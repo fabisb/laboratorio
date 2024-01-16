@@ -1,0 +1,19 @@
+{
+  "name": "laboratorio-milagrosa",
+  "version": "0.1.0",
+  "description": "Proyecto de tesis de laboratorio clinico 'La Milagrosa' Fabian Silva V-28146771",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron ."
+  },
+  "postinstall": "bower install",
+  "author": "Fabian",
+  "devDependencies": {
+    "electron": "^26.6.5",
+    "electron-reload": "^2.0.0-alpha.1"
+  },
+  "dependencies": {
+    "electron-pos-printer": "1.3.6",
+    "electron-store": "^8.1.0"
+  }
+}
