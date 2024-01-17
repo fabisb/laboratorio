@@ -1,12 +1,12 @@
 {
-  "name": "sistema-facturacion-front",
-  "description": "Sistema de facturacion en ElectronJS",
+  "name": "laboratorio-milagrosa",
+  "description": "Proyecto de tesis de laboratorio clinico 'La Milagrosa' Fabian Silva V-28146771",
   "main": "main.js",
   "authors": [
     "Fabian"
   ],
   "license": "MIT",
-  "homepage": "https://github.com/fabisb/sistema-facturacion",
+  "homepage": "https://github.com/fabisb/laboratorio",
   "ignore": [
     "**/.*",
     "node_modules",
