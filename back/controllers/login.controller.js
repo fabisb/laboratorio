@@ -10,7 +10,7 @@ export const loginController = async (req, res, next) => {
   }
   try {
     const [id] = await pool.execute(
-      "SELECT id, nivel FROM users WHERE username = ? AND password = ?",
+      "SELECT id, nivel FROM users WHERE cedula = ? AND password = ?",
       [user, pass]
     );
     if (id.length > 0) {

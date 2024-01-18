@@ -14,58 +14,8 @@ if (env === "development") {
   });
 }
 const store = new Store();
-/* 
-const productos = new Store();
-const existenciaStore = new Store();
 store.clear();
-productos.clear();
-existenciaStore.clear();
 
-ipcMain.on("setTicketProducto", async (event, producto) => {
-  const productoStorage = productos.get("productos");
-  console.log("🚀 ~ file: main.js:22 ~ ipcMain.on ~ productoStorage:", productoStorage);
-  if (!productoStorage) {
-    await store.set("productos", [producto]);
-  } else {
-    const productosExistenteStorage = await store.get("productos", productos);
-    console.log(
-      "🚀 ~ file: main.js:27 ~ ipcMain.on ~ productosExistenteStorage:",
-      productosExistenteStorage
-    );
-    const existeIndex = productosExistenteStorage.findIndex(
-      (existente) => existente.id === producto.id
-    );
-    console.log("🚀 ~ file: main.js:36 ~ ipcMain.on ~ existeIndex:", existeIndex);
-    if (existeIndex != -1) {
-      const llevaNuevo =
-        parseFloat(productosExistenteStorage[existeIndex].lleva) + parseFloat(producto.lleva);
-      console.log("🚀 ~ file: main.js:40 ~ ipcMain.on ~ llevaNuevo:", llevaNuevo);
-      productosExistenteStorage[existeIndex].lleva = llevaNuevo;
-      console.log(
-        "🚀 ~ file: main.js:43 ~ ipcMain.on ~ productoStorage[existeIndex].lleva:",
-        productosExistenteStorage[existeIndex]
-      );
-    } else {
-      productosExistenteStorage.push(producto);
-    }
-    console.log(
-      "🚀 ~ file: main.js:46 ~ ipcMain.on ~ productosExistenteStorage:",
-      productosExistenteStorage
-    );
-    await store.set("productos", productosExistenteStorage);
-  }
-});
-ipcMain.handle("getTicketProducto", async (event, producto) => {
-  const productoStorage = productos.get("productos");
-  return productoStorage;
-});
-ipcMain.on("setExistencia", async (event, existencia) => {
-  await existenciaStore.set("existencia", existencia);
-});
-ipcMain.handle("getExistencia", async (event, producto) => {
-  const existenciaStorage = existenciaStore.get("existencia");
-  return existenciaStorage;
-}); */
 ipcMain.on("token", async (event, token) => {
   store.clear();
   await store.set("token", token);
@@ -108,9 +58,36 @@ function createWindow() {
 
 ipcMain.handle("facturarWindow", () => facturarWindow());
 */
+function menuWindow() {
+  let menuWindow = new BrowserWindow({
+    width: 800,
+    height: 600,
+    title: "Menu",
+    webPreferences: {
+      preload: path.join(__dirname, "app/preloads/preload.js"),
+      //devTools:false
+    },
+  });
+  menuWindow.loadFile("app/screens/menu.html");
+  menuWindow.on("closed", () => (menuWindow = null));
+}
 
+ipcMain.handle("menuWindow", () => menuWindow());
+function creacionWindow() {
+  let creacionWindow = new BrowserWindow({
+    width: 800,
+    height: 600,
+    title: "Menu",
+    webPreferences: {
+      preload: path.join(__dirname, "app/preloads/preload.js"),
+      //devTools:false
+    },
+  });
+  creacionWindow.loadFile("app/screens/crear.html");
+  creacionWindow.on("closed", () => (creacionWindow = null));
+}
 
-
+ipcMain.handle("creacionWindow", () => creacionWindow());
 
 ipcMain.handle("alertWindow", async (event, { titulo, body }) => {
   const currentWindow = event.sender.getOwnerBrowserWindow();
@@ -123,12 +100,15 @@ ipcMain.handle("alertWindow", async (event, { titulo, body }) => {
     title: "Alerta",
     cancelId: 1,
   });
-  console.log("🚀 ~ file: main.js:102 ~ ipcMain.handle ~ result:", result);
-  return result;
+  console.log("🚀 ~ file: main.js:102 ~ ipcMmenule ~ result:", result);
+  return rult;
 });
 ipcMain.handle("errorWindow", async (event, arg) => {
   const currentWindow = event.sender.getOwnerBrowserWindow();
-  const result = await dialog.showErrorBox("ERROR", "Ha ocurrido un error en el servidor");
+  const result = await dialog.showErrorBox(
+    "ERROR",
+    "Ha ocurrido un error en el servidor"
+  );
   console.log("🚀 ~ file: main.js:102 ~ ipcMain.handle ~ result:", result);
   return result;
 });

@@ -14,6 +14,8 @@ async function renderer() {
   document.getElementById("login").hidden = true;
 
   }
+  document.getElementsByClassName('open-overlay')[0].click()
+
 }
 
 async function loguear(e) {
