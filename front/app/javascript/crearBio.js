@@ -5,7 +5,7 @@ const subirImagen = async () => {
     console.log("🚀 ~ subirImagen ~ imagen.files[0]:", imagen.files[0]);
     const reader = new FileReader();
     reader.readAsDataURL(imagen.files[0]);
-
+    //HAY QUE AGREGAR VALIDACIONES PARA QUE NO ENVIEN OTRO FORMATO QUE NO SEA DE FOTO, O EL FORMATO QUE USEN PARA LAS FIRMAS (que es uno distinto a los clasicos)
     reader.onload = async () => {
       const imgRes = reader.result;
       console.log("🚀 ~ reader.onload= ~ imgRes:", imgRes);
