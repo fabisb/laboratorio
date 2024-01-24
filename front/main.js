@@ -71,23 +71,47 @@ function menuWindow() {
   menuWindow.loadFile("app/screens/menu.html");
   menuWindow.on("closed", () => (menuWindow = null));
 }
-
 ipcMain.handle("menuWindow", () => menuWindow());
-function creacionWindow() {
-  let creacionWindow = new BrowserWindow({
-    width: 800,
-    height: 600,
-    title: "Menu",
-    webPreferences: {
-      preload: path.join(__dirname, "app/preloads/preload.js"),
-      //devTools:false
-    },
-  });
-  creacionWindow.loadFile("app/screens/crear.html");
-  creacionWindow.on("closed", () => (creacionWindow = null));
-}
 
-ipcMain.handle("creacionWindow", () => creacionWindow());
+let creacionPaciWindowVar;
+function creacionPaciWindow() {
+  if (!creacionPaciWindowVar) {
+    creacionPaciWindowVar = new BrowserWindow({
+      width: 800,
+      height: 600,
+      title: "Menu",
+      webPreferences: {
+        preload: path.join(__dirname, "app/preloads/preload.js"),
+        //devTools:false
+      },
+    });
+    creacionPaciWindowVar.loadFile("app/screens/crearPaci.html");
+    creacionPaciWindowVar.on("closed", () => (creacionPaciWindowVar = null));
+  }else{
+    creacionPaciWindowVar.focus()
+  }
+}
+ipcMain.handle("creacionPaciWindow", () => creacionPaciWindow());
+
+let creacionBioWindowVar;
+function creacionBioWindow() {
+  if (!creacionBioWindowVar) {
+    creacionBioWindowVar = new BrowserWindow({
+      width: 800,
+      height: 600,
+      title: "Menu",
+      webPreferences: {
+        preload: path.join(__dirname, "app/preloads/preload.js"),
+        //devTools:false
+      },
+    });
+    creacionBioWindowVar.loadFile("app/screens/crearBio.html");
+    creacionBioWindowVar.on("closed", () => (creacionBioWindowVar = null));
+  }else{
+    creacionBioWindowVar.focus()
+  }
+}
+ipcMain.handle("creacionBioWindow", () => creacionBioWindow());
 
 ipcMain.handle("alertWindow", async (event, { titulo, body }) => {
   const currentWindow = event.sender.getOwnerBrowserWindow();

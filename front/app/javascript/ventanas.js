@@ -1,3 +1,4 @@
 
 const abrirMenuWindow = () => ventanas.menuWindow();
-const abrirCreacionWindow = () => ventanas.creacionWindow();
+const abrirCreacionPaciWindow = () => ventanas.creacionPaciWindow();
+const abrirCreacionBioWindow = () => ventanas.creacionBioWindow();

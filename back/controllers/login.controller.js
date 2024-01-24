@@ -4,7 +4,7 @@ export const loginController = async (req, res, next) => {
   console.log("loginController");
   const { user, pass } = req.body;
   if (!(user || pass) || user == "" || pass == "") {
-    return res
+    return await res
       .status(422)
       .json({ mensaje: "Error al iniciar sesion, valide los datos" });
   }
@@ -22,16 +22,16 @@ export const loginController = async (req, res, next) => {
         }
       );
 
-      return res.status(200).json({ token, user });
+      return await res.status(200).json({ token, user });
     } else {
-      return res.status(404).json({
+      return await res.status(404).json({
         mensaje:
           "No se han encontrado informacion con ese usuario o contraseña",
       });
     }
   } catch (error) {
     console.log(error);
-    return res
+    return await res
       .status(500)
       .json({ mensaje: "Ha ocurrido un error en el servidor" });
   }
@@ -47,13 +47,34 @@ export const verifyToken = async (req, res, next) => {
         decoded
       );
       req.user = decoded;
-      next();
+      await next();
     }
   } catch (err) {
     // err
     console.log(err);
-    return res
+    return await res
       .status(420)
       .json({ mensaje: "Error de autentificacion, verificar token" });
+  }
+};
+
+export const imagen = async (req, res, next) => {
+  console.log("imagen");
+  const { img, cedula, nombre, colegio } = req.body;
+  console.log("🚀 ~ imagen ~ req.body:", req.body);
+  try {
+    await pool.execute(
+      "INSERT INTO bioanalistas (foto_carnet, cedula, nombre, colegio) VALUES (?,?,?,?)",
+      [img, cedula, nombre, colegio]
+    );
+    const [imgNueva] = await pool.execute(
+      "SELECT foto_carnet FROM bioanalistas"
+    );
+    return await res
+      .status(200)
+      .json({ mensaje: "exitoso", img: imgNueva[0].foto_carnet });
+  } catch (error) {
+    console.log(error);
+    return await res.status(500).json({ mensaje: "ERROR DE SERVIDOR" });
   }
 };

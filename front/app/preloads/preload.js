@@ -10,8 +10,9 @@ const { contextBridge, ipcRenderer, dialog } = require("electron");
 
 contextBridge.exposeInMainWorld("ventanas", {
   menuWindow: async () => await ipcRenderer.invoke("menuWindow"),
-  creacionWindow: async () => await ipcRenderer.invoke("creacionWindow"),
-
+  creacionPaciWindow: async () =>
+    await ipcRenderer.invoke("creacionPaciWindow"),
+  creacionBioWindow: async () => await ipcRenderer.invoke("creacionBioWindow"),
   mainWindow: async () => await ipcRenderer.invoke("createWindow"),
 });
 contextBridge.exposeInMainWorld("urlsv", "http://localhost:3000");
