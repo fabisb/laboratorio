@@ -6,6 +6,7 @@ import { fileURLToPath } from "url";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 import indexRouter from "./routes/index.js";
+import creacionRouter from "./routes/creacion.routes.js";
 import usersRouter from "./routes/users.routes.js";
 import productosRouter from "./routes/producto.routes.js";
 import facturaRouter from "./routes/factura.routes.js";
@@ -19,6 +20,7 @@ app.use(express.static(path.join(__dirname, "public")));
 app.use(express.json({ limit: "20mb" }));
 
 app.use("/api/", indexRouter);
+app.use("/api/creacion", creacionRouter);
 app.use("/api/users", usersRouter);
 app.use("/api/productos", productosRouter);
 app.use("/api/factura", facturaRouter);

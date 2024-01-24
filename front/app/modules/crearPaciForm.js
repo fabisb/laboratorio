@@ -5,11 +5,12 @@
     form.addEventListener(
       "submit",
       function (event) {
+        event.preventDefault();
         if (!form.checkValidity()) {
-          event.preventDefault();
           event.stopPropagation();
+        } else {
+          agregarPaciente(event);
         }
-
         form.classList.add("was-validated");
       },
       false

@@ -19,11 +19,12 @@
               <div class="form-items">
                 <h3>Registro de Paciente</h3>
                 <p>Ingrese los siguientes datos.</p>
-                <form class="requires-validation" novalidate>
+                <form onsubmit="" class="requires-validation" novalidate>
                   <div class="col-md-12">
                     <div class="d-flex">
                       <select
                         class="w-25 form-select mt-3 rounded-end-0"
+                        name="pre_cedula"
                         required
                       >
                         <option selected value="V">V</option>
@@ -32,7 +33,7 @@
                       <input
                         class="form-control rounded-start-0"
                         type="text"
-                        name="number"
+                        name="cedula"
                         placeholder="Cedula"
                         required
                       />
@@ -42,7 +43,7 @@
                     <input
                       class="form-control"
                       type="text"
-                      name="name"
+                      name="nombre"
                       placeholder="Nombre Completo"
                       required
                     />
@@ -56,7 +57,7 @@
                     <input
                       class="form-control"
                       type="email"
-                      name="email"
+                      name="correo"
                       placeholder="Correo Electronico"
                       required
                     />
@@ -97,7 +98,7 @@
                     <input
                       class="form-control mt-3"
                       type="date"
-                      name="nacimiento"
+                      name="fecha_nacimiento"
                       placeholder="Fecha de Nacimiento"
                       required
                     />
@@ -108,13 +109,14 @@
                   </div>
 
                   <div class="col-md-12 mt-3">
-                    <label class="mb-3 mr-1" for="gender">Gender: </label>
+                    <label class="mb-3 mr-1" for="genero">Genero: </label>
 
                     <input
                       type="radio"
                       class="btn-check"
-                      name="gender"
+                      name="genero"
                       id="male"
+                      value="Hombre"
                       autocomplete="off"
                       required
                     />
@@ -125,8 +127,9 @@
                     <input
                       type="radio"
                       class="btn-check"
-                      name="gender"
+                      name="genero"
                       id="female"
+                      value="Mujer"
                       autocomplete="off"
                       required
                     />
