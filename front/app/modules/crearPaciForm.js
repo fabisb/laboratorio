@@ -6,10 +6,10 @@
       "submit",
       function (event) {
         event.preventDefault();
+        agregarPaciente(event);
         if (!form.checkValidity()) {
           event.stopPropagation();
         } else {
-          agregarPaciente(event);
         }
         form.classList.add("was-validated");
       },
