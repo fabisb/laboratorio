@@ -10,12 +10,161 @@
   />
     <title>Creacion - Bioanalista</title>
 </head>
-<body>
+<body onload="">
 <main class="container">
-    <div class="input-group">
-        <input type="file" class="form-control" id="file" >
-        <button onclick="subirImagen()" class="btn btn-outline-secondary" type="button" id="inputGroupFileAddon04">Cargar</button>
+    <div class="form-body">
+      <div class="row">
+        <div class="form-holder">
+          <div class="form-content">
+            <div class="form-items">
+              <h3>Registro de Bioanalista</h3>
+              <p>Ingrese los siguientes datos.</p>
+              <form onsubmit="agregarBioanalista(event), event.preventDefault()" class="requires-validation" novalidate>
+                <div class="col-md-12">
+                  <div class="d-flex">
+                    <select
+                      class="w-25 form-select mt-3 rounded-end-0"
+                      name="pre_cedula"
+                      required
+                    >
+                      <option selected value="V">V</option>
+                      <option value="E">E</option>
+                    </select>
+                    <input
+                      class="form-control rounded-start-0"
+                      type="number"
+                      min="0"
+                      name="cedula"
+                      placeholder="Cedula"
+                      required
+                    />
+                  </div>
+                </div>
+                <div class="col-md-12">
+                  <input
+                    class="form-control"
+                    type="text"
+                    name="nombre"
+                    placeholder="Nombre Completo"
+                    required
+                  />
+                  <div class="valid-feedback">Nombre valido</div>
+                  <div class="invalid-feedback">
+                    El nombre no puede ser vacio!
+                  </div>
+                </div>
+
+                <div class="col-md-12">
+                  <input
+                    class="form-control"
+                    type="text"
+                    name="colegio"
+                    placeholder="Colegio"
+                    required
+                  />
+                  <div class="valid-feedback">Correo electronico valido</div>
+                  <div class="invalid-feedback">
+                    El correo electronico no puede estar vacio!
+                  </div>
+                </div>
+
+                <div class="col-md-12">
+                  <input
+                    class="form-control mt-3"
+                    type="text"
+                    name="telefono"
+                    placeholder="Numero de Telefono"
+                    required
+                  />
+                  <div class="valid-feedback">Numero de telefono valido</div>
+                  <div class="invalid-feedback">
+                    El numero de telefono no puede estar vacio!
+                  </div>
+                </div>
+
+                <div class="col-md-12">
+                  <input
+                    class="form-control"
+                    type="text"
+                    name="direccion"
+                    placeholder="Direccion"
+                    required
+                  />
+                  <div class="valid-feedback">Direccion Valida</div>
+                  <div class="invalid-feedback">
+                    La direccion no puede estar vacio!
+                  </div>
+                </div>
+                <div class="col-md-12">
+                  <input
+                    class="form-control mt-3"
+                    type="date"
+                    name="fecha_nacimiento"
+                    placeholder="Fecha de Nacimiento"
+                    required
+                    min="1920-01-01"
+                  />
+                  <div class="valid-feedback">Fecha de nacimiento Valida</div>
+                  <div class="invalid-feedback">
+                    La fecha de nacimiento no puede estar vacia!
+                  </div>
+                </div>
+
+                <div class="col-md-12 mt-3">
+                  <label class="mb-3 mr-1" for="genero">Genero: </label>
+
+                  <input
+                    type="radio"
+                    class="btn-check generoCheck"
+                    name="genero"
+                    id="male"
+                    value="Hombre"
+                    autocomplete="off"
+                    required
+                  />
+                  <label class="btn btn-sm btn-outline-secondary" for="male"
+                    >Hombre</label
+                  >
+
+                  <input
+                    type="radio"
+                    class="btn-check generoCheck"
+                    name="genero"
+                    id="female"
+                    value="Mujer"
+                    autocomplete="off"
+                    required
+                  />
+                    <label class="btn btn-sm btn-outline-secondary" for="female"
+                      >Mujer</label
+                    >
+
+                  <div class="valid-feedback mv-up">Genero seleccionado</div>
+                  <div class="invalid-feedback mv-up">
+                    Por favor selecciona un genero!
+                  </div>
+
+                  <div class="input-group">
+                    Firma
+                    <input type="file" class="form-control" id="file">
+                    <button onclick="subirImagen()" class="btn btn-outline-secondary" type="button" id="inputGroupFileAddon04">Cargar</button>
+                  </div>
+                </div>
+
+                <div class="form-button mt-3">
+                  
+                  <button id="submit" type="submit" class="btn btn-primary">
+                    Registrar
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
       </div>
+    </div>
+  
+    
       <img id="imgPrueba">
 </main>
 

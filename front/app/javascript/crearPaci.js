@@ -3,9 +3,11 @@ const agregarPaciente = async (event) => {
 
   const paciente = [];
   const validacion = [...event.target].some((el) => {
+    
     if (el.tagName == "SELECT" || el.tagName == "INPUT") {
       if (el.name == "genero") {
         let generoChk= document.getElementsByClassName('generoCheck')
+        console.log(generoChk)
         let suma = 0;
         [generoChk].forEach(chk=>{
           if (chk.checked){suma++}

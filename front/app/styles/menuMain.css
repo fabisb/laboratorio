@@ -1,6 +1,7 @@
 @import url(https://fonts.googleapis.com/css?family=Work+Sans:400,300,700|Open+Sans:400italic,300italic);
 body {
-  background-color: #fff
+  background-color: #fff;
+  color: #000000
 }
 
 .home {
@@ -65,7 +66,7 @@ nav ul li {
 nav li a {
   position: relative;
   top: 46%;
-  color: #fff;
+  color: #000;
   text-transform: uppercase;
   font-family: 'Work sans', sans-serif;
   font-weight: 300;
@@ -97,7 +98,7 @@ nav li a:after {
   opacity: 0;
   position: absolute;
   z-index: 100;
-  color: #fff;
+  color: #000;
   display: block;
   margin-right: auto;
   margin-left: auto;
@@ -121,11 +122,14 @@ nav li a:hover:after {
   opacity: 1;
 }
 
-nav li:nth-of-type(1){background-color: #29363B}
-nav li:nth-of-type(2){background-color: #EA495F}
-nav li:nth-of-type(3){background-color: #F4837D}
-nav li:nth-of-type(4){background-color: #FDCEA9}
-nav li:nth-of-type(5){background-color: #99B998}
+nav li:nth-of-type(1){background-color: #00b912}
+nav li:nth-of-type(2){background-color: #7ee23c}
+nav li:nth-of-type(3){
+  background: rgb(126,226,60);
+  background: linear-gradient(90deg, rgba(126,226,60,1) 25%, rgba(158,241,104,1) 50%, rgba(119,247,220,1) 75%, rgba(119,227,251,1) 100%);
+}
+nav li:nth-of-type(4){background-color: #77e3fb}
+nav li:nth-of-type(5){background-color: #2681ab}
 
 .slide-in-nav-item {
   animation: slide-in-nav-item 0.4s linear 1 .2s both;
@@ -185,7 +189,7 @@ Burger king
 .open-overlay span {
   display: block;
   height: 1px;
-  background-color: #fff;
+  background-color: #000000;
   cursor: pointer;
   margin-top: 8px;
 }
@@ -346,7 +350,7 @@ Animation keyframes
 }
 .home a{
   font-family: "Work Sans", sans-serif;
-  color: #fff;
+  color: #000;
   font-weight: 300;
   font-size: 12px;
   text-transform: uppercase;
@@ -357,6 +361,10 @@ Animation keyframes
   left:50px;
   padding-bottom: 3px;
   border-bottom: 1px solid #fff;
+}
+
+body,li{
+  font-weight:bolder ;
 }
 @media (max-width: 640px) {
   nav ul li a {
