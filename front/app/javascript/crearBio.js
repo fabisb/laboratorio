@@ -35,13 +35,17 @@ const agregarBioanalista = async (event) => {
  
   console.log(event)
   const paciente = [];
+  let firma;
   const validacion = [...event.target].some((el) => {
+   
     if (el.tagName == "SELECT" || el.tagName == "INPUT") {
       if (el.name == "genero") {
         let generoChk= document.getElementsByClassName('generoCheck')
+        console.log("🚀 ~ validacion ~ generoChk:", generoChk)
         let suma = 0;
-        [generoChk].forEach(chk=>{
-          if (chk.checked){suma++}
+        [...generoChk].forEach(chk=>{
+          console.log(chk)
+          if (chk.checked == true){suma++}
         })
         if(suma>0){     
           if (el.checked == true) {
@@ -53,13 +57,29 @@ const agregarBioanalista = async (event) => {
           return true
 
         }
+      } else if(el.name =='firma'){
+        console.log('firma:'+el)
+        if (el.value !== '') {
+          const reader = new FileReader();
+          reader.readAsDataURL(el.files[0]);
+          reader.onload = async () => {
+             firma = await  reader.result;
+             console.log("🚀 ~ reader.onload= ~ firma:", firma)
+          }
+        }
       } else {
         if(el.value== ""){
-          console.log(`Campo ${el.name} vacio`)
-          return true
+          if (el.name == 'firma') {
+            console.log(`Campo ${el.name} vacio`)
+            
+          }else{
+
+            console.log(`Campo ${el.name} vacio`)
+            return true 
+          }
 
         }
-        if(el.name='telefono'){
+        if(el.name=='telefono'){
           let validarletra=false
 
           for (let i = 0; i < el.value.length; i++) {
@@ -117,7 +137,7 @@ const agregarBioanalista = async (event) => {
   console.log("🚀 ~ agregarPaciente ~ paciente:", paciente);
   await axios.post(
     urlsv + "/api/creacion/agregar-bioanalista",
-    { paciente },
+    { paciente,firma },
     { headers: { token } }
   );
 };

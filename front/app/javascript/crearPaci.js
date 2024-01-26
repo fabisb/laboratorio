@@ -9,7 +9,7 @@ const agregarPaciente = async (event) => {
         let generoChk= document.getElementsByClassName('generoCheck')
         console.log(generoChk)
         let suma = 0;
-        [generoChk].forEach(chk=>{
+        [...generoChk].forEach(chk=>{
           if (chk.checked){suma++}
         })
         if(suma>0){     
@@ -28,7 +28,7 @@ const agregarPaciente = async (event) => {
           return true
 
         }
-        if(el.name='telefono'){
+        if(el.name=='telefono'){
           let validarletra=false
 
           for (let i = 0; i < el.value.length; i++) {

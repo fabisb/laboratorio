@@ -125,8 +125,7 @@ nav li a:hover:after {
 nav li:nth-of-type(1){background-color: #00b912}
 nav li:nth-of-type(2){background-color: #7ee23c}
 nav li:nth-of-type(3){
-  background: rgb(126,226,60);
-  background: linear-gradient(90deg, rgba(126,226,60,1) 25%, rgba(158,241,104,1) 50%, rgba(119,247,220,1) 75%, rgba(119,227,251,1) 100%);
+  background: rgb(204, 238, 52);
 }
 nav li:nth-of-type(4){background-color: #77e3fb}
 nav li:nth-of-type(5){background-color: #2681ab}

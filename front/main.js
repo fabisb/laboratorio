@@ -125,7 +125,7 @@ ipcMain.handle("alertWindow", async (event, { titulo, body }) => {
     cancelId: 1,
   });
   console.log("🚀 ~ file: main.js:102 ~ ipcMmenule ~ result:", result);
-  return rult;
+  return result;
 });
 ipcMain.handle("errorWindow", async (event, arg) => {
   const currentWindow = event.sender.getOwnerBrowserWindow();

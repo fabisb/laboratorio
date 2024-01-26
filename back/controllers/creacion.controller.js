@@ -27,7 +27,7 @@ export const agregarPacienteController = async (req, res) => {
         console.log(`Campo ${el.name} vacio`);
         return true;
       }
-      if ((el.name = "telefono")) {
+      if ((el.name == "telefono")) {
         let validarletra = false;
 
         for (let i = 0; i < el.value.length; i++) {
@@ -103,32 +103,16 @@ export const agregarPacienteController = async (req, res) => {
 };
 
 export const agregarBioanalistaController = async (req, res) => {
-  const { paciente } = req.body;
+  const { paciente,firma } = req.body;
+  console.log("🚀 ~ agregarBioanalistaController ~ firma:", firma)
   console.log("🚀 ~ agregarBioanalistaController ~ paciente:", paciente);
   const validacion = paciente.some((el) => {
-    if (el.name == "genero") {
-      let generoChk = document.getElementsByClassName("generoCheck");
-      let suma = 0;
-      [generoChk].forEach((chk) => {
-        if (chk.checked) {
-          suma++;
-        }
-      });
-      if (suma > 0) {
-        if (el.checked == true) {
-          const elemento = { valor: el.value, nombre: el.name };
-          paciente.push(elemento);
-        }
-      } else {
-        console.log("no genero");
-        return true;
-      }
-    } else {
+    
       if (el.value == "") {
         console.log(`Campo ${el.name} vacio`);
         return true;
       }
-      if ((el.name = "telefono")) {
+      if ((el.name == "telefono")) {
         let validarletra = false;
 
         for (let i = 0; i < el.value.length; i++) {
@@ -162,14 +146,14 @@ export const agregarBioanalistaController = async (req, res) => {
           return true;
         }
       }
-      
+
       if (el.name == "fecha_nacimiento") {
         if (moment(el.value).isAfter(moment().format("YYYY-MM-DD"))) {
           console.log("Ingrese una fecha valida");
           return true;
         }
       }
-    }
+    
   });
   if (validacion) {
     console.log("SE HA ENCONTRADO ALGUN ERROR");
@@ -183,6 +167,7 @@ export const agregarBioanalistaController = async (req, res) => {
     const valores = paciente.map((dato) => "?").join(", ");
     const consulta = `INSERT INTO bioanalistas (${columnas}) VALUES (${valores})`;
 
+    console.log("🚀 ~ agregarBioanalistaController ~ consulta:", consulta)
     // Ejecutar la consulta
     const resultados = await pool.execute(
       consulta,
