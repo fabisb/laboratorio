@@ -14,7 +14,7 @@ const agregarPaciente = async (event) => {
         })
         if(suma>0){     
           if (el.checked == true) {
-            const elemento = { valor: el.value, nombre: el.name };
+            const elemento = { value: el.value, name: el.name };
             paciente.push(elemento);
           }
         }else{
