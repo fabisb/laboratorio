@@ -13,6 +13,8 @@ contextBridge.exposeInMainWorld("ventanas", {
   creacionPaciWindow: async () =>
     await ipcRenderer.invoke("creacionPaciWindow"),
   creacionBioWindow: async () => await ipcRenderer.invoke("creacionBioWindow"),
+  creacionExamenWindow: async () =>
+    await ipcRenderer.invoke("creacionExamenWindow"),
   mainWindow: async () => await ipcRenderer.invoke("createWindow"),
 });
 contextBridge.exposeInMainWorld("urlsv", "http://localhost:3000");

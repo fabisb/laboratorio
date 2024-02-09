@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Creacion - Examen</title>
+    <link rel="stylesheet" href="../styles/creacionExamen.css" />
+    <link
+      rel="stylesheet"
+      href="../../bower_components/bootstrap/dist/css/bootstrap.min.css"
+    />
+</head>
+<body onload="render()">
+  <div>
+    <div class="container text-center">
+      <h1 class="display-2">Laboratorio</h1>
+      <div class="row row-gap-2">
+        <div class="row d-flex justify-content-center">
+          <div class="mb-3" style="width: 300px;">
+            <input oninput="cedulaPaciente()" name="cedulaPaciente" type="number" class="form-control" id="exampleFormControlInput1" placeholder="Cedula">
+          </div>
+          
+        </div>
+        <hr>
+        <br>
+        <div class="row row-cols-2 mx-0">
+          <div class="col">
+            <div class="mb-3 d-flex align-items-center justify-content-center">
+              <label for="exampleFormControlInput2" class="form-label">Nombre: </label>
+              <input name="nombre" type="text" class="form-control mx-2" id="exampleFormControlInput2" >
+            </div>
+           
+          </div>
+          <div class="col">
+            <div class="mb-3 d-flex align-items-center justify-content-center">
+              <!-- iconos -->
+              <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-vignette" viewBox="0 0 16 16">
+                <path d="M8 1a7 7 0 1 0 0 14A7 7 0 0 0 8 1M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8"/>
+                <path d="M8.5 4.5a.5.5 0 1 1-1 0 .5.5 0 0 1 1 0m0 7a.5.5 0 1 1-1 0 .5.5 0 0 1 1 0m1.683-6.281a.5.5 0 1 1-.866-.5.5.5 0 0 1 .866.5m-3.5 6.062a.5.5 0 1 1-.866-.5.5.5 0 0 1 .866.5m4.598-4.598a.5.5 0 1 1-.5-.866.5.5 0 0 1 .5.866m-6.062 3.5a.5.5 0 1 1-.5-.866.5.5 0 0 1 .5.866M11.5 8.5a.5.5 0 1 1 0-1 .5.5 0 0 1 0 1m-7 0a.5.5 0 1 1 0-1 .5.5 0 0 1 0 1m6.281 1.683a.5.5 0 1 1 .5-.866.5.5 0 0 1-.5.866m-6.062-3.5a.5.5 0 1 1 .5-.866.5.5 0 0 1-.5.866m4.598 4.598a.5.5 0 1 1 .866-.5.5.5 0 0 1-.866.5m-3.5-6.062a.5.5 0 1 1 .866-.5.5.5 0 0 1-.866.5"/>
+              </svg>
+            </div>
+           
+          </div>
+          <div class="col">
+            <div class="mb-3 d-flex align-items-center justify-content-center">
+              <label for="exampleFormControlInput2" class="form-label">Nacimiento: </label>
+              <input name="fecha_nacimiento" type="text" class="form-control mx-2" id="exampleFormControlInput2" >
+            </div>
+           
+          </div>
+          <div class="col">
+            <div class="mb-3 d-flex align-items-center justify-content-center">
+              <label for="exampleFormControlInput2" class="form-label">Edad: </label>
+              <input name="edad" type="text" class="form-control mx-2" id="exampleFormControlInput2" >
+            </div>
+          </div>
+          <div class="col">
+            <div class="mb-3 d-flex align-items-center justify-content-center">
+              <label for="exampleFormControlInput2" class="form-label">Direccion: </label>
+              <input name="direccion" type="text" class="form-control mx-2" id="exampleFormControlInput2">
+            </div>
+          </div>
+          <div class="col">
+            <div class="mb-3 d-flex align-items-center justify-content-center">
+              <label for="exampleFormControlInput2" class="form-label">Telefono: </label>
+              <input name="telefono" type="text" class="form-control mx-2" id="exampleFormControlInput2">
+            </div>
+          </div>
+          <div class="col">
+            <div class="mb-3 d-flex align-items-center justify-content-center">
+              <select name="bioanalistasSlct" class="form-select" >
+                <option selected>Bioanalista</option>
+
+              </select>
+            </div>
+          </div>
+          <div class="col">
+            <div class="mb-3 d-flex align-items-center justify-content-center">
+              <label for="exampleFormControlInput2" class="form-label">Genero: </label>
+              <input name="genero" type="text" class="form-control mx-2" id="exampleFormControlInput2">
+            </div>
+          </div>
+        </div>
+        <hr>
+        
+      </div>
+    </div>
+
+  </div>
+
+
+    
+    <script src="../javascript/examen.js"></script>
+    <script src="../modules/axios.min.js"></script>
+    <script src="../../bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+    <script src="../../bower_components/moment/moment.js"></script>
+</body>
+</html>

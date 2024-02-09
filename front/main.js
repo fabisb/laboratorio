@@ -27,8 +27,8 @@ ipcMain.handle("getToken", (event, arg) => {
 function createWindow() {
   // Create the browser window.
   let mainWindow = new BrowserWindow({
-    width: 800,
-    height: 600,
+    width: 1024,
+    height: 768,
     title: "Menu",
     webPreferences: {
       preload: path.join(__dirname, "app/preloads/preload.js"),
@@ -60,8 +60,8 @@ ipcMain.handle("facturarWindow", () => facturarWindow());
 */
 function menuWindow() {
   let menuWindow = new BrowserWindow({
-    width: 800,
-    height: 600,
+    width: 1024,
+    height: 768,
     title: "Menu",
     webPreferences: {
       preload: path.join(__dirname, "app/preloads/preload.js"),
@@ -77,9 +77,9 @@ let creacionPaciWindowVar;
 function creacionPaciWindow() {
   if (!creacionPaciWindowVar) {
     creacionPaciWindowVar = new BrowserWindow({
-      width: 800,
-      height: 600,
-      title: "Menu",
+      width: 1024,
+      height: 768,
+      title: "Creacion - Paciente",
       webPreferences: {
         preload: path.join(__dirname, "app/preloads/preload.js"),
         //devTools:false
@@ -87,8 +87,8 @@ function creacionPaciWindow() {
     });
     creacionPaciWindowVar.loadFile("app/screens/crearPaci.html");
     creacionPaciWindowVar.on("closed", () => (creacionPaciWindowVar = null));
-  }else{
-    creacionPaciWindowVar.focus()
+  } else {
+    creacionPaciWindowVar.focus();
   }
 }
 ipcMain.handle("creacionPaciWindow", () => creacionPaciWindow());
@@ -97,9 +97,9 @@ let creacionBioWindowVar;
 function creacionBioWindow() {
   if (!creacionBioWindowVar) {
     creacionBioWindowVar = new BrowserWindow({
-      width: 800,
-      height: 600,
-      title: "Menu",
+      width: 1024,
+      height: 768,
+      title: "Creacion - Bioanalista",
       webPreferences: {
         preload: path.join(__dirname, "app/preloads/preload.js"),
         //devTools:false
@@ -107,11 +107,31 @@ function creacionBioWindow() {
     });
     creacionBioWindowVar.loadFile("app/screens/crearBio.html");
     creacionBioWindowVar.on("closed", () => (creacionBioWindowVar = null));
-  }else{
-    creacionBioWindowVar.focus()
+  } else {
+    creacionBioWindowVar.focus();
   }
 }
 ipcMain.handle("creacionBioWindow", () => creacionBioWindow());
+
+let crearExamenWindowVar;
+function creacionExamenWindow() {
+  if (!crearExamenWindowVar) {
+    crearExamenWindowVar = new BrowserWindow({
+      width: 1024,
+      height: 768,
+      title: "Creacion - Examen",
+      webPreferences: {
+        preload: path.join(__dirname, "app/preloads/preload.js"),
+        //devTools:false
+      },
+    });
+    crearExamenWindowVar.loadFile("app/screens/examen.html");
+    crearExamenWindowVar.on("closed", () => (crearExamenWindowVar = null));
+  } else {
+    crearExamenWindowVar.focus();
+  }
+}
+ipcMain.handle("creacionExamenWindow", () => creacionExamenWindow());
 
 ipcMain.handle("alertWindow", async (event, { titulo, body }) => {
   const currentWindow = event.sender.getOwnerBrowserWindow();

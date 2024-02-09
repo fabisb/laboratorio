@@ -10,7 +10,7 @@
       rel="stylesheet"
       href="../../bower_components/bootstrap/dist/css/bootstrap.min.css"
     />
-    <title>La Milagrosa - LOGIN</title>
+    <title>La Milagrosa - INICIO</title>
   </head>
   <body onload="renderer()">
     <div class="container text-center" id="login">
@@ -21,7 +21,13 @@
               class="card flex-row my-5 border-0 shadow rounded-3 overflow-hidden"
             >
               <div class="card-img-left d-none d-md-flex">
-                <p style="z-index: -1;">Imagen de <a href="https://www.freepik.es/foto-gratis/mujer-trabajando-laborator_12168544.htm#query=bioanalista&position=0&from_view=keyword&track=sph&uuid=f8cef3bc-ca8f-4a8f-a335-8b8411d65f2b">Freepik</a></p>
+                <p style="z-index: -1">
+                  Imagen de
+                  <a
+                    href="https://www.freepik.es/foto-gratis/mujer-trabajando-laborator_12168544.htm#query=bioanalista&position=0&from_view=keyword&track=sph&uuid=f8cef3bc-ca8f-4a8f-a335-8b8411d65f2b"
+                    >Freepik</a
+                  >
+                </p>
                 <!-- Background image for card set in CSS! -->
               </div>
               <div class="card-body p-4 p-sm-5">
@@ -90,20 +96,29 @@
                 >Creacion de Bioanalistas</a
               >
             </li>
-            <li onclick="abrirCreacionPaciWindow()"><a href="#" data-content="Agrega pacientes a la base de datos">Creacion de Pacientes</a></li>
-            <li onclick=""><a href="#" data-content="Creacion y consulta de examenes">Examenes</a></li>
+            <li onclick="abrirCreacionPaciWindow()">
+              <a href="#" data-content="Agrega pacientes a la base de datos"
+                >Creacion de Pacientes</a
+              >
+            </li>
+            <li onclick="abrirExamenesWindow()">
+              <a href="#" data-content="Creacion y consulta de examenes"
+                >Examenes</a
+              >
+            </li>
             <li onclick="">
               <a href="#" data-content="Consulta de reportes">Reportes</a>
             </li>
             <li onclick="">
-              <a href="#" data-content="Modificar parametros del sistema">Configuracion</a>
+              <a href="#" data-content="Modificar parametros del sistema"
+                >Configuracion</a
+              >
             </li>
           </ul>
         </nav>
       </div>
 
       <section class="home">
-
         <div class="open-overlay" hidden>
           <span class="bar-top"></span>
           <span class="bar-middle"></span>
