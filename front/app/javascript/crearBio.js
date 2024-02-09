@@ -104,11 +104,23 @@ const agregarBioanalista = async (event) => {
   }
   console.log("🚀 ~ agregarPaciente ~ paciente:", paciente);
   console.log(firma);
-  await axios.post(
-    urlsv + "/api/creacion/agregar-bioanalista",
-    { paciente, firma },
-    { headers: { token } }
-  );
+  try {
+    
+    await axios.post(
+      urlsv + "/api/creacion/agregar-bioanalista",
+      { paciente, firma },
+      { headers: { token } }
+      );
+      const modal = new bootstrap.Modal("#confirmacion-modal");
+      modal.show();
+    } catch (error) {
+      console.log(error);
+      if (error.response.data.mensaje) {
+        return await alerta.alert("Error:", error.response.data.mensaje);
+      } else {
+        return await alerta.error();
+      }
+    }
 };
 
 /*const render = () =>{

@@ -9,6 +9,8 @@
       rel="stylesheet"
       href="../../bower_components/bootstrap/dist/css/bootstrap.min.css"
     />
+
+    <link rel="stylesheet" href="../styles/modalConfirmacion.css" />
   </head>
   <body onload="render()">
     <main>
@@ -157,6 +159,37 @@
         </div>
       </div>
     </main>
+    <div id="confirmacion-modal" class="modal fade">
+      <div class="modal-dialog modal-confirm">
+        <div class="modal-content">
+          <div class="modal-header">
+            <div class="icon-box">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                height="58"
+                viewBox="0 -960 960 960"
+                width="58"
+              >
+                <path
+                  d="M382-240 154-468l57-57 171 171 367-367 57 57-424 424Z"
+                />
+              </svg>
+            </div>
+            <h4 class="modal-title">Agregado!</h4>
+          </div>
+          <div class="modal-body">
+            <p class="text-center">
+              El paciente ha sido agregado correctamente.
+            </p>
+          </div>
+          <div class="modal-footer">
+            <button class="btn btn-success btn-block" data-bs-dismiss="modal">
+              OK
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
     <script src="../javascript/crearPaci.js"></script>
     <script src="../modules/crearPaciForm.js"></script>
     <script src="../modules/axios.min.js"></script>

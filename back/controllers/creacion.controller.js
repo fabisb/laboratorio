@@ -78,6 +78,9 @@ export const agregarPacienteController = async (req, res) => {
       consulta,
       paciente.map((dato) => dato.value)
     );
+    return await res
+      .status(200)
+      .json({ mensaje: "Paciente registrado con exito" });
   } catch (error) {
     console.log(error);
     return await res.status(500).json({ mensaje: "ERROR DE SERVIDOR" });
@@ -157,6 +160,9 @@ export const agregarBioanalistaController = async (req, res) => {
       consulta,
       paciente.map((dato) => dato.value)
     );
+    return await res
+      .status(200)
+      .json({ mensaje: "Bioanalista registrado con exito" });
   } catch (error) {
     console.log(error);
     return await res.status(500).json({ mensaje: "ERROR DE SERVIDOR" });
@@ -234,7 +240,7 @@ export const agregarAdministradorController = async (req, res) => {
       // Crear la consulta SQL
       const columnas = administrador.map((dato) => dato.name).join(", ");
       const valores = administrador.map((dato) => "?").join(", ");
-      const consulta = `INSERT INTO bioanalistas (${columnas}) VALUES (${valores})`;
+      const consulta = `INSERT INTO users (${columnas}) VALUES (${valores})`;
 
       // Ejecutar la consulta
       const resultados = await pool.execute(

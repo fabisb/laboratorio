@@ -32,11 +32,30 @@ export const getPaciente = async (req, res) => {
       return await res
         .status(400)
         .json({ mensaje: "No se ha encontrado el paciente" });
-    }
-  } catch (error) {
-    console.log(error);
-    return await res
+      }
+    } catch (error) {
+      console.log(error);
+      return await res
       .status(500)
       .json({ mensaje: "Ha ocurrido un error en el servidor" });
+    }
+  };
+  
+  export const getExamenes = async (req,res)=>{
+    try {
+      const [examenes] = await pool.execute('SELECT * FROM examenes');
+      if (examenes.length > 0 ) {
+        return await res.status(200).json(examenes)
+      }else{
+        return await res
+          .status(400)
+          .json({ mensaje: "No se han encontrado examenes" });
+
+      }
+    } catch (error) {
+      console.log(error)
+      return await res
+        .status(500)
+        .json({ mensaje: "Ha ocurrido un error en el servidor" });
   }
-};
+}

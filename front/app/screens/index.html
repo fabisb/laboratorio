@@ -86,46 +86,81 @@
       </div>
     </div>
     <div hidden class="" id="isLog">
-      <div class="overlay-navigation">
-        <nav role="navigation">
-          <ul>
-            <li onclick="abrirCreacionBioWindow()">
-              <a
-                href="#"
-                data-content="Crea Examenes, Pacientes, Bionalistas segun tu nivel de usuario"
-                >Creacion de Bioanalistas</a
-              >
-            </li>
-            <li onclick="abrirCreacionPaciWindow()">
-              <a href="#" data-content="Agrega pacientes a la base de datos"
-                >Creacion de Pacientes</a
-              >
-            </li>
-            <li onclick="abrirExamenesWindow()">
-              <a href="#" data-content="Creacion y consulta de examenes"
-                >Examenes</a
-              >
-            </li>
-            <li onclick="">
-              <a href="#" data-content="Consulta de reportes">Reportes</a>
-            </li>
-            <li onclick="">
-              <a href="#" data-content="Modificar parametros del sistema"
-                >Configuracion</a
-              >
-            </li>
-          </ul>
-        </nav>
-      </div>
-
-      <section class="home">
-        <div class="open-overlay" hidden>
-          <span class="bar-top"></span>
-          <span class="bar-middle"></span>
-          <span class="bar-bottom"></span>
+      <div class="container my-4">
+        <div class="row row-cols-1 row-cols-md-2 g-4">
+          <div class="col">
+            <div
+              class="card"
+              onclick="abrirCreacionBioWindow()"
+              style="cursor: pointer"
+            >
+              <img
+              width="275px"
+              height="200px"
+                src="https://img.freepik.com/foto-gratis/mujer-trabajando-laborator_23-2148824178.jpg?w=740&t=st=1707454989~exp=1707455589~hmac=1db6c7144e4ecfef9a0dc5f31a7899e7288122aad0691045d63a4940573f103a"
+                class="card-img-top"
+                alt="Creacion"
+              />
+              <div class="card-body">
+                <hr />
+                <h5 class="card-title">Creacion</h5>
+              </div>
+            </div>
+          </div>
+          <div class="col">
+            <div
+              class="card"
+              style="cursor: pointer"
+              onclick="abrirExamenesWindow()"
+            >
+              <img
+              width="275px"
+              height="200px"
+              src="https://img.freepik.com/foto-gratis/mujer-trabajando-laborator_23-2148824178.jpg?w=740&t=st=1707454989~exp=1707455589~hmac=1db6c7144e4ecfef9a0dc5f31a7899e7288122aad0691045d63a4940573f103a"
+              class="card-img-top"
+                alt="Diagnosticos"
+              />
+              <div class="card-body">
+                <hr />
+                <h5 class="card-title">Diagnosticos</h5>
+              </div>
+            </div>
+          </div>
+          <div class="col">
+            <div class="card" onclick="" style="cursor: pointer">
+              <img
+              src="https://img.freepik.com/foto-gratis/mujer-trabajando-laborator_23-2148824178.jpg?w=740&t=st=1707454989~exp=1707455589~hmac=1db6c7144e4ecfef9a0dc5f31a7899e7288122aad0691045d63a4940573f103a"
+              width="275px"
+                height="200px"
+                class="card-img-top"
+                alt="Reportes"
+              />
+              <div class="card-body">
+                <hr />
+                <h5 class="card-title">Reportes</h5>
+              </div>
+            </div>
+          </div>
+          <div class="col">
+            <div class="card" onclick="" style="cursor: pointer">
+              <img
+              src="https://img.freepik.com/foto-gratis/mujer-trabajando-laborator_23-2148824178.jpg?w=740&t=st=1707454989~exp=1707455589~hmac=1db6c7144e4ecfef9a0dc5f31a7899e7288122aad0691045d63a4940573f103a"
+              width="275px"
+                height="200px"
+                class="card-img-top"
+                alt="Configuracion"
+              />
+              <div class="card-body">
+                <hr />
+                <h5 class="card-title">Configuracion</h5>
+              </div>
+            </div>
+          </div>
         </div>
-      </section>
+      </div>
+      <!-- NUEVO MENU -->
     </div>
+
     <div hidden class="container text-center" id="isLogAdmin"></div>
     <script src="../../bower_components/jquery/dist/jquery.min.js"></script>
     <script src="../javascript/renderer.js"></script>

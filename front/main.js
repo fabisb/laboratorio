@@ -133,13 +133,33 @@ function creacionExamenWindow() {
 }
 ipcMain.handle("creacionExamenWindow", () => creacionExamenWindow());
 
+let menuExamenesVar;
+function menuExamenesWindow() {
+  if (!menuExamenesVar) {
+    menuExamenesVar = new BrowserWindow({
+      width: 1024,
+      height: 768,
+      title: "Menu - Examenes",
+      webPreferences: {
+        preload: path.join(__dirname, "app/preloads/preload.js"),
+        //devTools:false
+      },
+    });
+    menuExamenesVar.loadFile("app/screens/menuExamenes.html");
+    menuExamenesVar.on("closed", () => (menuExamenesVar = null));
+  } else {
+    menuExamenesVar.focus();
+  }
+}
+ipcMain.handle("menuExamenesWindow", () => menuExamenesWindow());
+
 ipcMain.handle("alertWindow", async (event, { titulo, body }) => {
   const currentWindow = event.sender.getOwnerBrowserWindow();
   const result = await dialog.showMessageBox(currentWindow, {
     type: "info",
     message: titulo,
     detail: body,
-    buttons: ["OK", "Cancel"],
+    buttons: ["OK", "Cancelar"],
     defaultId: 0,
     title: "Alerta",
     cancelId: 1,
@@ -147,6 +167,7 @@ ipcMain.handle("alertWindow", async (event, { titulo, body }) => {
   console.log("🚀 ~ file: main.js:102 ~ ipcMmenule ~ result:", result);
   return result;
 });
+
 ipcMain.handle("errorWindow", async (event, arg) => {
   const currentWindow = event.sender.getOwnerBrowserWindow();
   const result = await dialog.showErrorBox(

@@ -16,6 +16,7 @@ contextBridge.exposeInMainWorld("ventanas", {
   creacionExamenWindow: async () =>
     await ipcRenderer.invoke("creacionExamenWindow"),
   mainWindow: async () => await ipcRenderer.invoke("createWindow"),
+  menuExamenesWindow: async () => await ipcRenderer.invoke("menuExamenesWindow"),
 });
 contextBridge.exposeInMainWorld("urlsv", "http://localhost:3000");
 
@@ -52,6 +53,7 @@ contextBridge.exposeInMainWorld("alerta", {
     console.log("🚀 ~ file: preload.js:29 ~ alert: ~ result:", result);
     return result;
   },
+
   error: async () => {
     const result = await ipcRenderer.invoke("errorWindow");
     console.log("🚀 ~ file: preload.js:44 ~ error: ~ result:", result);

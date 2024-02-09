@@ -1,98 +1,346 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Creacion - Examen</title>
     <link rel="stylesheet" href="../styles/creacionExamen.css" />
     <link
       rel="stylesheet"
       href="../../bower_components/bootstrap/dist/css/bootstrap.min.css"
     />
-</head>
-<body onload="render()">
-  <div>
-    <div class="container text-center">
-      <h1 class="display-2">Laboratorio</h1>
-      <div class="row row-gap-2">
-        <div class="row d-flex justify-content-center">
-          <div class="mb-3" style="width: 300px;">
-            <input oninput="cedulaPaciente()" name="cedulaPaciente" type="number" class="form-control" id="exampleFormControlInput1" placeholder="Cedula">
-          </div>
-          
-        </div>
-        <hr>
-        <br>
-        <div class="row row-cols-2 mx-0">
-          <div class="col">
-            <div class="mb-3 d-flex align-items-center justify-content-center">
-              <label for="exampleFormControlInput2" class="form-label">Nombre: </label>
-              <input name="nombre" type="text" class="form-control mx-2" id="exampleFormControlInput2" >
-            </div>
-           
-          </div>
-          <div class="col">
-            <div class="mb-3 d-flex align-items-center justify-content-center">
-              <!-- iconos -->
-              <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-vignette" viewBox="0 0 16 16">
-                <path d="M8 1a7 7 0 1 0 0 14A7 7 0 0 0 8 1M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8"/>
-                <path d="M8.5 4.5a.5.5 0 1 1-1 0 .5.5 0 0 1 1 0m0 7a.5.5 0 1 1-1 0 .5.5 0 0 1 1 0m1.683-6.281a.5.5 0 1 1-.866-.5.5.5 0 0 1 .866.5m-3.5 6.062a.5.5 0 1 1-.866-.5.5.5 0 0 1 .866.5m4.598-4.598a.5.5 0 1 1-.5-.866.5.5 0 0 1 .5.866m-6.062 3.5a.5.5 0 1 1-.5-.866.5.5 0 0 1 .5.866M11.5 8.5a.5.5 0 1 1 0-1 .5.5 0 0 1 0 1m-7 0a.5.5 0 1 1 0-1 .5.5 0 0 1 0 1m6.281 1.683a.5.5 0 1 1 .5-.866.5.5 0 0 1-.5.866m-6.062-3.5a.5.5 0 1 1 .5-.866.5.5 0 0 1-.5.866m4.598 4.598a.5.5 0 1 1 .866-.5.5.5 0 0 1-.866.5m-3.5-6.062a.5.5 0 1 1 .866-.5.5.5 0 0 1-.866.5"/>
-              </svg>
-            </div>
-           
-          </div>
-          <div class="col">
-            <div class="mb-3 d-flex align-items-center justify-content-center">
-              <label for="exampleFormControlInput2" class="form-label">Nacimiento: </label>
-              <input name="fecha_nacimiento" type="text" class="form-control mx-2" id="exampleFormControlInput2" >
-            </div>
-           
-          </div>
-          <div class="col">
-            <div class="mb-3 d-flex align-items-center justify-content-center">
-              <label for="exampleFormControlInput2" class="form-label">Edad: </label>
-              <input name="edad" type="text" class="form-control mx-2" id="exampleFormControlInput2" >
+  </head>
+  <body onload="render()">
+    <div>
+      <div class="container text-center">
+        <h1 class="display-2">Laboratorio</h1>
+        <div class="row row-gap-2">
+          <div class="row d-flex justify-content-center">
+            <div class="mb-3" style="width: 300px">
+              <input
+                oninput="cedulaPaciente()"
+                name="cedulaPaciente"
+                type="number"
+                class="form-control"
+                id="exampleFormControlInput1"
+                placeholder="Cedula"
+              />
             </div>
           </div>
-          <div class="col">
-            <div class="mb-3 d-flex align-items-center justify-content-center">
-              <label for="exampleFormControlInput2" class="form-label">Direccion: </label>
-              <input name="direccion" type="text" class="form-control mx-2" id="exampleFormControlInput2">
+          <hr />
+          <br />
+          <div class="row row-cols-2 mx-0">
+            <div class="col">
+              <div
+                class="mb-3 d-flex align-items-center justify-content-center"
+              >
+                <label for="exampleFormControlInput2" class="form-label"
+                  >Nombre:
+                </label>
+                <input
+                  readonly
+                  name="nombre"
+                  type="text"
+                  class="form-control mx-2"
+                  id="exampleFormControlInput2"
+                />
+              </div>
+            </div>
+            <div class="col">
+              <div class="row row-cols-3">
+                <div class="col">
+                  <svg
+                    onclick="abrirModalExamenes()"
+                    style="cursor: pointer"
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="40"
+                    height="40"
+                    fill="green"
+                    class="bi bi-file-plus"
+                    viewBox="0 0 16 16"
+                  >
+                    <path
+                      d="M8.5 6a.5.5 0 0 0-1 0v1.5H6a.5.5 0 0 0 0 1h1.5V10a.5.5 0 0 0 1 0V8.5H10a.5.5 0 0 0 0-1H8.5z"
+                    />
+                    <path
+                      d="M2 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2zm10-1H4a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1"
+                    />
+                  </svg>
+                </div>
+                <div class="col">
+                  <svg
+                    style="cursor: pointer"
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="40"
+                    height="40"
+                    fill="black"
+                    class="bi bi-building-fill-check"
+                    viewBox="0 0 16 16"
+                  >
+                    <path
+                      d="M12.5 16a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7m1.679-4.493-1.335 2.226a.75.75 0 0 1-1.174.144l-.774-.773a.5.5 0 0 1 .708-.708l.547.548 1.17-1.951a.5.5 0 1 1 .858.514"
+                    />
+                    <path
+                      d="M2 1a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v7.256A4.5 4.5 0 0 0 12.5 8a4.5 4.5 0 0 0-3.59 1.787A.5.5 0 0 0 9 9.5v-1a.5.5 0 0 0-.5-.5h-1a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .39-.187A4.5 4.5 0 0 0 8.027 12H6.5a.5.5 0 0 0-.5.5V16H3a1 1 0 0 1-1-1zm2 1.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5h-1a.5.5 0 0 0-.5.5m3 0v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5h-1a.5.5 0 0 0-.5.5m3.5-.5a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5zM4 5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5h-1a.5.5 0 0 0-.5.5M7.5 5a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5zm2.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5h-1a.5.5 0 0 0-.5.5M4.5 8a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5z"
+                    />
+                  </svg>
+                </div>
+                <div class="col">
+                  <svg
+                    onclick="reloadPage()"
+                    style="cursor: pointer"
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="40"
+                    height="40"
+                    fill="orange"
+                    class="bi bi-arrow-clockwise"
+                    viewBox="0 0 16 16"
+                  >
+                    <path
+                      fill-rule="evenodd"
+                      d="M8 3a5 5 0 1 0 4.546 2.914.5.5 0 0 1 .908-.417A6 6 0 1 1 8 2z"
+                    />
+                    <path
+                      d="M8 4.466V.534a.25.25 0 0 1 .41-.192l2.36 1.966c.12.1.12.284 0 .384L8.41 4.658A.25.25 0 0 1 8 4.466"
+                    />
+                  </svg>
+                </div>
+              </div>
+            </div>
+            <div class="col">
+              <div
+                class="mb-3 d-flex align-items-center justify-content-center"
+              >
+                <label for="exampleFormControlInput2" class="form-label"
+                  >Nacimiento:
+                </label>
+                <input
+                  readonly
+                  name="fecha_nacimiento"
+                  type="text"
+                  class="form-control mx-2"
+                  id="exampleFormControlInput2"
+                />
+              </div>
+            </div>
+            <div class="col">
+              <div
+                class="mb-3 d-flex align-items-center justify-content-center"
+              >
+                <label for="exampleFormControlInput2" class="form-label"
+                  >Edad:
+                </label>
+                <input
+                  readonly
+                  name="edad"
+                  type="text"
+                  class="form-control mx-2"
+                  id="exampleFormControlInput2"
+                />
+              </div>
+            </div>
+            <div class="col">
+              <div
+                class="mb-3 d-flex align-items-center justify-content-center"
+              >
+                <label for="exampleFormControlInput2" class="form-label"
+                  >Direccion:
+                </label>
+                <input
+                  readonly
+                  name="direccion"
+                  type="text"
+                  class="form-control mx-2"
+                  id="exampleFormControlInput2"
+                />
+              </div>
+            </div>
+            <div class="col">
+              <div
+                class="mb-3 d-flex align-items-center justify-content-center"
+              >
+                <label for="exampleFormControlInput2" class="form-label"
+                  >Telefono:
+                </label>
+                <input
+                  readonly
+                  name="telefono"
+                  type="text"
+                  class="form-control mx-2"
+                  id="exampleFormControlInput2"
+                />
+              </div>
+            </div>
+            <div class="col">
+              <div
+                class="mb-3 d-flex align-items-center justify-content-center"
+              >
+                <select name="bioanalistasSlct" class="form-select">
+                  <option selected>Bioanalista</option>
+                </select>
+              </div>
+            </div>
+            <div class="col">
+              <div
+                class="mb-3 d-flex align-items-center justify-content-center"
+              >
+                <label for="exampleFormControlInput2" class="form-label"
+                  >Genero:
+                </label>
+                <input
+                  readonly
+                  name="genero"
+                  type="text"
+                  class="form-control mx-2"
+                  id="exampleFormControlInput2"
+                />
+              </div>
             </div>
           </div>
-          <div class="col">
-            <div class="mb-3 d-flex align-items-center justify-content-center">
-              <label for="exampleFormControlInput2" class="form-label">Telefono: </label>
-              <input name="telefono" type="text" class="form-control mx-2" id="exampleFormControlInput2">
-            </div>
-          </div>
-          <div class="col">
-            <div class="mb-3 d-flex align-items-center justify-content-center">
-              <select name="bioanalistasSlct" class="form-select" >
-                <option selected>Bioanalista</option>
+          <hr />
 
-              </select>
-            </div>
-          </div>
-          <div class="col">
-            <div class="mb-3 d-flex align-items-center justify-content-center">
-              <label for="exampleFormControlInput2" class="form-label">Genero: </label>
-              <input name="genero" type="text" class="form-control mx-2" id="exampleFormControlInput2">
-            </div>
+          <div class="row">
+            <table class="table text-center table-bordered">
+              <thead>
+                <tr>
+                  <th colspan="3" scope="col">Examenes realizados</th>
+                </tr>
+                <tr>
+                  <th scope="col">#</th>
+                  <th scope="col">n°</th>
+                  <th scope="col" class="row m-0">
+                    <div class="col-10">Tipo Examen</div>
+                    <div class="col-1">
+                      <input
+                        class="form-check-input"
+                        type="checkbox"
+                        value=""
+                        id="flexCheckDefault"
+                      />
+                    </div>
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <th scope="row">1</th>
+                  <td>1</td>
+                  <td class="d-flex justify-content-around">
+                    <span>Hematologia Completa </span>
+
+                    <div
+                      class="btn-group"
+                      role="group"
+                      aria-label="Basic mixed styles example"
+                    >
+                      <button type="button" class="btn btn-outline-light">
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="20"
+                          height="20"
+                          fill="black"
+                          class="bi bi-pencil-square"
+                          viewBox="0 0 20 20"
+                        >
+                          <path
+                            d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"
+                          />
+                          <path
+                            fill-rule="evenodd"
+                            d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z"
+                          />
+                        </svg>
+                      </button>
+                      <button type="button" class="btn btn-outline-light">
+                        <input
+                          class="form-check-input"
+                          type="checkbox"
+                          value=""
+                          id="flexCheckDefault"
+                        />
+                      </button>
+                      <button type="button" class="btn btn-outline-light">
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="20"
+                          height="20"
+                          fill="red"
+                          class="bi bi-x-lg"
+                          viewBox="0 0 20 20"
+                        >
+                          <path
+                            d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8z"
+                          />
+                        </svg>
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
           </div>
         </div>
-        <hr>
-        
       </div>
     </div>
 
-  </div>
+    <div id="examenes-list" class="modal fade" tabindex="-1">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Menu Examenes</h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body d-flex justify-content-center flex-column align-items-center">
+            <input
+              style="width: 300px"
+              class="form-control form-control-lg"
+              type="text"
+              placeholder="Examenes"
+              aria-label=".form-control-lg example"
+              oninput="buscarExamen()"
+              id="inputMenuExamen"
+            />
+            <hr>
+            <table class="table table-bordered table-hover text-center">
+              <thead>
+                <tr>
+                  <th colspan="2" scope="col">Examenes</th>
+                </tr>
+                <tr>
+                  <th scope="col">#</th>
+                  <th scope="col">Examen</th>
+                </tr>
+              </thead>
+              <tbody  id="tBodyMenuExamen">
+                <tr>
+                  
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-bs-dismiss="modal"
+            >
+              Cerrar
+            </button>
+            <button type="button" class="btn btn-primary">Ok</button>
+          </div>
+        </div>
+      </div>
+    </div>
 
-
-    
     <script src="../javascript/examen.js"></script>
+    <script src="../javascript/ventanas.js"></script>
     <script src="../modules/axios.min.js"></script>
     <script src="../../bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
     <script src="../../bower_components/moment/moment.js"></script>
-</body>
+  </body>
 </html>
