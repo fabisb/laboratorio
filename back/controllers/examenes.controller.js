@@ -30,8 +30,8 @@ export const getPaciente = async (req, res) => {
       return await res.status(200).json( paciente[0] );
     } else {
       return await res
-        .status(400)
-        .json({ mensaje: "No se ha encontrado el paciente" });
+        .status(200)
+        .json({ mensaje: "No se ha encontrado el paciente",paciente: 404 });
       }
     } catch (error) {
       console.log(error);
