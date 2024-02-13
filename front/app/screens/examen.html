@@ -115,6 +115,9 @@
                     fill="#FACD0B"
                     class="bi bi-pencil-square"
                     viewBox="0 0 20 20"
+                    id="botonModificar"
+                    
+                    
                   >
                     <path
                       d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"
@@ -156,7 +159,7 @@
                   >Nacimiento:
                 </label>
                 <input
-                  readonly
+                  value="2001-10-10"
                   name="fecha_nacimiento"
                   type="date"
                   onchange="calcularEdad()"
@@ -242,6 +245,7 @@
                   value="Hombre"
                   autocomplete="off"
                   disabled
+                  checked
                   
                 />
                 <label class="btn btn-sm btn-outline-secondary" for="Hombre"
@@ -481,6 +485,39 @@
       </div>
     </div>
 
+    <!-- Modal para agregar un paciente -->
+    <div id="confirmacion-modal" class="modal fade">
+      <div class="modal-dialog modal-confirm">
+        <div class="modal-content">
+          <div class="modal-header">
+            <div class="icon-box">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                height="58"
+                viewBox="0 -960 960 960"
+                width="58"
+              >
+                <path
+                  d="M382-240 154-468l57-57 171 171 367-367 57 57-424 424Z"
+                />
+              </svg>
+            </div>
+            <h4 class="modal-title">Agregado!</h4>
+          </div>
+          <div class="modal-body">
+            <p class="text-center">
+              El paciente ha sido agregado correctamente.
+            </p>
+          </div>
+          <div class="modal-footer">
+            <button class="btn btn-success btn-block" data-bs-dismiss="modal">
+              OK
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Modal para agregar un paciente -->
     <script src="../javascript/examen.js"></script>
     <script src="../javascript/ventanas.js"></script>
     <script src="../javascript/alertas.js"></script>

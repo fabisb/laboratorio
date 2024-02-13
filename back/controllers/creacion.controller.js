@@ -6,8 +6,11 @@ export const agregarPacienteController = async (req, res) => {
   console.log("🚀 ~ agregarPacienteController ~ paciente:", paciente);
   const validacion = paciente.some((el) => {
     if (el.value == "") {
-      console.log(`Campo ${el.name} vacio`);
-      return true;
+      if(el.name!='genero'){
+        
+        console.log(`Campo ${el.name} vacio`);
+        return true;
+      }
     }
     if (el.name == "telefono") {
       let validarletra = false;
@@ -68,19 +71,38 @@ export const agregarPacienteController = async (req, res) => {
   }
   try {
     // Crear la consulta SQL
-    const columnas = paciente.map((dato) => dato.name).join(", ");
-    const valores = paciente.map((dato) => "?").join(", ");
-    const consulta = `INSERT INTO pacientes (${columnas}) VALUES (${valores})`;
+    if(req.body.new){
+      const columnas = paciente.map((dato) => dato.name).join(", ");
+      const valores = paciente.map((dato) => "?").join(", ");
+      const consulta = `INSERT INTO pacientes (${columnas}) VALUES (${valores})`;
+  
+      console.log("🚀 ~ agregarPacienteController ~ consulta:", consulta);
+      // Ejecutar la consulta
+      const resultados = await pool.execute(
+        consulta,
+        paciente.map((dato) => dato.value)
+      );
+      return await res
+        .status(200)
+        .json({ mensaje: "Paciente registrado con exito" });
+    }else{
+      const valores = paciente.map((dato) => `${dato.name} = '${dato.value}'`).join(", ");
+      console.log("modificando")
+      console.log("🚀 ~ agregarPacienteController ~ valores:", valores)
+      
+      const consulta = `UPDATE pacientes SET ${valores}`;
+  
+      console.log("🚀 ~ agregarPacienteController ~ consulta:", consulta);
+      // Ejecutar la consulta
+      const resultados = await pool.execute(
+        consulta
+      );
+      return await res
+        .status(200)
+        .json({ mensaje: "Paciente registrado con exito" });
+    }
 
-    console.log("🚀 ~ agregarPacienteController ~ consulta:", consulta);
-    // Ejecutar la consulta
-    const resultados = await pool.execute(
-      consulta,
-      paciente.map((dato) => dato.value)
-    );
-    return await res
-      .status(200)
-      .json({ mensaje: "Paciente registrado con exito" });
+    
   } catch (error) {
     console.log(error);
     return await res.status(500).json({ mensaje: "ERROR DE SERVIDOR" });
