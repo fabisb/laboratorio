@@ -5,15 +5,74 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Creacion - Examen</title>
     <link rel="stylesheet" href="../styles/creacionExamen.css" />
+    <link rel="stylesheet" href="../styles/navBar.css" />
     <link
       rel="stylesheet"
       href="../../bower_components/bootstrap/dist/css/bootstrap.min.css"
     />
   </head>
   <body onload="render()">
+    <section>
+      <nav class="navbar navbar bg-transparent">
+        <div class="container-fluid">
+          <a class="navbar-brand" href="#">
+            <img src="../imgs/la-milagrosa-logo.png" width="100" alt="" />
+          </a>
+          <div class="">
+            <h1 class="display-3">Laboratorio</h1>
+          </div>
+          <button
+            class="navbar-toggler"
+            type="button"
+            data-bs-toggle="offcanvas"
+            data-bs-target="#offcanvasDarkNavbar"
+            aria-controls="offcanvasDarkNavbar"
+            aria-label="Toggle navigation"
+          >
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div
+            class="offcanvas offcanvas-end"
+            tabindex="-1"
+            id="offcanvasDarkNavbar"
+            aria-labelledby="offcanvasDarkNavbarLabel"
+          >
+            <div class="offcanvas-header">
+              <h5 class="offcanvas-title" id="offcanvasDarkNavbarLabel">
+                <img src="../imgs/la-milagrosa-logo.png" alt="" />
+              </h5>
+              <button
+                type="button"
+                class="btn-close btn-close-white"
+                data-bs-dismiss="offcanvas"
+                aria-label="Close"
+              ></button>
+            </div>
+            <div class="offcanvas-body">
+              <ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
+                <li class="nav-item">
+                  <a class="nav-link active" aria-current="page" onclick="abrirExamenesWindow()" style="cursor: pointer;"
+                    >Diagnosticos</a
+                  >
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" >Reportes</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" onclick="abrirCreacionBioWindow()" style="cursor: pointer;">Usuarios</a>
+                </li>
+
+                <li class="nav-item">
+                  <a class="nav-link" onclick="" style="cursor: pointer;">Cerrar Sesion</a>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </nav>
+    </section>
     <div>
       <div class="container text-center">
-        <h1 class="display-2">Laboratorio</h1>
         <div class="row row-gap-2">
           <div class="">
             <form
@@ -110,14 +169,12 @@
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     style="cursor: pointer"
-                    width="43"
-                    height="43"
+                    width="50"
+                    height="50"
                     fill="#FACD0B"
                     class="bi bi-pencil-square"
                     viewBox="0 0 20 20"
                     id="botonModificar"
-                    
-                    
                   >
                     <path
                       d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"
@@ -232,7 +289,7 @@
                 />
               </div>
             </div>
-            <div class="col" >
+            <div class="col">
               <div
                 class="mb-3 d-flex align-items-center justify-content-lg-around"
                 id="divRadios"
@@ -246,7 +303,6 @@
                   autocomplete="off"
                   disabled
                   checked
-                  
                 />
                 <label class="btn btn-sm btn-outline-secondary" for="Hombre"
                   >Hombre</label
@@ -259,13 +315,11 @@
                   id="Mujer"
                   value="Mujer"
                   autocomplete="off"
-                  
                   disabled
                 />
                 <label class="btn btn-sm btn-outline-secondary" for="Mujer"
                   >Mujer</label
                 >
-                
               </div>
             </div>
           </div>
@@ -432,7 +486,7 @@
     </div>
 
     <div id="examenes-list" class="modal fade" tabindex="-1">
-      <div class="modal-dialog">
+      <div class="modal-dialog modal-xl">
         <div class="modal-content">
           <div class="modal-header">
             <h5 class="modal-title">Menu Examenes</h5>
@@ -443,20 +497,62 @@
               aria-label="Close"
             ></button>
           </div>
-          <div
-            class="modal-body d-flex justify-content-center flex-column align-items-center"
-          >
-            <input
-              style="width: 300px"
-              class="form-control form-control-lg"
-              type="text"
-              placeholder="Examenes"
-              aria-label=".form-control-lg example"
-              oninput="buscarExamen()"
-              id="inputMenuExamen"
-            />
+          <div class="modal-body">
+            <div class="row">
+              <div class="col-8 d-flex justify-content-center">
+                <input
+                  style="width: 300px"
+                  class="form-control form-control-lg"
+                  type="text"
+                  placeholder="Examenes"
+                  aria-label=".form-control-lg example"
+                  oninput="buscarExamen()"
+                  id="inputMenuExamen"
+                />
+              </div>
+              <div class="col-2">
+                <svg
+                  onclick="abrirModalExamenesCrud()"
+                  style="cursor: pointer"
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="40"
+                  height="40"
+                  fill="#1C8484"
+                  class="bi bi-file-plus"
+                  viewBox="0 0 16 16"
+                >
+                  <path
+                    d="M8.5 6a.5.5 0 0 0-1 0v1.5H6a.5.5 0 0 0 0 1h1.5V10a.5.5 0 0 0 1 0V8.5H10a.5.5 0 0 0 0-1H8.5z"
+                  />
+                  <path
+                    d="M2 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2zm10-1H4a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1"
+                  />
+                </svg>
+              </div>
+              <div class="col-2">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  style="cursor: pointer"
+                  width="50"
+                  height="50"
+                  fill="#FACD0B"
+                  class="bi bi-pencil-square"
+                  viewBox="0 0 20 20"
+                  id="botonModificarExamenes"
+                >
+                  <path
+                    d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"
+                  />
+                  <path
+                    fill-rule="evenodd"
+                    d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z"
+                  />
+                </svg>
+              </div>
+            </div>
+
             <hr />
-            <table class="table table-bordered table-hover text-center">
+            <table class="table table-bordered table-hover text-center" id="">
               <thead>
                 <tr>
                   <th colspan="2" scope="col">Examenes</th>
@@ -479,7 +575,254 @@
             >
               Cerrar
             </button>
-            <button type="button" class="btn btn-primary">Ok</button>
+            <button type="button" class="btn btn-primary">Guardar</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="examenes-crud" class="modal fade" tabindex="-1">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Modulo Examenes</h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <div class="row">
+              <div class="mb-3 col-12 d-flex justify-content-center">
+                <div class="w-50">
+                  <label for="examenNameCrud" class="form-label">Examen</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="examenNameCrud"
+                    placeholder=""
+                  />
+                </div>
+              </div>
+              <div class="col-12">
+                <table class="table" id="tableDetalles">
+                  <thead>
+                    <tr>
+                      <th scope="col">Nombre</th>
+                      <th scope="col">Inferior</th>
+                      <th scope="col">Superior</th>
+                      <th scope="col">Posicion</th>
+                      <th scope="col">Unidad</th>
+                      <th>Imp</th>
+                      <th>Mod</th>
+                      <th>EL</th>
+                    </tr>
+                  </thead>
+                  <tbody id="tBodyDetalles"></tbody>
+                  <tfoot>
+                    <tr class="">
+                      <td colspan="7"></td>
+                      <td colspan="">
+                        <button
+                          class="btn btn-outline-success"
+                          type="button"
+                          data-bs-toggle="collapse"
+                          data-bs-target="#collapseExample"
+                          aria-expanded="false"
+                          aria-controls="collapseExample"
+                        >
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            width="25"
+                            height="25"
+                            fill="currentColor"
+                            class="bi bi-plus-circle"
+                            viewBox="0 0 16 16"
+                          >
+                            <path
+                              d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"
+                            />
+                            <path
+                              d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4"
+                            />
+                          </svg>
+                        </button>
+                      </td>
+                    </tr>
+                  </tfoot>
+                </table>
+              </div>
+              <div class="">
+                <div class="collapse row" id="collapseExample">
+                  <hr />
+                  <div class="col-6">
+                    <form onsubmit="pushDetalle(), event.preventDefault()">
+                      <div class="col-12 d-flex justify-content-center">
+                        <div class="mb-3 w-75">
+                          <label
+                            for="nombreDetalleExamenCrud"
+                            class="form-label"
+                            >Nombre</label
+                          >
+                          <input
+                            type="text"
+                            class="form-control"
+                            id="nombreDetalleExamenCrud"
+                            placeholder=""
+                            required
+                          />
+                        </div>
+                      </div>
+                      <div class="col-12 d-flex justify-content-center">
+                        <div class="mb-3 w-75">
+                          <label for="inferiorExamenCrud" class="form-label"
+                            >Inferior</label
+                          >
+                          <input
+                            type="text"
+                            class="form-control"
+                            id="inferiorExamenCrud"
+                            placeholder=""
+                          />
+                        </div>
+                      </div>
+                      <div class="col-12 d-flex justify-content-center">
+                        <div class="mb-3 w-75">
+                          <label for="superiorExamenCrud" class="form-label"
+                            >Superior</label
+                          >
+                          <input
+                            type="text"
+                            class="form-control"
+                            id="superiorExamenCrud"
+                            placeholder=""
+                          />
+                        </div>
+                      </div>
+                      <div class="col-12 d-flex justify-content-center">
+                        <div class="mb-3 w-75">
+                          <label for="unidadExamenCrud" class="form-label"
+                            >Unidad</label
+                          >
+                          <input
+                            type="text"
+                            class="form-control"
+                            id="unidadExamenCrud"
+                            placeholder=""
+                          />
+                        </div>
+                      </div>
+                      <div class="col-12 d-flex justify-content-center">
+                        <div class="mb-3 w-75">
+                          <label for="ordenExamenCrud" class="form-label"
+                            >Orden</label
+                          >
+                          <input
+                            type="number"
+                            min="0"
+                            step="1"
+                            class="form-control"
+                            id="ordenExamenCrud"
+                            placeholder=""
+                          />
+                        </div>
+                      </div>
+
+                      <div class="col-12 d-flex justify-content-around my-3">
+                        <button
+                          type="submit"
+                          class="btn btn-outline-primary"
+                          id=""
+                        >
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            width="30"
+                            height="30"
+                            fill="currentColor"
+                            class="bi bi-floppy2"
+                            viewBox="0 0 16 16"
+                          >
+                            <path
+                              d="M1.5 0h11.586a1.5 1.5 0 0 1 1.06.44l1.415 1.414A1.5 1.5 0 0 1 16 2.914V14.5a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 0 14.5v-13A1.5 1.5 0 0 1 1.5 0M1 1.5v13a.5.5 0 0 0 .5.5H2v-4.5A1.5 1.5 0 0 1 3.5 9h9a1.5 1.5 0 0 1 1.5 1.5V15h.5a.5.5 0 0 0 .5-.5V2.914a.5.5 0 0 0-.146-.353l-1.415-1.415A.5.5 0 0 0 13.086 1H13v3.5A1.5 1.5 0 0 1 11.5 6h-7A1.5 1.5 0 0 1 3 4.5V1H1.5a.5.5 0 0 0-.5.5m9.5-.5a.5.5 0 0 0-.5.5v3a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 0-.5-.5z"
+                            />
+                          </svg>
+                        </button>
+                        <button
+                          type="button"
+                          data-bs-toggle="collapse"
+                          data-bs-target="#collapseExample"
+                          aria-expanded="false"
+                          aria-controls="collapseExample"
+                          class="btn-close"
+                          aria-label="Close"
+                        ></button>
+                      </div>
+                    </form>
+                  </div>
+
+                  <div class="col-6">
+                    <div class="row">
+                      <div class="col-6">
+                        <h1 class="display-5 text-center">Resultados</h1>
+                      </div>
+                      <div
+                        class="col-6 d-flex align-content-center justify-content-center"
+                        style="cursor: pointer"
+                        onclick="addInput()"
+                      >
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="45"
+                          height="45"
+                          fill="green"
+                          class="bi bi-plus-circle"
+                          viewBox="0 0 16 16"
+                        >
+                          <path
+                            d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"
+                          />
+                          <path
+                            d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4"
+                          />
+                        </svg>
+                      </div>
+                    </div>
+                    <div class="container" id="inputContainerResultados">
+                      <input
+                        name="resultadoInput"
+                        class="form-control"
+                        type="text"
+                        placeholder="Ingrese un resultado unico en el examen"
+                        aria-label="default input example"
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!--
+            
+            
+          -->
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-bs-dismiss="modal"
+            >
+              Cerrar
+            </button>
+            <button
+              type="button"
+              class="btn btn-primary"
+              onclick="guardarExamen()"
+            >
+              Ok
+            </button>
           </div>
         </div>
       </div>
@@ -519,6 +862,7 @@
     </div>
     <!-- Modal para agregar un paciente -->
     <script src="../javascript/examen.js"></script>
+    <script src="../javascript/crearExamen.js"></script>
     <script src="../javascript/ventanas.js"></script>
     <script src="../javascript/alertas.js"></script>
     <script src="../modules/axios.min.js"></script>

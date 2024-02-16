@@ -134,13 +134,13 @@ const cedulaPaciente = async () => {
         }*/
       } else {
         console.log(botonModificar);
-        desactivarInputs()
+        desactivarInputs();
         botonModificar.addEventListener(
           "click",
           () => activarInputs("modificarPaciente()"),
           true
         );
-        
+
         paciente.fecha_nacimiento = moment(paciente.fecha_nacimiento).format(
           "YYYY-MM-DD"
         );
@@ -150,11 +150,10 @@ const cedulaPaciente = async () => {
         for (let clave in paciente) {
           if (clave == "fecha_nacimiento") {
             console.log(moment(paciente[clave]).format("YYYY-MM-DD"));
-             document.getElementsByName(clave)[0]
+            document.getElementsByName(clave)[0]
               ? (document.getElementsByName(clave)[0].value =
                   moment(paciente[clave]).format("YYYY-MM-DD") ?? "")
-              : ""; 
-              
+              : "";
           } else {
             document.getElementsByName(clave)[0]
               ? (document.getElementsByName(clave)[0].value =
@@ -175,7 +174,7 @@ const cedulaPaciente = async () => {
   }
 };
 
-const desactivarInputs = ()=>{
+const desactivarInputs = () => {
   var inputs = [...document.getElementsByTagName("input")];
   const botonGuardar = document.getElementById("botonGuardar");
   if (botonGuardar) {
@@ -185,7 +184,7 @@ const desactivarInputs = ()=>{
     if (
       inp.name != "pre_cedula" &&
       inp.name != "cedula" &&
-      inp.name != "fecha" 
+      inp.name != "fecha"
     ) {
       inp.setAttribute("readonly", "true");
     }
@@ -193,10 +192,7 @@ const desactivarInputs = ()=>{
       inp.setAttribute("disabled", "true");
     }
   });
-  
-
-  
-}
+};
 
 const activarInputs = async (click) => {
   var inputs = [...document.getElementsByTagName("input")];
@@ -227,9 +223,9 @@ const activarInputs = async (click) => {
   }
 };
 
-async function modificarPaciente(){
+async function modificarPaciente() {
   const generoRadio = document.getElementsByName("genero");
-  var genero
+  var genero;
   const nombre = document.getElementsByName("nombre")[0];
   const cedula = document.getElementsByName("cedula")[0];
   const preCedula = document.getElementsByName("pre_cedula")[0];
@@ -238,11 +234,11 @@ async function modificarPaciente(){
   const telefono = document.getElementsByName("telefono")[0];
   const correo = document.getElementsByName("correo")[0];
 
-  [...generoRadio].forEach(e=>{
-    if(e.checked){
-      genero = {name:'genero', value:e.id, tagName:'INPUT'}
+  [...generoRadio].forEach((e) => {
+    if (e.checked) {
+      genero = { name: "genero", value: e.id, tagName: "INPUT" };
     }
-  })
+  });
   const pacienteArray = [
     genero,
     nombre,
@@ -253,148 +249,131 @@ async function modificarPaciente(){
     telefono,
     correo,
   ];
-  const validacion = validarDatosPaciente(pacienteArray)
+  const validacion = validarDatosPaciente(pacienteArray);
 
-  if(validacion){
+  if (validacion) {
+    try {
+      const { token } = await login.getToken();
 
-  
-  try {
-    const { token } = await login.getToken();
-
-    await axios.post(
-      urlsv + "/api/creacion/agregar-paciente",
-      { paciente:validacion, new:false },
-      { headers: { token } }
-    );
-    console.log("PACIENTE INGRESADO");
-    const modal = new bootstrap.Modal("#confirmacion-modal");
-    modal.show();
-    desactivarInputs()
-  } catch (error) {
-    console.log(error);
-    if (error.response.data.mensaje) {
-      return await alerta.alert("Error:", error.response.data.mensaje);
-    } else {
-      return await alerta.error();
+      await axios.post(
+        urlsv + "/api/creacion/agregar-paciente",
+        { paciente: validacion, new: false },
+        { headers: { token } }
+      );
+      console.log("PACIENTE INGRESADO");
+      const modal = new bootstrap.Modal("#confirmacion-modal");
+      modal.show();
+      desactivarInputs();
+    } catch (error) {
+      console.log(error);
+      if (error.response.data.mensaje) {
+        return await alerta.alert("Error:", error.response.data.mensaje);
+      } else {
+        return await alerta.error();
+      }
     }
   }
-  }
-
 }
 
-const validarDatosPaciente = (pacienteArray)=>{
+const validarDatosPaciente = (pacienteArray) => {
   const paciente = [];
-  let cadena=[]
+  let cadena = [];
   pacienteArray.forEach((el) => {
-    console.log("🚀 ~ pacienteArray.forEach ~ el:", el)
+    console.log("🚀 ~ pacienteArray.forEach ~ el:", el);
     if (el.tagName == "SELECT" || el.tagName == "INPUT") {
-      
       if (el.value == "") {
-          if(el.name!== "genero"){
-            
-            console.log(`Campo ${el.name} vacio`);
-            cadena.push(`El campo <b class='text-danger'>${el.name}</b> no puede estar vacío`);
-          }
-          
+        if (el.name !== "genero") {
+          console.log(`Campo ${el.name} vacio`);
+          cadena.push(
+            `El campo <b class='text-danger'>${el.name}</b> no puede estar vacío`
+          );
         }
-        if (el.name == "telefono") {
-          let validarletra = false;
+      }
+      if (el.name == "telefono") {
+        let validarletra = false;
 
-          for (let i = 0; i < el.value.length; i++) {
-            const c = el.value[i];
-            if (c == "+") {
-              if (i != 0) {
-                validarletra = true;
-              }
-            } else {
-              if (isNaN(parseInt(c))) {
-                validarletra == true;
-              }
+        for (let i = 0; i < el.value.length; i++) {
+          const c = el.value[i];
+          if (c == "+") {
+            if (i != 0) {
+              validarletra = true;
+            }
+          } else {
+            if (isNaN(parseInt(c))) {
+              validarletra == true;
             }
           }
-
-          if (validarletra) {
-            console.log(`Campo ${el.name} invalido`);
-            cadena.push( `El campo "Teléfono" debe contener solo números`) ;
-            
-          }
         }
 
-        if (el.name == "cedula") {
-          if (el.value < 0) {
-            console.log("Ingrese una cedula valida");
+        if (validarletra) {
+          console.log(`Campo ${el.name} invalido`);
+          cadena.push(`El campo "Teléfono" debe contener solo números`);
+        }
+      }
 
-            cadena.push(`Debe ingresar una cedula valida`);
-            
-          }
+      if (el.name == "cedula") {
+        if (el.value < 0) {
+          console.log("Ingrese una cedula valida");
+
+          cadena.push(`Debe ingresar una cedula valida`);
         }
-        if (el.name == "nombre") {
-          if (!isNaN(el.value)) {
-            console.log("Ingrese un nombre valido");
-            cadena.push(`Ingresó un número en lugar de un nombre`)
-            
-          }
+      }
+      if (el.name == "nombre") {
+        if (!isNaN(el.value)) {
+          console.log("Ingrese un nombre valido");
+          cadena.push(`Ingresó un número en lugar de un nombre`);
         }
-        if (el.name == "correo") {
-          if (el.value != '') {
+      }
+      if (el.name == "correo") {
+        if (el.value != "") {
           if (el.value.split("@")[0] == "" || el.value.split("@")[1] == "") {
             console.log("Ingrese un correo valido");
-            cadena.push( "Ingrese un correo valido")
+            cadena.push("Ingrese un correo valido");
+          }
 
-            
+          if (!el.value.split("@")[1].split(".")[1].includes("com")) {
+            console.log("Ingrese un correo valido");
+            cadena.push("Ingrese un correo valido");
           }
-            
-            if (!el.value.split("@")[1].split(".")[1].includes("com")) {
-              console.log("Ingrese un correo valido");
-              cadena.push( "Ingrese un correo valido")
-              
-              
-            }
-          }else{
-            cadena.push( "El campo correo no puede estar vacio")
-
-          }
+        } else {
+          cadena.push("El campo correo no puede estar vacio");
         }
-        if (el.name == "fecha_nacimiento") {
-          if (moment(el.value).isAfter(moment().format("YYYY-MM-DD"))) {
-            console.log("Ingrese una fecha valida");
-            cadena.push(`La fecha de nacimiento no puede ser mayor a la actual`);
-            
-          }
-        }
-        if (el.name == 'genero') {
-          
-          console.log('etiqueta', el)
-          console.log('valor', el.value)
-        }
-        const elemento = { value: el.value, name: el.name };
-        paciente.push(elemento);
-        
       }
-      
+      if (el.name == "fecha_nacimiento") {
+        if (moment(el.value).isAfter(moment().format("YYYY-MM-DD"))) {
+          console.log("Ingrese una fecha valida");
+          cadena.push(`La fecha de nacimiento no puede ser mayor a la actual`);
+        }
+      }
+      if (el.name == "genero") {
+        console.log("etiqueta", el);
+        console.log("valor", el.value);
+      }
+      const elemento = { value: el.value, name: el.name };
+      paciente.push(elemento);
+    }
   });
-    console.log(cadena.join(', '))
+  console.log(cadena.join(", "));
   if (cadena.length > 0) {
     cedulaAlerta(
       `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-exclamation-triangle-fill" viewBox="0 0 16 16">
     <path d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5m.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2"/>
   </svg>  <div>
   <p>
-  ${cadena.join(', ')}
+  ${cadena.join(", ")}
   </p>
     </div>`,
       "warning"
     );
     return false;
-  }else{
-
+  } else {
     return paciente;
   }
-}
+};
 
 const crearPaciente = async () => {
   const generoRadio = document.getElementsByName("genero");
-  var genero
+  var genero;
   const nombre = document.getElementsByName("nombre")[0];
   const cedula = document.getElementsByName("cedula")[0];
   const preCedula = document.getElementsByName("pre_cedula")[0];
@@ -403,13 +382,12 @@ const crearPaciente = async () => {
   const telefono = document.getElementsByName("telefono")[0];
   const correo = document.getElementsByName("correo")[0];
 
-  [...generoRadio].forEach(e=>{
-    console.log(e)
-    if(e.checked){
-      genero = {name:'genero', value:e.id, tagName:'INPUT'}
+  [...generoRadio].forEach((e) => {
+    console.log(e);
+    if (e.checked) {
+      genero = { name: "genero", value: e.id, tagName: "INPUT" };
     }
-  })
-  
+  });
 
   const pacienteArray = [
     genero,
@@ -422,14 +400,14 @@ const crearPaciente = async () => {
     correo,
   ];
   const paciente = [];
-  const validacion = validarDatosPaciente(pacienteArray)
+  const validacion = validarDatosPaciente(pacienteArray);
   if (validacion) {
     try {
       const { token } = await login.getToken();
-  
+
       await axios.post(
         urlsv + "/api/creacion/agregar-paciente",
-        { paciente:validacion, new:true },
+        { paciente: validacion, new: true },
         { headers: { token } }
       );
       console.log("PACIENTE INGRESADO");
@@ -443,7 +421,6 @@ const crearPaciente = async () => {
         return await alerta.error();
       }
     }
-
   }
   /*pacienteArray.some((el) => {
     if (el.tagName == "SELECT" || el.tagName == "INPUT") {
@@ -537,8 +514,7 @@ const crearPaciente = async () => {
       }
     }
     
-  })*/;
-
+  })*/
 };
 
 const reloadPage = async () => {
@@ -552,6 +528,27 @@ const reloadPage = async () => {
 };
 
 const abrirModalExamenes = () => new bootstrap.Modal("#examenes-list").toggle();
+const abrirModalExamenesCrud = () =>
+  new bootstrap.Modal("#examenes-crud").toggle();
+
+const addInput = () => {
+  const inputContainer = document.getElementById("inputContainerResultados");
+  const inputsArray = document.getElementsByName("resultadoInput");
+  if (inputsArray.length + 1 > 10) {
+    return;
+  }
+
+  inputContainer.innerHTML += `
+  <input
+    name='resultadoInput'
+                      class="form-control"
+                      type="text"
+                      placeholder="Ingrese un resultado unico en el examen"
+
+                      aria-label="default input example"
+                    />
+  `;
+};
 
 const calcularEdad = () => {
   const fecha = document.getElementsByName("fecha_nacimiento")[0].value;

@@ -3,8 +3,9 @@ const { app, BrowserWindow, ipcMain, dialog } = require("electron");
 const Store = require("electron-store");
 const path = require("path");
 const { PosPrinter } = require("electron-pos-printer");
-/* 
-const electronReload = require("electron-reload");
+
+//RECARGA AUTOMATICA
+/* const electronReload = require("electron-reload");
 const env = process.env.NODE_ENV || "development";
 if (env === "development") {
   require("electron-reload")(__dirname, {
@@ -12,7 +13,10 @@ if (env === "development") {
     hardResetMethod: "exit",
     ignored: /main\.js/,
   });
-} */
+}  */
+//RECARGA AUTOMATICA
+
+
 const store = new Store();
 store.clear();
 

@@ -93,7 +93,7 @@ const agregarPaciente = async (event) => {
       { paciente },
       { headers: { token } }
       );
-    const modal = new bootstrap.Modal("#confirmacion-modal");
+    const modal = new bootstrap.Modal("#confirmacion-modalPaci");
     modal.show();
     } catch (error) {
       console.log(error);

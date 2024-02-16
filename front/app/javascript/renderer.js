@@ -46,8 +46,9 @@ async function loguear(e) {
     }
   }
 
-  document.getElementById("isLog").hidden = false;
-  document.getElementById("login").hidden = true;
+  await abrirExamenesWindow()
+/*   document.getElementById("isLog").hidden = false;
+  document.getElementById("login").hidden = true; */
 }
 
 async function facturarWindow() {
