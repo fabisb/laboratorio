@@ -10,11 +10,11 @@ async function renderer() {
   const token = await login.getToken();
   console.log("🚀 ~ file: renderer.js:12 ~ renderer ~ token:", token)
   if (token) {
-    document.getElementById("isLog").hidden = false;
-  document.getElementById("login").hidden = true;
+   /*  document.getElementById("isLog").hidden = false;
+  document.getElementById("login").hidden = true; */
 
   }
-  document.getElementsByClassName('open-overlay')[0].click()
+  //document.getElementsByClassName('open-overlay')[0].click()
 
 }
 

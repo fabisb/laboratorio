@@ -128,25 +128,6 @@ const agregarUsuario = async (event) => {
   const usuario = [];
   const validacion = [...event.target].some((el) => {
     if (el.tagName == "SELECT" || el.tagName == "INPUT") {
-      if (el.name == "genero") {
-        let generoChk = document.getElementsByClassName("generoCheck");
-        console.log(generoChk);
-        let suma = 0;
-        [...generoChk].forEach((chk) => {
-          if (chk.checked) {
-            suma++;
-          }
-        });
-        if (suma > 0) {
-          if (el.checked == true) {
-            const elemento = { value: el.value, name: el.name };
-            usuario.push(elemento);
-          }
-        } else {
-          console.log("no genero");
-          return true;
-        }
-      } else {
         if (el.value == "") {
           console.log(`Campo ${el.name} vacio`);
           return true;
@@ -195,26 +176,23 @@ const agregarUsuario = async (event) => {
             return true;
           }
         }
-        if (el.name == "fecha_nacimiento") {
-          if (moment(el.value).isAfter(moment().format("YYYY-MM-DD"))) {
-            console.log("Ingrese una fecha valida");
-            return true;
-          }
-        }
+
         if (el.name != 'password') {
           
           const elemento = { value: el.value, name: el.name };
           usuario.push(elemento);
         }
-      }
+      
     }
   });
   if (validacion) {
-    return console.log("SE HA ENCONTRADO ALGUN ERROR");
+    console.log("SE HA ENCONTRADO ALGUN ERROR");
+    return await alerta.alert("Error:", 'Se ha encontrado algun error al ingresar alguno de los datos');
+
   }
   console.log("🚀 ~ agregarPaciente ~ usuario:", usuario);
   const clave = document.getElementsByName('password')[0].value;
-  const nivel = document.getElementsByName('nivelUsuario')[0].value;
+  const nivel = document.getElementsByName('nivel')[0].value;
   try {
     await axios.post(
       urlsv + "/api/creacion/agregar-usuario",
@@ -471,67 +449,17 @@ const cambiarCrearUsuario = () => {
               </div>
             </div>
             <div class="col-md-12">
-              <input
-                class="form-control mt-3"
-                type="date"
-                name="fecha_nacimiento"
-                placeholder="Fecha de Nacimiento"
-                required
-                min="1920-01-01"
-              />
-              <div class="valid-feedback">Fecha de nacimiento Valida</div>
-              <div class="invalid-feedback">
-                La fecha de nacimiento no puede estar vacia!
-              </div>
-            </div>
-            <div class="col-md-12">
             <select
             class="form-select mt-3 rounded-end-0"
-            name="niveleUsuario"
+            name="nivel"
             required
           >
-            <option selected value="1">Administrador</option>
+            <option selected value="3">Administrador</option>
             <option value="2">Coordinador</option>
-            <option value="3">Usuario</option>
+            <option value="1">Usuario</option>
           </select>
             </div>
-
-            <div class="col-md-12 mt-3">
-              <label class="mb-3 mr-1" for="genero">Genero: </label>
-
-              <input
-                type="radio"
-                class="btn-check generoCheck"
-                name="genero"
-                id="male"
-                value="Hombre"
-                autocomplete="off"
-                required
-              />
-              <label class="btn btn-sm btn-outline-secondary" for="male"
-                >Hombre</label
-              >
-
-              <input
-                type="radio"
-                class="btn-check generoCheck"
-                name="genero"
-                id="female"
-                value="Mujer"
-                autocomplete="off"
-                required
-              />
-              <label class="btn btn-sm btn-outline-secondary" for="female"
-                >Mujer</label
-              >
-
-              <div class="valid-feedback mv-up">Genero seleccionado</div>
-              <div class="invalid-feedback mv-up">
-                Por favor selecciona un genero!
-              </div>
-            </div>
             
-
             <div class="form-button mt-3 row">
             <button id="submit" type="submit" class="col btn btn-primary">
             Registrar

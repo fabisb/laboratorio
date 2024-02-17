@@ -157,6 +157,17 @@ function menuExamenesWindow() {
 }
 ipcMain.handle("menuExamenesWindow", () => menuExamenesWindow());
 
+//handlers
+
+ipcMain.handle("loginWindow", () =>{
+  store.clear();
+  
+  createWindow()
+});
+
+
+//handlers
+
 ipcMain.handle("alertWindow", async (event, { titulo, body }) => {
   const currentWindow = event.sender.getOwnerBrowserWindow();
   const result = await dialog.showMessageBox(currentWindow, {

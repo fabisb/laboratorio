@@ -17,6 +17,7 @@ contextBridge.exposeInMainWorld("ventanas", {
     await ipcRenderer.invoke("creacionExamenWindow"),
   mainWindow: async () => await ipcRenderer.invoke("createWindow"),
   menuExamenesWindow: async () => await ipcRenderer.invoke("menuExamenesWindow"),
+  loginWindow: async () => await ipcRenderer.invoke("loginWindow"),
 });
 contextBridge.exposeInMainWorld("urlsv", "http://localhost:3000");
 

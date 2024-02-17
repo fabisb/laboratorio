@@ -252,7 +252,7 @@ export const agregarUsuarioController = async (req, res) => {
   try {
     let claveEncriptada = "";
     try {
-      claveEncriptada = bcrypt.hash(clave, 3);
+      claveEncriptada = await bcrypt.hash(clave, 2);
     } catch (error) {
       console.log(error);
     }
@@ -262,13 +262,12 @@ export const agregarUsuarioController = async (req, res) => {
         .json({ mensaje: "ERROR DE SERVIDOR AL ENCRIPTAR CONTRASEÑA" });
     } else {
       usuario.push(
-        { value: claveEncriptada, name: "password" },
-        { value: nivel, name: "nivel" }
+        { value: claveEncriptada, name: "password" }
       );
       // Crear la consulta SQL
       const columnas = usuario.map((dato) => dato.name).join(", ");
       const valores = usuario.map((dato) => "?").join(", ");
-      const consulta = `INSERT INTO bioanalistas (${columnas}) VALUES (${valores})`;
+      const consulta = `INSERT INTO users (${columnas}) VALUES (${valores})`;
 
       // Ejecutar la consulta
       const resultados = await pool.execute(

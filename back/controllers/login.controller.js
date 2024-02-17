@@ -1,7 +1,8 @@
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
 import { pool } from "../database/db.js";
-export const loginController = async (req, res, next) => {
+
+export const loginController2 = async (req, res, next) => {
   console.log("loginController");
   const { user, pass } = req.body;
   if (!(user || pass) || user == "" || pass == "") {
@@ -37,7 +38,7 @@ export const loginController = async (req, res, next) => {
       .json({ mensaje: "Ha ocurrido un error en el servidor" });
   }
 };
-export const loginController2 = async (req, res, next) => {
+export const loginController = async (req, res, next) => {
   console.log("loginController2");
   const { user, pass } = req.body;
   if (!(user || pass) || user == "" || pass == "") {
@@ -50,8 +51,14 @@ export const loginController2 = async (req, res, next) => {
       "SELECT id, nivel, password FROM users WHERE cedula = ?",
       [user]
     );
+    console.log("🚀 ~ loginController2 ~ pass:", pass);
+    console.log("🚀 ~ loginController2 ~ id:", id[0].password);
     if (id.length > 0) {
       const comparacionClave = await bcrypt.compare(pass, id[0].password);
+      console.log(
+        "🚀 ~ loginController2 ~ comparacionClave:",
+        comparacionClave
+      );
       if (comparacionClave) {
         var token = await jwt.sign(
           { id: id[0].id, user, nivel: id[0].nivel },
