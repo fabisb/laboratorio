@@ -7,7 +7,12 @@ const cedulaAlerta = (message, type) => {
     '   <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>',
     "</div>",
   ].join("");
-
-  alertaCedula.append(wrapper);
-  setTimeout(() => new bootstrap.Alert("#alertCedulaDiv").close(), 6000);
+  if (alertaCedula.children.length == 0) {
+    alertaCedula.append(wrapper);
+    setTimeout(() => {
+       new bootstrap.Alert("#alertCedulaDiv").close();
+      alertaCedula.removeChild(alertaCedula.firstChild);
+      return
+    }, 6000);
+  }
 };
