@@ -5,21 +5,63 @@ const pushDetalle = () => {
   const unidad = document.getElementById("unidadExamenCrud").value;
   const posicion = document.getElementById("ordenExamenCrud").value;
   const tBody = document.getElementById("tBodyDetalles");
+  const alertaCaracteristica = document.getElementById("alertaCaracteristicas");
+  
+  
   if (!nombre || nombre == "") {
-    return alerta.alert("Error", "El campo nombre no puede estar vacio");
+    
+    alertaCaracteristica.removeAttribute("hidden");
+    alertaCaracteristica.className= "alert alert-danger text-center"
+    alertaCaracteristica.innerHTML =`
+    <h4 class="alert-heading">Error</h4>
+                    <hr>
+                    <p>El campo nombre no puede estar vacio<p>
+                    ` 
+                   //return 
   }
+  if (!unidad || unidad == "") {
+    alertaCaracteristica.removeAttribute("hidden");
+    alertaCaracteristica.className= "alert alert-danger text-center"
+    alertaCaracteristica.innerHTML =`
+    <h4 class="alert-heading">Error</h4>
+                    <hr>
+                    <p>El campo unidad no puede estar vacio<p>
+                    ` 
+                   //return 
+  }
+  
   const resultados2 = [...document.getElementsByName("resultadoInput")].map(
-    (e) => e.value
+    (e) => {
+      if(e.value !=''){
+        return e.value
+      }else{
+        return ''
+      }
+    
+    }
   );
-  let resultados = resultados2.toString();
-  console.log(resultados);
+
+
+  let resultados = resultados2.filter(e=>e!='');
+  console.log(resultados)
+  if((resultados.length<2 || resultados.length >10) && resultados.length !=0){
+    alertaCaracteristica.removeAttribute("hidden");
+    alertaCaracteristica.className= "alert alert-danger text-center"
+    alertaCaracteristica.innerHTML =`
+    <h4 class="alert-heading">Error</h4>
+                    <hr>
+                    <p>Debe colocar minimo 2 resultados y maximo 10<p>
+                    ` 
+                   //return 
+  } 
+
   detallesExamen.push({
     nombre,
     inferior,
     superior,
     unidad,
     posicion,
-    resultados,
+    resultados: resultados.toString(),
     impsiempre: 0,
   });
   tBody.innerHTML += `
@@ -54,9 +96,33 @@ const pushDetalle = () => {
 var detallesExamen = [];
 
 const guardarExamen = async () => {
+  const alertaCaracteristica = document.getElementById("alertaCaracteristicas");
+
   const { token } = await login.getToken();
 
   const examen = document.getElementById("examenNameCrud").value;
+  if(examen==''){
+    console.log('aaa')
+    alertaCaracteristica.removeAttribute("hidden");
+    alertaCaracteristica.className= "alert alert-danger text-center"
+    alertaCaracteristica.innerHTML =`
+    <h4 class="alert-heading">Error</h4>
+                    <hr>
+                    <p>El nombre del examen no puede estar vacio<p>
+                    
+                    ` 
+                   //return 
+  }
+  if(detallesExamen.length==0){
+    alertaCaracteristica.removeAttribute("hidden");
+    alertaCaracteristica.className= "alert alert-danger text-center"
+    alertaCaracteristica.innerHTML =`
+    <h4 class="alert-heading">Error</h4>
+                    <hr>
+                    <p>Debe agregar al menos una caracteristica<p>
+                    ` 
+                   //return 
+  }
   console.log("🚀 ~ guardarExamen ~ examen:", examen);
   try {
     const res = await axios.post(

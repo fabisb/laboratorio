@@ -111,7 +111,7 @@
               </div>
               <div class="col-2" style="width: 300px">
                 <input
-                  onchange="cedulaPaciente()"
+                  onchange=""
                   name="fechaRegistro"
                   type="date"
                   class="form-control"
@@ -515,7 +515,7 @@
               <div class="col-8 d-flex justify-content-center">
                 <input
                   style="width: 300px"
-                  class="form-control form-control-lg"
+                  class="form-control form-control-lg inputExamen"
                   type="text"
                   placeholder="Examenes"
                   aria-label=".form-control-lg example"
@@ -608,12 +608,18 @@
           </div>
           <div class="modal-body">
             <div class="row">
+              <div class="row d-flex justify-content-center">
+                <div class="alert text-center" style="width: 75%;" hidden role="alert" id="alertaCaracteristicas">
+                
+                </div>
+                
+              </div>
               <div class="mb-3 col-12 d-flex justify-content-center">
                 <div class="w-50">
                   <label for="examenNameCrud" class="form-label">Examen</label>
                   <input
                     type="text"
-                    class="form-control"
+                    class="form-control inputExamen"
                     id="examenNameCrud"
                     placeholder=""
                   />
@@ -670,8 +676,11 @@
               <div class="">
                 <div class="collapse row" id="collapseExample">
                   <hr />
+                  
+                  
                   <div class="col-6">
-                    <form onsubmit="pushDetalle(), event.preventDefault()">
+                    <form onsubmit="event.preventDefault(),pushDetalle()">
+                      
                       <div class="col-12 d-flex justify-content-center">
                         <div class="mb-3 w-75">
                           <label
@@ -680,11 +689,12 @@
                             >Nombre</label
                           >
                           <input
+                            name="caracteristicaNombre"
                             type="text"
-                            class="form-control"
+                            class="form-control inputExamen"
                             id="nombreDetalleExamenCrud"
                             placeholder=""
-                            required
+                            
                           />
                         </div>
                       </div>
@@ -694,8 +704,9 @@
                             >Inferior</label
                           >
                           <input
+                            name="caracteristicaInferior"
                             type="text"
-                            class="form-control"
+                            class="form-control inputExamen"
                             id="inferiorExamenCrud"
                             placeholder=""
                           />
@@ -707,8 +718,9 @@
                             >Superior</label
                           >
                           <input
+                            name="caracteristicaSuperior"
                             type="text"
-                            class="form-control"
+                            class="form-control inputExamen"
                             id="superiorExamenCrud"
                             placeholder=""
                           />
@@ -720,8 +732,9 @@
                             >Unidad</label
                           >
                           <input
+                            name="caracteristicaUnidad"
                             type="text"
-                            class="form-control"
+                            class="form-control inputExamen"
                             id="unidadExamenCrud"
                             placeholder=""
                           />
@@ -733,10 +746,11 @@
                             >Orden</label
                           >
                           <input
+                            name="caracteristicaOrden"
                             type="number"
                             min="0"
                             step="1"
-                            class="form-control"
+                            class="form-control inputExamen"
                             id="ordenExamenCrud"
                             placeholder=""
                           />
@@ -805,7 +819,14 @@
                     <div class="container" id="inputContainerResultados">
                       <input
                         name="resultadoInput"
-                        class="form-control"
+                        class="form-control inputExamen"
+                        type="text"
+                        placeholder="Ingrese un resultado unico en el examen"
+                        aria-label="default input example"
+                      />
+                      <input
+                        name="resultadoInput"
+                        class="form-control inputExamen"
                         type="text"
                         placeholder="Ingrese un resultado unico en el examen"
                         aria-label="default input example"
