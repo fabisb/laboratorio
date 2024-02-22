@@ -28,12 +28,14 @@ ipcMain.handle("getToken", (event, arg) => {
   const token = store.get("token");
   return token;
 });
+let mainWindow
 function createWindow() {
   // Create the browser window.
-  let mainWindow = new BrowserWindow({
+  mainWindow = new BrowserWindow({
     width: 1024,
     height: 768,
     title: "Menu",
+    show: false,
     webPreferences: {
       preload: path.join(__dirname, "app/preloads/preload.js"),
     },
@@ -41,7 +43,10 @@ function createWindow() {
 
   // and load the index.html of the app.
   mainWindow.loadFile("app/screens/index.html");
-
+  mainWindow.on("closed", () => (mainWindow = null));
+  mainWindow.once('ready-to-show', () => {
+    mainWindow.show();
+});
   // Open the DevTools.
   // mainWindow.webContents.openDevTools()
 }
@@ -131,6 +136,10 @@ function creacionExamenWindow() {
     });
     crearExamenWindowVar.loadFile("app/screens/examen.html");
     crearExamenWindowVar.on("closed", () => (crearExamenWindowVar = null));
+    if (mainWindow) {
+      
+      mainWindow.close()
+    }
   } else {
     crearExamenWindowVar.focus();
   }
@@ -161,7 +170,9 @@ ipcMain.handle("menuExamenesWindow", () => menuExamenesWindow());
 
 ipcMain.handle("loginWindow", () =>{
   store.clear();
-  
+  if (crearExamenWindowVar) {
+    crearExamenWindowVar.close()
+  }
   createWindow()
 });
 

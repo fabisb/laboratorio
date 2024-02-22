@@ -51,19 +51,33 @@
             <div class="offcanvas-body">
               <ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
                 <li class="nav-item">
-                  <a class="nav-link active" aria-current="page" onclick="abrirExamenesWindow()" style="cursor: pointer;"
+                  <a
+                    class="nav-link active"
+                    aria-current="page"
+                    onclick="abrirExamenesWindow()"
+                    style="cursor: pointer"
                     >Diagnosticos</a
                   >
                 </li>
                 <li class="nav-item">
-                  <a class="nav-link" >Reportes</a>
+                  <a class="nav-link">Reportes</a>
                 </li>
                 <li class="nav-item">
-                  <a class="nav-link" onclick="abrirCreacionBioWindow()" style="cursor: pointer;">Usuarios</a>
+                  <a
+                    class="nav-link"
+                    onclick="abrirCreacionBioWindow()"
+                    style="cursor: pointer"
+                    >Usuarios</a
+                  >
                 </li>
 
                 <li class="nav-item">
-                  <a class="nav-link" onclick="abrirLoginWindow()" style="cursor: pointer;">Cerrar Sesion</a>
+                  <a
+                    class="nav-link"
+                    onclick="abrirLoginWindow()"
+                    style="cursor: pointer"
+                    >Cerrar Sesion</a
+                  >
                 </li>
               </ul>
             </div>
@@ -216,7 +230,6 @@
                   >Nacimiento:
                 </label>
                 <input
-                  value="2001-10-10"
                   name="fecha_nacimiento"
                   type="date"
                   onchange="calcularEdad()"
@@ -861,6 +874,37 @@
       </div>
     </div>
     <!-- Modal para agregar un paciente -->
+    <!-- Modal para confirmar guardar examen -->
+    <div id="confirmacion-examen-modal" class="modal fade">
+      <div class="modal-dialog modal-confirm">
+        <div class="modal-content">
+          <div class="modal-header">
+            <div class="icon-box">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                height="58"
+                viewBox="0 -960 960 960"
+                width="58"
+              >
+                <path
+                  d="M382-240 154-468l57-57 171 171 367-367 57 57-424 424Z"
+                />
+              </svg>
+            </div>
+            <h4 class="modal-title">Agregado!</h4>
+          </div>
+          <div class="modal-body">
+            <p class="text-center">Examen agregado correctamente.</p>
+          </div>
+          <div class="modal-footer">
+            <button class="btn btn-success btn-block" data-bs-dismiss="modal">
+              OK
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Modal para confirmar guardar examen -->
     <script src="../javascript/examen.js"></script>
     <script src="../javascript/crearExamen.js"></script>
     <script src="../javascript/ventanas.js"></script>
