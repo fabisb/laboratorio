@@ -182,7 +182,7 @@ ipcMain.handle("loginWindow", () =>{
 ipcMain.handle("alertWindow", async (event, { titulo, body }) => {
   const currentWindow = event.sender.getOwnerBrowserWindow();
   const result = await dialog.showMessageBox(currentWindow, {
-    type: "info",
+    type: "warning",
     message: titulo,
     detail: body,
     buttons: ["OK", "Cancelar"],
