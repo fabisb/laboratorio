@@ -13,27 +13,25 @@
     <title>La Milagrosa - INICIO</title>
   </head>
   <body onload="renderer()">
-    <div class="container text-center" id="login">
+    <div class="container w-100 h-100 text-center" id="login">
       <div class="container">
         <div class="row">
-          <div class="col-lg-10 col-xl-9 mx-auto">
+          <div class="col-lg-12 col-xl-11 mx-auto">
             <div
               class="card flex-row my-5 border-0 shadow rounded-3 overflow-hidden"
             >
               <div class="card-img-left d-none d-md-flex">
-                <p style="z-index: -1">
-                  Imagen de
-                  <a
-                    href="https://www.freepik.es/foto-gratis/mujer-trabajando-laborator_12168544.htm#query=bioanalista&position=0&from_view=keyword&track=sph&uuid=f8cef3bc-ca8f-4a8f-a335-8b8411d65f2b"
-                    >Freepik</a
-                  >
-                </p>
+                
+                
                 <!-- Background image for card set in CSS! -->
               </div>
               <div class="card-body p-4 p-sm-5">
-                <h5 class="card-title text-center mb-5 fw-light fs-5">
-                  La Milagrosa
-                </h5>
+                <a class="navbar-brand" href="#">
+                  <img src="../imgs/la-milagrosa-logo.png" width="150" alt="" />
+                </a>
+                <br>
+                <br>
+                <hr>
                 <form onsubmit="loguear(event)">
                   <div class="form-floating mb-3">
                     <input
@@ -60,7 +58,7 @@
 
                   <div class="d-grid mb-2">
                     <button
-                      class="btn btn-lg btn-primary btn-login fw-bold text-uppercase"
+                      class="btn btn-lg btn-warning btn-login fw-bold text-uppercase"
                       type="submit"
                     >
                       Iniciar sesion
@@ -85,81 +83,7 @@
         </div>
       </div>
     </div>
-    <div hidden class="container" id="isLog">
-      <div class="my-4">
-        <div class="row row-cols-1 row-cols-md-2 g-4">
-          <div class="col">
-            <div
-              class="card"
-              onclick="abrirCreacionBioWindow()"
-              style="cursor: pointer"
-            >
-              <img
-              width="275px"
-              height="200px"
-                src="https://img.freepik.com/foto-gratis/mujer-trabajando-laborator_23-2148824178.jpg?w=740&t=st=1707454989~exp=1707455589~hmac=1db6c7144e4ecfef9a0dc5f31a7899e7288122aad0691045d63a4940573f103a"
-                class="card-img-top"
-                alt="Creacion"
-              />
-              <div class="card-body">
-                <hr />
-                <h5 class="card-title">Creacion</h5>
-              </div>
-            </div>
-          </div>
-          <div class="col">
-            <div
-              class="card"
-              style="cursor: pointer"
-              onclick="abrirExamenesWindow()"
-            >
-              <img
-              width="275px"
-              height="200px"
-              src="https://img.freepik.com/foto-gratis/mujer-trabajando-laborator_23-2148824178.jpg?w=740&t=st=1707454989~exp=1707455589~hmac=1db6c7144e4ecfef9a0dc5f31a7899e7288122aad0691045d63a4940573f103a"
-              class="card-img-top"
-                alt="Diagnosticos"
-              />
-              <div class="card-body">
-                <hr />
-                <h5 class="card-title">Diagnosticos</h5>
-              </div>
-            </div>
-          </div>
-          <div class="col">
-            <div class="card" onclick="" style="cursor: pointer">
-              <img
-              src="https://img.freepik.com/foto-gratis/mujer-trabajando-laborator_23-2148824178.jpg?w=740&t=st=1707454989~exp=1707455589~hmac=1db6c7144e4ecfef9a0dc5f31a7899e7288122aad0691045d63a4940573f103a"
-              width="275px"
-                height="200px"
-                class="card-img-top"
-                alt="Reportes"
-              />
-              <div class="card-body">
-                <hr />
-                <h5 class="card-title">Reportes</h5>
-              </div>
-            </div>
-          </div>
-          <div class="col">
-            <div class="card" onclick="" style="cursor: pointer">
-              <img
-              src="https://img.freepik.com/foto-gratis/mujer-trabajando-laborator_23-2148824178.jpg?w=740&t=st=1707454989~exp=1707455589~hmac=1db6c7144e4ecfef9a0dc5f31a7899e7288122aad0691045d63a4940573f103a"
-              width="275px"
-                height="200px"
-                class="card-img-top"
-                alt="Configuracion"
-              />
-              <div class="card-body">
-                <hr />
-                <h5 class="card-title">Configuracion</h5>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <!-- NUEVO MENU -->
-    </div>
+   
 
     <div hidden class="container text-center" id="isLogAdmin"></div>
     <script src="../../bower_components/jquery/dist/jquery.min.js"></script>

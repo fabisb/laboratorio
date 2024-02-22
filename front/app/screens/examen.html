@@ -568,11 +568,13 @@
             <table class="table table-bordered table-hover text-center" id="">
               <thead>
                 <tr>
-                  <th colspan="2" scope="col">Examenes</th>
+                  <th colspan="4" scope="col">Examenes</th>
                 </tr>
                 <tr>
                   <th scope="col">#</th>
                   <th scope="col">Examen</th>
+                  <th scope="col">Modificar</th>
+                  <th scope="col">Eliminar</th>
                 </tr>
               </thead>
               <tbody id="tBodyMenuExamen">
@@ -626,7 +628,7 @@
                 </div>
               </div>
               <div class="col-12">
-                <table class="table" id="tableDetalles">
+                <table class="table text-center" id="tableDetalles">
                   <thead>
                     <tr>
                       <th scope="col">Nombre</th>
@@ -639,7 +641,7 @@
                       <th>EL</th>
                     </tr>
                   </thead>
-                  <tbody id="tBodyDetalles"></tbody>
+                  <tbody id="tBodyDetalles" ></tbody>
                   <tfoot>
                     <tr class="">
                       <td colspan="7"></td>
@@ -651,6 +653,7 @@
                           data-bs-target="#collapseExample"
                           aria-expanded="false"
                           aria-controls="collapseExample"
+                          id="botonAbrirCollapseCaracteristica"
                         >
                           <svg
                             xmlns="http://www.w3.org/2000/svg"
@@ -679,7 +682,7 @@
                   
                   
                   <div class="col-6">
-                    <form onsubmit="event.preventDefault(),pushDetalle()">
+                    <form id="caracteristicaForm" onsubmit="event.preventDefault(),pushDetalle(),borrarAlerta()">
                       
                       <div class="col-12 d-flex justify-content-center">
                         <div class="mb-3 w-75">
@@ -761,7 +764,7 @@
                         <button
                           type="submit"
                           class="btn btn-outline-primary"
-                          id=""
+                          
                         >
                           <svg
                             xmlns="http://www.w3.org/2000/svg"

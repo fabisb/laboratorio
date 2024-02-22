@@ -1,8 +1,9 @@
 var examenes = [];
+
 const render = async () => {
   try {
     const { token } = await login.getToken();
-
+   
     const { data: examenesGet } = await axios.get(
       urlsv + "/api/examenes/get-examenes",
       { headers: { token } }
@@ -20,7 +21,39 @@ const render = async () => {
     });*/
     const examBody = document.getElementById("tBodyMenuExamen");
     examenesGet.map((ex) => {
-      examBody.innerHTML += `<tr><td>${ex.id}</td><td>${ex.nombre}</td></tr>`;
+      examBody.innerHTML += `<tr><td>${ex.id}</td><td>${ex.nombre}</td><td style="cursor:pointer"
+      onclick="abrirModalExamenesCrud(),modificarExamen('${ex.id}')">
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="30"
+      height="30"
+      fill="#FACD0B"
+      class="bi bi-pencil-square"
+      viewBox="0 0 20 20"
+    >
+      <path
+        d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"
+      />
+      <path
+        fill-rule="evenodd"
+        d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z"
+      />
+    </svg>
+    </td>
+    <td style="cursor:pointer" onclick="">
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="27"
+      height="27"
+      fill="red"
+      class="bi bi-x-lg"
+      viewBox="0 0 20 20"
+    >
+      <path
+        d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8z"
+      />
+    </svg>
+  </td></tr>`;
     });
   } catch (error) {
     console.log(error);
@@ -31,6 +64,32 @@ const render = async () => {
     }
   }
 };
+
+
+async function modificarExamen(id){
+  const { token } = await login.getToken();
+
+  console.log(id)
+  try {
+    const { token } = await login.getToken();
+
+    const resp= await axios.post(
+      urlsv + "/api/examenes/get-examen",
+      { id },
+      { headers: { token } }
+    );
+    const {examen,detalle} = resp
+
+    
+    
+  } catch (error) {
+    console.log(error);
+    
+  }
+
+  console.log(examenGet,data)
+}
+
 
 function buscarExamen() {
   input = document.getElementById("inputMenuExamen");
