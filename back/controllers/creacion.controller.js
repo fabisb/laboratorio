@@ -3,6 +3,7 @@ import moment from "moment";
 import bcrypt from "bcrypt";
 export const agregarPacienteController = async (req, res) => {
   const { paciente, idPaciente } = req.body;
+  console.log("🚀 ~ agregarPacienteController ~ idPaciente:", idPaciente)
   console.log("🚀 ~ agregarPacienteController ~ paciente:", paciente);
   let cedulaValidacion;
   const validacion = paciente.some((el) => {
@@ -98,11 +99,12 @@ export const agregarPacienteController = async (req, res) => {
         .status(200)
         .json({ mensaje: "Paciente registrado con exito" });
     } else {
-      const cedulaExistente = await pool.execute(
+      const [cedulaExistente] = await pool.execute(
         "SELECT cedula FROM pacientes WHERE cedula = ? AND id = ?",
         [cedulaValidacion, idPaciente]
       );
-      if (!(cedulaExistente.length > 0)) {
+      console.log("🚀 ~ agregarPacienteController ~ cedulaExistente:", cedulaExistente)
+      if ((cedulaExistente.length == 0)) {
         return await res.status(401).json({
           mensaje:
             "La cedula que esta intentando modificar no coincide con el id",
@@ -197,7 +199,7 @@ export const agregarBioanalistaController = async (req, res) => {
       .json({ mensaje: "Se ha encontrado algun error en los datos" });
   }
   try {
-    const cedulaExistente = await pool.execute(
+    const [cedulaExistente] = await pool.execute(
       "SELECT cedula FROM bioanalistas WHERE cedula = ?",
       [cedulaValidacion]
     );
@@ -290,7 +292,7 @@ export const agregarUsuarioController = async (req, res) => {
       .json({ mensaje: "Se ha encontrado algun error en los datos" });
   }
   try {
-    const cedulaExistente = await pool.execute(
+    const [cedulaExistente] = await pool.execute(
       "SELECT cedula FROM users WHERE cedula = ?",
       [cedulaValidacion]
     );
@@ -318,7 +320,7 @@ export const agregarUsuarioController = async (req, res) => {
       const consulta = `INSERT INTO users (${columnas}) VALUES (${valores})`;
 
       // Ejecutar la consulta
-      const resultados = await pool.execute(
+      const [resultados] = await pool.execute(
         consulta,
         usuario.map((dato) => dato.value)
       );

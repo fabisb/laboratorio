@@ -1,8 +1,63 @@
+async function modificarExamenBdd(idExamen){
+  const { token } = await login.getToken();
+  const alertaCaracteristica = document.getElementById("alertaCaracteristicas");
+
+
+  const examenCrud = document.getElementById("examenNameCrud");
+  const examen = examenCrud.value;
+  if(examen==''){
+    alertaCaracteristica.removeAttribute("hidden");
+    alertaCaracteristica.className= "alert alert-danger text-center"
+    alertaCaracteristica.innerHTML =`
+    <h4 class="alert-heading">Error</h4>
+                    <hr>
+                    <p>El nombre del examen no puede estar vacio<p>
+                    
+                    ` 
+                    borrarAlerta()
+                   return 
+  }
+  if(detallesExamen.length==0){
+    alertaCaracteristica.removeAttribute("hidden");
+    alertaCaracteristica.className= "alert alert-danger text-center"
+    alertaCaracteristica.innerHTML =`
+    <h4 class="alert-heading">Error</h4>
+                    <hr>
+                    <p>Debe agregar al menos una caracteristica<p>
+                    ` 
+                    borrarAlerta()
+                   return 
+  }
+  
+  try {
+    const res = await axios.put(
+      urlsv + "/api/examenes/modificar-examen",
+      { examen, detalle: detallesExamen,  idExamen },
+      { headers: { token } }
+    );
+    console.log("🚀 ~ modificarExamenBdd ~ res:", res)
+    const modal = new bootstrap.Modal("#confirmacion-modal");
+    modal.show();
+    examenCrud.value=''
+    detallesExamen=[]
+
+    document.getElementById('tBodyDetalles').innerHTML=''
+  } catch (error) {
+    console.log(error);
+    if (error.response.data.mensaje) {
+      return await alerta.alert("Error:", error.response.data.mensaje);
+    } else {
+      return await alerta.error();
+    }
+  }
+}
+
+
+
+
 async function modificarExamen(id){
   const { token } = await login.getToken();
-const btn = document.getElementById('btnGuardarExamen');
-btn.setAttribute('onclick','guardarExamen(true)') 
-  console.log(id)
+  const btn = document.getElementById('btnGuardarExamen');
   try {
     const { token } = await login.getToken();
 
@@ -14,6 +69,7 @@ btn.setAttribute('onclick','guardarExamen(true)')
     const {examen,detalle} = resp.data
     console.log(examen,detalle)
     document.getElementById("examenNameCrud").value = examen[0][0].nombre
+    btn.setAttribute('onclick',`modificarExamenBdd('${id}')`)
 
     
     const tBodyDetalles = document.getElementById("tBodyDetalles")
@@ -31,6 +87,7 @@ btn.setAttribute('onclick','guardarExamen(true)')
         posicion: e.posicion,
         resultados: e.resultados,
         impsiempre: 0,
+        idDetalleBdd:e.id
       });
       tBodyDetalles.innerHTML+=`
       <tr id='tr-${contadorCaracteristica}'>
@@ -54,7 +111,7 @@ btn.setAttribute('onclick','guardarExamen(true)')
                         data-bs-toggle="collapse"
                         data-bs-target="#collapseExample"
                         aria-expanded="false"
-                        aria-controls="collapseExample" onclick="modificarCaracteristica('${contadorCaracteristica}')">
+                        aria-controls="collapseExample" onclick="modificarCaracteristica('${contadorCaracteristica}','${e.id}')">
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
                         width="30"
@@ -178,6 +235,7 @@ const pushDetalle = () => {
     posicion,
     resultados: resultadosSQl,
     impsiempre: 0,
+    idDetalleBdd: idCaracteristicaBdd
   });
 
   alertaCaracteristica.removeAttribute("hidden");
@@ -269,7 +327,9 @@ const pushDetalle = () => {
  
   
 };
-function modificarCaracteristica(id){
+var idCaracteristicaBdd = ''
+function modificarCaracteristica(id,idBdd){
+  idCaracteristicaBdd= idBdd
   const caracteristicaDetalle = detallesExamen.find(e=>e.id==id)
   console.log(caracteristicaDetalle)
   document.getElementById("nombreDetalleExamenCrud").value = caracteristicaDetalle.nombre;

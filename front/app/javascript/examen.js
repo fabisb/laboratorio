@@ -301,7 +301,7 @@ async function modificarPaciente() {
 
       await axios.post(
         urlsv + "/api/creacion/agregar-paciente",
-        { paciente: validacion, new: false },
+        { paciente: validacion, new: false, idPaciente },
         { headers: { token } }
       );
       console.log("PACIENTE INGRESADO");
