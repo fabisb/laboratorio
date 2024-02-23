@@ -2,8 +2,9 @@ import { pool } from "../database/db.js";
 import moment from "moment";
 import bcrypt from "bcrypt";
 export const agregarPacienteController = async (req, res) => {
-  const { paciente } = req.body;
+  const { paciente, idPaciente } = req.body;
   console.log("🚀 ~ agregarPacienteController ~ paciente:", paciente);
+  let cedulaValidacion;
   const validacion = paciente.some((el) => {
     if (el.value == "") {
       if (el.name != "genero") {
@@ -34,6 +35,7 @@ export const agregarPacienteController = async (req, res) => {
     }
 
     if (el.name == "cedula") {
+      cedulaValidacion = el.value;
       if (el.value < 0) {
         console.log("Ingrese una cedula valida");
         return true;
@@ -69,8 +71,19 @@ export const agregarPacienteController = async (req, res) => {
       .json({ mensaje: "Se ha encontrado algun error en los datos" });
   }
   try {
+    console.log("CEDULA VALIDAICION:", cedulaValidacion);
     // Crear la consulta SQL
     if (req.body.new) {
+      const cedulaExistente = await pool.execute(
+        "SELECT cedula FROM pacientes WHERE cedula = ?",
+        [cedulaValidacion]
+      );
+      if (cedulaExistente.length > 0) {
+        return await res.status(401).json({
+          mensaje:
+            "La cedula que esta intentando ingresar ya pertenece a otro usuario, modifique los datos de la cedula",
+        });
+      }
       const columnas = paciente.map((dato) => dato.name).join(", ");
       const valores = paciente.map((dato) => "?").join(", ");
       const consulta = `INSERT INTO pacientes (${columnas}) VALUES (${valores})`;
@@ -85,20 +98,33 @@ export const agregarPacienteController = async (req, res) => {
         .status(200)
         .json({ mensaje: "Paciente registrado con exito" });
     } else {
+      const cedulaExistente = await pool.execute(
+        "SELECT cedula FROM pacientes WHERE cedula = ? AND id = ?",
+        [cedulaValidacion, idPaciente]
+      );
+      if (!(cedulaExistente.length > 0)) {
+        return await res.status(401).json({
+          mensaje:
+            "La cedula que esta intentando modificar no coincide con el id",
+        });
+      }
       const valores = paciente
         .map((dato) => `${dato.name} = '${dato.value}'`)
         .join(", ");
       console.log("modificando");
       console.log("🚀 ~ agregarPacienteController ~ valores:", valores);
 
-      const consulta = `UPDATE pacientes SET ${valores}`;
+      const consulta = `UPDATE pacientes SET ${valores} WHERE cedula = ? AND id = ?`;
 
       console.log("🚀 ~ agregarPacienteController ~ consulta:", consulta);
       // Ejecutar la consulta
-      const resultados = await pool.execute(consulta);
+      const resultados = await pool.execute(consulta, [
+        cedulaValidacion,
+        idPaciente,
+      ]);
       return await res
         .status(200)
-        .json({ mensaje: "Paciente registrado con exito" });
+        .json({ mensaje: "Paciente modificado con exito" });
     }
   } catch (error) {
     console.log(error);
@@ -114,6 +140,8 @@ export const agregarBioanalistaController = async (req, res) => {
     paciente.push({ value: null, name: "foto_firma" });
   }
   console.log("🚀 ~ agregarBioanalistaController ~ paciente:", paciente);
+  let cedulaValidacion;
+
   const validacion = paciente.some((el) => {
     if (el.value == "") {
       console.log(`Campo ${el.name} vacio`);
@@ -142,6 +170,7 @@ export const agregarBioanalistaController = async (req, res) => {
     }
 
     if (el.name == "cedula") {
+      cedulaValidacion = el.value;
       if (el.value < 0) {
         console.log("Ingrese una cedula valida");
         return true;
@@ -168,6 +197,16 @@ export const agregarBioanalistaController = async (req, res) => {
       .json({ mensaje: "Se ha encontrado algun error en los datos" });
   }
   try {
+    const cedulaExistente = await pool.execute(
+      "SELECT cedula FROM bioanalistas WHERE cedula = ?",
+      [cedulaValidacion]
+    );
+    if (cedulaExistente.length > 0) {
+      return await res.status(401).json({
+        mensaje:
+          "La cedula que esta intentando ingresar ya pertenece a otro bioanalista, modifique los datos del bioanalista",
+      });
+    }
     // Crear la consulta SQL
     const columnas = paciente.map((dato) => dato.name).join(", ");
     const valores = paciente.map((dato) => "?").join(", ");
@@ -188,7 +227,6 @@ export const agregarBioanalistaController = async (req, res) => {
   }
 };
 
-
 export const agregarUsuarioController = async (req, res) => {
   const { usuario, clave, nivel } = req.body;
   if (!clave || !nivel || nivel == "" || clave == "") {
@@ -196,6 +234,7 @@ export const agregarUsuarioController = async (req, res) => {
       .status(400)
       .json({ mensaje: "Se ha encontrado algun error en los datos" });
   }
+  let cedulaValidacion;
   const validacion = usuario.some((el) => {
     if (el.value == "") {
       console.log(`Campo ${el.name} vacio`);
@@ -224,6 +263,7 @@ export const agregarUsuarioController = async (req, res) => {
     }
 
     if (el.name == "cedula") {
+      cedulaValidacion = el.value;
       if (el.value < 0) {
         console.log("Ingrese una cedula valida");
         return true;
@@ -250,6 +290,16 @@ export const agregarUsuarioController = async (req, res) => {
       .json({ mensaje: "Se ha encontrado algun error en los datos" });
   }
   try {
+    const cedulaExistente = await pool.execute(
+      "SELECT cedula FROM users WHERE cedula = ?",
+      [cedulaValidacion]
+    );
+    if (cedulaExistente.length > 0) {
+      return await res.status(401).json({
+        mensaje:
+          "La cedula que esta intentando ingresar ya pertenece a otro usuario, modifique los datos del usuario",
+      });
+    }
     let claveEncriptada = "";
     try {
       claveEncriptada = await bcrypt.hash(clave, 2);
@@ -261,9 +311,7 @@ export const agregarUsuarioController = async (req, res) => {
         .status(500)
         .json({ mensaje: "ERROR DE SERVIDOR AL ENCRIPTAR CONTRASEÑA" });
     } else {
-      usuario.push(
-        { value: claveEncriptada, name: "password" }
-      );
+      usuario.push({ value: claveEncriptada, name: "password" });
       // Crear la consulta SQL
       const columnas = usuario.map((dato) => dato.name).join(", ");
       const valores = usuario.map((dato) => "?").join(", ");

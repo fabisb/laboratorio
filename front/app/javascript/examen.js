@@ -1,4 +1,5 @@
 var examenes = [];
+var idPaciente ='';
 
 const render = async () => {
   try {
@@ -66,29 +67,6 @@ const render = async () => {
 };
 
 
-async function modificarExamen(id){
-  const { token } = await login.getToken();
-
-  console.log(id)
-  try {
-    const { token } = await login.getToken();
-
-    const resp= await axios.post(
-      urlsv + "/api/examenes/get-examen",
-      { id },
-      { headers: { token } }
-    );
-    const {examen,detalle} = resp
-
-    
-    
-  } catch (error) {
-    console.log(error);
-    
-  }
-
-  console.log(examenGet,data)
-}
 
 
 function buscarExamen() {
@@ -155,6 +133,7 @@ const cedulaPaciente = async () => {
           headers: { token },
         }
       );
+      idPaciente = paciente.id
 
       console.log("🚀 ~ cedulaPaciente ~ paciente:", paciente);
       if (paciente.paciente == 404) {
@@ -472,7 +451,7 @@ const crearPaciente = async () => {
 
       await axios.post(
         urlsv + "/api/creacion/agregar-paciente",
-        { paciente: validacion, new: true },
+        { paciente: validacion, new: true, idPaciente},
         { headers: { token } }
       );
       console.log("PACIENTE INGRESADO");

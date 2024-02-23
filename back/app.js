@@ -10,7 +10,6 @@ import creacionRouter from "./routes/creacion.routes.js";
 import examenesRouter from "./routes/examenes.routes.js";
 import usersRouter from "./routes/users.routes.js";
 import productosRouter from "./routes/producto.routes.js";
-import facturaRouter from "./routes/factura.routes.js";
 
 var app = express();
 
@@ -25,6 +24,5 @@ app.use("/api/creacion", creacionRouter);
 app.use("/api/examenes", examenesRouter);
 app.use("/api/users", usersRouter);
 app.use("/api/productos", productosRouter);
-app.use("/api/factura", facturaRouter);
 
 export default app;
