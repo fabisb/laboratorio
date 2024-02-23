@@ -1,6 +1,7 @@
 async function modificarExamen(id){
   const { token } = await login.getToken();
-
+const btn = document.getElementById('btnGuardarExamen');
+btn.setAttribute('onclick','guardarExamen(true)') 
   console.log(id)
   try {
     const { token } = await login.getToken();
@@ -342,7 +343,7 @@ function borrarAlerta(){
 var detallesExamen = [];
 var contadorCaracteristica=0;
 
-const guardarExamen = async () => {
+const guardarExamen = async (newExamen) => {
   const alertaCaracteristica = document.getElementById("alertaCaracteristicas");
 
   const { token } = await login.getToken();
@@ -384,6 +385,7 @@ const guardarExamen = async () => {
     modal.show();
     examenCrud.value=''
     detallesExamen=[]
+
     document.getElementById('tBodyDetalles').innerHTML=''
   } catch (error) {
     console.log(error);

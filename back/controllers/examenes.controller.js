@@ -90,7 +90,7 @@ export const modificarExamen = async (req, res) => {
 };
 
 export const crearExamen = async (req, res) => {
-  const { examen, detalle } = req.body;
+  const { examen, detalle, newExamen, idExamen} = req.body;
   if (!examen || examen == '') {
     return await res
       .status(400)
@@ -136,6 +136,13 @@ export const crearExamen = async (req, res) => {
           .json({ mensaje: "El campo unidad de alguna de las caracteristicas es vacio" });
       }
     }
+
+    if (newExamen) {
+      //MODIFICAR
+      const [examenUpdate] = await pool.execute('UPDATE examenes SET nombre = ? WHERE id = ?',[]);
+    }else{
+
+
     const [examenInsert] = await pool.execute(
       "INSERT INTO examenes (nombre) VALUES (?)",
       [examen]
@@ -154,12 +161,14 @@ export const crearExamen = async (req, res) => {
     return await res
       .status(200)
       .json({ mensaje: "Examen ingresado con exito" });
+    }
   } catch (error) {
     console.log(error);
     return await res
       .status(500)
       .json({ mensaje: "Ha ocurrido un error en el servidor" });
   }
+
 };
 
 export const getBioanalistas = async (req, res) => {

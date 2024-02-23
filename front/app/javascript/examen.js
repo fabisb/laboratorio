@@ -23,7 +23,7 @@ const render = async () => {
     const examBody = document.getElementById("tBodyMenuExamen");
     examenesGet.map((ex) => {
       examBody.innerHTML += `<tr><td>${ex.id}</td><td>${ex.nombre}</td><td style="cursor:pointer"
-      onclick="abrirModalExamenesCrud(),modificarExamen('${ex.id}')">
+      onclick="abrirModalExamenesCrud(), modificarExamen('${ex.id}')">
     <svg
       xmlns="http://www.w3.org/2000/svg"
       width="30"
