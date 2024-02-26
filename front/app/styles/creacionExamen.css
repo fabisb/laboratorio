@@ -1,0 +1,8 @@
+#buttonCollapse{
+    background-color: transparent;
+    border: solid 3px #1c8c9b;
+}
+
+#buttonCollapse:hover{
+    background-color: #1c8c9b;
+}
