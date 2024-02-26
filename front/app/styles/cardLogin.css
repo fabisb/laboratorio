@@ -1,6 +1,6 @@
 body {
-  background: rgb(104,192,195);
-  background: linear-gradient(90deg, rgba(9,168,173,1) 0%, rgba(104,192,195,1)  50%, rgba(9,168,173,1) 75%);  }
+  background: rgb(214,255,242);
+  background: linear-gradient(180deg, rgba(214,255,242,1) 05%, rgba(255,255,255,1) 11%, rgba(255,255,255,1) 89%, rgba(214,255,242,1) 95%); }
   
   .card-img-left {
     width: 45%;

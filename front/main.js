@@ -126,14 +126,16 @@ let crearExamenWindowVar;
 function creacionExamenWindow() {
   if (!crearExamenWindowVar) {
     crearExamenWindowVar = new BrowserWindow({
-      width: 1024,
-      height: 768,
+      width: 2300,
+      height: 1600,
       title: "Creacion - Examen",
       webPreferences: {
         preload: path.join(__dirname, "app/preloads/preload.js"),
         //devTools:false
       },
     });
+    
+
     crearExamenWindowVar.loadFile("app/screens/examen.html");
     crearExamenWindowVar.on("closed", () => (crearExamenWindowVar = null));
     if (mainWindow) {

@@ -6,11 +6,7 @@ main {
     -moz-osx-font-smoothing: grayscale;
   }
   
-  main {
-    height: 100%;
-    background-color: #152733;
-    overflow: hidden;
-  }
+  
   
   .form-holder {
     display: flex;
@@ -37,7 +33,7 @@ main {
   }
   
   .form-content .form-items {
-    border: 3px solid #fff;
+    border: 3px solid rgb(62, 159, 177);
     padding: 40px;
     display: inline-block;
     width: 100%;
@@ -51,7 +47,7 @@ main {
   }
   
   .form-content h3 {
-    color: #fff;
+    color: #000000;
     text-align: left;
     font-size: 28px;
     font-weight: 600;
@@ -63,7 +59,7 @@ main {
   }
   
   .form-content p {
-    color: #fff;
+    color: #3d3939;
     text-align: left;
     font-size: 17px;
     font-weight: 300;
@@ -74,7 +70,7 @@ main {
   .form-content label,
   .was-validated .form-check-input:invalid ~ .form-check-label,
   .was-validated .form-check-input:valid ~ .form-check-label {
-    color: #fff;
+    color: #3d3939;
   }
   
   .form-content input[type="text"],
@@ -85,10 +81,10 @@ main {
     width: 100%;
     padding: 9px 20px;
     text-align: left;
-    border: 0;
-    outline: 0;
+    
     border-radius: 6px;
-    background-color: #fff;
+    
+    background-color: #ffffff;
     font-size: 15px;
     font-weight: 300;
     color: #8d8d8d;
@@ -107,7 +103,7 @@ main {
   .btn-primary:hover,
   .btn-primary:focus,
   .btn-primary:active {
-    background-color: #495056;
+    background-color: rgb(62, 159, 177);
     outline: none !important;
     border: none !important;
     box-shadow: none;

@@ -12,14 +12,20 @@
 
     <title>Creacion - Bioanalista</title>
 </head>
-<body onload="render()">
+<body onload="render()" style="background: rgb(214,255,242);
+background: linear-gradient(180deg, rgba(214,255,242,1) 05%, rgba(255,255,255,1) 11%, rgba(255,255,255,1) 89%, rgba(214,255,242,1) 95%);">
 <main>
  
-    <div id="formBody" class="form-body">
+    <div id="formBody" class="form-body" style="background: rgb(214,255,242);
+    background: linear-gradient(180deg, rgba(214,255,242,1) 05%, rgba(255,255,255,1) 11%, rgba(255,255,255,1) 89%, rgba(214,255,242,1) 95%);">
       <div class="row">
         <div class="form-holder">
           <div class="form-content">
             <div class="form-items">
+              <div class="d-flex justify-content-center">
+                <img src="../imgs/la-milagrosa-logo.png" width="120" alt="" />
+              </div>
+              <hr>
               <h3>Registro de Bioanalista</h3>
               <p>Ingrese los siguientes datos.</p>
               <form onsubmit="agregarBioanalista(event), event.preventDefault()" class="requires-validation" novalidate>
@@ -121,19 +127,21 @@
                     </div>
                 </div>
 
-                <div class="form-button mt-3 row">
+                <div class="form-button mt-3 row ">
+                  <div class="col d-flex justify-content-center">
+                    <button id="submit" type="submit" class="btn btn-success">
+                      Registrar
+                    </button>
+                  </div>
                   
-                  <button id="submit" type="submit" class="col btn btn-primary">
-                    Registrar
-                  </button>
-                  <nav class="col">
-                    <ul class="pagination pagination-lg">
-                      <li class="page-item active" aria-current="page">
-                        <span class="page-link">Bioanalista</span>
-                      </li>
-                      <li class="page-item"><a class="page-link" onclick="cambiarCrearUsuario()" style="cursor: pointer;">Usuario</a></li>
-                    </ul>
-                  </nav>
+                  <div class="col d-flex justify-content-center ">
+                    <div class="btn-group" role="group" aria-label="Basic example">
+                      <button type="button" class="btn btn-outline-success">Bioanalista</button>
+                      <button type="button" class="btn btn-outline-success">Usuario</button>
+                      
+                    </div>
+                    
+                  </div>
                 </div>
               </form>
             </div>
