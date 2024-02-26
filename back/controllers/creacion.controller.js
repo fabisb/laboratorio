@@ -75,10 +75,11 @@ export const agregarPacienteController = async (req, res) => {
     console.log("CEDULA VALIDAICION:", cedulaValidacion);
     // Crear la consulta SQL
     if (req.body.new) {
-      const cedulaExistente = await pool.execute(
+      const [cedulaExistente] = await pool.execute(
         "SELECT cedula FROM pacientes WHERE cedula = ?",
         [cedulaValidacion]
       );
+      
       if (cedulaExistente.length > 0) {
         return await res.status(401).json({
           mensaje:
