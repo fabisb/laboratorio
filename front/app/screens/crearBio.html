@@ -109,6 +109,7 @@ background: linear-gradient(180deg, rgba(214,255,242,1) 05%, rgba(255,255,255,1)
                     class="form-control mt-3"
                     type="date"
                     name="ingreso"
+                    
                     placeholder="Fecha de Ingreso"
                     required
                     min="1920-01-01"
@@ -129,15 +130,15 @@ background: linear-gradient(180deg, rgba(214,255,242,1) 05%, rgba(255,255,255,1)
 
                 <div class="form-button mt-3 row ">
                   <div class="col d-flex justify-content-center">
-                    <button id="submit" type="submit" class="btn btn-success">
+                    <button id="submit" type="submit" class="btn-lg btn btn-success">
                       Registrar
                     </button>
                   </div>
                   
                   <div class="col d-flex justify-content-center ">
                     <div class="btn-group" role="group" aria-label="Basic example">
-                      <button type="button" class="btn btn-outline-success">Bioanalista</button>
-                      <button type="button" class="btn btn-outline-success">Usuario</button>
+                      <button type="button" onclick="cambiarCrearBio()" class="btn btn-lg active btn-outline-success">Bioanalista</button>
+                      <button type="button" onclick="cambiarCrearUsuario()" class="btn btn-lg btn-outline-success">Usuario</button>
                       
                     </div>
                     
@@ -149,6 +150,7 @@ background: linear-gradient(180deg, rgba(214,255,242,1) 05%, rgba(255,255,255,1)
         </div>
         
       </div>
+      <!--  -->
     </div>
   
     

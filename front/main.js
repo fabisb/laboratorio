@@ -107,9 +107,14 @@ function creacionBioWindow() {
   if (!creacionBioWindowVar) {
     creacionBioWindowVar = new BrowserWindow({
       width: 1024,
-      height: 768,
+      height: 2000,
       title: "Creacion - Bioanalista",
+
+      parent:crearExamenWindowVar,
+      modal:true,
+      
       webPreferences: {
+      
         preload: path.join(__dirname, "app/preloads/preload.js"),
         //devTools:false
       },
@@ -126,15 +131,15 @@ let crearExamenWindowVar;
 function creacionExamenWindow() {
   if (!crearExamenWindowVar) {
     crearExamenWindowVar = new BrowserWindow({
-      width: 2300,
-      height: 1600,
+      width: 1368,
+      height: 960,
       title: "Creacion - Examen",
       webPreferences: {
         preload: path.join(__dirname, "app/preloads/preload.js"),
         //devTools:false
       },
     });
-    
+    crearExamenWindowVar.maximize()
 
     crearExamenWindowVar.loadFile("app/screens/examen.html");
     crearExamenWindowVar.on("closed", () => (crearExamenWindowVar = null));

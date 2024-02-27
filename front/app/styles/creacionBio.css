@@ -6,7 +6,16 @@ main {
     -moz-osx-font-smoothing: grayscale;
   }
   
-  
+  ::placeholder{
+    font-size: large;
+  }
+  input{
+    font-size: large !important;
+
+  }
+  .selectNivelUsuario{
+    font-size: large !important;
+  }
   
   .form-holder {
     display: flex;
