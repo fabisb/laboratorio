@@ -52,6 +52,67 @@ async function modificarExamenBdd(idExamen){
   }
 }
 
+function añadirRowRango(){
+  const tableRango = document.getElementById("tableRangosBody");
+  const trRangos=document.getElementsByClassName("tr-rango");
+  contadorCaracteristica=trRangos.length
+  if(trRangos.length>4){
+    return
+  }
+  let tr = document.createElement("tr");
+  tr.className="tr-rango"
+  tr.innerHTML=`
+  <td scope="row"><input
+    name="rangoSup"
+    type="number"
+    min="0"
+    max="150"
+    class="form-control inputExamenRango"
+    id="superiorExamenCrud${contadorCaracteristica}"
+    placeholder=""
+  /></td>
+  <td scope="row"><input
+    name="rangoInf"
+    type="number"
+    min="0"
+    max="150"
+    class="form-control inputExamenRango"
+    id="inferiorExamenCrud${contadorCaracteristica}"
+    placeholder=""
+  /></td>
+  <td scope="row"><input
+    name="rangoDesde"
+    type="number"
+    min="0"
+    max="150"
+    class="form-control inputExamenRango"
+    id="DesdeExamenCrud${contadorCaracteristica}"
+    placeholder="Desde"
+  /></td>
+  <td scope="row"><input
+    name="rangoHasta"
+    min="0"
+    max="150"
+    type="number"
+    class="form-control inputExamenRango"
+    id="HastaExamenCrud${contadorCaracteristica}"
+    placeholder="Hasta"
+  /></td>
+  <td scope="row">
+    <select class="form-select form-select-sm inputExamenRango" id="selectRango${contadorCaracteristica}" name="rangoSelect" aria-label="Small select example">
+      <option selected>Genero</option>
+      <option value="Hombre">Masculino</option>
+      <option value="Mujer">Femenino</option>
+
+    </select>
+</td>
+  `
+  
+
+  tableRango.appendChild(tr)                             
+
+}
+
 
 
 
@@ -162,15 +223,68 @@ async function modificarExamen(id){
 
 const pushDetalle = () => {
   const nombre = document.getElementById("nombreDetalleExamenCrud").value;
-  const inferior = document.getElementById("inferiorExamenCrud").value;
-  const superior = document.getElementById("superiorExamenCrud").value;
   const unidad = document.getElementById("unidadExamenCrud").value;
   const posicion = document.getElementById("ordenExamenCrud").value;
   const tBody = document.getElementById("tBodyDetalles");
   const alertaCaracteristica = document.getElementById("alertaCaracteristicas");
+  const alertaCaracteristicaRangos = document.getElementById("alertaCaracteristicasRangos");
+  const trRango = document.getElementsByClassName("tr-rango");
+  let validacionRango=false
 
-  contadorCaracteristica+=1;
+  contadorCaracteristica+=1
+  const examenRango=document.getElementsByClassName("inputExamenRango");
+  let rangos=[];
 
+  [...trRango].forEach((e,i)=>{
+    const inputsE = [...examenRango].filter(f=> f.id.endsWith(i));
+       console.log(inputsE)
+      const select = document.getElementById(`selectRango${i}`)
+      const superior = inputsE.find(e=>e.name=="rangoSup")
+      const inferior = inputsE.find(e=>e.name=="rangoInf")
+      const desde = inputsE.find(e=>e.name=="rangoDesde")
+      const hasta = inputsE.find(e=>e.name=="rangoHasta")
+      console.log(superior.value,inferior,desde,hasta,select)
+      if(i>0){
+        if(superior.value=="" || inferior.value=="" ){
+          validacionRango=true;
+        }
+      }
+      if(i==0){
+        
+          if(superior.value!="" || inferior.value!=""){
+            if(superior.value!="" && inferior.value!=""){
+              validacionRango=false
+            }else{
+              validacionRango=true
+            }
+          }
+        
+      }
+      
+      if(superior.value!='' && inferior.value!=''){
+        
+        rangos.push({
+          genero: select.value,
+          superior: superior.value,
+          inferior: inferior.value,
+          desde: desde.value,
+          hasta: hasta.value
+        })
+      }
+      
+  })
+  if(validacionRango){
+    alertaCaracteristicaRangos.removeAttribute("hidden");
+                    alertaCaracteristicaRangos.className= "alert alert-danger text-center"
+                    alertaCaracteristicaRangos.innerHTML =`
+                    <h4 class="alert-heading">Error</h4>
+                    <hr>
+                    <p>Existe la posibildad de que algun dato de Rango no haya podido ser ingresado Verifique!!!<p>
+                    ` 
+              
+       
+  }
+ 
   
   if (!nombre || nombre == "") {
     
@@ -224,16 +338,17 @@ const pushDetalle = () => {
       resultadosSQl+=`${e}~`
     })
     resultadosSQl=resultadosSQl.slice(0,-1)
+
   
+
 
   detallesExamen.push({
     id: contadorCaracteristica,
     nombre,
-    inferior,
-    superior,
     unidad,
     posicion,
     resultados: resultadosSQl,
+    rangos,
     impsiempre: 0,
     idDetalleBdd: idCaracteristicaBdd
   });
@@ -249,8 +364,6 @@ const pushDetalle = () => {
   tBody.innerHTML += `
   <tr id='tr-${contadorCaracteristica}'>
                       <td scope="col">${nombre}</td>
-                      <td scope="col">${inferior}</td> 
-                      <td scope="col">${superior}</td>
                       <td scope="col">${posicion}</td>
                       <td scope="col">${unidad}</td>
                         
@@ -303,8 +416,6 @@ const pushDetalle = () => {
                     </tr>
   `;
   document.getElementById("nombreDetalleExamenCrud").value = "";
-  document.getElementById("inferiorExamenCrud").value = "";
-  document.getElementById("superiorExamenCrud").value = "";
   document.getElementById("unidadExamenCrud").value = "";
   document.getElementById("ordenExamenCrud").value = ""; 
   document.getElementById("inputContainerResultados").innerHTML= `
@@ -323,6 +434,55 @@ const pushDetalle = () => {
                         aria-label="default input example"
                       />
   `
+  document.getElementById("tableRangosBody").innerHTML=`
+  <tr class="tr-rango">
+                              <td scope="row"><input
+                                name="rangoSup"
+                                type="number"
+                                min="0"
+                                max="150"
+                                class="form-control inputExamenRango"
+                                id="superiorExamenCrud0"
+                                placeholder=""
+                              /></td>
+                              <td scope="row"><input
+                                name="rangoInf"
+                                type="number"
+                                min="0"
+                                max="150"
+                                class="form-control inputExamenRango"
+                                id="inferiorExamenCrud0"
+                                placeholder=""
+                              /></td>
+                              <td scope="row"><input
+                                name="rangoDesde"
+                                type="number"
+                                min="0"
+                                max="150"
+                                class="form-control inputExamenRango"
+                                id="DesdeExamenCrud0"
+                                placeholder="Desde"
+                              /></td>
+                              <td scope="row"><input
+                                name="rangoHasta"
+                                min="0"
+                                max="150"
+                                type="number"
+                                class="form-control inputExamenRango"
+                                id="HastaExamenCrud0"
+                                placeholder="Hasta"
+                              /></td>
+                              <td scope="row">
+                                <select class="form-select form-select-sm inputExamenRango" id="selectRango0" name="rangoSelect" aria-label="Small select example">
+                                  <option selected>Genero</option>
+                                  <option value="Hombre">Masculino</option>
+                                  <option value="Mujer">Femenino</option>
+
+                                </select>
+                            </td>
+                              
+                            </tr>
+  `
   
  
   
@@ -333,13 +493,69 @@ function modificarCaracteristica(id,idBdd){
   const caracteristicaDetalle = detallesExamen.find(e=>e.id==id)
   console.log(caracteristicaDetalle)
   document.getElementById("nombreDetalleExamenCrud").value = caracteristicaDetalle.nombre;
-  document.getElementById("inferiorExamenCrud").value =caracteristicaDetalle.inferior;
-  document.getElementById("superiorExamenCrud").value = caracteristicaDetalle.superior;
   document.getElementById("unidadExamenCrud").value = caracteristicaDetalle.unidad;
   document.getElementById("ordenExamenCrud").value = caracteristicaDetalle.posicion; 
-  document.getElementById("inputContainerResultados").innerHTML= `
+  document.getElementById("inputContainerResultados").innerHTML= ``
+  document.getElementById("tableRangosBody").innerHTML=``
+
+  caracteristicaDetalle.rangos.forEach((e,i)=>{
+    console.log(caracteristicaDetalle.id)
+    document.getElementById("tableRangosBody").innerHTML=`
+    <tr class="tr-rango">
+  <td scope="row"><input
+    name="rangoSup"
+    type="number"
+    min="0"
+    max="150"
+    value="${e.superior}"
+    class="form-control inputExamenRango"
+    id="superiorExamenCrud${i}"
+    placeholder=""
+  /></td>
+  <td scope="row"><input
+    name="rangoInf"
+    type="number"
+    min="0"
+    max="150"
+    value="${e.inferior}"
+    class="form-control inputExamenRango"
+    id="inferiorExamenCrud${i}"
+    placeholder=""
+  /></td>
+  <td scope="row"><input
+    name="rangoDesde"
+    type="number"
+    min="0"
+    value="${e.desde}"
+    max="150"
+    class="form-control inputExamenRango"
+    id="DesdeExamenCrud${i}"
+    placeholder="Desde"
+  /></td>
+  <td scope="row"><input
+    name="rangoHasta"
+    min="0"
+    max="150"
+    value="${e.hasta}"
+    type="number"
+    class="form-control inputExamenRango"
+    id="HastaExamenCrud${i}"
+    placeholder="Hasta"
+  /></td>
+  <td scope="row">
+    <select class="form-select form-select-sm inputExamenRango" id="selectRango${i}" name="rangoSelect" aria-label="Small select example">
+      <option selected>Genero</option>
+      <option value="Hombre">Masculino</option>
+      <option value="Mujer">Femenino</option>
+
+    </select>
+</td>
   
-  `
+</tr>
+    `
+    document.getElementById("selectRango"+i).value = e.genero;
+  })
+
   caracteristicaDetalle.resultados.split('~').forEach(e=>{
     document.getElementById("inputContainerResultados").innerHTML+= `
     <input
@@ -392,11 +608,16 @@ detallesExamen = detallesExamen.filter(e=>e.id!=id)
 
 function borrarAlerta(){
   const alertaCaracteristica = document.getElementById("alertaCaracteristicas");
+  const alertaCaracteristicaRango = document.getElementById("alertaCaracteristicasRangos");
 
   if(!alertaCaracteristica.hasAttribute('hidden')){
-    console.log('aaaaa')
     setTimeout(() => {
       alertaCaracteristica.setAttribute('hidden','true')
+    }, "3000")
+  }
+  if(!alertaCaracteristicaRango.hasAttribute('hidden')){
+    setTimeout(() => {
+      alertaCaracteristicaRango.setAttribute('hidden','true')
     }, "3000")
   }
 }

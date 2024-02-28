@@ -1,6 +1,8 @@
 var examenes = [];
 var idPaciente = "";
 
+
+
 const render = async () => {
   try {
     const { token } = await login.getToken();
@@ -74,7 +76,42 @@ function buscarExamen() {
   const examBody = document.getElementById("tBodyMenuExamen");
   examBody.innerHTML = "";
   filtro.map((ex) => {
-    examBody.innerHTML += `<tr class=" text-break"><td>${ex.id}</td><td>${ex.nombre}</td></tr>`;
+    examBody.innerHTML += `
+    <tr><td>${ex.id}</td><td>${ex.nombre}</td><td style="cursor:pointer"
+      onclick="abrirModalExamenesCrud(), modificarExamen('${ex.id}')">
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="30"
+      height="30"
+      fill="#FACD0B"
+      class="bi bi-pencil-square"
+      viewBox="0 0 20 20"
+    >
+      <path
+        d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"
+      />
+      <path
+        fill-rule="evenodd"
+        d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z"
+      />
+    </svg>
+    </td>
+    <td style="cursor:pointer" onclick="">
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="27"
+      height="27"
+      fill="red"
+      class="bi bi-x-lg"
+      viewBox="0 0 20 20"
+    >
+      <path
+        d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8z"
+      />
+    </svg>
+  </td></tr>
+    
+    `;
   });
 }
 const cedulaPaciente = async () => {
@@ -574,23 +611,35 @@ const abrirModalExamenes = () => new bootstrap.Modal("#examenes-list").toggle();
 const abrirModalExamenesCrud = () =>
   new bootstrap.Modal("#examenes-crud").toggle();
 
+
+const ModalExamenesCrud = document.getElementById('examenes-crud')
+ModalExamenesCrud.addEventListener('show.bs.modal', event => {
+  console.log(event)
+document.getElementById('examenes-list').style.boxShadow = "0.5";
+},false)
+
+ModalExamenesCrud.addEventListener('hidden.bs.modal', event => {
+  console.log(event)
+document.getElementById('examenes-list').style.opacity = "1";
+},false)
+function grisModal(id1){
+  document.getElementById(id1).style.opacity = "0.75";
+}
+
 const addInput = () => {
   const inputContainer = document.getElementById("inputContainerResultados");
   const inputsArray = document.getElementsByName("resultadoInput");
   if (inputsArray.length + 1 > 10) {
     return;
   }
-
-  inputContainer.innerHTML += `
-  <input
-    name='resultadoInput'
-                      class="form-control inputExamen"
-                      type="text"
-                      placeholder="Ingrese un resultado unico en el examen"
-
-                      aria-label="default input example"
-                    />
-  `;
+  let inputC=document.createElement("input");
+  inputC.name = "resultadoInput";
+  inputC.type = "text";
+  inputC.placeholder = "Ingrese un resultado unico en el examen";
+  inputC.ariaLabel = "default input example"
+  inputC.className= "form-control inputExamen"
+  inputContainer.appendChild(inputC);
+  
 };
 
 const calcularEdad = () => {
