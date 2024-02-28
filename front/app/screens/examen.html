@@ -11,8 +11,21 @@
       href="../../bower_components/bootstrap/dist/css/bootstrap.min.css"
     />
   </head>
-  <body class="fs-5" onload="render()" style="background: rgb(214,255,242);
-  background: linear-gradient(180deg,rgba(214,255,242,1) 01%, rgba(255,255,255,1) 04%, rgba(255,255,255,1) 87%, rgba(214,255,242,1) 92%);height: 100vh;">
+  <body
+    class="fs-5"
+    onload="render()"
+    style="
+      background: rgb(214, 255, 242);
+      background: linear-gradient(
+        180deg,
+        rgba(214, 255, 242, 1) 01%,
+        rgba(255, 255, 255, 1) 04%,
+        rgba(255, 255, 255, 1) 87%,
+        rgba(214, 255, 242, 1) 92%
+      );
+      height: 100vh;
+    "
+  >
     <section>
       <nav class="navbar navbar bg-transparent">
         <div class="container-fluid">
@@ -93,14 +106,21 @@
             <form
               class="row row-cols-7 d-flex justify-content-center"
               onsubmit="event.preventDefault(), cedulaPaciente()"
+              id="formPaciente"
             >
               <div class="col-2">
-                <select class="form-select w-100" name="pre_cedula" required>
+                <select
+                  onchange="validarNInput(event)"
+                  class="form-select w-100"
+                  name="pre_cedula"
+                  required
+                >
                   <option selected value="V">V</option>
                   <option value="E">E</option>
+                  <option value="N">Niño</option>
                 </select>
               </div>
-              
+
               <div class="mb-3 col-2" style="width: 300px">
                 <input
                   name="cedula"
@@ -110,6 +130,16 @@
                   id="exampleFormControlInput1"
                   placeholder="Cedula"
                 />
+              </div>
+              <div class="col-1">
+                <input
+                  class="form-control"
+                  list="childNameList"
+                  id="childName"
+                  placeholder="Niño"
+                />
+                <datalist id="childNameList">
+                </datalist>
               </div>
               <div class="col-2" style="width: 300px">
                 <input
@@ -141,7 +171,7 @@
           <div class="row">
             <div id="alertaCedula"></div>
           </div>
-          <hr style="border-top:solid 3px rgb(255, 196, 0);" />
+          <hr style="border-top: solid 3px rgb(255, 196, 0)" />
           <br />
           <div class="row row-cols-2 mx-0">
             <div class="col">
@@ -224,15 +254,25 @@
                 </div>
               </div>
             </div>
-          </div>  
-          <div class="row f-flex justify-content-center">
-            <button type="button" class="btn"  id="buttonCollapse"  ><svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-arrows-collapse" viewBox="0 0 16 16">
-              <path fill-rule="evenodd" d="M1 8a.5.5 0 0 1 .5-.5h13a.5.5 0 0 1 0 1h-13A.5.5 0 0 1 1 8m7-8a.5.5 0 0 1 .5.5v3.793l1.146-1.147a.5.5 0 0 1 .708.708l-2 2a.5.5 0 0 1-.708 0l-2-2a.5.5 0 1 1 .708-.708L7.5 4.293V.5A.5.5 0 0 1 8 0m-.5 11.707-1.146 1.147a.5.5 0 0 1-.708-.708l2-2a.5.5 0 0 1 .708 0l2 2a.5.5 0 0 1-.708.708L8.5 11.707V15.5a.5.5 0 0 1-1 0z"/>
-            </svg></button>
           </div>
-          <div class="row row-cols-2 mx-0" hidden>
-            
-            
+          <div class="row f-flex justify-content-center">
+            <button type="button" class="btn" id="buttonCollapse">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="30"
+                height="30"
+                fill="currentColor"
+                class="bi bi-arrows-collapse"
+                viewBox="0 0 16 16"
+              >
+                <path
+                  fill-rule="evenodd"
+                  d="M1 8a.5.5 0 0 1 .5-.5h13a.5.5 0 0 1 0 1h-13A.5.5 0 0 1 1 8m7-8a.5.5 0 0 1 .5.5v3.793l1.146-1.147a.5.5 0 0 1 .708.708l-2 2a.5.5 0 0 1-.708 0l-2-2a.5.5 0 1 1 .708-.708L7.5 4.293V.5A.5.5 0 0 1 8 0m-.5 11.707-1.146 1.147a.5.5 0 0 1-.708-.708l2-2a.5.5 0 0 1 .708 0l2 2a.5.5 0 0 1-.708.708L8.5 11.707V15.5a.5.5 0 0 1-1 0z"
+                />
+              </svg>
+            </button>
+          </div>
+          <div class="row row-cols-2 mx-0" >
             <div class="col">
               <div
                 class="mb-3 d-flex align-items-center justify-content-center"
@@ -328,7 +368,7 @@
                   disabled
                   checked
                 />
-                <label class="btn btn-outline-secondary"  for="Hombre"
+                <label class="btn btn-outline-secondary" for="Hombre"
                   >Hombre</label
                 >
 
@@ -347,7 +387,7 @@
               </div>
             </div>
           </div>
-          <hr style="border-top:solid 3px rgb(255, 196, 0);"  />
+          <hr style="border-top: solid 3px rgb(255, 196, 0)" />
 
           <div class="row">
             <table class="table text-center table-bordered">
@@ -622,10 +662,13 @@
           <div class="modal-body">
             <div class="row">
               <div class="row d-flex justify-content-center">
-                <div class="alert text-center" style="width: 75%;" hidden role="alert" id="alertaCaracteristicas">
-                
-                </div>
-                
+                <div
+                  class="alert text-center"
+                  style="width: 75%"
+                  hidden
+                  role="alert"
+                  id="alertaCaracteristicas"
+                ></div>
               </div>
               <div class="mb-3 col-12 d-flex justify-content-center">
                 <div class="w-50">
@@ -652,7 +695,7 @@
                       <th>EL</th>
                     </tr>
                   </thead>
-                  <tbody id="tBodyDetalles" ></tbody>
+                  <tbody id="tBodyDetalles"></tbody>
                   <tfoot>
                     <tr class="">
                       <td colspan="7"></td>
@@ -690,11 +733,12 @@
               <div class="">
                 <div class="collapse row" id="collapseExample">
                   <hr />
-                  
-                  
+
                   <div class="col-6">
-                    <form id="caracteristicaForm" onsubmit="event.preventDefault(),pushDetalle(),borrarAlerta()">
-                      
+                    <form
+                      id="caracteristicaForm"
+                      onsubmit="event.preventDefault(),pushDetalle(),borrarAlerta()"
+                    >
                       <div class="col-12 d-flex justify-content-center">
                         <div class="mb-3 w-75">
                           <label
@@ -708,7 +752,6 @@
                             class="form-control inputExamen"
                             id="nombreDetalleExamenCrud"
                             placeholder=""
-                            
                           />
                         </div>
                       </div>
@@ -772,11 +815,7 @@
                       </div>
 
                       <div class="col-12 d-flex justify-content-around my-3">
-                        <button
-                          type="submit"
-                          class="btn btn-outline-primary"
-                          
-                        >
+                        <button type="submit" class="btn btn-outline-primary">
                           <svg
                             xmlns="http://www.w3.org/2000/svg"
                             width="30"

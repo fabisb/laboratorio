@@ -269,3 +269,4 @@ export const getExamenes = async (req, res) => {
       .json({ mensaje: "Ha ocurrido un error en el servidor" });
   }
 };
+

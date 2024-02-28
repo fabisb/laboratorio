@@ -6,6 +6,8 @@ export const agregarPacienteController = async (req, res) => {
   console.log("🚀 ~ agregarPacienteController ~ idPaciente:", idPaciente)
   console.log("🚀 ~ agregarPacienteController ~ paciente:", paciente);
   let cedulaValidacion;
+  let preCedulaVal = ''
+
   const validacion = paciente.some((el) => {
     if (el.value == "") {
       if (el.name != "genero") {
@@ -64,6 +66,16 @@ export const agregarPacienteController = async (req, res) => {
         return true;
       }
     }
+    if (el.name == "pre_cedula") {
+      if (el.value  != 'E' && el.value  != 'V' && el.value  != 'N') {
+        console.log('Ingrese pre Cedula Valida')
+        return true;
+        
+      }else{
+
+        preCedulaVal = el.value;
+      }
+    }
   });
   if (validacion) {
     console.log("SE HA ENCONTRADO ALGUN ERROR");
@@ -76,8 +88,8 @@ export const agregarPacienteController = async (req, res) => {
     // Crear la consulta SQL
     if (req.body.new) {
       const [cedulaExistente] = await pool.execute(
-        "SELECT cedula FROM pacientes WHERE cedula = ?",
-        [cedulaValidacion]
+        "SELECT cedula FROM pacientes WHERE cedula = ? AND pre_cedula = ?",
+        [cedulaValidacion,preCedulaVal]
       );
       
       if (cedulaExistente.length > 0) {
@@ -334,3 +346,42 @@ export const agregarUsuarioController = async (req, res) => {
     return await res.status(500).json({ mensaje: "ERROR DE SERVIDOR" });
   }
 };
+
+export const getHijosController = async (req,res)=>{
+  console.log('getHijosController')
+  const {cedula, hijo} = req.query;
+  console.log("🚀 ~ getHijosController ~ cedula:", cedula)
+  console.log("🚀 ~ getHijosController ~ hijo:", hijo)
+  if (!cedula || isNaN(cedula) || cedula == '') {
+    return await res
+      .status(400)
+      .json({ mensaje: "La cedula no es valida" });
+  }
+  if (!hijo || hijo == '') {
+    return await res
+      .status(400)
+      .json({ mensaje: "El campo hijo no es valido" });
+  }
+  const hijosMay= hijo.toUpperCase()
+  try {
+    const [hijos] = await pool.execute('SELECT * FROM pacientes WHERE cedula = ? AND pre_cedula = "N"',[cedula ]);
+    const [rep] = await pool.execute('SELECT * FROM pacientes WHERE cedula = ?',[cedula ]);
+    const hijoFilter = hijos.filter(hijo => hijo.hijo.toUpperCase() == hijosMay)
+    console.log("🚀 ~ getHijosController ~ hijoFilter:", hijoFilter)
+    if (hijoFilter.length > 0) {
+      return await res
+      .status(200)
+      .json({hijos:hijoFilter, rep});
+      
+    }else{
+
+      return await res
+      .status(200)
+      .json({hijos,rep});
+    }
+  } catch (error) {
+    console.log(error)
+    return await res.status(500).json({ mensaje: "ERROR DE SERVIDOR" });
+
+  }
+}

@@ -1,10 +1,10 @@
 var examenes = [];
-var idPaciente ='';
+var idPaciente = "";
 
 const render = async () => {
   try {
     const { token } = await login.getToken();
-   
+
     const { data: examenesGet } = await axios.get(
       urlsv + "/api/examenes/get-examenes",
       { headers: { token } }
@@ -66,9 +66,6 @@ const render = async () => {
   }
 };
 
-
-
-
 function buscarExamen() {
   input = document.getElementById("inputMenuExamen");
   filtro = examenes.filter((ex) =>
@@ -109,7 +106,13 @@ const cedulaPaciente = async () => {
       "warning"
     );
   }
-  if (preCedula == "" || cedula == "" || !cedula || cedula.length <6 || cedula.length >12) {
+  if (
+    preCedula == "" ||
+    cedula == "" ||
+    !cedula ||
+    cedula.length < 6 ||
+    cedula.length > 12
+  ) {
     return cedulaAlerta(
       `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-exclamation-triangle-fill" viewBox="0 0 16 16">
     <path d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5m.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2"/>
@@ -121,7 +124,7 @@ const cedulaPaciente = async () => {
   }
 
   try {
-    if (cedula.length >=6 && cedula.length <=12) {
+    if (cedula.length >= 6 && cedula.length <= 12) {
       const { token } = await login.getToken();
 
       const { data: paciente } = await axios.get(
@@ -133,7 +136,7 @@ const cedulaPaciente = async () => {
           headers: { token },
         }
       );
-      idPaciente = paciente.id
+      idPaciente = paciente.id;
 
       console.log("🚀 ~ cedulaPaciente ~ paciente:", paciente);
       if (paciente.paciente == 404) {
@@ -223,16 +226,12 @@ const desactivarInputs = () => {
       inp.name != "pre_cedula" &&
       inp.name != "cedula" &&
       inp.name != "fecha" &&
-      !(inp.className.includes('inputExamen'))
+      !inp.className.includes("inputExamen")
     ) {
-      
       inp.setAttribute("readonly", "true");
-        
-      
     }
-    
-    
-    if (inp.name == "genero" )   {
+
+    if (inp.name == "genero") {
       inp.setAttribute("disabled", "true");
     }
   });
@@ -443,15 +442,15 @@ const crearPaciente = async () => {
     telefono,
     correo,
   ];
-  const paciente = [];
   const validacion = validarDatosPaciente(pacienteArray);
+
   if (validacion) {
     try {
       const { token } = await login.getToken();
 
       await axios.post(
         urlsv + "/api/creacion/agregar-paciente",
-        { paciente: validacion, new: true, idPaciente},
+        { paciente: validacion, new: true, idPaciente },
         { headers: { token } }
       );
       console.log("PACIENTE INGRESADO");
@@ -622,3 +621,83 @@ const calcularEdadNormal = (fecha) => {
 
   return `${anoR} años;  ${mesR} meses`;
 };
+
+const validarNInput = (event) => {
+  if (event.target.value == "N") {
+    document
+      .getElementById("formPaciente")
+      .setAttribute("onsubmit", "event.preventDefault(), validarN()");
+
+    const cedula = document.getElementsByName("cedula")[0].value;
+    if (cedula != "") {
+      const hijo = document.getElementById("childName").value;
+      if (hijo != "") {
+        validarN();
+      }
+    }
+  } else {
+    document
+      .getElementById("formPaciente")
+      .setAttribute("onsubmit", "event.preventDefault(), cedulaPaciente()");
+  }
+};
+
+const validarN = async (event) => {
+  if (document.getElementsByName("pre_cedula")[0].value == "N") {
+    const cedula = document.getElementsByName("cedula")[0].value;
+    console.log("🚀 ~ validarN ~ cedula:", cedula);
+    const hijo = document.getElementById("childName").value;
+    console.log("🚀 ~ validarN ~ hijo:", hijo);
+    try {
+      const { token } = await login.getToken();
+      if (!cedula || isNaN(cedula) || cedula == "") {
+        return alerta.alert("Error", "Se debe ingresar una cedula valida");
+      }
+      if (!hijo || hijo == "") {
+        return alerta.alert("Error", "El campo niño debe contener el nombre");
+      }
+
+      const { data } = await axios.get(urlsv + "/api/users/hijos", {
+        params: {
+          cedula,
+          hijo,
+        },
+        headers: { token },
+      });
+      const { hijos, rep } = data;
+      console.log("🚀 ~ validarN ~ data:", data);
+      if (hijos.length == 0) {
+        document.getElementsByName("nombre")[0].value = hijo;
+        console.log(rep);
+        if (rep.length > 0) {
+          const { direccion, telefono, correo } = rep[0];
+          document.getElementsByName("direccion")[0].value = direccion;
+          document.getElementsByName("telefono")[0].value = telefono;
+          document.getElementsByName("correo")[0].value = correo;
+        }
+        activarInputs("crearPaciente()");
+      } else {
+        document.getElementById("childNameList").innerHTML = hijos
+          .map(
+            (hijo) =>
+              `<option value="${hijo.nombre}" cedulaHijo="${hijo.cedula}">${hijo.nombre}</option>`
+          )
+          .join("");
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }
+};
+
+function handleDatalistInput() {
+  const inputValue = document.querySelector("input").value;
+  const datalistOptions = document.getElementById("myDatalist").children;
+  for (const option of datalistOptions) {
+    if (option.value === inputValue) {
+      // Execute your action here
+      console.log("Selected option:", option.value);
+      break;
+    }
+  }
+}

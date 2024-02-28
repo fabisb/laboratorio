@@ -1,9 +1,12 @@
 import express from "express";
-import { imagen, loginController } from "../controllers/login.controller.js";
+import { imagen, loginController, verifyToken } from "../controllers/login.controller.js";
+import { getHijosController } from "../controllers/creacion.controller.js";
 var router = express.Router();
 
 /* POST users listing. */
 router.post("/login", loginController);
 router.post("/imagen", imagen);
 
+/* GET users listing. */
+router.get("/hijos",verifyToken, getHijosController);
 export default router;
