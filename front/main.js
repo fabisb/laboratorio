@@ -16,7 +16,6 @@ if (env === "development") {
 }  */
 //RECARGA AUTOMATICA
 
-
 const store = new Store();
 store.clear();
 
@@ -28,13 +27,14 @@ ipcMain.handle("getToken", (event, arg) => {
   const token = store.get("token");
   return token;
 });
-let mainWindow
+let mainWindow;
 function createWindow() {
   // Create the browser window.
   mainWindow = new BrowserWindow({
     width: 1024,
     height: 768,
     title: "Menu",
+    icon: path.join(__dirname, "app/imgs/icons/app-logo.ico"),
     show: false,
     webPreferences: {
       preload: path.join(__dirname, "app/preloads/preload.js"),
@@ -44,9 +44,9 @@ function createWindow() {
   // and load the index.html of the app.
   mainWindow.loadFile("app/screens/index.html");
   mainWindow.on("closed", () => (mainWindow = null));
-  mainWindow.once('ready-to-show', () => {
+  mainWindow.once("ready-to-show", () => {
     mainWindow.show();
-});
+  });
   // Open the DevTools.
   // mainWindow.webContents.openDevTools()
 }
@@ -70,6 +70,7 @@ ipcMain.handle("facturarWindow", () => facturarWindow());
 function menuWindow() {
   let menuWindow = new BrowserWindow({
     width: 1024,
+    icon: path.join(__dirname, "app/imgs/icons/app-logo.ico"),
     height: 768,
     title: "Menu",
     webPreferences: {
@@ -87,6 +88,7 @@ function creacionPaciWindow() {
   if (!creacionPaciWindowVar) {
     creacionPaciWindowVar = new BrowserWindow({
       width: 1024,
+      icon: path.join(__dirname, "app/imgs/icons/app-logo.ico"),
       height: 768,
       title: "Creacion - Paciente",
       webPreferences: {
@@ -109,12 +111,12 @@ function creacionBioWindow() {
       width: 1024,
       height: 2000,
       title: "Creacion - Bioanalista",
+      icon: path.join(__dirname, "app/imgs/icons/app-logo.ico"),
 
-      parent:crearExamenWindowVar,
-      modal:true,
-      
+      parent: crearExamenWindowVar,
+      modal: true,
+
       webPreferences: {
-      
         preload: path.join(__dirname, "app/preloads/preload.js"),
         //devTools:false
       },
@@ -132,6 +134,7 @@ function creacionExamenWindow() {
   if (!crearExamenWindowVar) {
     crearExamenWindowVar = new BrowserWindow({
       width: 1368,
+      icon: path.join(__dirname, "app/imgs/icons/app-logo.ico"),
       height: 960,
       title: "Creacion - Examen",
       webPreferences: {
@@ -139,13 +142,12 @@ function creacionExamenWindow() {
         //devTools:false
       },
     });
-    crearExamenWindowVar.maximize()
+    crearExamenWindowVar.maximize();
 
     crearExamenWindowVar.loadFile("app/screens/examen.html");
     crearExamenWindowVar.on("closed", () => (crearExamenWindowVar = null));
     if (mainWindow) {
-      
-      mainWindow.close()
+      mainWindow.close();
     }
   } else {
     crearExamenWindowVar.focus();
@@ -158,6 +160,7 @@ function menuExamenesWindow() {
   if (!menuExamenesVar) {
     menuExamenesVar = new BrowserWindow({
       width: 1024,
+      icon: path.join(__dirname, "app/imgs/icons/app-logo.ico"),
       height: 768,
       title: "Menu - Examenes",
       webPreferences: {
@@ -175,14 +178,13 @@ ipcMain.handle("menuExamenesWindow", () => menuExamenesWindow());
 
 //handlers
 
-ipcMain.handle("loginWindow", () =>{
+ipcMain.handle("loginWindow", () => {
   store.clear();
   if (crearExamenWindowVar) {
-    crearExamenWindowVar.close()
+    crearExamenWindowVar.close();
   }
-  createWindow()
+  createWindow();
 });
-
 
 //handlers
 

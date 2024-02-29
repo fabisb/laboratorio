@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 29-02-2024 a las 00:01:55
--- Versión del servidor: 10.4.32-MariaDB
--- Versión de PHP: 8.2.12
+-- Tiempo de generación: 29-02-2024 a las 14:23:10
+-- Versión del servidor: 10.4.28-MariaDB
+-- Versión de PHP: 8.2.4
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -416,7 +416,9 @@ INSERT INTO `detalles_examen` (`id`, `id_ex`, `nombre`, `posicion`, `unidad`, `i
 (344, 4, 'T.P.T (P)', 2, 'Seg.', 0, '', 'activo'),
 (345, 8, 'PROTEINA C REACTIVA Cuantitativa', 5, 'mg/L', 0, '', 'activo'),
 (346, 82, 'das', 0, 'ads', 0, NULL, 'inactivo'),
-(347, 82, 'asd', 0, 'asd', 0, '123~1548', 'inactivo');
+(347, 82, 'asd', 0, 'asd', 0, '123~1548', 'inactivo'),
+(348, 83, 'fas', 2, '12', 0, '', 'activo'),
+(349, 84, 'fas', 2, '12', 0, '', 'activo');
 
 -- --------------------------------------------------------
 
@@ -530,7 +532,9 @@ INSERT INTO `examenes` (`id`, `nombre`) VALUES
 (79, 'dsf'),
 (80, 'and'),
 (81, 'asasd'),
-(82, 'uyiiu');
+(82, 'uyiiu'),
+(83, 'sa'),
+(84, 'sa');
 
 -- --------------------------------------------------------
 
@@ -595,7 +599,11 @@ CREATE TABLE `pacientes` (
 
 INSERT INTO `pacientes` (`id`, `cedula`, `nombre`, `direccion`, `telefono`, `correo`, `fecha_nacimiento`, `pre_cedula`, `genero`, `foto_carnet`) VALUES
 (24, 28582670, 'Antony', 'Soler2', '04146680992', 'antonymanuelbeni77tez@gmail.com', '2001-10-12', 'V', 'Mujer', NULL),
-(25, 29666666, 'Antony Benitez', 'pppppp', '04146680987', 'antonymanuelbenitez@gmail.com', '2023-08-01', 'V', 'Hombre', NULL);
+(25, 29666666, 'Antony Benitez', 'pppppp', '04146680987', 'antonymanuelbenitez@gmail.com', '2023-08-01', 'V', 'Hombre', NULL),
+(26, 28146771, 'Fabian Silva', 'El Silencio', '04146308395', 'silvabravofabian@gmail.com', '2002-12-17', 'V', 'Hombre', NULL),
+(31, 28146771, 'Fabiansito', 'El Silencio', '04146308395', 'silvabravofabian@gmail.com', '2020-12-17', 'N', 'Hombre', NULL),
+(32, 28146771, 'Olivia', 'El Silencio', '04146308395', 'silvabravofabian@gmail.com', '2023-12-18', 'N', 'Hombre', NULL),
+(33, 28146772, 'Fabian 2', 'El silencio', '04146308395', 'fabian2@gmail.com', '2002-12-17', 'V', 'Hombre', NULL);
 
 -- --------------------------------------------------------
 
@@ -608,8 +616,18 @@ CREATE TABLE `rangos_detalle` (
   `id_det_ex` int(11) NOT NULL,
   `desde` int(11) DEFAULT NULL,
   `hasta` int(11) DEFAULT NULL,
+  `inferior` decimal(5,2) NOT NULL,
+  `superior` decimal(5,2) NOT NULL,
   `genero` varchar(10) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `rangos_detalle`
+--
+
+INSERT INTO `rangos_detalle` (`id`, `id_det_ex`, `desde`, `hasta`, `inferior`, `superior`, `genero`) VALUES
+(1, 349, 0, 0, 1.00, 15.00, 'Mujer'),
+(2, 349, 0, 0, 2.00, 16.00, 'Hombre');
 
 -- --------------------------------------------------------
 
@@ -635,8 +653,8 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `pre_cedula`, `cedula`, `password`, `nombre`, `correo`, `telefono`, `direccion`, `foto_carnet`, `nivel`) VALUES
-(1, '', 123, '123', '', '', '', '', '', 3),
-(5, 'V', 28146771, '$2b$04$YGVtJYbYnEnKemyDy3VBxu6xXeti08efB7wVyY0Pe9C/Zr81K4Kyq', 'Fabian Silva Bravo', 'silvabravofabian@gmail.com', '04146308395', 'San Francisco', '', 3);
+(5, 'V', 28146771, '$2b$04$YGVtJYbYnEnKemyDy3VBxu6xXeti08efB7wVyY0Pe9C/Zr81K4Kyq', 'Fabian Silva Bravo', 'silvabravofabian@gmail.com', '04146308395', 'San Francisco', '', 3),
+(6, 'V', 123, '$2b$04$Ih7JFMxYtPcWXrKupAjqnuLz.WSpE8l3Oaxofbl5IlKb4TfDbsbEi', 'prueba', 'prueba@gmail.com', '123', 'prueba', '', 3);
 
 --
 -- Índices para tablas volcadas
@@ -683,8 +701,7 @@ ALTER TABLE `niveles_usuario`
 -- Indices de la tabla `pacientes`
 --
 ALTER TABLE `pacientes`
-  ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `cedula` (`cedula`);
+  ADD PRIMARY KEY (`id`);
 
 --
 -- Indices de la tabla `rangos_detalle`
@@ -714,7 +731,7 @@ ALTER TABLE `bioanalistas`
 -- AUTO_INCREMENT de la tabla `detalles_examen`
 --
 ALTER TABLE `detalles_examen`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=348;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=350;
 
 --
 -- AUTO_INCREMENT de la tabla `detalles_examenes_paciente`
@@ -726,7 +743,7 @@ ALTER TABLE `detalles_examenes_paciente`
 -- AUTO_INCREMENT de la tabla `examenes`
 --
 ALTER TABLE `examenes`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=83;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=85;
 
 --
 -- AUTO_INCREMENT de la tabla `examenes_paciente`
@@ -744,19 +761,19 @@ ALTER TABLE `niveles_usuario`
 -- AUTO_INCREMENT de la tabla `pacientes`
 --
 ALTER TABLE `pacientes`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=34;
 
 --
 -- AUTO_INCREMENT de la tabla `rangos_detalle`
 --
 ALTER TABLE `rangos_detalle`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT de la tabla `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- Restricciones para tablas volcadas
