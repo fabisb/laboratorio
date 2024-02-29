@@ -6,7 +6,7 @@ export const agregarPacienteController = async (req, res) => {
   console.log("🚀 ~ agregarPacienteController ~ idPaciente:", idPaciente)
   console.log("🚀 ~ agregarPacienteController ~ paciente:", paciente);
   let cedulaValidacion;
-  let preCedulaVal = ''
+  let preCedulaVal = '', nombreVal = ''
 
   const validacion = paciente.some((el) => {
     if (el.value == "") {
@@ -45,6 +45,7 @@ export const agregarPacienteController = async (req, res) => {
       }
     }
     if (el.name == "nombre") {
+      nombreVal = el.value
       if (!isNaN(el.value)) {
         console.log("Ingrese un nombre valido");
         return true;
@@ -83,13 +84,14 @@ export const agregarPacienteController = async (req, res) => {
       .status(400)
       .json({ mensaje: "Se ha encontrado algun error en los datos" });
   }
+
   try {
     console.log("CEDULA VALIDAICION:", cedulaValidacion);
     // Crear la consulta SQL
     if (req.body.new) {
       const [cedulaExistente] = await pool.execute(
-        "SELECT cedula FROM pacientes WHERE cedula = ? AND pre_cedula = ?",
-        [cedulaValidacion,preCedulaVal]
+        "SELECT cedula FROM pacientes WHERE cedula = ? AND pre_cedula = ? AND nombre = ?",
+        [cedulaValidacion,preCedulaVal,nombreVal]
       );
       
       if (cedulaExistente.length > 0) {
@@ -112,9 +114,10 @@ export const agregarPacienteController = async (req, res) => {
         .status(200)
         .json({ mensaje: "Paciente registrado con exito" });
     } else {
+      console.log('EDITANDO')
       const [cedulaExistente] = await pool.execute(
-        "SELECT cedula FROM pacientes WHERE cedula = ? AND id = ?",
-        [cedulaValidacion, idPaciente]
+        "SELECT cedula FROM pacientes WHERE cedula = ? AND pre_cedula = ? AND id = ?",
+        [cedulaValidacion,preCedulaVal, idPaciente]
       );
       console.log("🚀 ~ agregarPacienteController ~ cedulaExistente:", cedulaExistente)
       if ((cedulaExistente.length == 0)) {
@@ -129,12 +132,13 @@ export const agregarPacienteController = async (req, res) => {
       console.log("modificando");
       console.log("🚀 ~ agregarPacienteController ~ valores:", valores);
 
-      const consulta = `UPDATE pacientes SET ${valores} WHERE cedula = ? AND id = ?`;
+      const consulta = `UPDATE pacientes SET ${valores} WHERE cedula = ? AND pre_cedula = ? AND id = ?`;
 
       console.log("🚀 ~ agregarPacienteController ~ consulta:", consulta);
       // Ejecutar la consulta
       const resultados = await pool.execute(consulta, [
         cedulaValidacion,
+        preCedulaVal,
         idPaciente,
       ]);
       return await res
@@ -352,10 +356,17 @@ export const getHijosController = async (req,res)=>{
   const {cedula, hijo} = req.query;
   console.log("🚀 ~ getHijosController ~ cedula:", cedula)
   console.log("🚀 ~ getHijosController ~ hijo:", hijo)
+  try {
   if (!cedula || isNaN(cedula) || cedula == '') {
     return await res
       .status(400)
       .json({ mensaje: "La cedula no es valida" });
+  }
+  const [rep] = await pool.execute('SELECT * FROM pacientes WHERE cedula = ?',[cedula ]);
+  if (rep.length == 0) {
+    return await res
+    .status(403)
+    .json({ mensaje: "El representante no esta registrado" });
   }
   if (!hijo || hijo == '') {
     return await res
@@ -363,10 +374,14 @@ export const getHijosController = async (req,res)=>{
       .json({ mensaje: "El campo hijo no es valido" });
   }
   const hijosMay= hijo.toUpperCase()
-  try {
     const [hijos] = await pool.execute('SELECT * FROM pacientes WHERE cedula = ? AND pre_cedula = "N"',[cedula ]);
-    const [rep] = await pool.execute('SELECT * FROM pacientes WHERE cedula = ?',[cedula ]);
-    const hijoFilter = hijos.filter(hijo => hijo.hijo.toUpperCase() == hijosMay)
+    const hijoFilter = hijos.filter(hijo => {
+      if (hijo.hijo) {
+        
+       return returnhijo.hijo.toUpperCase() == hijosMay
+      }
+      })
+      
     console.log("🚀 ~ getHijosController ~ hijoFilter:", hijoFilter)
     if (hijoFilter.length > 0) {
       return await res

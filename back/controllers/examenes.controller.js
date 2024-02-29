@@ -130,6 +130,8 @@ export const modificarExamen = async (req, res) => {
 };
 export const crearExamen = async (req, res) => {
   const { examen, detalle } = req.body;
+  console.log("🚀 ~ crearExamen ~ examen:", examen)
+  console.log("🚀 ~ crearExamen ~ detalle:", detalle)
   if (!examen || examen == "") {
     return await res
       .status(400)
@@ -140,10 +142,19 @@ export const crearExamen = async (req, res) => {
       .status(400)
       .json({ mensaje: "El examen no puede ser enviado sin caracteristicas" });
   }
-  console.log("🚀 ~ crearExamen ~ req.body:", req.body);
   try {
     for await (const dato of detalle) {
-      const { nombre, unidad, resultados } = dato;
+      const { nombre, unidad, resultados, rangos } = dato;
+      rangos.forEach(async rg=>{
+        if(rg.superior=="" || rg.inferior=="" ){
+          return await res
+          .status(400)
+          .json({
+            mensaje:
+              "El formato de un Rango es erroneo",
+          });
+        }
+      })
       if (resultados != '') {
         
         if ((resultados.split("~").length == 0)) {
@@ -191,14 +202,35 @@ export const crearExamen = async (req, res) => {
       [examen]
     );
 
+    for await (const dato of detalle) {
+      const { nombre, unidad, resultados, rangos, posicion } = dato;
+      let cadenaRangos =""
+      
+      const [consulta] = await pool.execute(`INSERT INTO detalles_examen(id_ex, nombre, posicion, unidad, impsiempre, resultados) VALUES('${examenInsert.insertId}','${nombre}','${posicion}','${unidad}','','${resultados}')`);
+      console.log("🚀 ~ forawait ~ consulta:", consulta)
+      rangos.forEach(async rg=>{
+        cadenaRangos += `('${consulta.insertId}','${rg.superior}','${rg.inferior}','${rg.desde}','${rg.hasta}','${rg.genero}'),`
+
+      })
+      cadenaRangos = cadenaRangos.slice(0, cadenaRangos.length - 1);
+      const rangosConsulta = await pool.execute(`INSERT INTO rangos_detalle (id_det_ex,inferior,superior, desde, hasta,genero) VALUES ${cadenaRangos}`)
+      
+    }
+
+    
+
+    
+
     const valores = detalle
       .map((dato) => {
-        return `('${examenInsert.insertId}','${dato.nombre}','${dato.inferior}','${dato.superior}','${dato.posicion}','${dato.unidad}','${dato.impsiempre}','${dato.resultados}')`;
+        
+        return `('${examenInsert.insertId}','${dato.nombre}','${dato.posicion}','${dato.unidad}','${dato.impsiempre}','${dato.resultados}')`;
       })
       .join(", ");
-    const consulta = `INSERT INTO detalles_examen(id_ex, nombre, inferior, superior, posicion, unidad, impsiempre, resultados) VALUES ${valores}`;
-    console.log(consulta);
-    const resultados = await pool.execute(consulta);
+    //const consulta = `INSERT INTO detalles_examen(id_ex, nombre, posicion, unidad, impsiempre, resultados) VALUES ${valores}`;
+
+   
+    //const resultados = await pool.execute(consulta);
     return await res
       .status(200)
       .json({ mensaje: "Examen ingresado con exito" });
@@ -230,12 +262,12 @@ export const getBioanalistas = async (req, res) => {
   }
 };
 export const getPaciente = async (req, res) => {
-  const { cedula } = req.query;
+  const { cedula,preCedula } = req.query;
 
   try {
     const [paciente] = await pool.execute(
-      "SELECT * FROM pacientes WHERE cedula = ?",
-      [cedula]
+      "SELECT * FROM pacientes WHERE cedula = ? AND pre_cedula = ?",
+      [cedula,preCedula]
     );
     if (paciente.length > 0) {
       return await res.status(200).json(paciente[0]);

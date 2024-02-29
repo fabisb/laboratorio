@@ -115,7 +115,7 @@
                   name="pre_cedula"
                   required
                 >
-                  <option selected value="V">V</option>
+                  <option id="pre_cedula_v" selected value="V">V</option>
                   <option value="E">E</option>
                   <option value="N">Niño</option>
                 </select>
@@ -131,11 +131,13 @@
                   placeholder="Cedula"
                 />
               </div>
-              <div class="col-1">
+              <div id="childNameDiv" hidden class="col-1">
                 <input
+                name="childName"
                   class="form-control"
                   list="childNameList"
                   id="childName"
+                 
                   placeholder="Niño"
                 />
                 <datalist id="childNameList">
@@ -170,6 +172,7 @@
           </div>
           <div class="row">
             <div id="alertaCedula"></div>
+            <div id="alertaCedula2"></div>
           </div>
           <hr style="border-top: solid 3px rgb(255, 196, 0)" />
           <br />
@@ -286,11 +289,13 @@
                   >Nacimiento:
                 </label>
                 <input
+                  readonly
                   name="fecha_nacimiento"
                   type="date"
-                  onchange="calcularEdad()"
+                  onblur="calcularEdad()"
                   class="form-control mx-2"
                   id="exampleFormControlInput2"
+                  min="1900-01-01"
                 />
               </div>
             </div>

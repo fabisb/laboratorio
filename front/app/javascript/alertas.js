@@ -16,3 +16,21 @@ const cedulaAlerta = (message, type) => {
     }, 6000);
   }
 };
+const alertaCedula2 = document.getElementById("alertaCedula2");
+const cedulaAlerta2 = (message, type) => {
+  const wrapper = document.createElement("div");
+  wrapper.innerHTML = [
+    `<div id="alertCedulaDiv2" class="alert alert-${type} alert-dismissible fade show" role="alert">`,
+    `   <div>${message}</div>`,
+    '   <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>',
+    "</div>",
+  ].join("");
+  if (alertaCedula2.children.length == 0) {
+    alertaCedula2.append(wrapper);
+    setTimeout(() => {
+       new bootstrap.Alert("#alertCedulaDiv2").close();
+      alertaCedula2.removeChild(alertaCedula2.firstChild);
+      return
+    }, 6000);
+  }
+};
