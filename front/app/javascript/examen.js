@@ -346,7 +346,7 @@ async function modificarPaciente() {
         { headers: { token } }
       );
       console.log("PACIENTE INGRESADO");
-      const modal = new bootstrap.Modal("#confirmacion-modal");
+      const modal = new bootstrap.Modal("#confirmacion-modal-pacienteM");
       modal.show();
       desactivarInputs();
     } catch (error) {
