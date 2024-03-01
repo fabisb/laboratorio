@@ -39,8 +39,9 @@ async function modificarExamenBdd(idExamen) {
     modal.show();
     examenCrud.value = "";
     detallesExamen = [];
-
+    const btn = document.getElementById("btnGuardarExamen");
     document.getElementById("tBodyDetalles").innerHTML = "";
+    btn.setAttribute("onclick", `guardarExamen()`);
   } catch (error) {
     console.log(error);
     if (error.response.data.mensaje) {
@@ -121,21 +122,25 @@ async function modificarExamen(id) {
       { id },
       { headers: { token } }
     );
-    const { examen, detalle } = resp.data;
+    const { examen, detalle, rangos } = resp.data;
     console.log(examen, detalle);
-    document.getElementById("examenNameCrud").value = examen[0][0].nombre;
+    console.log(rangos)
+    document.getElementById("examenNameCrud").value = examen[0].nombre;
     btn.setAttribute("onclick", `modificarExamenBdd('${id}')`);
 
     const tBodyDetalles = document.getElementById("tBodyDetalles");
+    const tBodyRangos = document.getElementById("tableRangosBody");
+    tBodyRangos.innerHTML=""
 
     tBodyDetalles.innerHTML = "";
-    detalle[0].forEach((e) => {
+    detalle.forEach((e) => {
+      let rangosEx = rangos.filter(el=>el.idDetEx ==e.id )
+      console.log(rangosEx[0].rangos)
       contadorCaracteristica += 1;
       detallesExamen.push({
         id: contadorCaracteristica,
         nombre: e.nombre,
-        inferior: e.inferior,
-        superior: e.superior,
+        rangos: rangosEx[0].rangos ? rangosEx[0].rangos : [],
         unidad: e.unidad,
         posicion: e.posicion,
         resultados: e.resultados,
@@ -145,8 +150,6 @@ async function modificarExamen(id) {
       tBodyDetalles.innerHTML += `
       <tr id='tr-${contadorCaracteristica}'>
                       <td scope="col">${e.nombre}</td>
-                      <td scope="col">${e.inferior}</td> 
-                      <td scope="col">${e.superior}</td>
                       <td scope="col">${e.posicion}</td>
                       <td scope="col">${e.unidad}</td>
                         
@@ -535,20 +538,22 @@ function modificarCaracteristica(id, idBdd) {
     document.getElementById(`selectRango${i.toString()}`).value = e.genero;
   });
 
-  caracteristicaDetalle.resultados.split("~").forEach((e) => {
-    document.getElementById("inputContainerResultados").innerHTML += `
-    <input
-    name="resultadoInput"
-    class="form-control inputExamen"
-    type="text"
-    value="${e}"
-    placeholder="Ingrese un resultado unico en el examen"
-    aria-label="default input example"
-  />
-  `;
-  });
-  if (caracteristicaDetalle.resultados == "") {
-    console.log("aaa");
+  if(caracteristicaDetalle.resultados!='' && caracteristicaDetalle.resultados!=null){
+    caracteristicaDetalle.resultados.split("~").forEach((e) => {
+      document.getElementById("inputContainerResultados").innerHTML += `
+      <input
+      name="resultadoInput"
+      class="form-control inputExamen"
+      type="text"
+      value="${e}"
+      placeholder="Ingrese un resultado unico en el examen"
+      aria-label="default input example"
+    />
+    `;
+    }); 
+  }else{
+
+ 
     document.getElementById("inputContainerResultados").innerHTML = `
     <input
     name="resultadoInput"
@@ -645,6 +650,7 @@ const guardarExamen = async (newExamen) => {
     detallesExamen = [];
 
     document.getElementById("tBodyDetalles").innerHTML = "";
+    render()
   } catch (error) {
     console.log(error);
     if (error.response.data.mensaje) {

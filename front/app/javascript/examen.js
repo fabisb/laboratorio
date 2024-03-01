@@ -17,11 +17,7 @@ const render = async () => {
       urlsv + "/api/examenes/get-bioanalistas",
       { headers: { token } }
     );
-    /*console.log("🚀 ~ render ~ bioanalistas:", bioanalistas);
-    const bioSlct = document.getElementsByName("bioanalistasSlct")[0];
-    bioanalistas.map((bio) => {
-      bioSlct.innerHTML += `<option value="${bio.id}">${bio.nombre}</option>`;
-    });*/
+    
     const examBody = document.getElementById("tBodyMenuExamen");
     examenesGet.map((ex) => {
       examBody.innerHTML += `<tr><td>${ex.id}</td><td>${ex.nombre}</td><td style="cursor:pointer"
