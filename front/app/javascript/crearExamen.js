@@ -474,8 +474,9 @@ function modificarCaracteristica(id, idBdd) {
   document.getElementById("tableRangosBody").innerHTML = ``;
 
   caracteristicaDetalle.rangos.forEach((e, i) => {
+    console.log("🚀 ~ caracteristicaDetalle.rangos.forEach ~ e:", e)
     console.log(caracteristicaDetalle.id);
-    document.getElementById("tableRangosBody").innerHTML = `
+    document.getElementById("tableRangosBody").innerHTML += `
     <tr class="tr-rango">
   <td scope="row"><input
     name="rangoSup"
@@ -518,8 +519,8 @@ function modificarCaracteristica(id, idBdd) {
     placeholder="Hasta"
   /></td>
   <td scope="row">
-    <select class="form-select form-select-sm inputExamenRango" id="selectRango${i}" name="rangoSelect" aria-label="Small select example">
-      <option selected>Genero</option>
+    <select class="form-select form-select-sm inputExamenRango" id="selectRango${i.toString()}" name="rangoSelect" aria-label="Small select example">
+      <option >Genero</option>
       <option value="Hombre">Masculino</option>
       <option value="Mujer">Femenino</option>
 
@@ -528,7 +529,10 @@ function modificarCaracteristica(id, idBdd) {
   
 </tr>
     `;
-    document.getElementById("selectRango" + i).value = e.genero;
+  })
+  caracteristicaDetalle.rangos.forEach((e,i) => {
+    
+    document.getElementById(`selectRango${i.toString()}`).value = e.genero;
   });
 
   caracteristicaDetalle.resultados.split("~").forEach((e) => {

@@ -498,6 +498,7 @@ const crearPaciente = async () => {
       console.log("PACIENTE INGRESADO");
       const modal = new bootstrap.Modal("#confirmacion-modal");
       modal.show();
+      desactivarInputs()
     } catch (error) {
       console.log(error);
       if (error.response.data.mensaje) {
