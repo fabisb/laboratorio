@@ -351,7 +351,7 @@ export const agregarUsuarioController = async (req, res) => {
   }
 };
 
-export const getHijosController = async (req,res)=>{
+/* export const getHijosController = async (req,res)=>{
   console.log('getHijosController')
   const {cedula, hijo} = req.query;
   console.log("🚀 ~ getHijosController ~ cedula:", cedula)
@@ -399,4 +399,34 @@ export const getHijosController = async (req,res)=>{
     return await res.status(500).json({ mensaje: "ERROR DE SERVIDOR" });
 
   }
-}
+} */
+
+export const getHijosController = async (req, res) => {
+  console.log("getHijosControllerExamnes");
+  const { cedula } = req.query;
+  console.log("🚀 ~ getHijosController ~ cedula:", cedula);
+  try {
+    if (!cedula || isNaN(cedula) || cedula == "") {
+      return await res.status(400).json({ mensaje: "La cedula no es valida" });
+    }
+    const [rep] = await pool.execute(
+      "SELECT * FROM pacientes WHERE cedula = ? AND pre_cedula != 'N'",
+      [cedula]
+    );
+    if (rep.length == 0) {
+      return await res
+        .status(403)
+        .json({ mensaje: "El representante no esta registrado" });
+    }
+
+    const [hijos] = await pool.execute(
+      'SELECT * FROM pacientes WHERE cedula = ? AND pre_cedula = "N"',
+      [cedula]
+    );
+
+    return await res.status(200).json({ hijos, rep });
+  } catch (error) {
+    console.log(error);
+    return await res.status(500).json({ mensaje: "ERROR DE SERVIDOR" });
+  }
+};

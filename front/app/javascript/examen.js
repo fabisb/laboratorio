@@ -1,8 +1,6 @@
 var examenes = [];
 var idPaciente = "";
 
-
-
 const render = async () => {
   try {
     const { token } = await login.getToken();
@@ -117,23 +115,7 @@ function buscarExamen() {
 const cedulaPaciente = async () => {
   console.log("cedulaPaciente");
   const preCedula = document.getElementsByName("pre_cedula")[0].value;
-  const cedula = document.getElementsByName("cedula")[0].value;
-  console.log("🚀 ~ cedulaPaciente ~ cedula:", cedula);
-  const fecha = document.getElementsByName("fechaRegistro")[0].value;
-  var inputs = [...document.getElementsByTagName("input")];
-  const botonModificar = document.getElementById("botonModificar");
-  inputs.map((inp) => {
-    if (
-      inp.name != "pre_cedula" &&
-      inp.name != "cedula" &&
-      inp.name != "fecha"
-    ) {
-      inp.value = "";
-    }
-  });
-
-  console.log("🚀 ~ cedulaPaciente ~ fecha:", fecha);
-  if (preCedula != "E" && preCedula != "V" && preCedula!= "N") {
+  if (preCedula != "E" && preCedula != "V" && preCedula != "N") {
     return cedulaAlerta(
       `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-exclamation-triangle-fill" viewBox="0 0 16 16">
     <path d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5m.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2"/>
@@ -143,50 +125,70 @@ const cedulaPaciente = async () => {
       "warning"
     );
   }
-  if (
-    preCedula == "" ||
-    cedula == "" ||
-    !cedula ||
-    cedula.length < 6 ||
-    cedula.length > 12
-  ) {
-    return cedulaAlerta(
-      `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-exclamation-triangle-fill" viewBox="0 0 16 16">
+  if (preCedula === "N") {
+    validarN();
+  } else {
+    const cedula = document.getElementsByName("cedula")[0].value;
+    console.log("🚀 ~ cedulaPaciente ~ cedula:", cedula);
+    const fecha = document.getElementsByName("fechaRegistro")[0].value;
+    var inputs = [...document.getElementsByTagName("input")];
+    const botonModificar = document.getElementById("botonModificar");
+    inputs.map((inp) => {
+      if (
+        inp.name != "pre_cedula" &&
+        inp.name != "cedula" &&
+        inp.name != "fecha"
+      ) {
+        inp.value = "";
+      }
+    });
+
+    console.log("🚀 ~ cedulaPaciente ~ fecha:", fecha);
+    if (
+      preCedula == "" ||
+      cedula == "" ||
+      !cedula ||
+      cedula.length < 6 ||
+      cedula.length > 12
+    ) {
+      return cedulaAlerta(
+        `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-exclamation-triangle-fill" viewBox="0 0 16 16">
     <path d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5m.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2"/>
   </svg>  <div>
   Ingrese una cedula valida
     </div>`,
-      "warning"
-    );
-  }
-
-  try {
-    if (cedula.length >= 6 && cedula.length <= 12) {
-      const { token } = await login.getToken();
-
-      const { data: paciente } = await axios.get(
-        urlsv + "/api/examenes/get-paciente",
-        {
-          params: {
-            cedula,preCedula
-          },
-          headers: { token },
-        }
+        "warning"
       );
-      idPaciente = paciente.id;
+    }
 
-      console.log("🚀 ~ cedulaPaciente ~ paciente:", paciente);
-      if (paciente.paciente == 404) {
-        cedulaAlerta(
-          `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-exclamation-triangle-fill" viewBox="0 0 16 16">
+    try {
+      if (cedula.length >= 6 && cedula.length <= 12) {
+        const { token } = await login.getToken();
+
+        const { data: paciente } = await axios.get(
+          urlsv + "/api/examenes/get-paciente",
+          {
+            params: {
+              cedula,
+              preCedula,
+            },
+            headers: { token },
+          }
+        );
+        idPaciente = paciente.id;
+
+        console.log("🚀 ~ cedulaPaciente ~ paciente:", paciente);
+        if (paciente.paciente == 404) {
+          cedulaAlerta(
+            `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-exclamation-triangle-fill" viewBox="0 0 16 16">
         <path d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5m.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2"/>
       </svg>  <div>
       No se ha encontrado el usuario, agreguelo para continuar
         </div>`,
-          "primary"
-        );
-        activarInputs("crearPaciente()");
-        /*inputs.map((inp) => {
+            "primary"
+          );
+          activarInputs("crearPaciente()");
+          /*inputs.map((inp) => {
           inp.removeAttribute("readonly");
           inp.removeAttribute("disabled");
         });
@@ -210,44 +212,45 @@ const cedulaPaciente = async () => {
                   </button>
           `;
         }*/
-      } else {
-        console.log(botonModificar);
-        desactivarInputs();
-        botonModificar.addEventListener(
-          "click",
-          () => activarInputs("modificarPaciente()"),
-          true
-        );
+        } else {
+          console.log(botonModificar);
+          desactivarInputs();
+          botonModificar.addEventListener(
+            "click",
+            () => activarInputs("modificarPaciente()"),
+            true
+          );
 
-        paciente.fecha_nacimiento = moment(paciente.fecha_nacimiento).format(
-          "YYYY-MM-DD"
-        );
-        document.getElementsByName("edad")[0].value = calcularEdadNormal(
-          paciente.fecha_nacimiento
-        );
-        for (let clave in paciente) {
-          if (clave == "fecha_nacimiento") {
-            console.log(moment(paciente[clave]).format("YYYY-MM-DD"));
-            document.getElementsByName(clave)[0]
-              ? (document.getElementsByName(clave)[0].value =
-                  moment(paciente[clave]).format("YYYY-MM-DD") ?? "")
-              : "";
-          } else {
-            document.getElementsByName(clave)[0]
-              ? (document.getElementsByName(clave)[0].value =
-                  paciente[clave] ?? "")
-              : "";
+          paciente.fecha_nacimiento = moment(paciente.fecha_nacimiento).format(
+            "YYYY-MM-DD"
+          );
+          document.getElementsByName("edad")[0].value = calcularEdadNormal(
+            paciente.fecha_nacimiento
+          );
+          for (let clave in paciente) {
+            if (clave == "fecha_nacimiento") {
+              console.log(moment(paciente[clave]).format("YYYY-MM-DD"));
+              document.getElementsByName(clave)[0]
+                ? (document.getElementsByName(clave)[0].value =
+                    moment(paciente[clave]).format("YYYY-MM-DD") ?? "")
+                : "";
+            } else {
+              document.getElementsByName(clave)[0]
+                ? (document.getElementsByName(clave)[0].value =
+                    paciente[clave] ?? "")
+                : "";
+            }
           }
-        }
 
-        document.getElementById(paciente.genero).removeAttribute("disabled");
-        document.getElementById(paciente.genero).click();
+          document.getElementById(paciente.genero).removeAttribute("disabled");
+          document.getElementById(paciente.genero).click();
+        }
       }
-    }
-  } catch (error) {
-    console.log(error);
-    if (error.response.status != 404) {
-      return await alerta.error();
+    } catch (error) {
+      console.log(error);
+      if (error.response.status != 404) {
+        return await alerta.error();
+      }
     }
   }
 };
@@ -258,6 +261,11 @@ const desactivarInputs = () => {
   if (botonGuardar) {
     botonGuardar.remove();
   }
+  const bsCollapse = new bootstrap.Collapse("#collapseDatos", {
+    toggle: false,
+  });
+  bsCollapse.hide();
+
   inputs.map((inp) => {
     if (
       inp.name != "pre_cedula" &&
@@ -278,10 +286,11 @@ const desactivarInputs = () => {
 
 const activarInputs = async (click) => {
   var inputs = [...document.getElementsByTagName("input")];
-  const bsCollapse = new bootstrap.Collapse('#collapseDatos')
-  bsCollapse.show()
-   
-  
+  const bsCollapse = new bootstrap.Collapse("#collapseDatos", {
+    toggle: false,
+  });
+  bsCollapse.show();
+
   inputs.map((inp) => {
     inp.removeAttribute("readonly");
     inp.removeAttribute("disabled");
@@ -349,6 +358,7 @@ async function modificarPaciente() {
       const modal = new bootstrap.Modal("#confirmacion-modal-pacienteM");
       modal.show();
       desactivarInputs();
+      cedulaPaciente();
     } catch (error) {
       console.log(error);
       if (error.response.data.mensaje) {
@@ -498,7 +508,7 @@ const crearPaciente = async () => {
       console.log("PACIENTE INGRESADO");
       const modal = new bootstrap.Modal("#confirmacion-modal");
       modal.show();
-      desactivarInputs()
+      desactivarInputs();
     } catch (error) {
       console.log(error);
       if (error.response.data.mensaje) {
@@ -617,18 +627,25 @@ const abrirModalExamenes = () => new bootstrap.Modal("#examenes-list").toggle();
 const abrirModalExamenesCrud = () =>
   new bootstrap.Modal("#examenes-crud").toggle();
 
+const ModalExamenesCrud = document.getElementById("examenes-crud");
+ModalExamenesCrud.addEventListener(
+  "show.bs.modal",
+  (event) => {
+    console.log(event);
+    document.getElementById("examenes-list").style.boxShadow = "0.5";
+  },
+  false
+);
 
-const ModalExamenesCrud = document.getElementById('examenes-crud')
-ModalExamenesCrud.addEventListener('show.bs.modal', event => {
-  console.log(event)
-document.getElementById('examenes-list').style.boxShadow = "0.5";
-},false)
-
-ModalExamenesCrud.addEventListener('hidden.bs.modal', event => {
-  console.log(event)
-document.getElementById('examenes-list').style.opacity = "1";
-},false)
-function grisModal(id1){
+ModalExamenesCrud.addEventListener(
+  "hidden.bs.modal",
+  (event) => {
+    console.log(event);
+    document.getElementById("examenes-list").style.opacity = "1";
+  },
+  false
+);
+function grisModal(id1) {
   document.getElementById(id1).style.opacity = "0.75";
 }
 
@@ -638,14 +655,13 @@ const addInput = () => {
   if (inputsArray.length + 1 > 10) {
     return;
   }
-  let inputC=document.createElement("input");
+  let inputC = document.createElement("input");
   inputC.name = "resultadoInput";
   inputC.type = "text";
   inputC.placeholder = "Ingrese un resultado unico en el examen";
-  inputC.ariaLabel = "default input example"
-  inputC.className= "form-control inputExamen"
+  inputC.ariaLabel = "default input example";
+  inputC.className = "form-control inputExamen";
   inputContainer.appendChild(inputC);
-  
 };
 
 const calcularEdad = () => {
@@ -654,22 +670,25 @@ const calcularEdad = () => {
 };
 
 const calcularEdadNormal = (fecha) => {
-  let fechaActual=moment().format('YYYY-MM-DD');
-  
-  let fecha2= document.getElementsByName("fecha_nacimiento")[0].value = moment(fecha).format('YYYY-MM-DD');
-  
-console.log('momentisAfter:',moment(fecha2).isAfter(fechaActual))
-  
+  let fechaActual = moment().format("YYYY-MM-DD");
+
+  let fecha2 = (document.getElementsByName("fecha_nacimiento")[0].value =
+    moment(fecha).format("YYYY-MM-DD"));
+
+  console.log("momentisAfter:", moment(fecha2).isAfter(fechaActual));
 
   const mes = moment(fecha).format("MM");
   const ano = moment(fecha).format("YYYY");
-  console.log("🚀 ~ calcularEdadNormal ~ ano:", ano)
+  console.log("🚀 ~ calcularEdadNormal ~ ano:", ano);
   const dia = moment(fecha).format("DD");
-  if(mes == 2 && dia> 29 || moment(fecha2).isAfter(fechaActual) || ano < 1890){
-    document.getElementsByName("fecha_nacimiento")[0].value=""
-   return ""
+  if (
+    (mes == 2 && dia > 29) ||
+    moment(fecha2).isAfter(fechaActual) ||
+    ano < 1890
+  ) {
+    document.getElementsByName("fecha_nacimiento")[0].value = "";
+    return "";
   }
-  
 
   const mesAc = moment().format("MM");
   const anoAc = moment().format("YYYY");
@@ -691,28 +710,190 @@ console.log('momentisAfter:',moment(fecha2).isAfter(fechaActual))
 };
 
 const validarNInput = (event) => {
-  if (event.target.value == "N") {
-    document.getElementById('childNameDiv').removeAttribute('hidden') ;
-    document
-    .getElementById("formPaciente")
-    .setAttribute("onsubmit", "event.preventDefault(), validarN()");
-    
-    const cedula = document.getElementsByName("cedula")[0].value;
-    if (cedula != "") {
-      const hijo = document.getElementById("childName").value;
-      if (hijo != "") {
-        validarN();
-      }
-    }
-  } else {
-    document.getElementById('childNameDiv').setAttribute('hidden','true');
-    document
-      .getElementById("formPaciente")
-      .setAttribute("onsubmit", "event.preventDefault(), cedulaPaciente()");
+  if (event.target.value != "N") {
+    document.getElementById("childNameDiv").setAttribute("hidden", "true");
   }
 };
 
-const validarN = async (event) => {
+const validarNSlct = async (event) => {
+  if (event.target.value == "") {
+    console.log("agregar nuevo");
+    activarInputs("crearPaciente()");
+    document.getElementsByName("nombre")[0].value = "";
+    document.getElementsByName("edad")[0].value = "";
+    document.getElementsByName("fecha_nacimiento")[0].value = "";
+    const { direccion, telefono, correo } = JSON.parse(
+      event.target.options[event.target.selectedIndex].getAttribute("rep")
+    );
+    document.getElementsByName("direccion")[0].value = direccion;
+    document.getElementsByName("telefono")[0].value = telefono;
+    document.getElementsByName("correo")[0].value = correo;
+  } else if (event.target.value == "default") {
+    console.log("default");
+  } else {
+    console.log(event.target.value);
+    try {
+      const { token } = await login.getToken();
+
+      const { data: paciente } = await axios.get(
+        urlsv + "/api/examenes/get-paciente-hijo",
+        {
+          params: {
+            cedula: event.target.value.split("-")[1],
+            nombre: event.target.value.split("-")[0],
+          },
+          headers: { token },
+        }
+      );
+      if (paciente.length == 0) {
+        cedulaAlerta(
+          `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-exclamation-triangle-fill" viewBox="0 0 16 16">
+    <path d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5m.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2"/>
+  </svg>  <div>
+  No se ha encontrado el usuario, agreguelo para continuar
+    </div>`,
+          "primary"
+        );
+        return activarInputs("crearPaciente()");
+      } else {
+        console.log("🚀 ~ validarNSlct ~ paciente:", paciente);
+        idPaciente = paciente.id;
+
+        desactivarInputs();
+        document
+          .getElementById("botonModificar")
+          .addEventListener(
+            "click",
+            () => activarInputs("modificarPaciente()"),
+            true
+          );
+
+        paciente.fecha_nacimiento = moment(paciente.fecha_nacimiento).format(
+          "YYYY-MM-DD"
+        );
+        document.getElementsByName("edad")[0].value = calcularEdadNormal(
+          paciente.fecha_nacimiento
+        );
+        for (let clave in paciente) {
+          if (clave == "fecha_nacimiento") {
+            console.log(moment(paciente[clave]).format("YYYY-MM-DD"));
+            document.getElementsByName(clave)[0]
+              ? (document.getElementsByName(clave)[0].value =
+                  moment(paciente[clave]).format("YYYY-MM-DD") ?? "")
+              : "";
+          } else {
+            document.getElementsByName(clave)[0]
+              ? (document.getElementsByName(clave)[0].value =
+                  paciente[clave] ?? "")
+              : "";
+          }
+        }
+
+        document.getElementById(paciente.genero).removeAttribute("disabled");
+        document.getElementById(paciente.genero).click();
+      }
+    } catch (error) {
+      console.log(error);
+      if (error.response.data.mensaje) {
+        return await alerta.alert("Error:", error.response.data.mensaje);
+      } else {
+        return await alerta.error();
+      }
+    }
+  }
+};
+
+const validarN = async () => {
+  if (document.getElementsByName("pre_cedula")[0].value == "N") {
+    const cedula = document.getElementsByName("cedula")[0].value;
+    console.log("🚀 ~ validarN ~ cedula:", cedula);
+    try {
+      const { token } = await login.getToken();
+      if (!cedula || isNaN(cedula) || cedula == "") {
+        return cedulaAlerta(
+          `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-exclamation-triangle-fill" viewBox="0 0 16 16">
+        <path d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5m.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2"/>
+      </svg>  <div>
+      Se debe ingresar una cedula valida
+        </div>`,
+          "warning"
+        );
+      }
+
+      const { data } = await axios.get(urlsv + "/api/users/get-hijos", {
+        params: {
+          cedula,
+        },
+        headers: { token },
+      });
+
+      const { hijos, rep } = data;
+      console.log("🚀 ~ validarN ~ data:", data);
+      if (hijos.length == 0) {
+        if (rep.length > 0) {
+          let { direccion, telefono, correo } = rep[0];
+          document.getElementsByName("direccion")[0].value = direccion;
+          document.getElementsByName("telefono")[0].value = telefono;
+          document.getElementsByName("correo")[0].value = correo;
+          document.getElementsByName("fecha_nacimiento")[0].value = "";
+          document.getElementsByName("edad")[0].value = "";
+          cedulaAlerta(
+            `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-exclamation-triangle-fill" viewBox="0 0 16 16">
+          <path d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5m.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2"/>
+        </svg>  <div>
+        No se ha encontrado menores, agregue uno para continuar
+          </div>`,
+            "primary"
+          );
+          activarInputs("crearPaciente()");
+        }
+      } else {
+        document.getElementById("childNameDiv").removeAttribute("hidden");
+
+        document.getElementById("childNameList").innerHTML = `
+        <option value="default" selected>Niños</option>
+        <option rep='${JSON.stringify(
+          rep[0]
+        )}' value="">+ Agregar Niño...</option>
+        `;
+        document.getElementById("childNameList").innerHTML += hijos
+          .map(
+            (hijo) =>
+              `<option nombre="${hijo.nombre}" direccion="${hijo.direccion}" telefono="${hijo.telefono}" correo="${hijo.correo}" idHijo="${hijo.id}" genero="${hijo.genero}" fecha_nacimiento="${hijo.fecha_nacimiento}" cedula="${hijo.cedula}" value="${hijo.nombre}-${hijo.cedula}">${hijo.nombre}</option>`
+          )
+          .join("");
+      }
+    } catch (error) {
+      console.log(error);
+      if (error.response.status == 403) {
+        console.log(
+          "🚀 ~ validarN ~ error.response.status:",
+          error.response.status
+        );
+        document.getElementsByName("pre_cedula")[0].value = "V";
+
+        document.getElementById("childNameDiv").setAttribute("hidden", "true");
+        cedulaPaciente();
+
+        return cedulaAlerta2(
+          `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-exclamation-triangle-fill" viewBox="0 0 16 16">
+        <path d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5m.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2"/>
+      </svg>  <div>
+      La cedula del representante no está registrada
+        </div>`,
+          "danger"
+        );
+      } else {
+        if (error.response.data.mensaje) {
+          return await alerta.alert("Error:", error.response.data.mensaje);
+        } else {
+          return await alerta.error();
+        }
+      }
+    }
+  }
+};
+const validarN2 = async () => {
   if (document.getElementsByName("pre_cedula")[0].value == "N") {
     const cedula = document.getElementsByName("cedula")[0].value;
     console.log("🚀 ~ validarN ~ cedula:", cedula);
@@ -721,7 +902,7 @@ const validarN = async (event) => {
     try {
       const { token } = await login.getToken();
       if (!cedula || isNaN(cedula) || cedula == "") {
-         return cedulaAlerta(
+        return cedulaAlerta(
           `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-exclamation-triangle-fill" viewBox="0 0 16 16">
         <path d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5m.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2"/>
       </svg>  <div>
@@ -729,13 +910,10 @@ const validarN = async (event) => {
         </div>`,
           "warning"
         );
-
       }
 
-      
-      
-      if (!hijo  || hijo == "") {
-        activarInputs('crearPaciente()')
+      if (!hijo || hijo == "") {
+        activarInputs("crearPaciente()");
 
         cedulaAlerta(
           `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-exclamation-triangle-fill" viewBox="0 0 16 16">
@@ -754,21 +932,20 @@ const validarN = async (event) => {
         },
         headers: { token },
       });
-    
+
       const { hijos, rep } = data;
       console.log("🚀 ~ validarN ~ data:", data);
       if (hijos.length == 0) {
         document.getElementsByName("nombre")[0].value = hijo;
 
-        
         console.log(rep);
         if (rep.length > 0) {
-          let { direccion, telefono, correo,fecha_nacimiento } = rep[0];
+          let { direccion, telefono, correo, fecha_nacimiento } = rep[0];
           document.getElementsByName("direccion")[0].value = direccion;
           document.getElementsByName("telefono")[0].value = telefono;
           document.getElementsByName("correo")[0].value = correo;
-          document.getElementsByName("fecha_nacimiento")[0].value = ""
-          document.getElementsByName("edad")[0].value = ""
+          document.getElementsByName("fecha_nacimiento")[0].value = "";
+          document.getElementsByName("edad")[0].value = "";
           cedulaAlerta(
             `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-exclamation-triangle-fill" viewBox="0 0 16 16">
           <path d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5m.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2"/>
@@ -786,41 +963,43 @@ const validarN = async (event) => {
               `<option onclick="handleDatalistInput()" value="${hijo.nombre}" cedulaHijo="${hijo.cedula}">${hijo.nombre}</option>`
           )
           .join("");
-          
-          const hijoFind = hijos.find(e=>e.nombre.toUpperCase()==hijo.toUpperCase());
-          if (hijoFind !==undefined) {
-            
-          console.log("🚀 ~ validarN ~ hijoFind:", hijoFind)
-          document.getElementsByName("nombre")[0].value =hijoFind.nombre;
-          document.getElementsByName("direccion")[0].value =hijoFind.direccion;
+
+        const hijoFind = hijos.find(
+          (e) => e.nombre.toUpperCase() == hijo.toUpperCase()
+        );
+        if (hijoFind !== undefined) {
+          console.log("🚀 ~ validarN ~ hijoFind:", hijoFind);
+          document.getElementsByName("nombre")[0].value = hijoFind.nombre;
+          document.getElementsByName("direccion")[0].value = hijoFind.direccion;
           document.getElementsByName("telefono")[0].value = hijoFind.telefono;
           document.getElementsByName("correo")[0].value = hijoFind.correo;
           hijoFind.fecha_nacimiento = moment(hijoFind.fecha_nacimiento).format(
             "YYYY-MM-DD"
           );
-          document.getElementsByName("fecha_nacimiento")[0].value = hijoFind.fecha_nacimiento
+          document.getElementsByName("fecha_nacimiento")[0].value =
+            hijoFind.fecha_nacimiento;
 
           document.getElementsByName("edad")[0].value = calcularEdadNormal(
             hijoFind.fecha_nacimiento
           );
-          idPaciente = hijoFind.id
-          
+          idPaciente = hijoFind.id;
+
           desactivarInputs();
           botonModificar.addEventListener(
             "click",
             () => activarInputs("modificarPaciente()"),
             true
           );
-        }else{
+        } else {
           document.getElementsByName("nombre")[0].value = hijo;
           console.log(rep);
           if (rep.length > 0) {
-            let { direccion, telefono, correo,fecha_nacimiento } = rep[0];
+            let { direccion, telefono, correo, fecha_nacimiento } = rep[0];
             document.getElementsByName("direccion")[0].value = direccion;
             document.getElementsByName("telefono")[0].value = telefono;
             document.getElementsByName("correo")[0].value = correo;
-            document.getElementsByName("fecha_nacimiento")[0].value = ""
-           
+            document.getElementsByName("fecha_nacimiento")[0].value = "";
+
             cedulaAlerta(
               `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-exclamation-triangle-fill" viewBox="0 0 16 16">
             <path d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5m.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2"/>
@@ -833,16 +1012,17 @@ const validarN = async (event) => {
             activarInputs("crearPaciente()");
           }
         }
-
-          
       }
     } catch (error) {
       console.log(error);
-      if(error.response.status == 403){
-        console.log("🚀 ~ validarN ~ error.response.status:", error.response.status)
-        document.getElementsByName('pre_cedula')[0].value = 'V'
-        validarNInput({target:{value:"V"}});
-        
+      if (error.response.status == 403) {
+        console.log(
+          "🚀 ~ validarN ~ error.response.status:",
+          error.response.status
+        );
+        document.getElementsByName("pre_cedula")[0].value = "V";
+        validarNInput({ target: { value: "V" } });
+
         return cedulaAlerta2(
           `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-exclamation-triangle-fill" viewBox="0 0 16 16">
         <path d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5m.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2"/>
@@ -851,8 +1031,8 @@ const validarN = async (event) => {
         </div>`,
           "danger"
         );
+      }
     }
-  }
   }
 };
 
@@ -864,14 +1044,15 @@ function handleDatalistInput() {
       // Execute your action here
       const hijo = document.getElementById("childName").value;
       if (!hijo || hijo == "") {
-           return alerta.alert("Error", "El campo niño debe contener el nombre");
-         }
-   
+        return alerta.alert("Error", "El campo niño debe contener el nombre");
+      }
 
-      const hijoFind = hijos.find(e=>e.nombre.toUpperCase()==hijo.toUpperCase());
-      console.log("🚀 ~ validarN ~ hijoFind:", hijoFind)
-      document.getElementsByName("nombre")[0].value =hijoFind.nombre;
-      document.getElementsByName("direccion")[0].value =hijoFind.direccion;
+      const hijoFind = hijos.find(
+        (e) => e.nombre.toUpperCase() == hijo.toUpperCase()
+      );
+      console.log("🚀 ~ validarN ~ hijoFind:", hijoFind);
+      document.getElementsByName("nombre")[0].value = hijoFind.nombre;
+      document.getElementsByName("direccion")[0].value = hijoFind.direccion;
       document.getElementsByName("telefono")[0].value = hijoFind.telefono;
       document.getElementsByName("correo")[0].value = hijoFind.correo;
       hijoFind.fecha_nacimiento = moment(hijoFind.fecha_nacimiento).format(

@@ -7,7 +7,8 @@ export const getExamen = async (req, res) => {
       `SELECT * FROM examenes where id = ${id}`
     );
     const resultadosDetalle = await pool.execute(
-      `SELECT * FROM detalles_examen where id_ex = ${id} AND status = ?`,['activo']
+      `SELECT * FROM detalles_examen where id_ex = ${id} AND status = ?`,
+      ["activo"]
     );
     return await res
       .status(200)
@@ -21,7 +22,7 @@ export const getExamen = async (req, res) => {
 
 export const modificarExamen = async (req, res) => {
   const { examen, detalle, idExamen } = req.body;
-  console.log("🚀 ~ modificarExamen ~ idExamen:", idExamen)
+  console.log("🚀 ~ modificarExamen ~ idExamen:", idExamen);
   if (!examen || examen == "") {
     return await res
       .status(400)
@@ -36,64 +37,55 @@ export const modificarExamen = async (req, res) => {
   try {
     for await (const dato of detalle) {
       const { nombre, unidad, resultados, idDetalleBdd } = dato;
-      console.log("🚀 ~ forawait ~ resultados:", resultados)
+      console.log("🚀 ~ forawait ~ resultados:", resultados);
 
-      if (resultados != '') {
-        
-        
-        if ((resultados.split("~").length == 0)) {
-        return await res
-          .status(400)
-          .json({
+      if (resultados != "") {
+        if (resultados.split("~").length == 0) {
+          return await res.status(400).json({
             mensaje:
               "El formato de un resultado de una caracteristica es erroneo",
           });
+        }
+        if (
+          (resultados.split("~").length < 2 ||
+            resultados.split("~").length > 10) &&
+          resultados.split("~").length != 0
+        ) {
+          return await res.status(400).json({
+            mensaje:
+              "Minimo deben haber 2 resultados posibles en las caracteristicas",
+          });
+        }
       }
-      if (
-        (resultados.split("~").length < 2 ||
-          resultados.split("~").length > 10) &&
-        resultados.split("~").length != 0
-      ) {
-        return await res
-        .status(400)
-        .json({
-          mensaje:
-          "Minimo deben haber 2 resultados posibles en las caracteristicas",
+
+      if (!nombre || nombre == "") {
+        return await res.status(400).json({
+          mensaje: "El campo nombre de alguna de las caracteristicas es vacio",
         });
       }
-      
-    }
-    
-      if (!nombre || nombre == "") {
-        return await res
-          .status(400)
-          .json({
-            mensaje:
-              "El campo nombre de alguna de las caracteristicas es vacio",
-          });
-      }
       if (!unidad || unidad == "") {
-        return await res
-          .status(400)
-          .json({
-            mensaje:
-              "El campo unidad de alguna de las caracteristicas es vacio",
-          });
+        return await res.status(400).json({
+          mensaje: "El campo unidad de alguna de las caracteristicas es vacio",
+        });
       }
     }
 
-    const [detallesExistentes] = await pool.execute('SELECT * FROM detalles_examen WHERE id_ex = ? AND status = "activo"',[idExamen]);
+    const [detallesExistentes] = await pool.execute(
+      'SELECT * FROM detalles_examen WHERE id_ex = ? AND status = "activo"',
+      [idExamen]
+    );
 
-    const idsDetalle = detalle.map(e=>e.idDetalleBdd)
-    const idsDetalleEx = detallesExistentes.map(e=>e.id)
-    console.log(idsDetalle)
-    const detalleDelete =idsDetalleEx.filter(det => {
-      
-      return !(idsDetalle.includes(det))
-    
-    })
+    const idsDetalle = detalle.map((e) => e.idDetalleBdd);
+    const idsDetalleEx = detallesExistentes.map((e) => e.id);
+    console.log(idsDetalle);
+    const detalleDelete = idsDetalleEx.filter((det) => {
+      return !idsDetalle.includes(det);
+    });
 
-    await pool.query('UPDATE detalles_examen SET status = "inactivo" WHERE id IN (?)',[detalleDelete])
+    await pool.query(
+      'UPDATE detalles_examen SET status = "inactivo" WHERE id IN (?)',
+      [detalleDelete]
+    );
 
     const [examenUpdate] = await pool.execute(
       "UPDATE examenes SET nombre = ? WHERE id = ?",
@@ -112,7 +104,7 @@ export const modificarExamen = async (req, res) => {
             dato.unidad,
             dato.impsiempre,
             dato.resultados ? dato.resultados : null,
-            dato.idDetalleBdd
+            dato.idDetalleBdd,
           ]
         );
       })
@@ -130,8 +122,8 @@ export const modificarExamen = async (req, res) => {
 };
 export const crearExamen = async (req, res) => {
   const { examen, detalle } = req.body;
-  console.log("🚀 ~ crearExamen ~ examen:", examen)
-  console.log("🚀 ~ crearExamen ~ detalle:", detalle)
+  console.log("🚀 ~ crearExamen ~ examen:", examen);
+  console.log("🚀 ~ crearExamen ~ detalle:", detalle);
   if (!examen || examen == "") {
     return await res
       .status(400)
@@ -145,55 +137,41 @@ export const crearExamen = async (req, res) => {
   try {
     for await (const dato of detalle) {
       const { nombre, unidad, resultados, rangos } = dato;
-      rangos.forEach(async rg=>{
-        if(rg.superior=="" || rg.inferior=="" ){
-          return await res
-          .status(400)
-          .json({
-            mensaje:
-              "El formato de un Rango es erroneo",
+      rangos.forEach(async (rg) => {
+        if (rg.superior == "" || rg.inferior == "") {
+          return await res.status(400).json({
+            mensaje: "El formato de un Rango es erroneo",
           });
         }
-      })
-      if (resultados != '') {
-        
-        if ((resultados.split("~").length == 0)) {
-          return await res
-          .status(400)
-          .json({
+      });
+      if (resultados != "") {
+        if (resultados.split("~").length == 0) {
+          return await res.status(400).json({
             mensaje:
               "El formato de un resultado de una caracteristica es erroneo",
           });
         }
-      if (
-        (resultados.split("~").length < 2 ||
-          resultados.split("~").length > 10) &&
-        resultados.split("~").length != 0
+        if (
+          (resultados.split("~").length < 2 ||
+            resultados.split("~").length > 10) &&
+          resultados.split("~").length != 0
         ) {
-          return await res
-          .status(400)
-          .json({
+          return await res.status(400).json({
             mensaje:
-            "Minimo deben haber 2 resultados posibles en las caracteristicas",
+              "Minimo deben haber 2 resultados posibles en las caracteristicas",
           });
         }
       }
 
       if (!nombre || nombre == "") {
-        return await res
-          .status(400)
-          .json({
-            mensaje:
-              "El campo nombre de alguna de las caracteristicas es vacio",
-          });
+        return await res.status(400).json({
+          mensaje: "El campo nombre de alguna de las caracteristicas es vacio",
+        });
       }
       if (!unidad || unidad == "") {
-        return await res
-          .status(400)
-          .json({
-            mensaje:
-              "El campo unidad de alguna de las caracteristicas es vacio",
-          });
+        return await res.status(400).json({
+          mensaje: "El campo unidad de alguna de las caracteristicas es vacio",
+        });
       }
     }
 
@@ -204,32 +182,28 @@ export const crearExamen = async (req, res) => {
 
     for await (const dato of detalle) {
       const { nombre, unidad, resultados, rangos, posicion } = dato;
-      let cadenaRangos =""
-      
-      const [consulta] = await pool.execute(`INSERT INTO detalles_examen(id_ex, nombre, posicion, unidad, impsiempre, resultados) VALUES('${examenInsert.insertId}','${nombre}','${posicion}','${unidad}','','${resultados}')`);
-      console.log("🚀 ~ forawait ~ consulta:", consulta)
-      rangos.forEach(async rg=>{
-        cadenaRangos += `('${consulta.insertId}','${rg.superior}','${rg.inferior}','${rg.desde}','${rg.hasta}','${rg.genero}'),`
+      let cadenaRangos = "";
 
-      })
+      const [consulta] = await pool.execute(
+        `INSERT INTO detalles_examen(id_ex, nombre, posicion, unidad, impsiempre, resultados) VALUES('${examenInsert.insertId}','${nombre}','${posicion}','${unidad}','','${resultados}')`
+      );
+      console.log("🚀 ~ forawait ~ consulta:", consulta);
+      rangos.forEach(async (rg) => {
+        cadenaRangos += `('${consulta.insertId}','${rg.superior}','${rg.inferior}','${rg.desde}','${rg.hasta}','${rg.genero}'),`;
+      });
       cadenaRangos = cadenaRangos.slice(0, cadenaRangos.length - 1);
-      const rangosConsulta = await pool.execute(`INSERT INTO rangos_detalle (id_det_ex,inferior,superior, desde, hasta,genero) VALUES ${cadenaRangos}`)
-      
+      const rangosConsulta = await pool.execute(
+        `INSERT INTO rangos_detalle (id_det_ex,inferior,superior, desde, hasta,genero) VALUES ${cadenaRangos}`
+      );
     }
-
-    
-
-    
 
     const valores = detalle
       .map((dato) => {
-        
         return `('${examenInsert.insertId}','${dato.nombre}','${dato.posicion}','${dato.unidad}','${dato.impsiempre}','${dato.resultados}')`;
       })
       .join(", ");
     //const consulta = `INSERT INTO detalles_examen(id_ex, nombre, posicion, unidad, impsiempre, resultados) VALUES ${valores}`;
 
-   
     //const resultados = await pool.execute(consulta);
     return await res
       .status(200)
@@ -262,12 +236,16 @@ export const getBioanalistas = async (req, res) => {
   }
 };
 export const getPaciente = async (req, res) => {
-  const { cedula,preCedula } = req.query;
+  const { cedula, preCedula } = req.query;
 
+  if (cedula == '' || !cedula ) {
+    return await res.status(400).json({mensaje:'Los datos enviados no son validos'});
+    
+  }
   try {
     const [paciente] = await pool.execute(
       "SELECT * FROM pacientes WHERE cedula = ? AND pre_cedula = ?",
-      [cedula,preCedula]
+      [cedula, preCedula]
     );
     if (paciente.length > 0) {
       return await res.status(200).json(paciente[0]);
@@ -275,6 +253,33 @@ export const getPaciente = async (req, res) => {
       return await res
         .status(200)
         .json({ mensaje: "No se ha encontrado el paciente", paciente: 404 });
+    }
+  } catch (error) {
+    console.log(error);
+    return await res
+      .status(500)
+      .json({ mensaje: "Ha ocurrido un error en el servidor" });
+  }
+};
+export const getPacienteHijo = async (req, res) => {
+  console.log('getPacienteHijo')
+  const { cedula, nombre } = req.query;
+  console.log("🚀 ~ getPacienteHijo ~ req.query:", req.query)
+if (cedula == '' || !cedula || nombre == '' || !nombre) {
+  return await res.status(400).json({mensaje:'Los datos enviados no son validos'});
+  
+}
+  try {
+    const [paciente] = await pool.execute(
+      "SELECT * FROM pacientes WHERE cedula = ? AND pre_cedula = 'N' AND nombre = ?",
+      [cedula, nombre]
+    );
+    if (paciente.length > 0) {
+      return await res.status(200).json(paciente[0]);
+    } else {
+      return await res
+        .status(404)
+        .json({ mensaje: "No se ha encontrado el paciente" });
     }
   } catch (error) {
     console.log(error);
@@ -302,3 +307,32 @@ export const getExamenes = async (req, res) => {
   }
 };
 
+export const getHijosController = async (req, res) => {
+  console.log("getHijosControllerExamnes");
+  const { cedula } = req.query;
+  console.log("🚀 ~ getHijosController ~ cedula:", cedula);
+  try {
+    if (!cedula || isNaN(cedula) || cedula == "") {
+      return await res.status(400).json({ mensaje: "La cedula no es valida" });
+    }
+    const [rep] = await pool.execute(
+      "SELECT * FROM pacientes WHERE cedula = ?",
+      [cedula]
+    );
+    if (rep.length == 0) {
+      return await res
+        .status(403)
+        .json({ mensaje: "El representante no esta registrado" });
+    }
+
+    const [hijos] = await pool.execute(
+      'SELECT * FROM pacientes WHERE cedula = ? AND pre_cedula = "N"',
+      [cedula]
+    );
+
+    return await res.status(200).json({ hijos, rep });
+  } catch (error) {
+    console.log(error);
+    return await res.status(500).json({ mensaje: "ERROR DE SERVIDOR" });
+  }
+};

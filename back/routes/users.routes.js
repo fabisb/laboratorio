@@ -8,5 +8,7 @@ router.post("/login", loginController);
 router.post("/imagen", imagen);
 
 /* GET users listing. */
-router.get("/hijos",verifyToken, getHijosController);
+//router.get("/hijos",verifyToken, getHijosController);
+router.get("/get-hijos", verifyToken, getHijosController);
+
 export default router;
