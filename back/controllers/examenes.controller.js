@@ -3,16 +3,24 @@ import { pool } from "../database/db.js";
 export const getExamen = async (req, res) => {
   const { id } = req.body;
   try {
-    const resultados = await pool.execute(
+    const [resultados] = await pool.execute(
       `SELECT * FROM examenes where id = ${id}`
     );
-    const resultadosDetalle = await pool.execute(
+    const [resultadosDetalle] = await pool.execute(
       `SELECT * FROM detalles_examen where id_ex = ${id} AND status = ?`,
       ["activo"]
     );
+
+    const rangos = await Promise.all(resultadosDetalle.map(async e=>{
+      console.log('res: ', e)
+      const [rangosBdd] = await pool.execute(`SELECT * FROM rangos_detalle where id_det_ex = '${e.id}'`)
+      return {idDetEx: e.id, rangos:rangosBdd}
+      
+    }))
+    console.log('rangos otros:' + rangos)
     return await res
       .status(200)
-      .json({ examen: resultados, detalle: resultadosDetalle });
+      .json({ examen: resultados, detalle: resultadosDetalle,rangos: rangos });
   } catch (error) {
     return await res
       .status(400)
@@ -37,11 +45,14 @@ export const modificarExamen = async (req, res) => {
   try {
     for await (const dato of detalle) {
       const { nombre, unidad, resultados, idDetalleBdd } = dato;
-      console.log("🚀 ~ forawait ~ resultados:", resultados);
-
-      if (resultados != "") {
-        if (resultados.split("~").length == 0) {
-          return await res.status(400).json({
+      console.log("🚀 ~ forawait ~ resultados:", resultados)
+      if (resultados != null && resultados != '') {
+        console.log('aaa')
+        
+        if ((resultados.split("~").length == 0)) {
+        return await res
+          .status(400)
+          .json({
             mensaje:
               "El formato de un resultado de una caracteristica es erroneo",
           });
@@ -51,13 +62,16 @@ export const modificarExamen = async (req, res) => {
             resultados.split("~").length > 10) &&
           resultados.split("~").length != 0
         ) {
-          return await res.status(400).json({
+          return await res
+          .status(400)
+          .json({
             mensaje:
-              "Minimo deben haber 2 resultados posibles en las caracteristicas",
+            "Minimo deben haber 2 resultados posibles en las caracteristicas",
           });
         }
+      
       }
-
+    
       if (!nombre || nombre == "") {
         return await res.status(400).json({
           mensaje: "El campo nombre de alguna de las caracteristicas es vacio",
@@ -75,17 +89,26 @@ export const modificarExamen = async (req, res) => {
       [idExamen]
     );
 
-    const idsDetalle = detalle.map((e) => e.idDetalleBdd);
-    const idsDetalleEx = detallesExistentes.map((e) => e.id);
-    console.log(idsDetalle);
-    const detalleDelete = idsDetalleEx.filter((det) => {
-      return !idsDetalle.includes(det);
-    });
+    const idsDetalle = detalle.map(e=>{
+      
+      
+      let a = parseInt(e.idDetalleBdd)
+      return a
+    })
+    const idsDetalleEx = detallesExistentes.map(e=>e.id)
+    console.log('ids',idsDetalle)
+    console.log('idsEx',idsDetalleEx)
 
-    await pool.query(
-      'UPDATE detalles_examen SET status = "inactivo" WHERE id IN (?)',
-      [detalleDelete]
-    );
+    const detalleDelete =idsDetalleEx.filter(det => {
+      
+      return !(idsDetalle.includes(det))
+    
+    })
+    console.log('del: ',detalleDelete)
+    if(detalleDelete.length>0){
+      await pool.query('UPDATE detalles_examen SET status = "inactivo" WHERE id IN (?)',[detalleDelete])
+    }
+
 
     const [examenUpdate] = await pool.execute(
       "UPDATE examenes SET nombre = ? WHERE id = ?",
@@ -95,11 +118,9 @@ export const modificarExamen = async (req, res) => {
     await Promise.all(
       await detalle.map(async (dato) => {
         await pool.execute(
-          "UPDATE detalles_examen SET nombre = ?, inferior = ?, superior = ?, posicion = ?, unidad = ?, impsiempre = ?, resultados = ? WHERE id = ? AND status = 'activo'",
+          "UPDATE detalles_examen SET nombre = ?, posicion = ?, unidad = ?, impsiempre = ?, resultados = ? WHERE id = ? AND status = 'activo'",
           [
             dato.nombre,
-            dato.inferior,
-            dato.superior,
             dato.posicion,
             dato.unidad,
             dato.impsiempre,
@@ -107,6 +128,21 @@ export const modificarExamen = async (req, res) => {
             dato.idDetalleBdd,
           ]
         );
+        console.log('del: ', 'DELETE from rangos_detalle where id_det_ex = ?', [dato.idDetalleBdd] )
+        await pool.execute('DELETE from rangos_detalle where id_det_ex = ?', [dato.idDetalleBdd])
+        let cadenaRangos = ''
+
+        dato.rangos.forEach(rg=>{
+          cadenaRangos += `('${dato.idDetalleBdd}','${rg.superior}','${rg.inferior}','${rg.desde}','${rg.hasta}','${rg.genero}'),`
+
+        })
+
+      
+      cadenaRangos = cadenaRangos.slice(0, cadenaRangos.length - 1);
+      if(dato.rangos.length>0){
+        const rangosConsulta = await pool.execute(`INSERT INTO rangos_detalle (id_det_ex,inferior,superior, desde, hasta,genero) VALUES ${cadenaRangos}`)
+
+      }
       })
     );
 
@@ -192,9 +228,11 @@ export const crearExamen = async (req, res) => {
         cadenaRangos += `('${consulta.insertId}','${rg.superior}','${rg.inferior}','${rg.desde}','${rg.hasta}','${rg.genero}'),`;
       });
       cadenaRangos = cadenaRangos.slice(0, cadenaRangos.length - 1);
-      const rangosConsulta = await pool.execute(
-        `INSERT INTO rangos_detalle (id_det_ex,inferior,superior, desde, hasta,genero) VALUES ${cadenaRangos}`
-      );
+      if(rangos.length>0){
+        const rangosConsulta = await pool.execute(`INSERT INTO rangos_detalle (id_det_ex,inferior,superior, desde, hasta,genero) VALUES ${cadenaRangos}`)
+
+      }
+      
     }
 
     const valores = detalle
