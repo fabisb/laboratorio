@@ -14,7 +14,9 @@ contextBridge.exposeInMainWorld("ventanas", {
     await ipcRenderer.invoke("creacionPaciWindow"),
   creacionBioWindow: async () => await ipcRenderer.invoke("creacionBioWindow"),
   creacionExamenWindow: async () =>
-    await ipcRenderer.invoke("creacionExamenWindow"),
+      await ipcRenderer.invoke("creacionExamenWindow"),
+  creacionExWindow: async () =>
+      await ipcRenderer.invoke("creacionExWindow"),
   mainWindow: async () => await ipcRenderer.invoke("createWindow"),
   menuExamenesWindow: async () => await ipcRenderer.invoke("menuExamenesWindow"),
   loginWindow: async () => await ipcRenderer.invoke("loginWindow"),

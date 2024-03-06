@@ -136,7 +136,7 @@ function creacionExamenWindow() {
       width: 1368,
       icon: path.join(__dirname, "app/imgs/icons/app-logo.ico"),
       height: 960,
-      title: "Creacion - Examen",
+      title: "Diagnosticos",
       webPreferences: {
         preload: path.join(__dirname, "app/preloads/preload.js"),
         //devTools:false
@@ -154,6 +154,32 @@ function creacionExamenWindow() {
   }
 }
 ipcMain.handle("creacionExamenWindow", () => creacionExamenWindow());
+
+let crearExWindowVar;
+function creacionExWindow() {
+  if (!crearExWindowVar) {
+    crearExWindowVar = new BrowserWindow({
+      width: 1368,
+      icon: path.join(__dirname, "app/imgs/icons/app-logo.ico"),
+      height: 960,
+      title: "Creacion - Examen",
+      webPreferences: {
+        preload: path.join(__dirname, "app/preloads/preload.js"),
+        //devTools:false
+      },
+    });
+    crearExWindowVar.maximize();
+
+    crearExWindowVar.loadFile("app/screens/examenCreacion.html");
+    crearExWindowVar.on("closed", () => (crearExWindowVar = null));
+    if (mainWindow) {
+      mainWindow.close();
+    }
+  } else {
+    crearExWindowVar.focus();
+  }
+}
+ipcMain.handle("creacionExWindow", () => creacionExWindow());
 
 let menuExamenesVar;
 function menuExamenesWindow() {

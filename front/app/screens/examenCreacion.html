@@ -1,0 +1,705 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Creacion - Examen</title>
+    <link rel="stylesheet" href="../styles/exCreacion.css" />
+    <link rel="stylesheet" href="../styles/navBar.css" />
+    <link
+      rel="stylesheet"
+      href="../../bower_components/bootstrap/dist/css/bootstrap.min.css"
+    />
+  </head>
+  <body
+    class="fs-5"
+    onload="render()"
+    style="
+      background: rgb(214, 255, 242);
+      background: linear-gradient(
+        180deg,
+        rgba(214, 255, 242, 1) 01%,
+        rgba(255, 255, 255, 1) 04%,
+        rgba(255, 255, 255, 1) 87%,
+        rgba(214, 255, 242, 1) 92%
+      );
+      height: 1200px;
+    "
+  >
+    <section>
+      <nav class="navbar navbar bg-transparent">
+        <div class="container-fluid">
+          <a class="navbar-brand" href="#">
+            <img src="../imgs/la-milagrosa-logo.png" width="100" alt="" />
+          </a>
+          <div class="">
+            <h1 class="display-3">Examenes</h1>
+          </div>
+          <button
+            class="navbar-toggler"
+            type="button"
+            data-bs-toggle="offcanvas"
+            data-bs-target="#offcanvasDarkNavbar"
+            aria-controls="offcanvasDarkNavbar"
+            aria-label="Toggle navigation"
+          >
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div
+            class="offcanvas offcanvas-end"
+            tabindex="-1"
+            id="offcanvasDarkNavbar"
+            aria-labelledby="offcanvasDarkNavbarLabel"
+          >
+            <div class="offcanvas-header">
+              <h5 class="offcanvas-title" id="offcanvasDarkNavbarLabel">
+                <img src="../imgs/la-milagrosa-logo.png" alt="" />
+              </h5>
+              <button
+                type="button"
+                class="btn-close btn-close-white"
+                data-bs-dismiss="offcanvas"
+                aria-label="Close"
+              ></button>
+            </div>
+            <div class="offcanvas-body">
+              <ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
+                <li class="nav-item">
+                  <a
+                    class="nav-link active"
+                    aria-current="page"
+                    onclick="abrirExamenesWindow()"
+                    style="cursor: pointer"
+                    >Diagnosticos</a
+                  >
+                </li>
+                <li class="nav-item">
+                  <a
+                    class="nav-link"
+                    aria-current="page"
+                    onclick="abrirCreacionExWindow()"
+                    style="cursor: pointer"
+                    >Examenes</a
+                  >
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link">Reportes</a>
+                </li>
+                <li class="nav-item">
+                  <a
+                    class="nav-link"
+                    onclick="abrirCreacionBioWindow()"
+                    style="cursor: pointer"
+                    >Usuarios</a
+                  >
+                </li>
+
+                <li class="nav-item">
+                  <a
+                    class="nav-link"
+                    onclick="abrirLoginWindow()"
+                    style="cursor: pointer"
+                    >Cerrar Sesion</a
+                  >
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </nav>
+    </section>
+
+    <main class="">
+      <div class="container-fluid text-center">
+        <div class="row row-cols-3">
+          <div class="col">
+            <div class="mb-3 d-flex align-items-center justify-content-center">
+              <label for="exampleFormControlInput2" class="form-label"
+                >Nombre:
+              </label>
+              <input
+                name="nombre"
+                type="text"
+                class="form-control mx-2"
+                id="exampleFormControlInput2"
+              />
+            </div>
+          </div>
+          <div class="col">
+            <div class="mb-3 d-flex align-items-center justify-content-center">
+              <select class="form-select" aria-label="Default select example">
+                <option selected>Seccion</option>
+                <option value="1">One</option>
+                <option value="2">Two</option>
+                <option value="3">Three</option>
+              </select>
+            </div>
+          </div>
+          <div class="col">
+            <div class="row row-cols-3">
+              <div class="col">
+                <svg
+                  onclick=""
+                  style="cursor: pointer"
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="40"
+                  height="40"
+                  fill="#1C8484"
+                  class="bi bi-file-plus"
+                  viewBox="0 0 16 16"
+                >
+                  <path
+                    d="M8.5 6a.5.5 0 0 0-1 0v1.5H6a.5.5 0 0 0 0 1h1.5V10a.5.5 0 0 0 1 0V8.5H10a.5.5 0 0 0 0-1H8.5z"
+                  />
+                  <path
+                    d="M2 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2zm10-1H4a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1"
+                  />
+                </svg>
+              </div>
+              <div class="col">
+                <svg
+                  style="cursor: pointer"
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="40"
+                  height="40"
+                  fill="#facd0b"
+                  class="bi bi-search"
+                  viewBox="0 0 16 16"
+                >
+                  <path
+                    d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"
+                  />
+                </svg>
+              </div>
+
+              <div class="col">
+                <svg
+                  onclick="reloadPage()"
+                  style="cursor: pointer"
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="40"
+                  height="40"
+                  fill="black"
+                  class="bi bi-arrow-clockwise"
+                  viewBox="0 0 16 16"
+                >
+                  <path
+                    fill-rule="evenodd"
+                    d="M8 3a5 5 0 1 0 4.546 2.914.5.5 0 0 1 .908-.417A6 6 0 1 1 8 2z"
+                  />
+                  <path
+                    d="M8 4.466V.534a.25.25 0 0 1 .41-.192l2.36 1.966c.12.1.12.284 0 .384L8.41 4.658A.25.25 0 0 1 8 4.466"
+                  />
+                </svg>
+              </div>
+            </div>
+          </div>
+        </div>
+        <hr  >
+        <div class="row">
+          <h1 class="display-6">Caracteristicas</h1>
+        </div>
+        <hr>
+        <div class="row">
+          <div class="accordion" id="accordionCaracteristicas">
+            <div class="accordion-item acordionItemCaracteristica">
+              <h2 class="accordion-header headerCaracteristica"  >
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
+                 hemoglobina
+                </button>
+                
+              </h2>
+              <div id="collapseOne" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
+                <div class="accordion-body m-0 p-0 text-center">
+                  <div class="row">
+                    <div class="col-9 m-0 p-0"> 
+                      <div class="accordion mx-4" id="accordionDetalleCaracteristicas">
+                    
+                        <div class="accordion-item acordionSubItemCaracteristica ">
+                          <h2 class="accordion-header headerSubCaracteristica">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                              Subcaracteristicas
+                            </button>
+                          </h2>
+                          <div id="collapseTwo" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
+                            <div class="accordion-body">
+                              <table class="table" style="font-size: small;">
+                                <thead>
+                                  <tr>
+                                    <th scope="col">Tipo</th>
+                                    <th scope="col">Nombre</th>
+                                    <th scope="col">Valor</th>
+                                    <th></th>
+                                    <th></th>
+                                  </tr>
+                                </thead>
+                                <tbody style="font-size: small;">
+                                  <tr>
+                                    <th scope="row">
+                                      <select class="form-select form-control-sm" aria-label="Default select example">
+                                        <option selected>Open this select menu</option>
+                                        <option value="1">One</option>
+                                        <option value="2">Two</option>
+                                        <option value="3">Three</option>
+                                      </select>
+                                    </th>
+                                    <td>
+                                      <div
+                                        class="mb-3 d-flex align-items-center justify-content-center"
+                                      >
+                        
+                                        <input
+                                          readonly
+                                          name="nombre"
+                                          type="text"
+                                          class="form-control-sm mx-2"
+                                          id="exampleFormControlInput2"
+                                        />
+                                      </div>
+                                    </td>
+                                    <td>
+                                      <div
+                                      class="mb-3 d-flex align-items-center justify-content-center"
+                                    >
+                                     
+                                      <input
+                                        readonly
+                                        name="nombre"
+                                        type="text"
+                                        class="form-control-sm mx-2"
+                                        id="exampleFormControlInput2"
+                                      />
+                                    </div>
+                                    </td>
+                                    <th scope="row"> <svg
+                                      xmlns="http://www.w3.org/2000/svg"
+                                      style="cursor: pointer"
+                                      width="25"
+                                      height="25"
+                                      fill="#FACD0B"
+                                      class="bi bi-pencil-square"
+                                      viewBox="0 0 20 20"
+                                      id="botonModificar"
+                                    >
+                                      <path
+                                        d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"
+                                      />
+                                      <path
+                                        fill-rule="evenodd"
+                                        d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z"
+                                      />
+                                    </svg></th>
+                                    <td>
+                                      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="red" class="bi bi-x-circle" viewBox="0 0 16 16">
+                                        <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
+                                        <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708"/>
+                                      </svg>
+                                    </td>
+                                  </tr>
+                                  <tr>
+                                    <th scope="row">
+                                      <select class="form-select form-control-sm" aria-label="Default select example">
+                                        <option selected>Open this select menu</option>
+                                        <option value="1">One</option>
+                                        <option value="2">Two</option>
+                                        <option value="3">Three</option>
+                                      </select>
+                                    </th>
+                                    <td>
+                                      <div
+                                        class="mb-3 d-flex align-items-center justify-content-center"
+                                      >
+                        
+                                        <input
+                                          readonly
+                                          name="nombre"
+                                          type="text"
+                                          class="form-control-sm mx-2"
+                                          id="exampleFormControlInput2"
+                                        />
+                                      </div>
+                                    </td>
+                                    <td>
+                                      <div
+                                      class="mb-3 d-flex align-items-center justify-content-center"
+                                    >
+                                     
+                                      <input
+                                        readonly
+                                        name="nombre"
+                                        type="text"
+                                        class="form-control-sm mx-2"
+                                        id="exampleFormControlInput2"
+                                      />
+                                    </div>
+                                    </td>
+                                    <th scope="row"> <svg
+                                      xmlns="http://www.w3.org/2000/svg"
+                                      style="cursor: pointer"
+                                      width="25"
+                                      height="25"
+                                      fill="#FACD0B"
+                                      class="bi bi-pencil-square"
+                                      viewBox="0 0 20 20"
+                                      id="botonModificar"
+                                    >
+                                      <path
+                                        d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"
+                                      />
+                                      <path
+                                        fill-rule="evenodd"
+                                        d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z"
+                                      />
+                                    </svg></th>
+                                    <td>
+                                      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="red" class="bi bi-x-circle" viewBox="0 0 16 16">
+                                        <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
+                                        <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708"/>
+                                      </svg>
+                                    </td>
+                                  </tr>
+                                  
+
+                                </tbody>
+                                <tfoot>
+                                  <tr>
+                                    <td colspan="4">
+
+                                    </td>
+                                    <td>
+                                      <button type="button" class="btn btn-outline-success">
+
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-file-earmark-plus-fill" viewBox="0 0 16 16">
+                                          <path d="M9.293 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V4.707A1 1 0 0 0 13.707 4L10 .293A1 1 0 0 0 9.293 0M9.5 3.5v-2l3 3h-2a1 1 0 0 1-1-1M8.5 7v1.5H10a.5.5 0 0 1 0 1H8.5V11a.5.5 0 0 1-1 0V9.5H6a.5.5 0 0 1 0-1h1.5V7a.5.5 0 0 1 1 0"/>
+                                        </svg>
+                                      </button>
+                                    </td>
+                                    
+                                  </tr>
+                                </tfoot>
+                              </table>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="accordion-item acordionSubItemCaracteristica">
+                          <h2 class="accordion-header headerSubCaracteristica">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                              Rangos
+                            </button>
+                          </h2>
+                          <div id="collapseThree" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
+                            <div class="accordion-body">
+                              <table class="table" style="font-size: small;">
+                                <thead>
+                                  <tr>
+                                    <th scope="col">Inferior</th>
+                                    <th scope="col">Superior</th>
+                                    <th scope="col" colspan="2">Rango de edad</th>
+                                    <th scope="col">Genero</th>
+                                    <th></th>
+                                    <th></th>
+                                  </tr>
+                                </thead>
+                                <tbody style="font-size: small;">
+                                  <tr>
+                                    
+                                    <td>
+                                      <div
+                                        class="mb-3 d-flex align-items-center justify-content-center"
+                                      >
+                        
+                                        <input
+                                          readonly
+                                          name="nombre"
+                                          type="text"
+                                          class="form-control-sm mx-2 w-25"
+                                          id="exampleFormControlInput2"
+                                        />
+                                      </div>
+                                    </td>
+                                    <td>
+                                      <div
+                                      class="mb-3 d-flex align-items-center justify-content-center"
+                                    >
+                                     
+                                      <input
+                                        readonly
+                                        name="nombre"
+                                        type="text"
+                                        class="form-control-sm mx-2 w-25"
+                                        id="exampleFormControlInput2"
+                                      />
+                                    </div>
+                                    </td>
+                                    <td>
+                                      <div
+                                        class="mb-3 d-flex align-items-center justify-content-center"
+                                      >
+                        
+                                        <input
+                                          readonly
+                                          name="nombre"
+                                          type="text"
+                                          class="form-control-sm mx-2 w-25"
+                                          id="exampleFormControlInput2"
+                                        />
+                                      </div>
+                                    </td>
+                                    <td>
+                                      <div
+                                      class="mb-3 d-flex align-items-center justify-content-center"
+                                    >
+                                     
+                                      <input
+                                        readonly
+                                        name="nombre"
+                                        type="text"
+                                        class="form-control-sm mx-2 w-25"
+                                        id="exampleFormControlInput2"
+                                      />
+                                    </div>
+                                    </td>
+                                    <th scope="row">
+                                      <select class="form-select form-control-sm" aria-label="Default select example">
+                                        <option selected>Open this select menu</option>
+                                        <option value="1">One</option>
+                                        <option value="2">Two</option>
+                                        <option value="3">Three</option>
+                                      </select>
+                                    </th>
+                                    <th scope="row"> <svg
+                                      xmlns="http://www.w3.org/2000/svg"
+                                      style="cursor: pointer"
+                                      width="25"
+                                      height="25"
+                                      fill="#FACD0B"
+                                      class="bi bi-pencil-square"
+                                      viewBox="0 0 20 20"
+                                      id="botonModificar"
+                                    >
+                                      <path
+                                        d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"
+                                      />
+                                      <path
+                                        fill-rule="evenodd"
+                                        d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z"
+                                      />
+                                    </svg></th>
+                                    <td>
+                                      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="red" class="bi bi-x-circle" viewBox="0 0 16 16">
+                                        <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
+                                        <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708"/>
+                                      </svg>
+                                    </td>
+                                  </tr>
+                                  
+                                  
+
+                                </tbody>
+                                <tfoot>
+                                  <tr>
+                                    <td colspan="6">
+
+                                    </td>
+                                    <td>
+                                      <button type="button" class="btn btn-outline-success">
+
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-file-earmark-plus-fill" viewBox="0 0 16 16">
+                                          <path d="M9.293 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V4.707A1 1 0 0 0 13.707 4L10 .293A1 1 0 0 0 9.293 0M9.5 3.5v-2l3 3h-2a1 1 0 0 1-1-1M8.5 7v1.5H10a.5.5 0 0 1 0 1H8.5V11a.5.5 0 0 1-1 0V9.5H6a.5.5 0 0 1 0-1h1.5V7a.5.5 0 0 1 1 0"/>
+                                        </svg>
+                                      </button>
+                                    </td>
+                                    
+                                  </tr>
+                                </tfoot>
+                              </table>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="accordion-item acordionSubItemCaracteristica">
+                          <h2 class="accordion-header headerSubCaracteristica">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse4" aria-expanded="false" aria-controls="collapseThree">
+                              Resultados
+                            </button>
+                          </h2>
+                          <div id="collapse4" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
+                            <div class="accordion-body">
+                              <table class="table" style="font-size: small;">
+                                <thead>
+                                  <tr><th colspan="3">Resultados</th></tr>
+                                </thead>
+                                <tbody>
+                                  <td><div
+                                    class="mb-3 d-flex align-items-center justify-content-center"
+                                  >
+                                  
+                                   
+                                    <input
+                                      readonly
+                                      name="nombre"
+                                      type="text"
+                                      class="form-control-sm mx-2 w-100"
+                                      id="exampleFormControlInput2"
+                                    />
+                                  </div></td>
+                                  <th scope="row"> <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    style="cursor: pointer"
+                                    width="30"
+                                    height="30"
+                                    fill="#FACD0B"
+                                    class="bi bi-pencil-square"
+                                    viewBox="0 0 20 20"
+                                    id="botonModificar"
+                                  >
+                                    <path
+                                      d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"
+                                    />
+                                    <path
+                                      fill-rule="evenodd"
+                                      d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z"
+                                    />
+                                  </svg></th>
+                                  <td>
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="red" class="bi bi-x-circle" viewBox="0 0 16 16">
+                                      <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
+                                      <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708"/>
+                                    </svg>
+                                  </td>
+                                  
+                                </tbody>
+                                <tfoot>
+                                  <tr>
+                                    <td colspan="2">
+
+                                    </td>
+                                    <td>
+                                      <button type="button" class="btn btn-outline-success">
+
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-file-earmark-plus-fill" viewBox="0 0 16 16">
+                                          <path d="M9.293 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V4.707A1 1 0 0 0 13.707 4L10 .293A1 1 0 0 0 9.293 0M9.5 3.5v-2l3 3h-2a1 1 0 0 1-1-1M8.5 7v1.5H10a.5.5 0 0 1 0 1H8.5V11a.5.5 0 0 1-1 0V9.5H6a.5.5 0 0 1 0-1h1.5V7a.5.5 0 0 1 1 0"/>
+                                        </svg>
+                                      </button>
+                                    </td>
+                                    
+                                  </tr>
+                                </tfoot>
+                              </table>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      
+                      
+                    </div>
+                    <div class="col-3"> 
+                      <div>
+                        <table class="table table-success">
+                        
+                          <tbody style="font-size: medium;">
+                            <tr>
+                              <th scope="row">Nombre</th>
+                              <td>Hemoglobina</td>
+                              
+                            </tr>
+                            <tr>
+                              <th scope="row">Unidad</th>
+                              <td>gr/ml</td>
+                              
+                            </tr>
+                            <tr>
+                              <th scope="row">Posicion</th>
+                              <td>1</td>
+                              
+                            </tr>
+                            <tr>
+                              <th scope="row">Imprimir</th>
+                              <td>si</td>
+                              
+                            </tr>
+                            <tr>
+                              <th scope="row"> <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                style="cursor: pointer"
+                                width="25"
+                                height="25"
+                                fill="#FACD0B"
+                                class="bi bi-pencil-square"
+                                viewBox="0 0 20 20"
+                                id="botonModificar"
+                              >
+                                <path
+                                  d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"
+                                />
+                                <path
+                                  fill-rule="evenodd"
+                                  d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z"
+                                />
+                              </svg></th>
+                              <td>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="red" class="bi bi-x-circle" viewBox="0 0 16 16">
+                                  <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
+                                  <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708"/>
+                                </svg>
+                              </td>
+                              
+                            </tr>
+                            
+                          </tbody>
+                        </table>
+                      </div>
+                      
+                    </div>
+    
+                    </div>
+                  </div>
+
+              </div>
+            </div>
+            
+          </div>
+          <div class="row">
+            <div class="d-flex justify-content-end my-2">
+              <button class="btn btn-outline-success" id="buttonCaracteristica" type="button" data-bs-toggle="modal" data-bs-target="#añadirModal"><svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" fill="currentColor" class="bi bi-bookmark-plus" viewBox="0 0 16 16">
+                <path d="M2 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v13.5a.5.5 0 0 1-.777.416L8 13.101l-5.223 2.815A.5.5 0 0 1 2 15.5zm2-1a1 1 0 0 0-1 1v12.566l4.723-2.482a.5.5 0 0 1 .554 0L13 14.566V2a1 1 0 0 0-1-1z"/>
+                <path d="M8 4a.5.5 0 0 1 .5.5V6H10a.5.5 0 0 1 0 1H8.5v1.5a.5.5 0 0 1-1 0V7H6a.5.5 0 0 1 0-1h1.5V4.5A.5.5 0 0 1 8 4"/>
+              </svg></button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </main>
+
+
+
+    <!-- Modal -->
+    <div class="modal fade" id="añadirModal" tabindex="-1" aria-labelledby="añadirModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h1 class="modal-title fs-5" id="añadirModalLabel">Crear Caracteristica</h1>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <div class="mb-3">
+              <label for="inputCaracteristica" name="nombre" class="form-label formCaracteristica">Caracteristica</label>
+              <input type="text" class="form-control" id="inputCaracteristica" placeholder="Caracteristica">
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            <button type="button" class="btn btn-primary" data-bs-dismiss="modal"  onclick="validarNombreCaracteristica()">Crear</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal para confirmar modificar examen -->
+    <script src="../javascript/examenCreacion.js"></script>
+    <script src="../javascript/ventanas.js"></script>
+    <script src="../modules/axios.min.js"></script>
+    <script src="../../bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+    <script src="../../bower_components/moment/moment.js"></script>
+  </body>
+</html>
