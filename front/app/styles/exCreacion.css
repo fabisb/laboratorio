@@ -8,6 +8,14 @@ main {
 hr{
     border-top: solid 3px rgb(0, 0, 0) !important 
 }
+.btnIcon{
+    background-color: transparent;
+    border: none;
+    padding: 0;
+}
+.opacity{
+    opacity: 0.5;
+}
 
 .headerCaracteristica{
     --bs-accordion-btn-focus-border-color: #1c8484;
