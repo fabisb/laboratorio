@@ -1,0 +1,263 @@
+import { pool } from "../database/db.js";
+export const getSecciones = async (req, res) => {
+  try {
+    const [secciones] = await pool.execute("SELECT * FROM seccion_examen");
+    if (secciones.length == 0) {
+      return await res
+        .status(404)
+        .json({ mensaje: "No se encuentran secciones" });
+    } else {
+      return await res.status(200).json(secciones);
+    }
+  } catch (error) {
+    console.log(error);
+    return await res
+      .status(500)
+      .json({ mensaje: "Ha ocurrido un error en el servidor" });
+  }
+};
+export const getExamenByNombre = async (req, res) => {
+  const { nombre } = req.query;
+  try {
+    const [examenes] = await pool.execute(
+      "SELECT * FROM examenes WHERE nombre = ?",
+      [nombre]
+    );
+    if (examenes.length == 0) {
+      return await res
+        .status(404)
+        .json({ mensaje: "No se encuentran examenes" });
+    } else {
+      return await res.status(200).json(examenes);
+    }
+  } catch (error) {
+    console.log(error);
+    return await res
+      .status(500)
+      .json({ mensaje: "Ha ocurrido un error en el servidor" });
+  }
+};
+export const getExamenById = async (req, res) => {
+  const { idExamen } = req.query;
+  try {
+    const [examenes] = await pool.execute(
+      "SELECT * FROM examenes WHERE id = ?",
+      [idExamen]
+    );
+    if (examenes.length == 0) {
+      return await res
+        .status(404)
+        .json({ mensaje: "No se encuentran examenes" });
+    } else {
+      //return await res.status(200).json(examenes);
+      const [detalles] = await pool.execute(
+        "SELECT * FROM detalles_examen WHERE id_ex = ?",
+        [examenes[0].id]
+      );
+      if (detalles.length > 0) {
+        const [rangos] = await pool.execute(
+          "SELECT * FROM rangos_detalle WHERE id_det_ex = ?",
+          [detalles[0].id]
+        );
+        const [resultados] = await pool.execute(
+          "SELECT * FROM resultados_detalle WHERE id_det_ex = ?",
+          [detalles[0].id]
+        );
+        const [subCa] = await pool.execute(
+          "SELECT * FROM subcaracteristicas_detalle WHERE id_det_ex = ?",
+          [detalles[0].id]
+        );
+        return await res
+          .status(200)
+          .json({ examen: examenes[0], detalles, rangos, resultados, subCa });
+      } else {
+        return await res.status(200).json({ examen: examenes[0], detalles });
+      }
+    }
+  } catch (error) {
+    console.log(error);
+    return await res
+      .status(500)
+      .json({ mensaje: "Ha ocurrido un error en el servidor" });
+  }
+};
+export const getExamenBySeccion = async (req, res) => {
+  const { idSeccion } = req.query;
+  try {
+    const [examenes] = await pool.execute(
+      "SELECT * FROM examenes WHERE id_seccion = ?",
+      [idSeccion]
+    );
+    if (examenes.length == 0) {
+      return await res
+        .status(404)
+        .json({ mensaje: "No se encuentran examenes" });
+    } else {
+      return await res.status(200).json(examenes);
+    }
+  } catch (error) {
+    console.log(error);
+    return await res
+      .status(500)
+      .json({ mensaje: "Ha ocurrido un error en el servidor" });
+  }
+};
+export const crearExamen = async (req, res) => {
+  try {
+    const { seccion, nombre, caracteristicas } = req.body.examen;
+    if (!nombre || nombre == "") {
+      return await res
+        .status(400)
+        .json({ mensaje: "Ingrese un nombre valido" });
+    }
+    if (!seccion) {
+      return await res
+        .status(400)
+        .json({ mensaje: "Ingrese una seccion valida" });
+    }
+    if (caracteristicas.length == 0) {
+      return await res
+        .status(400)
+        .json({ mensaje: "Ingrese caracteristicas validas" });
+    }
+    const [nombreExistente] = await pool.execute(
+      "SELECT nombre FROM examenes WHERE nombre = ? ",
+      [nombre]
+    );
+    if (nombreExistente.length > 0) {
+      return await res.status(400).json({
+        mensaje: "El nombre que intenta agregar para este examen ya existe",
+      });
+    } else {
+      const [examenNew] = await pool.execute(
+        "INSERT INTO examen (nombre, id_seccion) VALUES (?)",
+        [nombre, seccion]
+      );
+      /* examenNew.insertId */
+
+      await Promise.all(
+        await caracteristicas.map(async (ca) => {
+          const { nombre, unidad, posicion, imp } = ca;
+          if (!nombre || nombre == "") {
+            return await res
+              .status(400)
+              .json({ mensaje: "Ingrese un nombre de caracteristica valido" });
+          } else {
+            const [detalle] = await pool.execute(
+              "INSERT INTO `detalles_examen`(`id_ex`, `nombre`, `posicion`, `unidad`, `impsiempre`) VALUES (?,?,?,?,?)",
+              [examenNew.insertId, nombre, posicion, unidad, imp]
+            );
+            /* detalle.insertId */
+            if (ca.subCaracteristica.length > 0) {
+              await Promise.all(
+                await ca.subCaracteristica.map(async (sub) => {
+                  if (sub.tipo == "" || !sub.tipo) {
+                    return await res.status(400).json({
+                      mensaje: "Ingrese un tipo de sub-caracteristica valido",
+                    });
+                  }
+                  if (sub.nombre == "" || !sub.nombre) {
+                    return await res.status(400).json({
+                      mensaje: "Ingrese un nombre de sub-caracteristica valido",
+                    });
+                  }
+                  const [subCa] = await pool.execute(
+                    "INSERT INTO `subcaracteristicas_detalle`(`tipo`, `nombre`, `valor`, `id_det_ex`) VALUES (?,?,?,?)",
+                    [sub.tipo, sub.nombre, sub.valor, detalle.insertId]
+                  );
+                })
+              );
+            }
+
+            if (ca.resultados.length > 0) {
+              await Promise.all(
+                await ca.resultados.map(async (res) => {
+                  const [resultados] = await pool.execute(
+                    "INSERT INTO `resultados_detalle`(`resultado`, `id_det_ex`) VALUES (?,?)",
+                    [res[0], detalle.insertId]
+                  );
+                })
+              );
+            }
+            if (ca.rangos.length > 0) {
+              await Promise.all(
+                await ca.rangos.map(async (ran) => {
+                  const [rangos] = await pool.execute(
+                    "INSERT INTO `rangos_detalle`(`id_det_ex`, `desde`, `hasta`, `inferior`, `superior`, `genero`) VALUES (?,?,?,?,?)",
+                    [
+                      detalle.insertId,
+                      ran.desde,
+                      ran.hasta,
+                      ran.inf,
+                      ran.sup,
+                      ran.genero,
+                    ]
+                  );
+                })
+              );
+            }
+            return await res.status(200).json({
+              mensaje: "Examen insertado correctamente",
+            });
+          }
+        })
+      );
+    }
+  } catch (error) {
+    console.log(error);
+    return await res
+      .status(500)
+      .json({ mensaje: "Ha ocurrido un error en el servidor" });
+  }
+};
+/* examen = {
+  nombre,
+  seccion,
+  caracteristicas: [
+    {
+      nombre,
+      unidad,
+      posicion,
+      imp,
+      subCaracteristica: [
+        { nombre, tipo, valor },
+        { nombre, tipo, valor },
+      ],
+      rangos: [{ inf, sup, desde, hasta, genero }],
+      resultados: [10, azul],
+    },
+  ],
+}; */
+export const crearSeccion = async (req, res) => {
+  const { nombre } = req.body;
+  try {
+    if (!nombre || nombre == "") {
+      return await res
+        .status(400)
+        .json({ mensaje: "Ingrese un nombre valido" });
+    }
+    const [nombreExistente] = await pool.execute(
+      "SELECT nombre FROM seccion_examen WHERE nombre = ?",
+      [nombre]
+    );
+    if (nombreExistente.length > 0) {
+      return await res.status(400).json({
+        mensaje: "El nombre que intenta agregar para esta seccion ya existe",
+      });
+    } else {
+      const [seccion] = await pool.execute(
+        "INSERT INTO seccion_examen (nombre) VALUES (?)",
+        [nombre]
+      );
+      return await res.status(200).json({
+        mensaje: "Seccion insertada correctamente",
+        seccionId: seccion.insertId,
+      });
+    }
+  } catch (error) {
+    console.log(error);
+    return await res
+      .status(500)
+      .json({ mensaje: "Ha ocurrido un error en el servidor" });
+  }
+};

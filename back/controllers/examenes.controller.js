@@ -23,7 +23,7 @@ export const getExamen = async (req, res) => {
       .json({ examen: resultados, detalle: resultadosDetalle,rangos: rangos });
   } catch (error) {
     return await res
-      .status(400)
+      .status(500)
       .json({ mensaje: "ha ocurrido un error el servidor" });
   }
 };
