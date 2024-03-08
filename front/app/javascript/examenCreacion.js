@@ -93,39 +93,50 @@ function añadirChars(char,event){
 
 function borrarSubCaracteristica(event,nombre){
  const tBody= document.getElementById(`tBodySubCaracteristica${nombre}`)
-
- if(event.target.localName=='td'){
- 
-  tBody.removeChild(event.target.parentNode)
- }
- if(event.target.localName == 'svg'){
-
+ console.log(event.target)
+ if(event.target.localName=='button'){
   tBody.removeChild(event.target.parentNode.parentNode)
+ }
+
+ if(event.target.localName=='svg'){
+  tBody.removeChild(event.target.parentNode.parentNode.parentNode)
+ }
+ if(event.target.localName == 'path'){
+
+  tBody.removeChild(event.target.parentNode.parentNode.parentNode.parentNode)
  }
 }
 function borrarResultado(event,nombre){
   const tBody= document.getElementById(`tBodyResultados${nombre}`)
  
-  if(event.target.localName=='td'){
-  
-   tBody.removeChild(event.target.parentNode)
+  console.log(event.target)
+  if(event.target.localName=='button'){
+    tBody.removeChild(event.target.parentNode.parentNode)
   }
-  if(event.target.localName == 'svg'){
- 
-   tBody.removeChild(event.target.parentNode.parentNode)
-  }
+
+ if(event.target.localName=='svg'){
+  tBody.removeChild(event.target.parentNode.parentNode.parentNode)
+ }
+ if(event.target.localName == 'path'){
+
+  tBody.removeChild(event.target.parentNode.parentNode.parentNode.parentNode)
+ }
  }
  function borrarRango(event,nombre){
   const tBody= document.getElementById(`tBodyRangos${nombre}`)
  
-  if(event.target.localName=='td'){
-  
-   tBody.removeChild(event.target.parentNode)
-  }
-  if(event.target.localName == 'svg'){
- 
-   tBody.removeChild(event.target.parentNode.parentNode)
-  }
+  console.log(event.target)
+  if(event.target.localName=='button'){
+    tBody.removeChild(event.target.parentNode.parentNode)
+   }
+
+ if(event.target.localName=='svg'){
+  tBody.removeChild(event.target.parentNode.parentNode.parentNode)
+ }
+ if(event.target.localName == 'path'){
+
+  tBody.removeChild(event.target.parentNode.parentNode.parentNode.parentNode)
+ }
  }
 
 
@@ -172,11 +183,14 @@ function añadirSubCaracteristica(nombre){
 </td>
 
 <th scope="row"></th>
-<td onclick="borrarSubCaracteristica(event,'${nombre}')">
+<td >
+  <button class="button${nombre} btnIcon" onclick="borrarSubCaracteristica(event,'${nombre}')">
   <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="red"  class="bi bi-x-circle" viewBox="0 0 16 16">
-    <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
-    <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708"/>
-  </svg>
+  <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
+  <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708"/>
+  </svg>      
+  </button>
+  
 </td>
 `
   tBodySubCaracteristica.appendChild(tr)
@@ -259,14 +273,19 @@ function añadirRango(nombre){
 </th>
 <th scope="row"> </th>
 <td>
-  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="red" onclick="borrarRango(event,'${nombre}')" class="bi bi-x-circle" viewBox="0 0 16 16">
+  <button class="button${nombre} btnIcon" onclick="borrarRango(event,'${nombre}')">
+  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="red"  class="bi bi-x-circle " viewBox="0 0 16 16">
     <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
     <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708"/>
-  </svg>
+  </svg>     
+  </button>
+  
 </td>
   `
   tBodyRango.appendChild(tr)
 }
+
+
 
 function añadirResultado(nombre){
   const trsResultados = document.getElementsByClassName("trResultados");
@@ -291,11 +310,14 @@ function añadirResultado(nombre){
                                     />
                                   </div></td>
                                   <th scope="row"> </th>
-                                  <td onclick="borrarResultado(event,'${nombre}')">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="red" class="bi bi-x-circle" viewBox="0 0 16 16">
+                                  <td >
+                                    <button class="button${nombre} btnIcon" onclick="borrarResultado(event,'${nombre}')">
+                                      <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="red" class="bi bi-x-circle" viewBox="0 0 16 16">
                                       <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
                                       <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708"/>
-                                    </svg>
+                                      </svg>    
+                                    </button>
+                                    
                                   </td>
   `
   tBodyResultados.appendChild(tr)
@@ -396,16 +418,27 @@ function crearCaracteristica(nombre){
 }
 
 var caracteristicas = []
-
+var caracteristicasCreadas = new Set()
 
 
 function añadirAcordionItem(nombre){
   const accordionCaracteristicas= document.getElementById("accordionCaracteristicas")
+  if(caracteristicasCreadas.has(nombre)){
+    return alert("Ya existe una caracteristica con ese nombre");
+  }else{
+    caracteristicasCreadas.add(nombre)
+  }
+
   disabledButton('buttonCaracteristica')
 
-  accordionCaracteristicas.innerHTML+=`
+  const divItem = document.createElement('div')
+  divItem.className = `accordion-item acordionItemCaracteristica`;
+  divItem.id = `accordionItemCaracteristica${nombre}`
+
+
+  divItem.innerHTML=`
   
-  <div class="accordion-item acordionItemCaracteristica" id='accordionItemCaracteristica${nombre}'>
+  
   <h2 class="accordion-header headerCaracteristica"  >
     <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseCaracteristica${nombre}" aria-expanded="false" aria-controls="collapseCaracteristica${nombre}">
      ${nombre}
@@ -445,9 +478,9 @@ function añadirAcordionItem(nombre){
 
                         </td>
                         <td>
-                          <button type="button" class="btn btn-outline-success button${nombre}" id=''>
+                          <button type="button" class="btn btn-outline-success button${nombre}" onclick="añadirSubCaracteristica('${nombre}')" id=''>
 
-                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" onclick="añadirSubCaracteristica('${nombre}')" fill="currentColor" class="bi bi-file-earmark-plus-fill" viewBox="0 0 16 16">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-file-earmark-plus-fill" viewBox="0 0 16 16">
                               <path d="M9.293 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V4.707A1 1 0 0 0 13.707 4L10 .293A1 1 0 0 0 9.293 0M9.5 3.5v-2l3 3h-2a1 1 0 0 1-1-1M8.5 7v1.5H10a.5.5 0 0 1 0 1H8.5V11a.5.5 0 0 1-1 0V9.5H6a.5.5 0 0 1 0-1h1.5V7a.5.5 0 0 1 1 0"/>
                             </svg>
                           </button>
@@ -620,9 +653,10 @@ function añadirAcordionItem(nombre){
       </div>
 
   </div>
-</div>
+
 
   `
+  accordionCaracteristicas.appendChild(divItem)
 
 
 
@@ -636,5 +670,5 @@ function borrarCaracteristica(event,nombre){
 
   accordion.removeChild(accordionCar)
 
-  
+  caracteristicas = caracteristicas.filter(c=> c.caracteristica[0].valor !== nombre)
 }
