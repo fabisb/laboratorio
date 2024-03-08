@@ -130,23 +130,30 @@ export const crearExamen = async (req, res) => {
       });
     } else {
       const [examenNew] = await pool.execute(
-        "INSERT INTO examen (nombre, id_seccion) VALUES (?)",
+        "INSERT INTO examen (nombre, id_seccion) VALUES (?,?)",
         [nombre, seccion]
       );
       /* examenNew.insertId */
 
       await Promise.all(
         await caracteristicas.map(async (ca) => {
-          const { nombre, unidad, posicion, imp } = ca;
-          if (!nombre || nombre == "") {
-            return await res
+        
+    const columnas = ca.caracteristica.map(async (dato) => {
+      if (!dato.nombre || dato.nombre == '') {
+        return await res
               .status(400)
               .json({ mensaje: "Ingrese un nombre de caracteristica valido" });
-          } else {
-            const [detalle] = await pool.execute(
-              "INSERT INTO `detalles_examen`(`id_ex`, `nombre`, `posicion`, `unidad`, `impsiempre`) VALUES (?,?,?,?,?)",
-              [examenNew.insertId, nombre, posicion, unidad, imp]
-            );
+      }
+      return dato.nombre
+    }).join(", ");
+    const valores = ca.caracteristica.map((dato) => "?").join(", ");
+    const consulta = `INSERT INTO detalles_examen (id_ex, ${columnas}) VALUES (${examenNew.insertId}, ${valores})`;
+    // Ejecutar la consulta
+    const [detalle] = await pool.execute(
+      consulta,
+      ca.caracteristica.map((dato) => dato.value || null)
+    );
+          
             /* detalle.insertId */
             if (ca.subCaracteristica.length > 0) {
               await Promise.all(
@@ -171,10 +178,10 @@ export const crearExamen = async (req, res) => {
 
             if (ca.resultados.length > 0) {
               await Promise.all(
-                await ca.resultados.map(async (res) => {
+                await ca.resultados.map(async (resu) => {
                   const [resultados] = await pool.execute(
                     "INSERT INTO `resultados_detalle`(`resultado`, `id_det_ex`) VALUES (?,?)",
-                    [res[0], detalle.insertId]
+                    [resu, detalle.insertId]
                   );
                 })
               );
@@ -188,8 +195,8 @@ export const crearExamen = async (req, res) => {
                       detalle.insertId,
                       ran.desde,
                       ran.hasta,
-                      ran.inf,
-                      ran.sup,
+                      ran.inferior,
+                      ran.superior,
                       ran.genero,
                     ]
                   );
@@ -199,7 +206,7 @@ export const crearExamen = async (req, res) => {
             return await res.status(200).json({
               mensaje: "Examen insertado correctamente",
             });
-          }
+          
         })
       );
     }
@@ -210,24 +217,62 @@ export const crearExamen = async (req, res) => {
       .json({ mensaje: "Ha ocurrido un error en el servidor" });
   }
 };
-/* examen = {
-  nombre,
-  seccion,
-  caracteristicas: [
+/* examen: 'nombre',
+seccion:'seccion',
+caracteristicas: [
     {
-      nombre,
-      unidad,
-      posicion,
-      imp,
-      subCaracteristica: [
-        { nombre, tipo, valor },
-        { nombre, tipo, valor },
-      ],
-      rangos: [{ inf, sup, desde, hasta, genero }],
-      resultados: [10, azul],
-    },
-  ],
-}; */
+        "caracteristica": [
+            {
+                "nombre": "nombre",
+                "valor": "dsa"
+            },
+            {
+                "nombre": "unidad",
+                "valor": "ml"
+            },
+            {
+                "nombre": "posicion",
+                "valor": "1"
+            },
+            {
+                "nombre": "imp",
+                "valor": false
+            }
+        ],
+        "subCaracteristicas": [
+            {
+                "tipo": "numero",
+                "nombre": "hematocrito",
+                "valor": ""
+            },
+            {
+                "tipo": "formula",
+                "nombre": "hematocrito calculado",
+                "valor": "{hematocrito}[*]{0.23}"
+            }
+        ],
+        "rangos": [
+            {
+                "inferior": "10",
+                "superior": "20",
+                "desde": "10",
+                "hasta": "15",
+                "genero": "masculino"
+            },
+            {
+                "inferior": "",
+                "superior": "",
+                "desde": "",
+                "hasta": "",
+                "genero": "todos"
+            }
+        ],
+        "resultados": [
+            "azul",
+            "verde"
+        ]
+    }
+]  */
 export const crearSeccion = async (req, res) => {
   const { nombre } = req.body;
   try {

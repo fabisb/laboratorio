@@ -125,11 +125,8 @@
           </div>
           <div class="col">
             <div class="mb-3 d-flex align-items-center justify-content-center">
-              <select class="form-select" aria-label="Default select example" id="seccionExamen">
-                <option selected>Seccion</option>
-                <option value="1">One</option>
-                <option value="2">Two</option>
-                <option value="3">Three</option>
+              <select class="form-select" aria-label="selectSeccion" id="seccionExamenSelect">
+                
               </select>
             </div>
           </div>
@@ -145,6 +142,8 @@
                   fill="#1C8484"
                   class="bi bi-file-plus"
                   viewBox="0 0 16 16"
+                  data-bs-toggle="modal"
+                  data-bs-target="#añadirSeccionModal"
                 >
                   <path
                     d="M8.5 6a.5.5 0 0 0-1 0v1.5H6a.5.5 0 0 0 0 1h1.5V10a.5.5 0 0 0 1 0V8.5H10a.5.5 0 0 0 0-1H8.5z"
@@ -897,6 +896,63 @@
       </div>
     </div>
 
+
+    <div
+      class="modal fade"
+      id="añadirSeccionModal"
+      tabindex="-1"
+      aria-labelledby="añadirSeccionModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h1 class="modal-title fs-5" id="añadirSeccionModalLabel">
+              Crear Seccion
+            </h1>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <div class="mb-3">
+              <label
+                for="inputSeccionNombre"
+                name="nombre"
+                class="form-label formSeccion"
+                >Seccion</label
+              >
+              <input
+                type="text"
+                class="form-control"
+                id="inputSeccion"
+                placeholder="Seccion"
+              />
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-bs-dismiss="modal"
+            >
+              Close
+            </button>
+            <button
+              type="button"
+              class="btn btn-primary"
+              data-bs-dismiss="modal"
+              onclick="crearSeccion()"
+            >
+              Crear
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
     <!-- Modal para confirmar modificar examen -->
     <script src="../javascript/examenCreacion.js"></script>
     <script src="../javascript/ventanas.js"></script>
