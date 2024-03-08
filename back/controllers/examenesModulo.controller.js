@@ -104,7 +104,8 @@ export const getExamenBySeccion = async (req, res) => {
 };
 export const crearExamen = async (req, res) => {
   try {
-    const { seccion, nombre, caracteristicas } = req.body.examen;
+    const { seccion, nombre, caracteristicas } = req.body;
+    console.log("🚀 ~ crearExamen ~ req.body:", req.body)
     if (!nombre || nombre == "") {
       return await res
         .status(400)
@@ -130,34 +131,29 @@ export const crearExamen = async (req, res) => {
       });
     } else {
       const [examenNew] = await pool.execute(
-        "INSERT INTO examen (nombre, id_seccion) VALUES (?,?)",
+        "INSERT INTO examenes (nombre, id_seccion) VALUES (?,?)",
         [nombre, seccion]
       );
       /* examenNew.insertId */
 
       await Promise.all(
         await caracteristicas.map(async (ca) => {
-        
-    const columnas = ca.caracteristica.map(async (dato) => {
-      if (!dato.nombre || dato.nombre == '') {
-        return await res
-              .status(400)
-              .json({ mensaje: "Ingrese un nombre de caracteristica valido" });
-      }
-      return dato.nombre
-    }).join(", ");
+        console.log("🚀 ~ awaitcaracteristicas.map ~ ca:", ca)
+        ca.caracteristica.push({nombre:'id_ex', valor: examenNew.insertId})
+    const columnas = ca.caracteristica.map((dato) => dato.nombre).join(", ");
     const valores = ca.caracteristica.map((dato) => "?").join(", ");
-    const consulta = `INSERT INTO detalles_examen (id_ex, ${columnas}) VALUES (${examenNew.insertId}, ${valores})`;
+    const consulta = `INSERT INTO detalles_examen (${columnas}) VALUES ( ${valores})`;
     // Ejecutar la consulta
+    console.log("🚀 ~ awaitcaracteristicas.map ~ consulta:", consulta)
     const [detalle] = await pool.execute(
       consulta,
-      ca.caracteristica.map((dato) => dato.value || null)
+      ca.caracteristica.map((dato) => dato.valor || null)
     );
           
             /* detalle.insertId */
-            if (ca.subCaracteristica.length > 0) {
+            if (ca.subCaracteristicas.length > 0) {
               await Promise.all(
-                await ca.subCaracteristica.map(async (sub) => {
+                await ca.subCaracteristicas.map(async (sub) => {
                   if (sub.tipo == "" || !sub.tipo) {
                     return await res.status(400).json({
                       mensaje: "Ingrese un tipo de sub-caracteristica valido",

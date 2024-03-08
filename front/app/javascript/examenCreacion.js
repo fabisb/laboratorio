@@ -301,12 +301,30 @@ function añadirResultado(nombre){
   tBodyResultados.appendChild(tr)
 }
 
-function crearExamen(){
+async function crearExamen(){
   const nombre = document.getElementById("inputNombreExamen").value
-  const seccion= document.getElementById("seccionExamen").value
+  const seccion= document.getElementById("seccionExamenSelect").value
+  console.log(nombre, seccion);
+console.log(caracteristicas);
+  if (nombre == '' || !nombre ) {
+    
+  }
+ 
 
-  console.log(nombre,seccion);
+    const { token } = await login.getToken();
+    const result = await axios.post(urlsv+'/api/modulo-examenes/crear-examen',{ nombre,seccion,caracteristicas },{ headers: { token } })
+    console.log("🚀 ~ crearExamen ~ result:", result)
 
+try {
+  
+} catch (error) {
+  console.log(error);
+    if (error.response.data.mensaje) {
+      return await alerta.alert("Error:", error.response.data.mensaje);
+    } else {
+      return await alerta.error();
+    }
+}
   
   
 }
@@ -341,7 +359,7 @@ function crearCaracteristica(nombre){
   const caracteristica = [...formCaracteristicas].map(c=>{
     if(c.name=="imp"){
       return{
-        nombre: c.name,
+        nombre: 'impsiempre',
         valor: c.checked
       }
     }else{
@@ -445,9 +463,9 @@ function añadirAcordionItem(nombre){
 
                         </td>
                         <td>
-                          <button type="button" class="btn btn-outline-success button${nombre}" id=''>
+                          <button type="button" class="btn btn-outline-success button${nombre}" onclick="añadirSubCaracteristica('${nombre}')" id=''>
 
-                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" onclick="añadirSubCaracteristica('${nombre}')" fill="currentColor" class="bi bi-file-earmark-plus-fill" viewBox="0 0 16 16">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"  fill="currentColor" class="bi bi-file-earmark-plus-fill" viewBox="0 0 16 16">
                               <path d="M9.293 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V4.707A1 1 0 0 0 13.707 4L10 .293A1 1 0 0 0 9.293 0M9.5 3.5v-2l3 3h-2a1 1 0 0 1-1-1M8.5 7v1.5H10a.5.5 0 0 1 0 1H8.5V11a.5.5 0 0 1-1 0V9.5H6a.5.5 0 0 1 0-1h1.5V7a.5.5 0 0 1 1 0"/>
                             </svg>
                           </button>
