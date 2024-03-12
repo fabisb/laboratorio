@@ -89,20 +89,24 @@ function validarNombreCaracteristica() {
   añadirAcordionItem(nombre);
 }
 function validarSelectSub(nombre, event) {
-  
   if (event.target.value == "formula") {
-    const trsSubCaracteristicas = document.querySelectorAll(`.trSubCaracteristica${nombre}`)
-    const arrSub = [...trsSubCaracteristicas]
+    const trsSubCaracteristicas = document.querySelectorAll(
+      `.trSubCaracteristica${nombre}`
+    );
+    const arrSub = [...trsSubCaracteristicas];
     let validacionInputsTxt = false;
     arrSub.forEach((tr) => {
-      if(tr.firstChild.children[0].value=='numero'){
+      if (tr.firstChild.children[0].value == "numero") {
         validacionInputsTxt = true;
       }
-    })
+    });
 
-    if(!validacionInputsTxt){
+    if (!validacionInputsTxt) {
       event.target.value = "numero";
-      return alerta.alert("Error:", "Debe Haber al menos un campo de numero para poder seleccionar Formula");
+      return alerta.alert(
+        "Error:",
+        "Debe Haber al menos un campo de numero para poder seleccionar Formula"
+      );
     }
 
     event.target.parentNode.parentNode.children[2].firstElementChild.children[0].removeAttribute(
@@ -138,8 +142,6 @@ function validarSelectSub(nombre, event) {
     );
   }
 }
-
-
 
 function añadirChars(char, event) {
   console.log(event);
@@ -269,6 +271,7 @@ function añadirRango(nombre) {
       
       name="inferior"
       type="text"
+      onChange="validarInferior(event,'inferior')"
       class="form-control-sm mx-2 input${nombre} w-25 formRango"
       id="exampleFormControlInput2"
     />
@@ -280,7 +283,7 @@ function añadirRango(nombre) {
 >
  
   <input
-    
+    onChange="validarInferior(event,'superior')"
     name="superior"
     type="text"
     class="form-control-sm mx-2 w-25 input${nombre} formRango"
@@ -294,7 +297,7 @@ function añadirRango(nombre) {
   >
 
     <input
-      
+      onChange="validarInferiorEdad(event,'inferior')"
       name="desde"
       type="text"
       class="form-control-sm mx-2 w-25 input${nombre} formRango"
@@ -308,7 +311,7 @@ function añadirRango(nombre) {
 >
  
   <input
-    
+    onChange="validarInferiorEdad(event,'superior')"
     name="hasta"
     type="text"
     class="form-control-sm mx-2 w-25 input${nombre} formRango"
@@ -352,7 +355,7 @@ function añadirResultado(nombre) {
                                   
                                    
                                     <input
-                                      
+                                      onChange="validarResultado(event)"
                                       name="resultado"
                                       type="text"
                                       class="form-control-sm input${nombre} mx-2 w-100 formResultado"
@@ -447,7 +450,112 @@ function crearCaracteristica(nombre) {
     `.trSubCaracteristica${nombre}`
   );
 
-  const subCaracteristicas = [...subCaracteristica].map((s) => {
+  let subCaracteristicas = [...subCaracteristica].map((s,i) => {
+    let validarNombre=true
+    for (let k=i+1; k<subCaracteristica.length;k++){
+      if(s.childNodes[2].childNodes[1].childNodes[1].value == subCaracteristica[k].childNodes[2].childNodes[1].childNodes[1].value){
+        validarNombre=false
+      }
+    }
+    if(!validarNombre){
+      alerta.alert('error','hay mas de una subCaracteristica con el mismo nombre')
+      return undefined
+    }
+    let variables=[]
+    if (
+      (s.childNodes[0].childNodes[1].value != "texto" &&
+        s.childNodes[0].childNodes[1].value != "numero" &&
+        s.childNodes[0].childNodes[1].value != "formula") ||
+      s.childNodes[2].childNodes[1].childNodes[1].value == ""
+    ) {
+      return undefined;
+    }
+    if (s.childNodes[0].childNodes[1].value == "formula") {
+      if (s.childNodes[4].childNodes[1].childNodes[1].value == "") {
+        return undefined;
+      }
+      let error = false;
+      let value = s.childNodes[4].childNodes[1].childNodes[1].value;
+      for (let i = 0; i < value.length; i++) {
+        if (value[i] == "{") {
+          let validarCierre = false;
+          let variable = "";
+          for (let j = i + 1; j < value.length; j++) {
+            if (value[j] == "{") {
+              break;
+            }
+            if (value[j] == "}") {
+              variable = value.slice(i + 1, j);
+              validarCierre = true;
+              break;
+            }
+          }
+
+          if (!validarCierre || variable == "") {
+            error = true;
+            break;
+          } else {
+            variables.push(variable);
+          }
+        }
+        if (
+          value[i] == "+" ||
+          value[i] == "-" ||
+          value[i] == "*" ||
+          value[i] == "/"
+        ) {
+          if (
+            (value[i - 1] == "}" || value[i - 1] == ")") &&
+            (value[i + 1] == "{" || value[i + 1] == "(")
+          ) {
+            continue;
+          } else {
+            error = true;
+            break;
+          }
+        }
+        if (value[i] == "(") {
+          let validarCierre = false;
+
+          for (let j = i + 1; j < value.length; j++) {
+            if (value[j] == "(") {
+              break;
+            }
+            if (value[j] == ")") {
+              variable = value.slice(i + 1, j);
+              validarCierre = true;
+              break;
+            }
+          }
+
+          if (!validarCierre || variable == "") {
+            error = true;
+            break;
+          }
+        }
+      }
+      variables.forEach(v=>{
+        let validar= false
+        for(let il = 0; il<subCaracteristica.length;il++){
+          if(subCaracteristica[il].childNodes[0].childNodes[1].value!='texto'&& s.childNodes[2].childNodes[1].childNodes[1].value!=v&& v==subCaracteristica[il].children[1].children[0].children[0].value){
+            
+            validar=true
+            break;
+          }
+    
+        }
+      if(!validar){
+        error = true;
+
+      }
+        
+      })
+      
+      if (error) {
+        return undefined;
+      }
+    }
+
     return {
       tipo: s.childNodes[0].childNodes[1].value,
       nombre: s.childNodes[2].childNodes[1].childNodes[1].value,
@@ -455,9 +563,32 @@ function crearCaracteristica(nombre) {
     };
   });
 
+  subCaracteristicas = subCaracteristicas.filter((s) => s != undefined);
+
   const rango = document.querySelectorAll(`.trRango${nombre}`);
 
-  const rangos = [...rango].map((r) => {
+  let rangos = [...rango].map((r) => {
+    if (r.childNodes[5].childNodes[1].childNodes[1].value == "") {
+      if (r.childNodes[7].childNodes[1].childNodes[1].value != "") {
+        return undefined;
+      }
+    }
+    if (
+      r.childNodes[1].childNodes[1].childNodes[1].value == "" ||
+      r.childNodes[3].childNodes[1].childNodes[1].value == ""
+    ) {
+      return undefined;
+    }
+
+    if (
+      r.childNodes[1].childNodes[1].childNodes[1].value >
+        r.childNodes[3].childNodes[1].childNodes[1].value ||
+      r.childNodes[5].childNodes[1].childNodes[1].value >
+        r.childNodes[7].childNodes[1].childNodes[1].value
+    ) {
+      return undefined;
+    }
+
     return {
       inferior: r.childNodes[1].childNodes[1].childNodes[1].value,
       superior: r.childNodes[3].childNodes[1].childNodes[1].value,
@@ -467,10 +598,11 @@ function crearCaracteristica(nombre) {
     };
   });
 
+  rangos = rangos.filter((r) => r != undefined);
   const resultado = document.querySelectorAll(`.trResultados${nombre}`);
 
   const resultados = [...resultado].map((rs) => {
-    return rs.children[0].children[0].children[0].value;
+    return rs.children[0].children[0].children[0].value.slice(0, 20);
   });
 
   caracteristicas.push({
@@ -482,8 +614,10 @@ function crearCaracteristica(nombre) {
   disabledButtonByClass("button" + nombre);
   desactivarInputs(nombre);
   desactivarSelects(nombre);
-  const btnModificar= document.getElementById(`botonModificarCaracteristica${nombre}`)
-  btnModificar.removeAttribute("hidden")
+  const btnModificar = document.getElementById(
+    `botonModificarCaracteristica${nombre}`
+  );
+  btnModificar.removeAttribute("hidden");
   enableButton("buttonCaracteristica");
 }
 
@@ -756,71 +890,213 @@ function modificarCrtCreacionFront(nombre) {
   activarInputs(nombre);
   activarSelects(nombre);
   enableButtonByClass("button" + nombre);
-  caracteristicas= caracteristicas.filter(c => c.caracteristica[0].valor!== nombre)
-
-
+  caracteristicas = caracteristicas.filter(
+    (c) => c.caracteristica[0].valor !== nombre
+  );
 }
 
-
-function validarInputFormula(nombre,event) {
-  const value= event.target.value
-  let variables = []
-  let error= false
+function validarInputFormula(nombre, event) {
+  const value = event.target.value;
+  let variables = [];
+  let error = false;
   for (let i = 0; i < value.length; i++) {
-    if(value[i]=="{"){
-      let validarCierre = false
-      let variable=""
+    if (value[i] == "{") {
+      let validarCierre = false;
+      let variable = "";
       for (let j = i + 1; j < value.length; j++) {
-        if(value[j]=="}"){
-          variable = value.slice(i+1,j)
-          validarCierre = true
+        if (value[j] == "{") {
+          break;
+        }
+        if (value[j] == "}") {
+          variable = value.slice(i + 1, j);
+          validarCierre = true;
           break;
         }
       }
-      
-      if(!validarCierre || variable==""){
-        error= true
-        event.target.style.borderColor = "red"
-        break;
-      }else{
-        variables.push(variable)
-      }
-    }
-    if(value[i]=="+"||value[i]=="-"||value[i]=="*"||value[i]=="/"){
-      
-      
-      
-      if((value[i-1]=="}"|| value[i-1]==")" ) &&( value[i+1]=="{" || value[i+1]=="(" )){
-        continue
-      }else{
-        error= true
-        event.target.style.borderColor = "red"
-        break;
-      }
-    }
-    if(value[i]=="("){
-      let validarCierre = false
-      
-      for (let j = i + 1; j < value.length; j++) {
-        if(value[j]==")"){
-          variable = value.slice(i+1,j)
-          validarCierre = true
-          break;
-        }
-      }
-      
-      if(!validarCierre || variable==""){
-        error= true
-        event.target.style.borderColor = "red"
-        break;
-      }
-    }
-    
-  }
-  if(!error){
-    event.target.style.borderColor = "green"
-  }
-  
-  
 
+      if (!validarCierre || variable == "") {
+        error = true;
+        event.target.style.borderColor = "red";
+        break;
+      } else {
+        variables.push(variable);
+      }
+    }
+    if (
+      value[i] == "+" ||
+      value[i] == "-" ||
+      value[i] == "*" ||
+      value[i] == "/"
+    ) {
+      if (
+        (value[i - 1] == "}" || value[i - 1] == ")") &&
+        (value[i + 1] == "{" || value[i + 1] == "(")
+      ) {
+        continue;
+      } else {
+        error = true;
+        event.target.style.borderColor = "red";
+        break;
+      }
+    }
+    if (value[i] == "(") {
+      let validarCierre = false;
+
+      for (let j = i + 1; j < value.length; j++) {
+        if (value[j] == "(") {
+          break;
+        }
+        if (value[j] == ")") {
+          variable = value.slice(i + 1, j);
+          validarCierre = true;
+          break;
+        }
+      }
+
+      if (!validarCierre || variable == "") {
+        error = true;
+        event.target.style.borderColor = "red";
+        break;
+      }
+    }
+  }
+  const tBodySub = document.getElementById(`tBodySubCaracteristica${nombre}`)
+  variables.forEach(v=>{
+    let validar= false
+    for(let i = 0; i<tBodySub.children.length;i++){
+      if(tBodySub.children[i].children[0].children[0].value!='texto'&& event.target.parentNode.parentNode.parentNode.children[1].children[0].children[0].value!=v&& v==tBodySub.children[i].children[1].children[0].children[0].value){
+
+        validar=true
+        break;
+      }
+
+    }
+  if(!validar){
+    error = true;
+    event.target.style.borderColor = "red";
+  }
+    
+  })
+  if (!error) {
+    event.target.style.borderColor = "green";
+  }
+}
+
+function validarInferior(event, tipo) {
+  if (
+    event.target.parentNode.parentNode.parentNode.children[1].children[0]
+      .children[0].value == "" &&
+    event.target.parentNode.parentNode.parentNode.children[0].children[0]
+      .children[0].value == ""
+  ) {
+    event.target.parentNode.parentNode.parentNode.children[1].children[0].children[0].style.borderColor =
+      "gray";
+    event.target.parentNode.parentNode.parentNode.children[0].children[0].children[0].style.borderColor =
+      "gray";
+    return;
+  }
+  if (
+    event.target.parentNode.parentNode.parentNode.children[1].children[0]
+      .children[0].value == "" ||
+    event.target.parentNode.parentNode.parentNode.children[0].children[0]
+      .children[0].value == ""
+  ) {
+    event.target.parentNode.parentNode.parentNode.children[1].children[0].children[0].style.borderColor =
+      "red";
+    event.target.parentNode.parentNode.parentNode.children[0].children[0].children[0].style.borderColor =
+      "red";
+    return;
+  }
+  if (tipo == "inferior") {
+    if (
+      parseFloat(
+        event.target.parentNode.parentNode.parentNode.children[1].children[0]
+          .children[0].value
+      ) < parseFloat(event.target.value)
+    ) {
+      event.target.parentNode.parentNode.parentNode.children[1].children[0].children[0].style.borderColor =
+        "red";
+      event.target.style.borderColor = "red";
+    } else {
+      event.target.parentNode.parentNode.parentNode.children[1].children[0].children[0].style.borderColor =
+        "green";
+      event.target.style.borderColor = "green";
+    }
+  } else {
+    if (
+      parseFloat(
+        event.target.parentNode.parentNode.parentNode.children[0].children[0]
+          .children[0].value
+      ) > parseFloat(event.target.value)
+    ) {
+      event.target.parentNode.parentNode.parentNode.children[0].children[0].children[0].style.borderColor =
+        "red";
+      event.target.style.borderColor = "red";
+    } else {
+      event.target.style.borderColor = "green";
+      event.target.parentNode.parentNode.parentNode.children[0].children[0].children[0].style.borderColor =
+        "green";
+    }
+  }
+}
+function validarResultado(event) {
+  if (event.target.value.length > 20) {
+    event.target.style.borderColor = "red";
+  } else {
+    event.target.style.borderColor = "green";
+  }
+}
+
+function validarInferiorEdad(event, tipo) {
+  if (
+    event.target.parentNode.parentNode.parentNode.children[3].children[0]
+      .children[0].value == "" &&
+    event.target.parentNode.parentNode.parentNode.children[2].children[0]
+      .children[0].value == ""
+  ) {
+    return;
+  }
+  if (
+    event.target.parentNode.parentNode.parentNode.children[3].children[0]
+      .children[0].value == "" ||
+    event.target.parentNode.parentNode.parentNode.children[2].children[0]
+      .children[0].value == ""
+  ) {
+    event.target.parentNode.parentNode.parentNode.children[3].children[0].children[0].style.borderColor =
+      "red";
+    event.target.parentNode.parentNode.parentNode.children[2].children[0].children[0].style.borderColor =
+      "red";
+    return;
+  }
+  if (tipo == "inferior") {
+    if (
+      parseFloat(
+        event.target.parentNode.parentNode.parentNode.children[3].children[0]
+          .children[0].value
+      ) < parseFloat(event.target.value)
+    ) {
+      event.target.parentNode.parentNode.parentNode.children[3].children[0].children[0].style.borderColor =
+        "red";
+      event.target.style.borderColor = "red";
+    } else {
+      event.target.parentNode.parentNode.parentNode.children[3].children[0].children[0].style.borderColor =
+        "green";
+      event.target.style.borderColor = "green";
+    }
+  } else {
+    if (
+      parseFloat(
+        event.target.parentNode.parentNode.parentNode.children[2].children[0]
+          .children[0].value
+      ) > parseFloat(event.target.value)
+    ) {
+      event.target.parentNode.parentNode.parentNode.children[2].children[0].children[0].style.borderColor =
+        "red";
+      event.target.style.borderColor = "red";
+    } else {
+      event.target.style.borderColor = "green";
+      event.target.parentNode.parentNode.parentNode.children[2].children[0].children[0].style.borderColor =
+        "green";
+    }
+  }
 }
