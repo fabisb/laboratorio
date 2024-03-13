@@ -1,18 +1,19 @@
 const render = async () => {
   try {
     const { token } = await login.getToken();
-    const secciones = await axios.get(urlsv+"/api/modulo-examenes/secciones",{ headers: { token } }
-    )
+    const secciones = await axios.get(
+      urlsv + "/api/modulo-examenes/secciones",
+      { headers: { token } }
+    );
 
-    const selectSeccion = document.getElementById('seccionExamenSelect')
-    selectSeccion.innerHTML=""
-    secciones.data.forEach(seccion=>{
-      const option = document.createElement('option')
-      option.value = seccion.id
-      option.innerText = seccion.nombre
-      selectSeccion.appendChild(option)
-    })
-    
+    const selectSeccion = document.getElementById("seccionExamenSelect");
+    selectSeccion.innerHTML = "";
+    secciones.data.forEach((seccion) => {
+      const option = document.createElement("option");
+      option.value = seccion.id;
+      option.innerText = seccion.nombre;
+      selectSeccion.appendChild(option);
+    });
   } catch (error) {
     console.log(error);
     if (error.response.data.mensaje) {
@@ -22,135 +23,189 @@ const render = async () => {
     }
   }
 };
-function disabledButton(id){
-  document.getElementById(id).setAttribute('disabled','true')
+function disabledButton(id) {
+  document.getElementById(id).setAttribute("disabled", "true");
 }
-function disabledButtonByClass(id){
-  const botones = document.getElementsByClassName(id)
-  const arrBotones=[...botones]
-  arrBotones.forEach(bt=>{
-    if(bt.className.includes("btnIcon")){
-      bt.setAttribute('hidden','true')
 
+function enableButtonByClass(id) {
+  const botones = document.getElementsByClassName(id);
+  const arrBotones = [...botones];
+  arrBotones.forEach((bt) => {
+    if (bt.className.includes("btnIcon")) {
+      bt.removeAttribute("hidden");
     }
-    bt.setAttribute('disabled','true')
-  })
+    bt.removeAttribute("disabled");
+  });
 }
-function enableButton(id){
-  document.getElementById(id).removeAttribute('disabled')
+function disabledButtonByClass(id) {
+  const botones = document.getElementsByClassName(id);
+  const arrBotones = [...botones];
+  arrBotones.forEach((bt) => {
+    if (bt.className.includes("btnIcon")) {
+      bt.setAttribute("hidden", "true");
+    }
+    bt.setAttribute("disabled", "true");
+  });
 }
-
-function desactivarInputs(nombre){
-  const inputs = document.getElementsByClassName('input'+nombre)
-  const arrInputs = [...inputs]
-  arrInputs.forEach(inp=>{
-    inp.setAttribute('readonly','true')
-  })
-}
-
-function desactivarSelects(nombre){
-  const selects = document.getElementsByClassName('select'+nombre)
-  const arrSelects = [...selects]
-  arrSelects.forEach(sl=>{
-    sl.setAttribute('disabled','true')
-  })
+function enableButton(id) {
+  document.getElementById(id).removeAttribute("disabled");
 }
 
-
-function validarNombreCaracteristica(){
-  const nombre = document.getElementById('inputCaracteristica').value
-
-  añadirAcordionItem(nombre)
+function desactivarInputs(nombre) {
+  const inputs = document.getElementsByClassName("input" + nombre);
+  const arrInputs = [...inputs];
+  arrInputs.forEach((inp) => {
+    inp.setAttribute("readonly", "true");
+  });
 }
-function validarSelectSub(nombre,event){
-  if(event.target.value=='formula'){
-    event.target.parentNode.parentNode.children[2].firstElementChild.children[0].removeAttribute('readonly')
-    event.target.parentNode.parentNode.children[2].firstElementChild.children[1].removeAttribute('disabled')
-    event.target.parentNode.parentNode.children[2].firstElementChild.children[2].removeAttribute('disabled')
-    event.target.parentNode.parentNode.children[2].firstElementChild.children[3].removeAttribute('disabled')
 
+function activarInputs(nombre) {
+  const inputs = document.getElementsByClassName("input" + nombre);
+  const arrInputs = [...inputs];
+  arrInputs.forEach((inp) => {
+    inp.removeAttribute("readonly");
+  });
+}
 
+function activarSelects(nombre) {
+  const selects = document.getElementsByClassName("select" + nombre);
+  const arrSelects = [...selects];
+  arrSelects.forEach((sl) => {
+    sl.removeAttribute("disabled");
+  });
+}
 
-  }else{
-    event.target.parentNode.parentNode.children[2].firstElementChild.children[0].setAttribute('readonly','true')
-    event.target.parentNode.parentNode.children[2].firstElementChild.children[0].value=''
-    event.target.parentNode.parentNode.children[2].firstElementChild.children[1].setAttribute('disabled','true')
-    event.target.parentNode.parentNode.children[2].firstElementChild.children[2].setAttribute('disabled','true')
-    event.target.parentNode.parentNode.children[2].firstElementChild.children[3].setAttribute('disabled','true')
+function desactivarSelects(nombre) {
+  const selects = document.getElementsByClassName("select" + nombre);
+  const arrSelects = [...selects];
+  arrSelects.forEach((sl) => {
+    sl.setAttribute("disabled", "true");
+  });
+}
 
+function validarNombreCaracteristica() {
+  const nombre = document.getElementById("inputCaracteristica").value;
+
+  añadirAcordionItem(nombre);
+}
+function validarSelectSub(nombre, event) {
+  if (event.target.value == "formula") {
+    const trsSubCaracteristicas = document.querySelectorAll(
+      `.trSubCaracteristica${nombre}`
+    );
+    const arrSub = [...trsSubCaracteristicas];
+    let validacionInputsTxt = false;
+    arrSub.forEach((tr) => {
+      if (tr.firstChild.children[0].value == "numero") {
+        validacionInputsTxt = true;
+      }
+    });
+
+    if (!validacionInputsTxt) {
+      event.target.value = "numero";
+      return alerta.alert(
+        "Error:",
+        "Debe Haber al menos un campo de numero para poder seleccionar Formula"
+      );
+    }
+
+    event.target.parentNode.parentNode.children[2].firstElementChild.children[0].removeAttribute(
+      "readonly"
+    );
+    event.target.parentNode.parentNode.children[2].firstElementChild.children[1].removeAttribute(
+      "disabled"
+    );
+    event.target.parentNode.parentNode.children[2].firstElementChild.children[2].removeAttribute(
+      "disabled"
+    );
+    event.target.parentNode.parentNode.children[2].firstElementChild.children[3].removeAttribute(
+      "disabled"
+    );
+  } else {
+    event.target.parentNode.parentNode.children[2].firstElementChild.children[0].setAttribute(
+      "readonly",
+      "true"
+    );
+    event.target.parentNode.parentNode.children[2].firstElementChild.children[0].value =
+      "";
+    event.target.parentNode.parentNode.children[2].firstElementChild.children[1].setAttribute(
+      "disabled",
+      "true"
+    );
+    event.target.parentNode.parentNode.children[2].firstElementChild.children[2].setAttribute(
+      "disabled",
+      "true"
+    );
+    event.target.parentNode.parentNode.children[2].firstElementChild.children[3].setAttribute(
+      "disabled",
+      "true"
+    );
+  }
+}
+
+function añadirChars(char, event) {
+  console.log(event);
+  event.target.parentNode.children[0].value += char;
+}
+
+function borrarSubCaracteristica(event, nombre) {
+  const tBody = document.getElementById(`tBodySubCaracteristica${nombre}`);
+  console.log(event.target);
+  if (event.target.localName == "button") {
+    tBody.removeChild(event.target.parentNode.parentNode);
   }
 
+  if (event.target.localName == "svg") {
+    tBody.removeChild(event.target.parentNode.parentNode.parentNode);
+  }
+  if (event.target.localName == "path") {
+    tBody.removeChild(event.target.parentNode.parentNode.parentNode.parentNode);
+  }
 }
+function borrarResultado(event, nombre) {
+  const tBody = document.getElementById(`tBodyResultados${nombre}`);
 
-function validarInputFormula(){
-
-}
-
-function añadirChars(char,event){
-  console.log(event)
-  event.target.parentNode.children[0].value += char
-}
-
-function borrarSubCaracteristica(event,nombre){
- const tBody= document.getElementById(`tBodySubCaracteristica${nombre}`)
- console.log(event.target)
- if(event.target.localName=='button'){
-  tBody.removeChild(event.target.parentNode.parentNode)
- }
-
- if(event.target.localName=='svg'){
-  tBody.removeChild(event.target.parentNode.parentNode.parentNode)
- }
- if(event.target.localName == 'path'){
-
-  tBody.removeChild(event.target.parentNode.parentNode.parentNode.parentNode)
- }
-}
-function borrarResultado(event,nombre){
-  const tBody= document.getElementById(`tBodyResultados${nombre}`)
- 
-  console.log(event.target)
-  if(event.target.localName=='button'){
-    tBody.removeChild(event.target.parentNode.parentNode)
+  console.log(event.target);
+  if (event.target.localName == "button") {
+    tBody.removeChild(event.target.parentNode.parentNode);
   }
 
- if(event.target.localName=='svg'){
-  tBody.removeChild(event.target.parentNode.parentNode.parentNode)
- }
- if(event.target.localName == 'path'){
+  if (event.target.localName == "svg") {
+    tBody.removeChild(event.target.parentNode.parentNode.parentNode);
+  }
+  if (event.target.localName == "path") {
+    tBody.removeChild(event.target.parentNode.parentNode.parentNode.parentNode);
+  }
+}
+function borrarRango(event, nombre) {
+  const tBody = document.getElementById(`tBodyRangos${nombre}`);
 
-  tBody.removeChild(event.target.parentNode.parentNode.parentNode.parentNode)
- }
- }
- function borrarRango(event,nombre){
-  const tBody= document.getElementById(`tBodyRangos${nombre}`)
- 
-  console.log(event.target)
-  if(event.target.localName=='button'){
-    tBody.removeChild(event.target.parentNode.parentNode)
-   }
+  console.log(event.target);
+  if (event.target.localName == "button") {
+    tBody.removeChild(event.target.parentNode.parentNode);
+  }
 
- if(event.target.localName=='svg'){
-  tBody.removeChild(event.target.parentNode.parentNode.parentNode)
- }
- if(event.target.localName == 'path'){
+  if (event.target.localName == "svg") {
+    tBody.removeChild(event.target.parentNode.parentNode.parentNode);
+  }
+  if (event.target.localName == "path") {
+    tBody.removeChild(event.target.parentNode.parentNode.parentNode.parentNode);
+  }
+}
 
-  tBody.removeChild(event.target.parentNode.parentNode.parentNode.parentNode)
- }
- }
-
-
-
-
-function añadirSubCaracteristica(nombre){
-  const trsSubCaracteristica = document.getElementsByClassName("trSubCaracteristica"+nombre);
-  if(trsSubCaracteristica.length>=5){
+function añadirSubCaracteristica(nombre) {
+  const trsSubCaracteristica = document.getElementsByClassName(
+    "trSubCaracteristica" + nombre
+  );
+  if (trsSubCaracteristica.length >= 5) {
     return;
   }
 
-  const tBodySubCaracteristica = document.getElementById("tBodySubCaracteristica"+nombre)
+  const tBodySubCaracteristica = document.getElementById(
+    "tBodySubCaracteristica" + nombre
+  );
   const tr = document.createElement("tr");
-  tr.className = "trSubCaracteristica"+nombre;
+  tr.className = "trSubCaracteristica" + nombre;
   tr.innerHTML = `<th scope="row">
   <select onChange='validarSelectSub("${nombre}",event)' class="form-select form-control-sm select${nombre} formSubCaracteristica${nombre}" name="select"  aria-label="Default select example">
     <option value="texto">Texto</option>
@@ -168,13 +223,14 @@ function añadirSubCaracteristica(nombre){
       type="text"
       class="form-control-sm mx-2 input${nombre} formSubCaracteristica${nombre}"
       
+      
     />
   </div>
 </td>
 <td>
   
 <div class="input-group">
-<input type="text" name='valor' readonly class="form-control-sm mx-2 input${nombre} formSubCaracteristica${nombre}" placeholder="{v} - [+-*/] - ({a}[/]{b})" aria-label="">
+<input type="text" name='valor' onchange="validarInputFormula('${nombre}',event)" readonly class="form-control-sm mx-2 input${nombre} formSubCaracteristica${nombre}" placeholder="{v} - [+-*/] - ({a}[/]{b})" aria-label="">
   <button disabled class="btn btn-light p-0 " onclick='añadirChars("{}",event)' type="button">{  }</button>
   <button disabled class="btn btn-light p-0 " onclick='añadirChars("[]",event)' type="button">[  ]</button>
   <button disabled class="btn btn-light p-0 " onclick='añadirChars("()",event)' type="button">(  )</button>
@@ -192,21 +248,19 @@ function añadirSubCaracteristica(nombre){
   </button>
   
 </td>
-`
-  tBodySubCaracteristica.appendChild(tr)
+`;
+  tBodySubCaracteristica.appendChild(tr);
 }
 
-
-function añadirRango(nombre){
-
-  const trsRango = document.getElementsByClassName("trRango"+nombre);
-  if(trsRango.length>=5){
+function añadirRango(nombre) {
+  const trsRango = document.getElementsByClassName("trRango" + nombre);
+  if (trsRango.length >= 5) {
     return;
   }
 
-  const tBodyRango = document.getElementById("tBodyRangos"+nombre)
+  const tBodyRango = document.getElementById("tBodyRangos" + nombre);
   const tr = document.createElement("tr");
-  tr.className = "trRango"+nombre;
+  tr.className = "trRango" + nombre;
   tr.innerHTML = `
   <td>
   <div
@@ -217,6 +271,7 @@ function añadirRango(nombre){
       
       name="inferior"
       type="text"
+      onChange="validarInferior(event,'inferior')"
       class="form-control-sm mx-2 input${nombre} w-25 formRango"
       id="exampleFormControlInput2"
     />
@@ -228,7 +283,7 @@ function añadirRango(nombre){
 >
  
   <input
-    
+    onChange="validarInferior(event,'superior')"
     name="superior"
     type="text"
     class="form-control-sm mx-2 w-25 input${nombre} formRango"
@@ -242,7 +297,7 @@ function añadirRango(nombre){
   >
 
     <input
-      
+      onChange="validarInferiorEdad(event,'inferior')"
       name="desde"
       type="text"
       class="form-control-sm mx-2 w-25 input${nombre} formRango"
@@ -256,7 +311,7 @@ function añadirRango(nombre){
 >
  
   <input
-    
+    onChange="validarInferiorEdad(event,'superior')"
     name="hasta"
     type="text"
     class="form-control-sm mx-2 w-25 input${nombre} formRango"
@@ -281,20 +336,18 @@ function añadirRango(nombre){
   </button>
   
 </td>
-  `
-  tBodyRango.appendChild(tr)
+  `;
+  tBodyRango.appendChild(tr);
 }
 
-
-
-function añadirResultado(nombre){
+function añadirResultado(nombre) {
   const trsResultados = document.getElementsByClassName("trResultados");
-  if(trsResultados.length>=10){
+  if (trsResultados.length >= 10) {
     return;
   }
-  const tBodyResultados = document.getElementById("tBodyResultados"+nombre)
+  const tBodyResultados = document.getElementById("tBodyResultados" + nombre);
   const tr = document.createElement("tr");
-  tr.className = "trResultados"+nombre;
+  tr.className = "trResultados" + nombre;
   tr.innerHTML = `
   <td><div
                                     class="mb-3 d-flex align-items-center justify-content-center"
@@ -302,7 +355,7 @@ function añadirResultado(nombre){
                                   
                                    
                                     <input
-                                      
+                                      onChange="validarResultado(event)"
                                       name="resultado"
                                       type="text"
                                       class="form-control-sm input${nombre} mx-2 w-100 formResultado"
@@ -319,50 +372,27 @@ function añadirResultado(nombre){
                                     </button>
                                     
                                   </td>
-  `
-  tBodyResultados.appendChild(tr)
+  `;
+  tBodyResultados.appendChild(tr);
 }
 
-async function crearExamen(){
-  const nombre = document.getElementById("inputNombreExamen").value
-  const seccion= document.getElementById("seccionExamenSelect").value
+async function crearExamen() {
+  const nombre = document.getElementById("inputNombreExamen").value;
+  const seccion = document.getElementById("seccionExamenSelect").value;
   console.log(nombre, seccion);
-console.log(caracteristicas);
-  if (nombre == '' || !nombre ) {
-    
+  console.log(caracteristicas);
+  if (nombre == "" || !nombre) {
   }
- 
 
-    const { token } = await login.getToken();
-    const result = await axios.post(urlsv+'/api/modulo-examenes/crear-examen',{ nombre,seccion,caracteristicas },{ headers: { token } })
-    console.log("🚀 ~ crearExamen ~ result:", result)
+  const { token } = await login.getToken();
+  const result = await axios.post(
+    urlsv + "/api/modulo-examenes/crear-examen",
+    { nombre, seccion, caracteristicas },
+    { headers: { token } }
+  );
+  console.log("🚀 ~ crearExamen ~ result:", result);
 
-try {
-  
-} catch (error) {
-  console.log(error);
-    if (error.response.data.mensaje) {
-      return await alerta.alert("Error:", error.response.data.mensaje);
-    } else {
-      return await alerta.error();
-    }
-}
-  
-  
-}
-
-async function crearSeccion(){
-  const nombre = document.getElementById("inputSeccion").value
-  console.log(nombre);
   try {
-    const { token } = await login.getToken();
-    const seccion = await axios.post(urlsv+"/api/modulo-examenes/crear-seccion",{
-    nombre
-    },      { headers: { token } }
-    )
-
-    render()
-    
   } catch (error) {
     console.log(error);
     if (error.response.data.mensaje) {
@@ -371,95 +401,254 @@ async function crearSeccion(){
       return await alerta.error();
     }
   }
-  
 }
 
-function crearCaracteristica(nombre){
-  
-  const formCaracteristicas = document.getElementsByClassName("formCaracteristica"+nombre);
+async function crearSeccion() {
+  const nombre = document.getElementById("inputSeccion").value;
+  console.log(nombre);
+  try {
+    const { token } = await login.getToken();
+    const seccion = await axios.post(
+      urlsv + "/api/modulo-examenes/crear-seccion",
+      {
+        nombre,
+      },
+      { headers: { token } }
+    );
 
-  const caracteristica = [...formCaracteristicas].map(c=>{
-    if(c.name=="imp"){
-      return{
-        nombre: 'impsiempre',
-        valor: c.checked
-      }
-    }else{
+    render();
+  } catch (error) {
+    console.log(error);
+    if (error.response.data.mensaje) {
+      return await alerta.alert("Error:", error.response.data.mensaje);
+    } else {
+      return await alerta.error();
+    }
+  }
+}
+
+function crearCaracteristica(nombre) {
+  const formCaracteristicas = document.getElementsByClassName(
+    "formCaracteristica" + nombre
+  );
+
+  const caracteristica = [...formCaracteristicas].map((c) => {
+    if (c.name == "imp") {
+      return {
+        nombre: "impsiempre",
+        valor: c.checked,
+      };
+    } else {
       return {
         nombre: c.name,
-        valor: c.value
+        valor: c.value,
+      };
+    }
+  });
+
+  const subCaracteristica = document.querySelectorAll(
+    `.trSubCaracteristica${nombre}`
+  );
+
+  let subCaracteristicas = [...subCaracteristica].map((s,i) => {
+    let validarNombre=true
+    for (let k=i+1; k<subCaracteristica.length;k++){
+      if(s.childNodes[2].childNodes[1].childNodes[1].value == subCaracteristica[k].childNodes[2].childNodes[1].childNodes[1].value){
+        validarNombre=false
       }
     }
+    if(!validarNombre){
+      alerta.alert('error','hay mas de una subCaracteristica con el mismo nombre')
+      return undefined
+    }
+    let variables=[]
+    if (
+      (s.childNodes[0].childNodes[1].value != "texto" &&
+        s.childNodes[0].childNodes[1].value != "numero" &&
+        s.childNodes[0].childNodes[1].value != "formula") ||
+      s.childNodes[2].childNodes[1].childNodes[1].value == ""
+    ) {
+      return undefined;
+    }
+    if (s.childNodes[0].childNodes[1].value == "formula") {
+      if (s.childNodes[4].childNodes[1].childNodes[1].value == "") {
+        return undefined;
+      }
+      let error = false;
+      let value = s.childNodes[4].childNodes[1].childNodes[1].value;
+      for (let i = 0; i < value.length; i++) {
+        if (value[i] == "{") {
+          let validarCierre = false;
+          let variable = "";
+          for (let j = i + 1; j < value.length; j++) {
+            if (value[j] == "{") {
+              break;
+            }
+            if (value[j] == "}") {
+              variable = value.slice(i + 1, j);
+              validarCierre = true;
+              break;
+            }
+          }
+
+          if (!validarCierre || variable == "") {
+            error = true;
+            break;
+          } else {
+            variables.push(variable);
+          }
+        }
+        if (
+          value[i] == "+" ||
+          value[i] == "-" ||
+          value[i] == "*" ||
+          value[i] == "/"
+        ) {
+          if (
+            (value[i - 1] == "}" || value[i - 1] == ")") &&
+            (value[i + 1] == "{" || value[i + 1] == "(")
+          ) {
+            continue;
+          } else {
+            error = true;
+            break;
+          }
+        }
+        if (value[i] == "(") {
+          let validarCierre = false;
+
+          for (let j = i + 1; j < value.length; j++) {
+            if (value[j] == "(") {
+              break;
+            }
+            if (value[j] == ")") {
+              variable = value.slice(i + 1, j);
+              validarCierre = true;
+              break;
+            }
+          }
+
+          if (!validarCierre || variable == "") {
+            error = true;
+            break;
+          }
+        }
+      }
+      variables.forEach(v=>{
+        let validar= false
+        for(let il = 0; il<subCaracteristica.length;il++){
+          if(subCaracteristica[il].childNodes[0].childNodes[1].value!='texto'&& s.childNodes[2].childNodes[1].childNodes[1].value!=v&& v==subCaracteristica[il].children[1].children[0].children[0].value){
+            
+            validar=true
+            break;
+          }
     
-  })
+        }
+      if(!validar){
+        error = true;
 
-  const subCaracteristica = document.querySelectorAll(`.trSubCaracteristica${nombre}`);
+      }
+        
+      })
+      
+      if (error) {
+        return undefined;
+      }
+    }
 
-  const subCaracteristicas = [...subCaracteristica].map(s=>{
-    return{
+    return {
       tipo: s.childNodes[0].childNodes[1].value,
       nombre: s.childNodes[2].childNodes[1].childNodes[1].value,
-      valor: s.childNodes[4].childNodes[1].childNodes[1].value
+      valor: s.childNodes[4].childNodes[1].childNodes[1].value,
+    };
+  });
+
+  subCaracteristicas = subCaracteristicas.filter((s) => s != undefined);
+
+  const rango = document.querySelectorAll(`.trRango${nombre}`);
+
+  let rangos = [...rango].map((r) => {
+    if (r.childNodes[5].childNodes[1].childNodes[1].value == "") {
+      if (r.childNodes[7].childNodes[1].childNodes[1].value != "") {
+        return undefined;
+      }
     }
-  })
+    if (
+      r.childNodes[1].childNodes[1].childNodes[1].value == "" ||
+      r.childNodes[3].childNodes[1].childNodes[1].value == ""
+    ) {
+      return undefined;
+    }
 
-  const rango = document.querySelectorAll(`.trRango${nombre}`)
+    if (
+      r.childNodes[1].childNodes[1].childNodes[1].value >
+        r.childNodes[3].childNodes[1].childNodes[1].value ||
+      r.childNodes[5].childNodes[1].childNodes[1].value >
+        r.childNodes[7].childNodes[1].childNodes[1].value
+    ) {
+      return undefined;
+    }
 
-  const rangos = [...rango].map(r=>{
     return {
       inferior: r.childNodes[1].childNodes[1].childNodes[1].value,
       superior: r.childNodes[3].childNodes[1].childNodes[1].value,
       desde: r.childNodes[5].childNodes[1].childNodes[1].value,
       hasta: r.childNodes[7].childNodes[1].childNodes[1].value,
-      genero: r.children[4].children[0].value
-    }
-  })
+      genero: r.children[4].children[0].value,
+    };
+  });
 
-  const resultado= document.querySelectorAll(`.trResultados${nombre}`)
+  rangos = rangos.filter((r) => r != undefined);
+  const resultado = document.querySelectorAll(`.trResultados${nombre}`);
 
-  const resultados = [...resultado].map(rs=>{
-    return rs.children[0].children[0].children[0].value
-  })
+  const resultados = [...resultado].map((rs) => {
+    return rs.children[0].children[0].children[0].value.slice(0, 20);
+  });
 
- 
   caracteristicas.push({
     caracteristica,
     subCaracteristicas,
     rangos,
-    resultados
-  })
-  disabledButtonByClass('button'+nombre)
-  desactivarInputs(nombre)
-  desactivarSelects(nombre)
-
-  enableButton('buttonCaracteristica')
+    resultados,
+  });
+  disabledButtonByClass("button" + nombre);
+  desactivarInputs(nombre);
+  desactivarSelects(nombre);
+  const btnModificar = document.getElementById(
+    `botonModificarCaracteristica${nombre}`
+  );
+  btnModificar.removeAttribute("hidden");
+  enableButton("buttonCaracteristica");
 }
 
-var caracteristicas = []
-var caracteristicasCreadas = new Set()
+var caracteristicas = [];
+var caracteristicasCreadas = new Set();
 
+function añadirAcordionItem(nombre1) {
+  nombre1 = nombre1.trim();
+  const nombre = nombre1.replaceAll(" ", "-");
 
-function añadirAcordionItem(nombre){
-  const accordionCaracteristicas= document.getElementById("accordionCaracteristicas")
-  if(caracteristicasCreadas.has(nombre)){
-    return alerta.alert('Error:',"Ya existe una caracteristica con ese nombre");
-  }else{
-    caracteristicasCreadas.add(nombre)
+  const accordionCaracteristicas = document.getElementById(
+    "accordionCaracteristicas"
+  );
+  if (caracteristicasCreadas.has(nombre)) {
+    return alerta.alert("Error", "Ya existe una caracteristica con ese nombre");
+  } else {
+    caracteristicasCreadas.add(nombre);
   }
 
-  disabledButton('buttonCaracteristica')
+  disabledButton("buttonCaracteristica");
 
-  const divItem = document.createElement('div')
+  const divItem = document.createElement("div");
   divItem.className = `accordion-item acordionItemCaracteristica`;
-  divItem.id = `accordionItemCaracteristica${nombre}`
+  divItem.id = `accordionItemCaracteristica${nombre}`;
 
-
-  divItem.innerHTML=`
+  divItem.innerHTML = `
   
   
   <h2 class="accordion-header headerCaracteristica"  >
     <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseCaracteristica${nombre}" aria-expanded="false" aria-controls="collapseCaracteristica${nombre}">
-     ${nombre}
+     ${nombre1}
     </button>
     
   </h2>
@@ -603,7 +792,7 @@ function añadirAcordionItem(nombre){
                 <tr>
                   <th scope="row">Nombre</th>
                   <td colspan='2'><div class="mb-3">
-                  <input type="text" readonly class="form-control input${nombre} formCaracteristica${nombre}" name="nombre" value='${nombre}' placeholder="Nombre">
+                  <input type="text" readonly class="form-control input${nombre} formCaracteristica${nombre}" name="nombre" value='${nombre1}' placeholder="Nombre">
                 </div></td>
                   
                 </tr>
@@ -631,10 +820,11 @@ function añadirAcordionItem(nombre){
                                       width="25"
                                       height="25"
                                       fill="#FACD0B"
-                                      class="bi bi-pencil-square"
+                                      class="bi bi-pencil-square botonModificar${nombre}"
                                       viewBox="0 0 20 20"
                                       id="botonModificarCaracteristica${nombre}"
-              
+                                      hidden
+                                      onclick="modificarCrtCreacionFront('${nombre}')"
                                     >
                                       <path
                                         d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"
@@ -645,11 +835,14 @@ function añadirAcordionItem(nombre){
                                       />
                                     </svg>
                   </th>
-                  <td onclick='borrarCaracteristica(event,"${nombre}")'>
+                  <td >
+                    
+                    <button class='button${nombre} btnIcon' onclick='borrarCaracteristica(event,"${nombre}")'>
                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="red" class="bi bi-x-circle" viewBox="0 0 16 16">
                       <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
                       <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708"/>
                     </svg>
+                    </button>
                   </td>
                   <td style="cursor:pointer">
                   <button class='button${nombre} btnIcon' onclick="crearCaracteristica('${nombre}')">
@@ -673,20 +866,237 @@ function añadirAcordionItem(nombre){
   </div>
 
 
-  `
-  accordionCaracteristicas.appendChild(divItem)
-
-
-
-
+  `;
+  accordionCaracteristicas.appendChild(divItem);
 }
-function borrarCaracteristica(event,nombre){
-  const accordion = document.getElementById('accordionCaracteristicas')
-  console.log(accordion.children)
-  const accordionCar=document.getElementById(`accordionItemCaracteristica${nombre}`)
-  console.log(accordionCar)
+function borrarCaracteristica(event, nombre) {
+  const accordion = document.getElementById("accordionCaracteristicas");
+  console.log(accordion.children);
+  const accordionCar = document.getElementById(
+    `accordionItemCaracteristica${nombre}`
+  );
+  console.log(accordionCar);
+  caracteristicasCreadas.delete(nombre);
+  accordion.removeChild(accordionCar);
 
-  accordion.removeChild(accordionCar)
+  enableButton("buttonCaracteristica");
 
-  caracteristicas = caracteristicas.filter(c=> c.caracteristica[0].valor !== nombre)
+  caracteristicas = caracteristicas.filter(
+    (c) => c.caracteristica[0].valor !== nombre
+  );
+}
+
+function modificarCrtCreacionFront(nombre) {
+  activarInputs(nombre);
+  activarSelects(nombre);
+  enableButtonByClass("button" + nombre);
+  caracteristicas = caracteristicas.filter(
+    (c) => c.caracteristica[0].valor !== nombre
+  );
+}
+
+function validarInputFormula(nombre, event) {
+  const value = event.target.value;
+  let variables = [];
+  let error = false;
+  for (let i = 0; i < value.length; i++) {
+    if (value[i] == "{") {
+      let validarCierre = false;
+      let variable = "";
+      for (let j = i + 1; j < value.length; j++) {
+        if (value[j] == "{") {
+          break;
+        }
+        if (value[j] == "}") {
+          variable = value.slice(i + 1, j);
+          validarCierre = true;
+          break;
+        }
+      }
+
+      if (!validarCierre || variable == "") {
+        error = true;
+        event.target.style.borderColor = "red";
+        break;
+      } else {
+        variables.push(variable);
+      }
+    }
+    if (
+      value[i] == "+" ||
+      value[i] == "-" ||
+      value[i] == "*" ||
+      value[i] == "/"
+    ) {
+      if (
+        (value[i - 1] == "}" || value[i - 1] == ")") &&
+        (value[i + 1] == "{" || value[i + 1] == "(")
+      ) {
+        continue;
+      } else {
+        error = true;
+        event.target.style.borderColor = "red";
+        break;
+      }
+    }
+    if (value[i] == "(") {
+      let validarCierre = false;
+
+      for (let j = i + 1; j < value.length; j++) {
+        if (value[j] == "(") {
+          break;
+        }
+        if (value[j] == ")") {
+          variable = value.slice(i + 1, j);
+          validarCierre = true;
+          break;
+        }
+      }
+
+      if (!validarCierre || variable == "") {
+        error = true;
+        event.target.style.borderColor = "red";
+        break;
+      }
+    }
+  }
+  const tBodySub = document.getElementById(`tBodySubCaracteristica${nombre}`)
+  variables.forEach(v=>{
+    let validar= false
+    for(let i = 0; i<tBodySub.children.length;i++){
+      if(tBodySub.children[i].children[0].children[0].value!='texto'&& event.target.parentNode.parentNode.parentNode.children[1].children[0].children[0].value!=v&& v==tBodySub.children[i].children[1].children[0].children[0].value){
+
+        validar=true
+        break;
+      }
+
+    }
+  if(!validar){
+    error = true;
+    event.target.style.borderColor = "red";
+  }
+    
+  })
+  if (!error) {
+    event.target.style.borderColor = "green";
+  }
+}
+
+function validarInferior(event, tipo) {
+  if (
+    event.target.parentNode.parentNode.parentNode.children[1].children[0]
+      .children[0].value == "" &&
+    event.target.parentNode.parentNode.parentNode.children[0].children[0]
+      .children[0].value == ""
+  ) {
+    event.target.parentNode.parentNode.parentNode.children[1].children[0].children[0].style.borderColor =
+      "gray";
+    event.target.parentNode.parentNode.parentNode.children[0].children[0].children[0].style.borderColor =
+      "gray";
+    return;
+  }
+  if (
+    event.target.parentNode.parentNode.parentNode.children[1].children[0]
+      .children[0].value == "" ||
+    event.target.parentNode.parentNode.parentNode.children[0].children[0]
+      .children[0].value == ""
+  ) {
+    event.target.parentNode.parentNode.parentNode.children[1].children[0].children[0].style.borderColor =
+      "red";
+    event.target.parentNode.parentNode.parentNode.children[0].children[0].children[0].style.borderColor =
+      "red";
+    return;
+  }
+  if (tipo == "inferior") {
+    if (
+      parseFloat(
+        event.target.parentNode.parentNode.parentNode.children[1].children[0]
+          .children[0].value
+      ) < parseFloat(event.target.value)
+    ) {
+      event.target.parentNode.parentNode.parentNode.children[1].children[0].children[0].style.borderColor =
+        "red";
+      event.target.style.borderColor = "red";
+    } else {
+      event.target.parentNode.parentNode.parentNode.children[1].children[0].children[0].style.borderColor =
+        "green";
+      event.target.style.borderColor = "green";
+    }
+  } else {
+    if (
+      parseFloat(
+        event.target.parentNode.parentNode.parentNode.children[0].children[0]
+          .children[0].value
+      ) > parseFloat(event.target.value)
+    ) {
+      event.target.parentNode.parentNode.parentNode.children[0].children[0].children[0].style.borderColor =
+        "red";
+      event.target.style.borderColor = "red";
+    } else {
+      event.target.style.borderColor = "green";
+      event.target.parentNode.parentNode.parentNode.children[0].children[0].children[0].style.borderColor =
+        "green";
+    }
+  }
+}
+function validarResultado(event) {
+  if (event.target.value.length > 20) {
+    event.target.style.borderColor = "red";
+  } else {
+    event.target.style.borderColor = "green";
+  }
+}
+
+function validarInferiorEdad(event, tipo) {
+  if (
+    event.target.parentNode.parentNode.parentNode.children[3].children[0]
+      .children[0].value == "" &&
+    event.target.parentNode.parentNode.parentNode.children[2].children[0]
+      .children[0].value == ""
+  ) {
+    return;
+  }
+  if (
+    event.target.parentNode.parentNode.parentNode.children[3].children[0]
+      .children[0].value == "" ||
+    event.target.parentNode.parentNode.parentNode.children[2].children[0]
+      .children[0].value == ""
+  ) {
+    event.target.parentNode.parentNode.parentNode.children[3].children[0].children[0].style.borderColor =
+      "red";
+    event.target.parentNode.parentNode.parentNode.children[2].children[0].children[0].style.borderColor =
+      "red";
+    return;
+  }
+  if (tipo == "inferior") {
+    if (
+      parseFloat(
+        event.target.parentNode.parentNode.parentNode.children[3].children[0]
+          .children[0].value
+      ) < parseFloat(event.target.value)
+    ) {
+      event.target.parentNode.parentNode.parentNode.children[3].children[0].children[0].style.borderColor =
+        "red";
+      event.target.style.borderColor = "red";
+    } else {
+      event.target.parentNode.parentNode.parentNode.children[3].children[0].children[0].style.borderColor =
+        "green";
+      event.target.style.borderColor = "green";
+    }
+  } else {
+    if (
+      parseFloat(
+        event.target.parentNode.parentNode.parentNode.children[2].children[0]
+          .children[0].value
+      ) > parseFloat(event.target.value)
+    ) {
+      event.target.parentNode.parentNode.parentNode.children[2].children[0].children[0].style.borderColor =
+        "red";
+      event.target.style.borderColor = "red";
+    } else {
+      event.target.style.borderColor = "green";
+      event.target.parentNode.parentNode.parentNode.children[2].children[0].children[0].style.borderColor =
+        "green";
+    }
+  }
 }
