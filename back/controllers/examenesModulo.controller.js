@@ -186,7 +186,7 @@ export const crearExamen = async (req, res) => {
               await Promise.all(
                 await ca.rangos.map(async (ran) => {
                   const [rangos] = await pool.execute(
-                    "INSERT INTO `rangos_detalle`(`id_det_ex`, `desde`, `hasta`, `inferior`, `superior`, `genero`) VALUES (?,?,?,?,?)",
+                    "INSERT INTO `rangos_detalle`(`id_det_ex`, `desde`, `hasta`, `inferior`, `superior`, `genero`) VALUES (?,?,?,?,?,?)",
                     [
                       detalle.insertId,
                       ran.desde,

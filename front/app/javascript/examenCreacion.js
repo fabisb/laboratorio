@@ -442,7 +442,7 @@ var caracteristicasCreadas = new Set()
 function añadirAcordionItem(nombre){
   const accordionCaracteristicas= document.getElementById("accordionCaracteristicas")
   if(caracteristicasCreadas.has(nombre)){
-    return alert("Ya existe una caracteristica con ese nombre");
+    return alerta.alert('Error:',"Ya existe una caracteristica con ese nombre");
   }else{
     caracteristicasCreadas.add(nombre)
   }
