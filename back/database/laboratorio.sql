@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 07-03-2024 a las 11:27:19
+-- Tiempo de generación: 15-03-2024 a las 04:44:57
 -- Versión del servidor: 10.4.28-MariaDB
 -- Versión de PHP: 8.2.4
 
@@ -417,7 +417,11 @@ INSERT INTO `detalles_examen` (`id`, `id_ex`, `nombre`, `posicion`, `unidad`, `i
 (346, 82, 'das', 0, 'ads', 0, 'inactivo'),
 (347, 82, 'asd', 0, 'asd', 0, 'inactivo'),
 (348, 83, 'fas', 2, '12', 0, 'activo'),
-(349, 84, 'fas', 2, '12', 0, 'activo');
+(349, 84, 'fas', 2, '12', 0, 'activo'),
+(350, 97, 'globulos', 1, 'ml', 1, 'activo'),
+(351, 99, 'caracteristica', 1, 'gr', 1, 'activo'),
+(352, 100, 'caracteristica', 1, 'gr', 1, 'activo'),
+(353, 101, 'fas', 1, 'rango', 1, 'activo');
 
 -- --------------------------------------------------------
 
@@ -534,7 +538,24 @@ INSERT INTO `examenes` (`id`, `nombre`, `id_seccion`) VALUES
 (81, 'asasd', 0),
 (82, 'uyiiu', 0),
 (83, 'sa', 0),
-(84, 'sa', 0);
+(84, 'sa', 0),
+(85, 'Examen1', 2),
+(86, 'Examen2', 2),
+(87, 'Examen3', 2),
+(88, 'Examen4', 2),
+(89, 'Examen5', 2),
+(90, 'Examen6', 2),
+(91, 'Examen7', 2),
+(92, 'Examen8', 2),
+(93, 'Examen9', 2),
+(94, 'Examen10', 2),
+(95, 'Examen11', 2),
+(96, 'examen12', 2),
+(97, 'examen13', 2),
+(98, 'aa', 2),
+(99, 'aass', 2),
+(100, 'aasss', 2),
+(101, 'ssss', 1);
 
 -- --------------------------------------------------------
 
@@ -628,7 +649,12 @@ CREATE TABLE `rangos_detalle` (
 
 INSERT INTO `rangos_detalle` (`id`, `id_det_ex`, `desde`, `hasta`, `inferior`, `superior`, `genero`) VALUES
 (1, 349, 0, 0, 1.00, 15.00, 'Mujer'),
-(2, 349, 0, 0, 2.00, 16.00, 'Hombre');
+(2, 349, 0, 0, 2.00, 16.00, 'Hombre'),
+(3, 351, 0, 0, 14.00, 15.00, 'femenino'),
+(4, 351, 0, 0, 10.00, 15.00, 'masculino'),
+(5, 352, 0, 0, 10.00, 15.00, 'masculino'),
+(6, 352, 0, 0, 14.00, 15.00, 'femenino'),
+(7, 353, 0, 0, 21.00, 23.00, 'todos');
 
 -- --------------------------------------------------------
 
@@ -642,6 +668,14 @@ CREATE TABLE `resultados_detalle` (
   `id_det_ex` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Volcado de datos para la tabla `resultados_detalle`
+--
+
+INSERT INTO `resultados_detalle` (`id`, `resultado`, `id_det_ex`) VALUES
+(1, 'rojo', 350),
+(2, 'azul', 350);
+
 -- --------------------------------------------------------
 
 --
@@ -652,6 +686,15 @@ CREATE TABLE `seccion_examen` (
   `id` int(11) NOT NULL,
   `nombre` tinytext NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `seccion_examen`
+--
+
+INSERT INTO `seccion_examen` (`id`, `nombre`) VALUES
+(1, 'hematocrito'),
+(2, 'hematologia'),
+(3, 'seccionPrueba');
 
 -- --------------------------------------------------------
 
@@ -666,6 +709,17 @@ CREATE TABLE `subcaracteristicas_detalle` (
   `valor` text DEFAULT NULL,
   `id_det_ex` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `subcaracteristicas_detalle`
+--
+
+INSERT INTO `subcaracteristicas_detalle` (`id`, `tipo`, `nombre`, `valor`, `id_det_ex`) VALUES
+(1, 'texto', 'color', '', 350),
+(2, 'numero', 'numero', '', 351),
+(3, 'formula', 'formula', '{numero}+{numero}', 351),
+(4, 'numero', 'numero', '', 352),
+(5, 'formula', 'formula', '{numero}+{numero}', 352);
 
 -- --------------------------------------------------------
 
@@ -787,7 +841,7 @@ ALTER TABLE `bioanalistas`
 -- AUTO_INCREMENT de la tabla `detalles_examen`
 --
 ALTER TABLE `detalles_examen`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=350;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=354;
 
 --
 -- AUTO_INCREMENT de la tabla `detalles_examenes_paciente`
@@ -799,7 +853,7 @@ ALTER TABLE `detalles_examenes_paciente`
 -- AUTO_INCREMENT de la tabla `examenes`
 --
 ALTER TABLE `examenes`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=85;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=102;
 
 --
 -- AUTO_INCREMENT de la tabla `examenes_paciente`
@@ -823,25 +877,25 @@ ALTER TABLE `pacientes`
 -- AUTO_INCREMENT de la tabla `rangos_detalle`
 --
 ALTER TABLE `rangos_detalle`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT de la tabla `resultados_detalle`
 --
 ALTER TABLE `resultados_detalle`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT de la tabla `seccion_examen`
 --
 ALTER TABLE `seccion_examen`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT de la tabla `subcaracteristicas_detalle`
 --
 ALTER TABLE `subcaracteristicas_detalle`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT de la tabla `users`

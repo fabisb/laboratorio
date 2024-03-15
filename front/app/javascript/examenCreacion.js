@@ -1,3 +1,27 @@
+/* 
+const { token } = await login.getToken();
+const {data: examenes} = await axios.get(
+  urlsv + "/api/modulo-examenes/examenes",
+  { headers: { token } }
+); 
+const {data: examenes} = await axios.get(
+  urlsv + "/api/modulo-examenes/examenes",
+  { headers: { token } }
+); 
+const {data: examen} = await axios.get(
+  urlsv + "/api/modulo-examenes/examen-id",
+  { headers: { token }, params: { idExamen } }
+); 
+const {data: examen} = await axios.get(
+  urlsv + "/api/modulo-examenes/examen-nombre",
+  { headers: { token }, params: { nombre } }
+); 
+const {data: examen} = await axios.get(
+  urlsv + "/api/modulo-examenes/examen-seccion",
+  { headers: { token }, params: { idSeccion } }
+); 
+*/
+
 const render = async () => {
   try {
     const { token } = await login.getToken();
@@ -272,7 +296,7 @@ function añadirRango(nombre) {
       name="inferior"
       type="text"
       onChange="validarInferior(event,'inferior')"
-      class="form-control-sm mx-2 input${nombre} w-25 formRango"
+      class="form-control-sm mx-2 input${nombre} w-50 formRango"
       id="exampleFormControlInput2"
     />
   </div>
@@ -286,7 +310,7 @@ function añadirRango(nombre) {
     onChange="validarInferior(event,'superior')"
     name="superior"
     type="text"
-    class="form-control-sm mx-2 w-25 input${nombre} formRango"
+    class="form-control-sm mx-2 w-50 input${nombre} formRango"
     id="exampleFormControlInput2"
   />
 </div>
@@ -300,7 +324,7 @@ function añadirRango(nombre) {
       onChange="validarInferiorEdad(event,'inferior')"
       name="desde"
       type="text"
-      class="form-control-sm mx-2 w-25 input${nombre} formRango"
+      class="form-control-sm mx-2 w-50 input${nombre} formRango"
       id="exampleFormControlInput2"
     />
   </div>
@@ -314,7 +338,7 @@ function añadirRango(nombre) {
     onChange="validarInferiorEdad(event,'superior')"
     name="hasta"
     type="text"
-    class="form-control-sm mx-2 w-25 input${nombre} formRango"
+    class="form-control-sm mx-2 w-50 input${nombre} formRango"
     id="exampleFormControlInput2"
   />
 </div>
@@ -384,15 +408,14 @@ async function crearExamen() {
   if (nombre == "" || !nombre) {
   }
 
-  const { token } = await login.getToken();
-  const result = await axios.post(
-    urlsv + "/api/modulo-examenes/crear-examen",
-    { nombre, seccion, caracteristicas },
-    { headers: { token } }
-  );
-  console.log("🚀 ~ crearExamen ~ result:", result);
-
   try {
+    const { token } = await login.getToken();
+    const result = await axios.post(
+      urlsv + "/api/modulo-examenes/crear-examen",
+      { nombre, seccion, caracteristicas },
+      { headers: { token } }
+    );
+    console.log("🚀 ~ crearExamen ~ result:", result);
   } catch (error) {
     console.log(error);
     if (error.response.data.mensaje) {
@@ -450,18 +473,24 @@ function crearCaracteristica(nombre) {
     `.trSubCaracteristica${nombre}`
   );
 
-  let subCaracteristicas = [...subCaracteristica].map((s,i) => {
-    let validarNombre=true
-    for (let k=i+1; k<subCaracteristica.length;k++){
-      if(s.childNodes[2].childNodes[1].childNodes[1].value == subCaracteristica[k].childNodes[2].childNodes[1].childNodes[1].value){
-        validarNombre=false
+  let subCaracteristicas = [...subCaracteristica].map((s, i) => {
+    let validarNombre = true;
+    for (let k = i + 1; k < subCaracteristica.length; k++) {
+      if (
+        s.childNodes[2].childNodes[1].childNodes[1].value ==
+        subCaracteristica[k].childNodes[2].childNodes[1].childNodes[1].value
+      ) {
+        validarNombre = false;
       }
     }
-    if(!validarNombre){
-      alerta.alert('error','hay mas de una subCaracteristica con el mismo nombre')
-      return undefined
+    if (!validarNombre) {
+      alerta.alert(
+        "error",
+        "hay mas de una subCaracteristica con el mismo nombre"
+      );
+      return undefined;
     }
-    let variables=[]
+    let variables = [];
     if (
       (s.childNodes[0].childNodes[1].value != "texto" &&
         s.childNodes[0].childNodes[1].value != "numero" &&
@@ -534,23 +563,24 @@ function crearCaracteristica(nombre) {
           }
         }
       }
-      variables.forEach(v=>{
-        let validar= false
-        for(let il = 0; il<subCaracteristica.length;il++){
-          if(subCaracteristica[il].childNodes[0].childNodes[1].value!='texto'&& s.childNodes[2].childNodes[1].childNodes[1].value!=v&& v==subCaracteristica[il].children[1].children[0].children[0].value){
-            
-            validar=true
+      variables.forEach((v) => {
+        let validar = false;
+        for (let il = 0; il < subCaracteristica.length; il++) {
+          if (
+            subCaracteristica[il].childNodes[0].childNodes[1].value !=
+              "texto" &&
+            s.childNodes[2].childNodes[1].childNodes[1].value != v &&
+            v == subCaracteristica[il].children[1].children[0].children[0].value
+          ) {
+            validar = true;
             break;
           }
-    
         }
-      if(!validar){
-        error = true;
+        if (!validar) {
+          error = true;
+        }
+      });
 
-      }
-        
-      })
-      
       if (error) {
         return undefined;
       }
@@ -960,23 +990,25 @@ function validarInputFormula(nombre, event) {
       }
     }
   }
-  const tBodySub = document.getElementById(`tBodySubCaracteristica${nombre}`)
-  variables.forEach(v=>{
-    let validar= false
-    for(let i = 0; i<tBodySub.children.length;i++){
-      if(tBodySub.children[i].children[0].children[0].value!='texto'&& event.target.parentNode.parentNode.parentNode.children[1].children[0].children[0].value!=v&& v==tBodySub.children[i].children[1].children[0].children[0].value){
-
-        validar=true
+  const tBodySub = document.getElementById(`tBodySubCaracteristica${nombre}`);
+  variables.forEach((v) => {
+    let validar = false;
+    for (let i = 0; i < tBodySub.children.length; i++) {
+      if (
+        tBodySub.children[i].children[0].children[0].value != "texto" &&
+        event.target.parentNode.parentNode.parentNode.children[1].children[0]
+          .children[0].value != v &&
+        v == tBodySub.children[i].children[1].children[0].children[0].value
+      ) {
+        validar = true;
         break;
       }
-
     }
-  if(!validar){
-    error = true;
-    event.target.style.borderColor = "red";
-  }
-    
-  })
+    if (!validar) {
+      error = true;
+      event.target.style.borderColor = "red";
+    }
+  });
   if (!error) {
     event.target.style.borderColor = "green";
   }
