@@ -17,6 +17,54 @@ export const getSecciones = async (req, res) => {
   }
 };
 
+export const getCaracteristicasById = async(req,res)=>{
+  console.log('aaabb')
+  const {id} = req.query;
+  try {
+    const [caracteristicas] = await pool.execute(
+      "SELECT * FROM detalles_examen WHERE id_ex = ?",
+      [id]
+    );
+    if (caracteristicas.length == 0) {
+      return await res
+        .status(404)
+        .json({ mensaje: "No se encuentran caracteristicas" });
+    } else {
+      return await res.status(200).json(caracteristicas);
+    }
+  } catch (error) {
+    console.log(error);
+    return await res
+      .status(500)
+      .json({ mensaje: "Ha ocurrido un error en el servidor" });
+  }
+
+}
+
+export const getExamenesBySec = async(req,res)=>{
+  
+  const {id} = req.query;
+  try {
+    const [examenes] = await pool.execute(
+      "SELECT * FROM examenes WHERE id_seccion = ?",
+      [id]
+    );
+    if (examenes.length == 0) {
+      return await res
+        .status(404)
+        .json({ mensaje: "No se encuentran caracteristicas" });
+    } else {
+      return await res.status(200).json(examenes);
+    }
+  } catch (error) {
+    console.log(error);
+    return await res
+      .status(500)
+      .json({ mensaje: "Ha ocurrido un error en el servidor" });
+  }
+
+}
+
 export const getExamenByNombre = async (req, res) => {
   const { nombre } = req.query;
   try {
