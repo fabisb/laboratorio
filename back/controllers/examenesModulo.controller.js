@@ -153,7 +153,6 @@ export const crearExamen = async (req, res) => {
         [nombre, seccion]
       );
       /* examenNew.insertId */
-
       await Promise.all(
         await caracteristicas.map(async (ca) => {
           console.log("🚀 ~ awaitcaracteristicas.map ~ ca:", ca);
@@ -165,14 +164,21 @@ export const crearExamen = async (req, res) => {
             .map((dato) => dato.nombre)
             .join(", ");
           const valores = ca.caracteristica.map((dato) => "?").join(", ");
-          const consulta = `INSERT INTO detalles_examen (${columnas}) VALUES ( ${valores})`;
+          const consulta = `INSERT INTO detalles_examen (${columnas}) VALUES (${valores})`;
           // Ejecutar la consulta
           console.log("🚀 ~ awaitcaracteristicas.map ~ consulta:", consulta);
           const [detalle] = await pool.execute(
             consulta,
-            ca.caracteristica.map((dato) => dato.valor || null)
+            ca.caracteristica.map((dato) => {
+              if (dato.nombre == "impsiempre") {
+                return dato.valor;
+              } else if (dato.nombre == "posicion") {
+                return dato.valor || 50;
+              } else {
+                return dato.valor || null;
+              }
+            })
           );
-
           /* detalle.insertId */
           if (ca.subCaracteristicas.length > 0) {
             await Promise.all(
