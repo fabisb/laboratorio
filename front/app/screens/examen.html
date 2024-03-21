@@ -206,7 +206,6 @@
               <div class="row row-cols-4">
                 <div class="col">
                   <svg
-                    onclick="abrirModalExamenes()"
                     style="cursor: pointer"
                     xmlns="http://www.w3.org/2000/svg"
                     width="40"
@@ -214,6 +213,8 @@
                     fill="#1C8484"
                     class="bi bi-file-plus"
                     viewBox="0 0 16 16"
+                    id="botonExamen"
+                    
                   >
                     <path
                       d="M8.5 6a.5.5 0 0 0-1 0v1.5H6a.5.5 0 0 0 0 1h1.5V10a.5.5 0 0 0 1 0V8.5H10a.5.5 0 0 0 0-1H8.5z"
@@ -568,103 +569,92 @@
       </div>
     </div>
 
-    <div id="examenes-list" class="modal fade" tabindex="-1">
-      <div class="modal-dialog modal-xl">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title">Menu Examenes</h5>
-            <button
-              type="button"
-              class="btn-close"
-              data-bs-dismiss="modal"
-              aria-label="Close"
-            ></button>
-          </div>
-          <div class="modal-body">
-            <div class="row">
-              <div class="col-8 d-flex justify-content-center">
-                <input
-                  style="width: 300px"
-                  class="form-control form-control-lg inputExamen"
-                  type="text"
-                  placeholder="Examenes"
-                  aria-label=".form-control-lg example"
-                  oninput="buscarExamen()"
-                  id="inputMenuExamen"
-                />
-              </div>
-              <div class="col-2">
-                <svg
-                  onclick="abrirModalExamenesCrud()"
-                  style="cursor: pointer"
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="40"
-                  height="40"
-                  fill="#1C8484"
-                  class="bi bi-file-plus"
-                  viewBox="0 0 16 16"
-                >
-                  <path
-                    d="M8.5 6a.5.5 0 0 0-1 0v1.5H6a.5.5 0 0 0 0 1h1.5V10a.5.5 0 0 0 1 0V8.5H10a.5.5 0 0 0 0-1H8.5z"
-                  />
-                  <path
-                    d="M2 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2zm10-1H4a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1"
-                  />
-                </svg>
-              </div>
-              <div class="col-2">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  style="cursor: pointer"
-                  width="50"
-                  height="50"
-                  fill="#FACD0B"
-                  class="bi bi-pencil-square"
-                  viewBox="0 0 20 20"
-                  id="botonModificarExamenes"
-                >
-                  <path
-                    d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"
-                  />
-                  <path
-                    fill-rule="evenodd"
-                    d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z"
-                  />
-                </svg>
-              </div>
-            </div>
+    <div
+    class="modal fade"
+    id="examenes-list"
+    tabindex="-1"
+    aria-labelledby="ExameneslLabel"
+    aria-hidden="true"
+  >
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content" style="border: 5px solid #68c0c3;">
+        <div class="modal-header">
+          <h1 class="fs-3" id="ExamenesLabel">
+            Diagnosticos
+          </h1>
+          <img src="../imgs/la-milagrosa-logo.png" width="70" alt="" />
 
-            <hr />
-            <table class="table table-bordered table-hover text-center" id="">
-              <thead>
-                <tr>
-                  <th colspan="4" scope="col">Examenes</th>
-                </tr>
-                <tr>
-                  <th scope="col">#</th>
-                  <th scope="col">Examen</th>
-                  <th scope="col">Modificar</th>
-                  <th scope="col">Eliminar</th>
-                </tr>
-              </thead>
-              <tbody id="tBodyMenuExamen">
-                <tr></tr>
-              </tbody>
-            </table>
+          
+        </div>
+        <div class="modal-body container" >
+          <h1 class="display-6 text-center">Diagnosticos</h1>
+          <hr>
+          <div class="d-flex justify-content-center">
+            <input type="text" id="examenDiagnosticoInput" oninput="buscarExamen()" class="form-control w-50" placeholder="Examen" aria-label="Username" aria-describedby="addon-wrapping">
+
           </div>
-          <div class="modal-footer">
-            <button
-              type="button"
-              class="btn btn-secondary"
-              data-bs-dismiss="modal"
-            >
-              Cerrar
-            </button>
-            <button type="button" class="btn btn-primary">Guardar</button>
-          </div>
+          <hr>
+          <ul class="list-group" id="menuDiagnosticoUl" style="max-height: 50vh; overflow-y: auto;">      
+          </ul>
+          
+        </div>
+        <div class="modal-footer">
+          <button
+            type="button"
+            class="btn btn-secondary"
+            data-bs-dismiss="modal"
+          >
+            Cerrar
+          </button>
+          
         </div>
       </div>
     </div>
+  </div>
+  <div
+  class="modal fade"
+  id="resultadosModal"
+  tabindex="-1"
+  aria-labelledby="resultadoModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content" style="border: 5px solid #68c0c3;">
+      <div class="modal-header">
+        <h1 class="fs-3" id="resultadoModalLabel">
+          Ingreso de Resultados
+        </h1>
+        <img src="../imgs/la-milagrosa-logo.png" width="70" alt="" />
+
+        
+      </div>
+      <div class="modal-body container" >
+        <h5 class="text-center" id="h1NombreEx"></h5>
+        <hr>
+        
+        
+        
+      </div>
+      <div class="modal-footer">
+        <button
+          type="button"
+          class="btn btn-secondary"
+          data-bs-dismiss="modal"
+        >
+          Cerrar
+        </button>
+        <button
+          type="button"
+          class="btn btn-primary"
+          data-bs-dismiss="modal"
+          onclick=""
+        >
+          Guardar Resultado
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
 
     <div id="examenes-crud" class="modal fade" tabindex="-1">
       <div class="modal-dialog modal-lg">
@@ -1091,7 +1081,7 @@
     </div>
     <!-- Modal para agregar un paciente -->
     <!-- Modal para modificar un paciente -->
-    <div id="confirmacion-modal-pacienteM" class="modal fade">
+    <div id="confirmacion-modal-paciente" class="modal fade">
       <div class="modal-dialog modal-confirm">
         <div class="modal-content">
           <div class="modal-header">
