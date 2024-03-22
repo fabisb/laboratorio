@@ -121,17 +121,21 @@ export const getExamenById = async (req, res) => {
         [examenes[0].id]
       );
       if (detalles.length > 0) {
+        let detallesIn = ''
+
+        let detallesId=detalles.forEach(d=>detallesIn+=`'${d.id}',`)
+        detallesIn= detallesIn.slice(0,-1)
         const [rangos] = await pool.execute(
-          "SELECT * FROM rangos_detalle WHERE id_det_ex = ?",
-          [detalles[0].id]
+          `SELECT * FROM rangos_detalle WHERE id_det_ex in (${detallesIn})`,
+          
         );
         const [resultados] = await pool.execute(
-          "SELECT * FROM resultados_detalle WHERE id_det_ex = ?",
-          [detalles[0].id]
+          `SELECT * FROM resultados_detalle WHERE id_det_ex in (${detallesIn})`,
+         
         );
         const [subCa] = await pool.execute(
-          "SELECT * FROM subcaracteristicas_detalle WHERE id_det_ex = ?",
-          [detalles[0].id]
+          `SELECT * FROM subcaracteristicas_detalle WHERE id_det_ex in (${detallesIn})`,
+
         );
         return await res
           .status(200)
@@ -191,6 +195,7 @@ export const crearExamen = async (req, res) => {
       "SELECT nombre FROM examenes WHERE nombre = ? ",
       [nombre]
     );
+    console.log(nombreExistente)
     if (nombreExistente.length > 0) {
       return await res.status(400).json({
         mensaje: "El nombre que intenta agregar para este examen ya existe",
