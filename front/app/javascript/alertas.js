@@ -10,9 +10,9 @@ const cedulaAlerta = (message, type) => {
   if (alertaCedula.children.length == 0) {
     alertaCedula.append(wrapper);
     setTimeout(() => {
-       new bootstrap.Alert("#alertCedulaDiv").close();
+      new bootstrap.Alert("#alertCedulaDiv").close();
       alertaCedula.removeChild(alertaCedula.firstChild);
-      return
+      return;
     }, 6000);
   }
 };
@@ -28,13 +28,15 @@ const cedulaAlerta2 = (message, type) => {
   if (alertaCedula2.children.length == 0) {
     alertaCedula2.append(wrapper);
     setTimeout(() => {
-       new bootstrap.Alert("#alertCedulaDiv2").close();
+      new bootstrap.Alert("#alertCedulaDiv2").close();
       alertaCedula2.removeChild(alertaCedula2.firstChild);
-      return
+      return;
     }, 6000);
   }
 };
-const alertaExamenesCreacion = document.getElementById("alertaExamenesCreacion");
+const alertaExamenesCreacion = document.getElementById(
+  "alertaExamenesCreacion"
+);
 const examenesAlerta = (message, type) => {
   const wrapper = document.createElement("div");
   wrapper.innerHTML = [
@@ -43,12 +45,12 @@ const examenesAlerta = (message, type) => {
     '   <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>',
     "</div>",
   ].join("");
-  if (alertaCedula2.children.length == 0) {
-    alertaCedula2.append(wrapper);
+  if (alertaExamenesCreacion.children.length == 0) {
+    alertaExamenesCreacion.append(wrapper);
     setTimeout(() => {
-       new bootstrap.Alert("#alertaExamenesCreacionDiv").close();
-      alertaCedula2.removeChild(alertaCedula2.firstChild);
-      return
+      new bootstrap.Alert("#alertaExamenesCreacionDiv").close();
+      alertaExamenesCreacion.removeChild(alertaExamenesCreacion.firstChild);
+      return;
     }, 6000);
   }
 };

@@ -9,6 +9,8 @@ import {
   getExamenBySeccion,
   getExamenes,
   getSecciones,
+  updateCaracteristica,
+  updateSubCaracteristica,
 } from "../controllers/examenesModulo.controller.js";
 var router = express.Router();
 
@@ -20,13 +22,12 @@ router.get("/examen-nombre", verifyToken, getExamenByNombre);
 router.get("/examen-seccion", verifyToken, getExamenBySeccion);
 router.get("/caracteristicas-id_ex", verifyToken, getCaracteristicasById);
 
-
-
 //POST
 router.post("/crear-seccion", verifyToken, crearSeccion);
 router.post("/crear-examen", verifyToken, crearExamen);
 
 //PUT
-router.put("/update-examen", verifyToken);
+router.put("/update-caracteristica", verifyToken, updateCaracteristica);
+router.put("/update-subcaracteristica", verifyToken, updateSubCaracteristica);
 
 export default router;
