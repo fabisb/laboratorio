@@ -204,6 +204,7 @@ async function modificarExamen(id) {
                         <th scope="col">Genero</th>
                         <th></th>
                         <th></th>
+                        <th></th>
                       </tr>
                     </thead>
                     <tbody style="font-size: small;" id="tBodyRangos${nombre}">
@@ -214,7 +215,7 @@ async function modificarExamen(id) {
                     </tbody>
                     <tfoot>
                       <tr>
-                        <td colspan="6">
+                        <td colspan="7">
 
                         </td>
                         <td>
@@ -242,7 +243,7 @@ async function modificarExamen(id) {
                 <div class="accordion-body" id="accordionBodyResultados${nombre}">
                   <table class="table" style="font-size: small;">
                     <thead>
-                      <tr><th colspan="3">Resultados</th></tr>
+                      <tr><th colspan="4">Resultados</th></tr>
                     </thead>
                     <tbody id="tBodyResultados${nombre}">
                      
@@ -250,7 +251,7 @@ async function modificarExamen(id) {
                     </tbody>
                     <tfoot>
                       <tr>
-                        <td colspan="2">
+                        <td colspan="3">
 
                         </td>
                         <td>
@@ -466,9 +467,10 @@ onclick="modificarSubCaForm('${sb.id}','${nombre}')"
         
         name="inferior"
         type="text"
-        class="form-control-sm mx-2 input${nombre} w-50 formRango"
-        id="exampleFormControlInput2"
+        class="form-control-sm mx-2 input${nombre} w-50 inpRg${r.id}  formRango"
         value="${r.inferior}"
+        onChange="validarInferior(event,'inferior')"
+        id='inferior${r.id}'
         readonly
       />
     </div>
@@ -476,16 +478,19 @@ onclick="modificarSubCaForm('${sb.id}','${nombre}')"
   <td>
     <div
     class="mb-3 d-flex align-items-center justify-content-center"
-  >
-   
-    <input
-      name="superior"
-      type="text"
-      class="form-control-sm mx-2 w-50 input${nombre} formRango"
-      value="${r.superior}"
+    >
+    
+      <input
+        name="superior"
+        type="text"
+        class="form-control-sm mx-2 w-50 input${nombre} inpRg${r.id} formRango"
+        value="${r.superior}"
+        onChange="validarInferior(event,'superior')"
+        id='superior${r.id}'
+
         readonly
-    />
-  </div>
+      />
+    </div>
   </td>
   <td>
     <div
@@ -497,7 +502,10 @@ onclick="modificarSubCaForm('${sb.id}','${nombre}')"
         readonly
         name="desde"
         type="text"
-        class="form-control-sm mx-2 w-50 input${nombre} formRango"
+        onChange="validarInferiorEdad(event,'inferior')"
+        id='desde${r.id}'
+
+        class="form-control-sm mx-2 w-50 input${nombre} inpRg${r.id} formRango"
       />
     </div>
   </td>
@@ -511,18 +519,21 @@ onclick="modificarSubCaForm('${sb.id}','${nombre}')"
       readonly
       name="hasta"
       type="text"
-      class="form-control-sm mx-2 w-50 input${nombre} formRango"
+      id='hasta${r.id}'
+
+      onChange="validarInferiorEdad(event,'superior')"
+      class="form-control-sm mx-2 w-50 input${nombre} inpRg${r.id} formRango"
     />
   </div>
   </td>
   <th scope="row">
-    <select class="form-select form-control-sm select${nombre} value="${r.genero}" disabled formRango" name="genero" aria-label="Default select example">
+    <select id='selectRg${r.id}' class="form-select form-control-sm inpRg${r.id} select${nombre} value="${r.genero}" disabled formRango" name="genero" aria-label="Default select example">
       <option value="todos">Genero</option>
       <option value="masculino">Masculino</option>
       <option value="femenino">Femenino</option>
     </select>
   </th>
-  <th scope="row"><button class="button${nombre} btnIcon" >
+  <th scope="row"><button class="button${nombre} buttonModificarRango${r.id} btnIcon" >
   <svg
   xmlns="http://www.w3.org/2000/svg"
   style="cursor: pointer"
@@ -532,7 +543,7 @@ onclick="modificarSubCaForm('${sb.id}','${nombre}')"
   class="bi bi-pencil-square"
   viewBox="0 0 20 20"
   id=""
-  onclick=""
+  onclick="modificarRangoForm('${r.id}','${nombre}')"
   >
   <path
     d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"
@@ -543,6 +554,16 @@ onclick="modificarSubCaForm('${sb.id}','${nombre}')"
   />
   </svg>
     </button> </th>
+
+    <td style="cursor:pointer">
+    <button hidden class='button${nombre} btnIcon' id='botonGuardarRg${r.id}' onclick="guardarCambioRgBdd('${r.id}','${nombre}')">
+      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="blue" class="bi bi-save" viewBox="0 0 16 16">
+        <path d="M2 1a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H9.5a1 1 0 0 0-1 1v7.293l2.646-2.647a.5.5 0 0 1 .708.708l-3.5 3.5a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L7.5 9.293V2a2 2 0 0 1 2-2H14a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2h2.5a.5.5 0 0 1 0 1z"/>
+      </svg>
+    </button>
+    </td>
+
+    
   <td>
     <button class="button${nombre} btnIcon" onclick="borrarRango(event,'${nombre}')">
     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="red"  class="bi bi-x-circle " viewBox="0 0 16 16">
@@ -569,6 +590,7 @@ onclick="modificarSubCaForm('${sb.id}','${nombre}')"
                                     
                                      
                                       <input
+                                        id='resultadoRs${rsl.id}'
                                         onChange="validarResultado(event)"
                                         name="resultado"
                                         type="text"
@@ -577,7 +599,7 @@ onclick="modificarSubCaForm('${sb.id}','${nombre}')"
                                         value="${rsl.resultado}"
                                       />
                                     </div></td>
-                                    <th scope="row"><button class="button${nombre} btnIcon" >
+                                    <th scope="row"><button class="button${nombre} btnIcon buttonModificarRs" >
                                     <svg
                                     xmlns="http://www.w3.org/2000/svg"
                                     style="cursor: pointer"
@@ -587,7 +609,7 @@ onclick="modificarSubCaForm('${sb.id}','${nombre}')"
                                     class="bi bi-pencil-square"
                                     viewBox="0 0 20 20"
                                     id=""
-                                    onclick=""
+                                    onclick="modificarResultadoForm(${rsl.id},'${nombre}')"
                                     >
                                     <path
                                       d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"
@@ -598,6 +620,14 @@ onclick="modificarSubCaForm('${sb.id}','${nombre}')"
                                     />
                                     </svg>
                                       </button> </th>
+                                      <td style="cursor:pointer">
+    <button hidden class='button${nombre} btnIcon' id='botonGuardarRs${rsl.id}' onclick="guardarCambioRsBdd('${rsl.id}','${nombre}')">
+      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="blue" class="bi bi-save" viewBox="0 0 16 16">
+        <path d="M2 1a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H9.5a1 1 0 0 0-1 1v7.293l2.646-2.647a.5.5 0 0 1 .708.708l-3.5 3.5a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L7.5 9.293V2a2 2 0 0 1 2-2H14a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2h2.5a.5.5 0 0 1 0 1z"/>
+      </svg>
+    </button>
+    </td>
+
                                     <td >
                                       <button class="button${nombre} btnIcon" onclick="borrarResultado(event,'${nombre}')">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="red" class="bi bi-x-circle" viewBox="0 0 16 16">
@@ -611,6 +641,32 @@ onclick="modificarSubCaForm('${sb.id}','${nombre}')"
       tBodyResultados.appendChild(tr);
     });
   });
+}
+function modificarResultadoForm(id,nombre){
+  const resultadoInput= document.getElementById(`resultadoRs${id}`)
+  resultadoInput.removeAttribute("readonly")
+  const btnModi= document.getElementsByClassName(`buttonModificarRs`)
+  const arrBtn = [...btnModi]
+  arrBtn.forEach(e=>{
+    e.setAttribute('hidden','true')
+  })
+  const botonGuardarRs= document.getElementById(`botonGuardarRs${id}`)
+  botonGuardarRs.removeAttribute('hidden')
+}
+
+async function guardarCambioRsBdd(id,nombre){
+  const resultadoInput= document.getElementById(`resultadoRs${id}`)
+  
+  resultadoInput.value=resultadoInput.value.slice(0,20)
+  console.log(resultadoInput.value)
+  resultadoInput.setAttribute("readonly",'true')
+  const btnModi= document.getElementsByClassName(`buttonModificarRs`)
+  const arrBtn = [...btnModi]
+  arrBtn.forEach(e=>{
+    e.removeAttribute('hidden')
+  })
+  const botonGuardarRs= document.getElementById(`botonGuardarRs${id}`)
+  botonGuardarRs.setAttribute('hidden','true')
 }
 
 function modificarCaracteristicaForm(nombre) {
@@ -638,7 +694,127 @@ async function guardarCambioSubCaBdd(id, nombre) {
   const inputNombre = document.getElementById(`inputNombreSubCa${id}`);
   const inputValor = document.getElementById(`inputValorSubCa${id}`);
   const tipo = document.getElementById(`selectSubTipo${id}`);
+  const subCaracteristica = document.querySelectorAll(
+    `.trSubCaracteristica${nombre}`
+  );
+  let tr= [...subCaracteristica]
+  tr.forEach((s, i) => {
+    let validarNombre = true;
+    for (let k = i + 1; k < subCaracteristica.length; k++) {
+      if (
+        s.childNodes[2].childNodes[1].childNodes[1].value ==
+        subCaracteristica[k].childNodes[2].childNodes[1].childNodes[1].value
+      ) {
+        validarNombre = false;
+      }
+    }
+    if (!validarNombre) {
+      alerta.alert(
+        "error",
+        "hay mas de una subCaracteristica con el mismo nombre"
+      );
+      return undefined;
+    }
+    let variables = [];
+    if (
+      (s.childNodes[0].childNodes[1].value != "texto" &&
+        s.childNodes[0].childNodes[1].value != "numero" &&
+        s.childNodes[0].childNodes[1].value != "formula") ||
+      s.childNodes[2].childNodes[1].childNodes[1].value == ""
+    ) {
+      return undefined;
+    }
+    if (s.childNodes[0].childNodes[1].value == "formula") {
+      if (s.childNodes[4].childNodes[1].childNodes[1].value == "") {
+        return undefined;
+      }
+      let error = false;
+      let value = s.childNodes[4].childNodes[1].childNodes[1].value;
+      for (let i = 0; i < value.length; i++) {
+        if (value[i] == "{") {
+          let validarCierre = false;
+          let variable = "";
+          for (let j = i + 1; j < value.length; j++) {
+            if (value[j] == "{") {
+              break;
+            }
+            if (value[j] == "}") {
+              variable = value.slice(i + 1, j);
+              validarCierre = true;
+              break;
+            }
+          }
 
+          if (!validarCierre || variable == "") {
+            error = true;
+            break;
+          } else {
+            variables.push(variable);
+          }
+        }
+        if (
+          value[i] == "+" ||
+          value[i] == "-" ||
+          value[i] == "*" ||
+          value[i] == "/"
+        ) {
+          if (
+            (value[i - 1] == "}" || value[i - 1] == ")") &&
+            (value[i + 1] == "{" || value[i + 1] == "(")
+          ) {
+            continue;
+          } else {
+            error = true;
+            break;
+          }
+        }
+        if (value[i] == "(") {
+          let validarCierre = false;
+
+          for (let j = i + 1; j < value.length; j++) {
+            if (value[j] == "(") {
+              break;
+            }
+            if (value[j] == ")") {
+              variable = value.slice(i + 1, j);
+              validarCierre = true;
+              break;
+            }
+          }
+
+          if (!validarCierre || variable == "") {
+            error = true;
+            break;
+          }
+        }
+      }
+      variables.forEach((v) => {
+        let validar = false;
+        for (let il = 0; il < subCaracteristica.length; il++) {
+          if (
+            subCaracteristica[il].childNodes[0].childNodes[1].value !=
+              "texto" &&
+            s.childNodes[2].childNodes[1].childNodes[1].value != v &&
+            v == subCaracteristica[il].children[1].children[0].children[0].value
+          ) {
+            validar = true;
+            break;
+          }
+        }
+        if (!validar) {
+          error = true;
+        }
+      });
+
+      if (error) {
+        return alerta.alert("Error", "Verifique la sintaxis del  valor");
+        
+      }
+    }
+    })
+    if(error){
+      return
+    }
   let subCa = {
     id_subCaracteristica: id,
     subCaracteristica: {
@@ -706,6 +882,99 @@ function modificarSubCaForm(id, nombre) {
   document.getElementById("botonGuardarSubCa" + id).removeAttribute("hidden");
   console.log(inputsSb);
 }
+
+async function modificarRangoForm(id,nombre){
+  const inputRg=document.getElementsByClassName(`inpRg${id}`)
+  console.log(inputRg)
+  const arrRg = [...inputRg];
+  arrRg.forEach((e) => {
+    if (e.tagName == "SELECT" || e.tagName == "button") {
+      e.removeAttribute("disabled");
+    } else {
+      e.removeAttribute("readonly");
+      
+    }
+  });
+  const btnModi=document.getElementsByClassName(`buttonModificarRango${id}`)
+
+  const arrBtn=[...btnModi]
+  arrBtn.forEach(e=>{
+    e.setAttribute('hidden','true')
+  })
+
+  const btnGuardarRg =document.getElementById(`botonGuardarRg${id}`)
+  btnGuardarRg.removeAttribute('hidden')
+}
+
+async function guardarCambioRgBdd(id,nombre){
+  const rango = document.querySelectorAll(`.trRango${nombre}`);
+  let error = false
+  let rangos = [...rango].map((r) => {
+    if (r.childNodes[5].childNodes[1].childNodes[1].value == "") {
+      if (r.childNodes[7].childNodes[1].childNodes[1].value != "") {
+        error=true
+        return alerta.alert("Error","Verifique los campos")
+      }
+    }
+    if (
+      r.childNodes[1].childNodes[1].childNodes[1].value == "" ||
+      r.childNodes[3].childNodes[1].childNodes[1].value == ""
+    ) {
+      error=true
+      return alerta.alert("Error","Verifique los campos")
+
+    }
+
+    if (
+      r.childNodes[1].childNodes[1].childNodes[1].value >
+        r.childNodes[3].childNodes[1].childNodes[1].value ||
+      r.childNodes[5].childNodes[1].childNodes[1].value >
+        r.childNodes[7].childNodes[1].childNodes[1].value
+    ) {
+      error=true
+      return alerta.alert("Error","Verifique los campos")
+  }
+
+  
+  });
+  if(error){
+    return
+  }
+
+  let desde=document.getElementById(`desde${id}`).value
+  let hasta= document.getElementById(`hasta${id}`).value
+  let inferior= document.getElementById(`inferior${id}`).value
+  let superior= document.getElementById(`superior${id}`).value
+  let genero = document.getElementById(`selectRg${id}`).value
+  let rangoBdd={
+    desde,hasta,inferior,superior,genero
+  }
+  console.log(rangoBdd)
+  const inputRg=document.getElementsByClassName(`inpRg${id}`)
+  console.log(inputRg)
+  const arrRg = [...inputRg];
+  arrRg.forEach((e) => {
+    if (e.tagName == "SELECT" || e.tagName == "button") {
+      e.setAttribute("disabled","true");
+    } else {
+      e.setAttribute("readonly","true");
+      
+    }
+  });
+  const btnModi=document.getElementsByClassName(`buttonModificarRango${id}`)
+
+  const arrBtn=[...btnModi]
+  arrBtn.forEach(e=>{
+    e.removeAttribute('hidden')
+  })
+
+  const btnGuardarRg =document.getElementById(`botonGuardarRg${id}`)
+  btnGuardarRg.setAttribute('hidden','true')
+
+
+}
+
+
 
 async function guardarCambioCaracteristicaBdd(id, nombre) {
   const formCaracteristica = document.getElementsByClassName(
