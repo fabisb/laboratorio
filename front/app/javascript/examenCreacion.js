@@ -164,6 +164,7 @@ async function modificarExamen(id){
                         <th scope="col">Valor</th>
                         <th></th>
                         <th></th>
+                        <th></th>
                       </tr>
                     </thead>
                     <tbody style="font-size: small;" id="tBodySubCaracteristica${nombre}">
@@ -171,7 +172,7 @@ async function modificarExamen(id){
                     </tbody>
                     <tfoot>
                       <tr>
-                        <td colspan="4">
+                        <td colspan="5">
 
                         </td>
                         <td>
@@ -312,7 +313,7 @@ async function modificarExamen(id){
                                       fill="#FACD0B"
                                       class="bi bi-pencil-square botonModificar${nombre}"
                                       viewBox="0 0 20 20"
-                                      id="botonModificarCaracteristica${nombre}"
+                                      id="botonModificarCaracteristicaForm${nombre}"
                                       onclick="modificarCaracteristicaForm('${nombre}')"
                                     >
                                       <path
@@ -334,7 +335,7 @@ async function modificarExamen(id){
                     </button>
                   </td>
                   <td style="cursor:pointer">
-                  <button hidden class='button${nombre} btnIcon'>
+                  <button hidden class='button${nombre} btnIcon' id='botonGuardarCaracteristica${nombre}' onclick="guardarCambioCaracteristicaBdd('${dt.id}','${nombre}')">
                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="blue" class="bi bi-save" viewBox="0 0 16 16">
                       <path d="M2 1a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H9.5a1 1 0 0 0-1 1v7.293l2.646-2.647a.5.5 0 0 1 .708.708l-3.5 3.5a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L7.5 9.293V2a2 2 0 0 1 2-2H14a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2h2.5a.5.5 0 0 1 0 1z"/>
                     </svg>
@@ -369,7 +370,7 @@ async function modificarExamen(id){
     const tr = document.createElement("tr");
   tr.className = "trSubCaracteristica" + nombre;
   tr.innerHTML = `<th scope="row">
-  <select value="${sb.tipo}" disabled class="form-select form-control-sm select${nombre} formSubCaracteristica${nombre}" name="select"  aria-label="Default select example">
+  <select id="selectSubTipo${sb.id}" onchange="validarSelectSub('${nombre}',event)" value="${sb.tipo}" disabled class="form-select form-control-sm select${nombre} inputSb${sb.id}" name="select"  aria-label="Default select example">
     <option value="texto">Texto</option>
     <option value="numero">Numero</option>
     <option value="formula">Formula</option>
@@ -384,8 +385,9 @@ async function modificarExamen(id){
       readonly
       name="nombre"
       type="text"
-      class="form-control-sm mx-2 input${nombre} formSubCaracteristica${nombre}"
+      class="form-control-sm mx-2 inputSb${sb.id} "
       value="${sb.nombre}"
+      id="inputNombreSubCa${sb.id}"
       
     />
   </div>
@@ -393,16 +395,16 @@ async function modificarExamen(id){
 <td>
   
 <div class="input-group">
-<input type="text" name='valor' value="${sb.valor}" readonly class="form-control-sm mx-2 input${nombre} formSubCaracteristica${nombre}" placeholder="{v} - [+-*/] - ({a}[/]{b})" aria-label="">
-  <button disabled class="btn btn-light p-0 " onclick='añadirChars("{}",event)' type="button">{  }</button>
-  <button disabled class="btn btn-light p-0 " onclick='añadirChars("[]",event)' type="button">[  ]</button>
-  <button disabled class="btn btn-light p-0 " onclick='añadirChars("()",event)' type="button">(  )</button>
+<input type="text" name='valor' id="inputValorSubCa${sb.id}" value="${sb.valor}" onchange="validarInputFormula('${nombre}',event)" readonly class="form-control-sm mx-2 inputSb${sb.id} formSubCaracteristica${nombre}" placeholder="{v} - [+-*/] - ({a}[/]{b})" aria-label="">
+  <button disabled class="btn btn-light p-0 inputSb${sb.id}" onclick='añadirChars("{}",event)' type="button">{  }</button>
+  <button disabled class="btn btn-light p-0 inputSb${sb.id}" onclick='añadirChars("[]",event)' type="button">[  ]</button>
+  <button disabled class="btn btn-light p-0 inputSb${sb.id}" onclick='añadirChars("()",event)' type="button">(  )</button>
 
 </div>
 </td>
 
 <td scope="row"
-<button class="button${nombre} btnIcon" >
+<button class="button${nombre} btnIcon buttonModificarSub${nombre}" >
 <svg
 xmlns="http://www.w3.org/2000/svg"
 style="cursor: pointer"
@@ -411,8 +413,8 @@ height="25"
 fill="#FACD0B"
 class="bi bi-pencil-square"
 viewBox="0 0 20 20"
-id=""
-onclick=""
+id="botonModificarSubCa${sb.id}"
+onclick="modificarSubCaForm('${sb.id}','${nombre}')"
 >
 <path
   d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"
@@ -424,6 +426,13 @@ onclick=""
 </svg>
   </button>
 </td>
+<td style="cursor:pointer">
+                  <button hidden class='button${nombre} btnIcon' id='botonGuardarSubCa${sb.id}' onclick="guardarCambioSubCaBdd('${sb.id}','${nombre}')">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="blue" class="bi bi-save" viewBox="0 0 16 16">
+                      <path d="M2 1a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H9.5a1 1 0 0 0-1 1v7.293l2.646-2.647a.5.5 0 0 1 .708.708l-3.5 3.5a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L7.5 9.293V2a2 2 0 0 1 2-2H14a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2h2.5a.5.5 0 0 1 0 1z"/>
+                    </svg>
+                  </button>
+                  </td>
 <td>
   <button class="button${nombre} btnIcon" >
   <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="red"  class="bi bi-x-circle" viewBox="0 0 16 16">
@@ -615,7 +624,118 @@ function modificarCaracteristicaForm(nombre){
     
     
   });
+  document.getElementById('botonModificarCaracteristicaForm'+nombre).setAttribute('hidden','true')
+  document.getElementById('botonGuardarCaracteristica'+nombre).removeAttribute('hidden')
 
+}
+
+async function guardarCambioSubCaBdd(id,nombre){
+  const inputNombre=document.getElementById(`inputNombreSubCa${id}`)
+  const inputValor = document.getElementById(`inputValorSubCa${id}`)
+  const tipo=document.getElementById(`selectSubTipo${id}`)
+
+  let subCa={
+    id_subCaracteristica:id,
+    subCaracteristica:{
+      nombre:inputNombre.value,
+      valor: inputValor.value,
+      tipo: tipo.value
+    }
+
+  }
+  const inputsSb=document.getElementsByClassName(`inputSb${id}`)
+  const arrSb= [...inputsSb]
+  arrSb.forEach(e=>{
+    if(e.tagName=='SELECT' || e.tagName=='button'){
+      e.setAttribute('disabled','true')
+    }else{
+      if(e.name == 'valor'){
+        if(tipo.value=='formula'){
+         e.setAttribute('readonly','true')
+        }
+      }else{
+        e.setAttribute('readonly','true')
+    
+      }
+    }
+  })
+  const botonesModificar=document.getElementsByClassName('buttonModificarSub'+nombre)
+  const arrBotonesMod= [...botonesModificar]
+  arrBotonesMod.forEach(b=>{
+    b.removeAttribute('hidden')
+  })
+  console.log(arrBotonesMod)
+  document.getElementById('botonGuardarSubCa'+id).setAttribute('hidden','true')
+  console.log(inputsSb)
+
+}
+
+function modificarSubCaForm(id,nombre){
+  const inputsSb=document.getElementsByClassName(`inputSb${id}`)
+  const tipo=document.getElementById(`selectSubTipo${id}`)
+  console.log(tipo)
+  const arrSb= [...inputsSb]
+  arrSb.forEach(e=>{
+    if(e.tagName=='SELECT' || e.tagName=='button'){
+      e.removeAttribute('disabled')
+    }else{
+      if(e.name == 'valor'){
+        if(tipo.value=='formula'){
+         e.removeAttribute('readonly')
+        }
+      }else{
+        e.removeAttribute('readonly')
+    
+      }
+    }
+  })
+
+
+
+  const botonesModificar=document.getElementsByClassName('buttonModificarSub'+nombre)
+  const arrBotonesMod= [...botonesModificar]
+  arrBotonesMod.forEach(b=>{
+    b.setAttribute('hidden','true')
+  })
+  console.log(arrBotonesMod)
+  document.getElementById('botonGuardarSubCa'+id).removeAttribute('hidden')
+  console.log(inputsSb)
+}
+
+async function guardarCambioCaracteristicaBdd(id,nombre){
+
+  const formCaracteristica = document.getElementsByClassName(
+    "formCaracteristica" + nombre
+  );
+
+  const caracteristica = [...formCaracteristica].map((c) => {
+    if (c.name == "imp") {
+      return {
+        nombre: "impsiempre",
+        valor: c.checked ? 1 : 0,
+      };
+    } else {
+      return {
+        nombre: c.name,
+        valor: c.value,
+      };
+    }
+  });
+  let arrayCar= [...formCaracteristica]
+
+  arrayCar.forEach(element => {
+    if(element.type=='checkbox'){
+      element.setAttribute('disabled','true')
+    }else{
+      element.setAttribute('readonly','true')
+    }
+    
+    
+  });
+  document.getElementById('botonModificarCaracteristicaForm'+nombre).removeAttribute('hidden')
+  document.getElementById('botonGuardarCaracteristica'+nombre).setAttribute('hidden','true')
+
+  console.log(caracteristica)
 }
 
 function validarSelectTipoBusqueda(value){
