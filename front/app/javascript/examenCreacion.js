@@ -823,6 +823,16 @@ async function guardarCambioSubCaBdd(id, nombre) {
       tipo: tipo.value,
     },
   };
+  try {
+    
+  } catch (error) {
+    console.log("🚀 ~ tr.forEach ~ error:", error)
+    if (error.response.data.mensaje) {
+      return await alerta.alert("Error:", error.response.data.mensaje);
+    } else {
+      return await alerta.error();
+    }
+  }
   const inputsSb = document.getElementsByClassName(`inputSb${id}`);
   const arrSb = [...inputsSb];
   arrSb.forEach((e) => {

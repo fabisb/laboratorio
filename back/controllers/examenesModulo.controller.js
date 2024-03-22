@@ -392,15 +392,93 @@ export const crearSeccion = async (req, res) => {
 };
 
 export const updateExamen = async (req, res) => {
-  const { id_examen } = req.body;
+  const { id_examen, nombre, id_seccion } = req.body;
+  if (!id_examen || id_examen < 0 || isNaN(id_examen)) {
+    return await res
+      .status(400)
+      .json({ mensaje: "El id del examen enviado no es valido" });
+  }
+  if (!id_seccion || id_seccion < 0 || isNaN(id_seccion)) {
+    return await res
+      .status(400)
+      .json({ mensaje: "El id de la seccion enviado no es valido" });
+  }
+  if (!nombre || nombre == "") {
+    return await res
+      .status(400)
+      .json({ mensaje: "El nombre a ingresar no es valido" });
+  }
+  try {
+    const [existente] = await pool.execute("SELECT * FROM examen id = ?", [
+      id_examen,
+    ]);
+    if (existente.length > 0) {
+      await pool.execute(
+        "UPDATE examenes SET nombre = ?, id_seccion = ? WHERE id = ?",
+        [nombre, id_seccion, id_examen]
+      );
+      return await res.status(200).json({
+        mensaje: `El examen #${id_examen} ha sido modificado correctamente`,
+      });
+    } else {
+      return await res
+        .status(400)
+        .json({ mensaje: "El id del examen no existe" });
+    }
+  } catch (error) {
+    console.log("🚀 ~ updateExamen ~ error:", error);
+    return await res
+      .status(500)
+      .json({ mensaje: "Ha ocurrido un error en el servidor" });
+  }
 };
 
 export const updateSeccion = async (req, res) => {
-  const { id_seccion } = req.body;
+  const { id_seccion, nombre } = req.body;
+
+  if (!id_seccion || id_seccion < 0 || isNaN(id_seccion)) {
+    return await res
+      .status(400)
+      .json({ mensaje: "El id de la seccion enviado no es valido" });
+  }
+  if (!nombre || nombre == "") {
+    return await res
+      .status(400)
+      .json({ mensaje: "El nombre a ingresar no es valido" });
+  }
+  try {
+    const [existente] = await pool.execute(
+      "SELECT * FROM seccion_examen id = ?",
+      [id_seccion]
+    );
+    if (existente.length > 0) {
+      await pool.execute("UPDATE seccion_examen SET nombre = ? WHERE id = ?", [
+        nombre,
+        id_seccion,
+      ]);
+      return await res.status(200).json({
+        mensaje: `La seccion #${id_seccion} ha sido modificado correctamente`,
+      });
+    } else {
+      return await res
+        .status(400)
+        .json({ mensaje: "El id de la seccion no existe" });
+    }
+  } catch (error) {
+    console.log("🚀 ~ updateSeccion ~ error:", error);
+    return await res
+      .status(500)
+      .json({ mensaje: "Ha ocurrido un error en el servidor" });
+  }
 };
 
 export const updateCaracteristica = async (req, res) => {
   const { id_caracteristica, caracteristica } = req.body;
+  if (isNaN(id_caracteristica)) {
+    return await res
+      .status(400)
+      .json({ mensaje: "El id de la caracteristica no es valido" });
+  }
   try {
     const [existente] = await pool.execute(
       "SELECT * FROM detalles_examen WHERE id = ?",
@@ -442,6 +520,7 @@ export const updateCaracteristica = async (req, res) => {
         .json({ mensaje: "El id de la caracteristica no existe" });
     }
   } catch (error) {
+    console.log("🚀 ~ updateCaracteristica ~ error:", error);
     return await res
       .status(500)
       .json({ mensaje: "Ha ocurrido un error en el servidor" });
@@ -450,6 +529,15 @@ export const updateCaracteristica = async (req, res) => {
 
 export const updateSubCaracteristica = async (req, res) => {
   const { id_subCaracteristica, subCaracteristica } = req.body;
+  if (
+    !id_subCaracteristica ||
+    id_subCaracteristica < 0 ||
+    isNaN(id_subCaracteristica)
+  ) {
+    return await res
+      .status(400)
+      .json({ mensaje: "El id de la subcaracteristica no es valido" });
+  }
   try {
     const [existente] = await pool.execute(
       "SELECT * FROM subcaracteristicas_detalle WHERE id = ?",
@@ -486,12 +574,11 @@ export const updateSubCaracteristica = async (req, res) => {
           }
         })
       );
-      console.log("🚀 ~ updateCaracteristica ~ update:", update);
       return await res.status(200).json({
         mensaje:
           "La subCaracteristica #" +
           id_subCaracteristica +
-          " ha sido actualizada",
+          " ha sido actualizada correctamente",
         update,
       });
     } else {
@@ -500,6 +587,106 @@ export const updateSubCaracteristica = async (req, res) => {
         .json({ mensaje: "El id de la caracteristica no existe" });
     }
   } catch (error) {
+    console.log("🚀 ~ updateSubCaracteristica ~ error:", error);
+    return await res
+      .status(500)
+      .json({ mensaje: "Ha ocurrido un error en el servidor" });
+  }
+};
+
+export const updateRango = async (req, res) => {
+  const { id_rango, rango } = req.body;
+  const { desde, hasta, inferior, superior, genero } = rango;
+  if (
+    isNaN(id_rango) ||
+    isNaN(desde) ||
+    isNaN(hasta) ||
+    isNaN(inferior) ||
+    isNaN(superior)
+  ) {
+    return await res
+      .status(400)
+      .json({ mensaje: "Alguno de los valores no son numericos" });
+  }
+  if (
+    inferior == null ||
+    superior == null ||
+    inferior == "" ||
+    superior == ""
+  ) {
+    return await res
+      .status(400)
+      .json({ mensaje: "Los valores inferior o superior no son validos" });
+  }
+  try {
+    const [existente] = await pool.execute(
+      "SELECT * FROM rangos_detalle WHERE id = ?",
+      [id_rango]
+    );
+    if (existente.length > 0) {
+      const [update] = await pool.execute(
+        "UPDATE rangos_detalle SET desde = ?, hasta = ?, inferior = ?, superior = ?, genero = ? WHERE id = ?",
+        [
+          desde || null,
+          hasta || null,
+          inferior,
+          superior,
+          genero || null,
+          id_rango,
+        ]
+      );
+      return await res.status(200).json({
+        mensaje: "El rango #" + id_rango + " ha sido actualizado correctamente",
+        update,
+      });
+    } else {
+      return await res
+        .status(400)
+        .json({ mensaje: "El id del rango no existe" });
+    }
+  } catch (error) {
+    console.log("🚀 ~ updateRango ~ error:", error);
+    return await res
+      .status(500)
+      .json({ mensaje: "Ha ocurrido un error en el servidor" });
+  }
+};
+
+export const updateResultados = async (req, res) => {
+  const { id_resultado, resultado } = req.body;
+  if (!id_resultado || id_resultado < 0 || isNaN(id_resultado)) {
+    return await res
+      .status(400)
+      .json({ mensaje: "El id del resultado no es valido" });
+  }
+  if (resultado == "") {
+    return await res.status(400).json({ mensaje: "El resultado no es valido" });
+  }
+  try {
+    const [existente] = await pool.execute(
+      "SELECT * FROM resultados_detalle WHERE id = ?",
+      [id_resultado]
+    );
+    if (existente.length > 0) {
+      const [update] = await pool.execute(
+        "UPDATE resultados_detalle SET resultado = ? WHERE id = ?",
+        [resultado, id_resultado]
+      );
+      return await res.status(200).json({
+        mensaje:
+          "El resultado #" +
+          id_resultado +
+          " ha sido actualizado correctamente",
+        update,
+      });
+    } else {
+      return await res
+        .status(400)
+        .json({ mensaje: "El id del resultado no existe" });
+    }
+  } catch (error) {
+    console.log("🚀 ~ updateResultados ~ error:", error);
+
     return await res
       .status(500)
       .json({ mensaje: "Ha ocurrido un error en el servidor" });
