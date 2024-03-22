@@ -27,5 +27,6 @@ router.post("/crear-seccion", verifyToken, crearSeccion);
 router.post("/crear-examen", verifyToken, crearExamen);
 
 //PUT
+router.put("/update-examen", verifyToken);
 
 export default router;

@@ -383,3 +383,15 @@ export const crearSeccion = async (req, res) => {
       .json({ mensaje: "Ha ocurrido un error en el servidor" });
   }
 };
+
+export const updateExamen = async (req,res)=>{
+  const { id_examen } = req.body;
+}
+
+export const updateSeccion = async (req,res)=>{
+  const { id_seccion } = req.body;
+}
+
+export const updateCaracteristica = async (req,res)=>{
+  const { id_caracteristica } = req.body;
+}
