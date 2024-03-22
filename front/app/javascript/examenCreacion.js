@@ -22,8 +22,8 @@ const {data: examen} = await axios.get(
 ); 
 */
 
-var examenes=[]
-var seccionesData = []
+var examenes = [];
+var seccionesData = [];
 const render = async () => {
   try {
     const { token } = await login.getToken();
@@ -36,7 +36,7 @@ const render = async () => {
       { headers: { token } }
     );
     examenes = examenesGet;
-    seccionesData = secciones.data
+    seccionesData = secciones.data;
 
     const selectSeccion = document.getElementById("seccionExamenSelect");
     selectSeccion.innerHTML = "";
@@ -46,9 +46,9 @@ const render = async () => {
       option.innerText = seccion.nombre;
       selectSeccion.appendChild(option);
     });
-    const menuCreacionUl = document.getElementById("menuCreacionUl")
-    examenes.forEach(ex=>{
-      menuCreacionUl.innerHTML+=`
+    const menuCreacionUl = document.getElementById("menuCreacionUl");
+    examenes.forEach((ex) => {
+      menuCreacionUl.innerHTML += `
       <li  class="list-group-item list-group-item-light list-group-item-action">
               <div class="row">
                 <div class="col-10">
@@ -94,10 +94,8 @@ const render = async () => {
             </div> 
   
   
-      `
-  
-    })
-
+      `;
+    });
   } catch (error) {
     console.log(error);
     if (error.response.data.mensaje) {
@@ -108,32 +106,31 @@ const render = async () => {
   }
 };
 
-async function modificarExamen(id){
+async function modificarExamen(id) {
   const { token } = await login.getToken();
-  const {data: examen} = await axios.get(
+  const { data: examen } = await axios.get(
     urlsv + "/api/modulo-examenes/examen-id",
-    { headers: { token }, params: { idExamen:id } }
-  ); 
-  console.log(examen)
+    { headers: { token }, params: { idExamen: id } }
+  );
+  console.log(examen);
 
-  const inputExamenNombre = document.getElementById('inputNombreExamen')
-  const seccionSelect = document.getElementById('seccionExamenSelect')
-  const botonGuardarExamen= document.getElementById('buttonGuardarExamen')
-  const accordionDiv= document.getElementById('accordionCaracteristicas')
+  const inputExamenNombre = document.getElementById("inputNombreExamen");
+  const seccionSelect = document.getElementById("seccionExamenSelect");
+  const botonGuardarExamen = document.getElementById("buttonGuardarExamen");
+  const accordionDiv = document.getElementById("accordionCaracteristicas");
 
-  inputExamenNombre.value=examen.examen.nombre
-  seccionSelect.value=examen.examen.id_seccion
-  accordionDiv.innerHTML=""
+  inputExamenNombre.value = examen.examen.nombre;
+  seccionSelect.value = examen.examen.id_seccion;
+  accordionDiv.innerHTML = "";
 
-  examen.detalles.forEach(dt=>{
-
+  examen.detalles.forEach((dt) => {
     const divItem = document.createElement("div");
     nombre1 = dt.nombre.trim();
     const nombre = nombre1.replaceAll(" ", "-");
-  divItem.className = `accordion-item acordionItemCaracteristica`;
-  divItem.id = `accordionItemCaracteristica${nombre}`;
+    divItem.className = `accordion-item acordionItemCaracteristica`;
+    divItem.id = `accordionItemCaracteristica${nombre}`;
 
-  divItem.innerHTML = `
+    divItem.innerHTML = `
   
   
   <h2 class="accordion-header headerCaracteristica"  >
@@ -289,17 +286,23 @@ async function modificarExamen(id){
                 </tr>
                 <tr>
                   <th scope="row">Unidad</th>
-                  <td colspan='2'><input type="text" readonly value='${dt.unidad}' class="form-control input${nombre} formCaracteristica${nombre}" name="unidad" placeholder='Unidad'></td>
+                  <td colspan='2'><input type="text" readonly value='${
+                    dt.unidad
+                  }' class="form-control input${nombre} formCaracteristica${nombre}" name="unidad" placeholder='Unidad'></td>
                   
                 </tr>
                 <tr>
                   <th scope="row">Posicion</th>
-                  <td colspan='2'><input type="number" readonly value='${dt.posicion}' min='0' class="form-control input${nombre} formCaracteristica${nombre}" name="posicion" placeholder='Orden'></td>
+                  <td colspan='2'><input type="number" readonly value='${
+                    dt.posicion
+                  }' min='0' class="form-control input${nombre} formCaracteristica${nombre}" name="posicion" placeholder='Orden'></td>
                   
                 </tr>
                 <tr>
                   <th scope="row">Imprimir</th>
-                  <td colspan='2'><input type="checkbox" disabled ${dt.impsiempre == 1 ? 'checked' : 'checked="false"'} class="form-check-input select${nombre} formCaracteristica${nombre}" checked name="imp" ></td>
+                  <td colspan='2'><input type="checkbox" disabled ${
+                    dt.impsiempre == 1 ? "checked" : 'checked="false"'
+                  } class="form-check-input select${nombre} formCaracteristica${nombre}" checked name="imp" ></td>
 
                   
                 </tr>
@@ -335,7 +338,9 @@ async function modificarExamen(id){
                     </button>
                   </td>
                   <td style="cursor:pointer">
-                  <button hidden class='button${nombre} btnIcon' id='botonGuardarCaracteristica${nombre}' onclick="guardarCambioCaracteristicaBdd('${dt.id}','${nombre}')">
+                  <button hidden class='button${nombre} btnIcon' id='botonGuardarCaracteristica${nombre}' onclick="guardarCambioCaracteristicaBdd('${
+      dt.id
+    }','${nombre}')">
                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="blue" class="bi bi-save" viewBox="0 0 16 16">
                       <path d="M2 1a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H9.5a1 1 0 0 0-1 1v7.293l2.646-2.647a.5.5 0 0 1 .708.708l-3.5 3.5a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L7.5 9.293V2a2 2 0 0 1 2-2H14a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2h2.5a.5.5 0 0 1 0 1z"/>
                     </svg>
@@ -357,19 +362,20 @@ async function modificarExamen(id){
 
 
   `;
-  accordionDiv.appendChild(divItem)
-  const tBodySubCaracteristica = document.getElementById(`tBodySubCaracteristica${nombre}`)
-  const tBody = document.getElementById(`tBodySubCaracteristica${nombre}`)
+    accordionDiv.appendChild(divItem);
+    const tBodySubCaracteristica = document.getElementById(
+      `tBodySubCaracteristica${nombre}`
+    );
+    const tBody = document.getElementById(`tBodySubCaracteristica${nombre}`);
 
-  const subCa= examen.subCa.filter(sb=>dt.id == sb.id_det_ex)
-  const rg = examen.rangos.filter(rg=>dt.id==rg.id_det_ex)
-  const rs = examen.resultados.filter(rs=>dt.id==rs.id_det_ex)
+    const subCa = examen.subCa.filter((sb) => dt.id == sb.id_det_ex);
+    const rg = examen.rangos.filter((rg) => dt.id == rg.id_det_ex);
+    const rs = examen.resultados.filter((rs) => dt.id == rs.id_det_ex);
 
-
-  subCa.forEach(sb=>{
-    const tr = document.createElement("tr");
-  tr.className = "trSubCaracteristica" + nombre;
-  tr.innerHTML = `<th scope="row">
+    subCa.forEach((sb) => {
+      const tr = document.createElement("tr");
+      tr.className = "trSubCaracteristica" + nombre;
+      tr.innerHTML = `<th scope="row">
   <select id="selectSubTipo${sb.id}" onchange="validarSelectSub('${nombre}',event)" value="${sb.tipo}" disabled class="form-select form-control-sm select${nombre} inputSb${sb.id}" name="select"  aria-label="Default select example">
     <option value="texto">Texto</option>
     <option value="numero">Numero</option>
@@ -443,15 +449,14 @@ onclick="modificarSubCaForm('${sb.id}','${nombre}')"
   
 </td>
 `;
-  tBodySubCaracteristica.appendChild(tr);
-    
-  })
+      tBodySubCaracteristica.appendChild(tr);
+    });
 
-  rg.forEach(r=>{
-    const tBodyRango = document.getElementById("tBodyRangos" + nombre);
-    const tr = document.createElement("tr");
-    tr.className = "trRango" + nombre;
-    tr.innerHTML = `
+    rg.forEach((r) => {
+      const tBodyRango = document.getElementById("tBodyRangos" + nombre);
+      const tr = document.createElement("tr");
+      tr.className = "trRango" + nombre;
+      tr.innerHTML = `
     <td>
     <div
       class="mb-3 d-flex align-items-center justify-content-center"
@@ -548,14 +553,16 @@ onclick="modificarSubCaForm('${sb.id}','${nombre}')"
     
   </td>
     `;
-    tBodyRango.appendChild(tr);
-  })
+      tBodyRango.appendChild(tr);
+    });
 
-  rs.forEach(rsl=>{
-    const tBodyResultados = document.getElementById("tBodyResultados" + nombre);
-    const tr = document.createElement("tr");
-    tr.className = "trResultados" + nombre;
-    tr.innerHTML = `
+    rs.forEach((rsl) => {
+      const tBodyResultados = document.getElementById(
+        "tBodyResultados" + nombre
+      );
+      const tr = document.createElement("tr");
+      tr.className = "trResultados" + nombre;
+      tr.innerHTML = `
     <td><div
                                       class="mb-3 d-flex align-items-center justify-content-center"
                                     >
@@ -601,109 +608,106 @@ onclick="modificarSubCaForm('${sb.id}','${nombre}')"
                                       
                                     </td>
     `;
-    tBodyResultados.appendChild(tr);
-  
-  })
-
-  })
-  
-
-}
-
-
-function modificarCaracteristicaForm(nombre){
-  const formCaracteristica= document.getElementsByClassName('formCaracteristica'+nombre)
-  let arrayCar= [...formCaracteristica]
-
-  arrayCar.forEach(element => {
-    if(element.type=='checkbox'){
-      element.removeAttribute('disabled')
-    }else{
-      element.removeAttribute('readonly')
-    }
-    
-    
+      tBodyResultados.appendChild(tr);
+    });
   });
-  document.getElementById('botonModificarCaracteristicaForm'+nombre).setAttribute('hidden','true')
-  document.getElementById('botonGuardarCaracteristica'+nombre).removeAttribute('hidden')
-
 }
 
-async function guardarCambioSubCaBdd(id,nombre){
-  const inputNombre=document.getElementById(`inputNombreSubCa${id}`)
-  const inputValor = document.getElementById(`inputValorSubCa${id}`)
-  const tipo=document.getElementById(`selectSubTipo${id}`)
+function modificarCaracteristicaForm(nombre) {
+  const formCaracteristica = document.getElementsByClassName(
+    "formCaracteristica" + nombre
+  );
+  let arrayCar = [...formCaracteristica];
 
-  let subCa={
-    id_subCaracteristica:id,
-    subCaracteristica:{
-      nombre:inputNombre.value,
+  arrayCar.forEach((element) => {
+    if (element.type == "checkbox") {
+      element.removeAttribute("disabled");
+    } else {
+      element.removeAttribute("readonly");
+    }
+  });
+  document
+    .getElementById("botonModificarCaracteristicaForm" + nombre)
+    .setAttribute("hidden", "true");
+  document
+    .getElementById("botonGuardarCaracteristica" + nombre)
+    .removeAttribute("hidden");
+}
+
+async function guardarCambioSubCaBdd(id, nombre) {
+  const inputNombre = document.getElementById(`inputNombreSubCa${id}`);
+  const inputValor = document.getElementById(`inputValorSubCa${id}`);
+  const tipo = document.getElementById(`selectSubTipo${id}`);
+
+  let subCa = {
+    id_subCaracteristica: id,
+    subCaracteristica: {
+      nombre: inputNombre.value,
       valor: inputValor.value,
-      tipo: tipo.value
-    }
-
-  }
-  const inputsSb=document.getElementsByClassName(`inputSb${id}`)
-  const arrSb= [...inputsSb]
-  arrSb.forEach(e=>{
-    if(e.tagName=='SELECT' || e.tagName=='button'){
-      e.setAttribute('disabled','true')
-    }else{
-      if(e.name == 'valor'){
-        if(tipo.value=='formula'){
-         e.setAttribute('readonly','true')
+      tipo: tipo.value,
+    },
+  };
+  const inputsSb = document.getElementsByClassName(`inputSb${id}`);
+  const arrSb = [...inputsSb];
+  arrSb.forEach((e) => {
+    if (e.tagName == "SELECT" || e.tagName == "button") {
+      e.setAttribute("disabled", "true");
+    } else {
+      if (e.name == "valor") {
+        if (tipo.value == "formula") {
+          e.setAttribute("readonly", "true");
         }
-      }else{
-        e.setAttribute('readonly','true')
-    
+      } else {
+        e.setAttribute("readonly", "true");
       }
     }
-  })
-  const botonesModificar=document.getElementsByClassName('buttonModificarSub'+nombre)
-  const arrBotonesMod= [...botonesModificar]
-  arrBotonesMod.forEach(b=>{
-    b.removeAttribute('hidden')
-  })
-  console.log(arrBotonesMod)
-  document.getElementById('botonGuardarSubCa'+id).setAttribute('hidden','true')
-  console.log(inputsSb)
-
+  });
+  const botonesModificar = document.getElementsByClassName(
+    "buttonModificarSub" + nombre
+  );
+  const arrBotonesMod = [...botonesModificar];
+  arrBotonesMod.forEach((b) => {
+    b.removeAttribute("hidden");
+  });
+  console.log(arrBotonesMod);
+  document
+    .getElementById("botonGuardarSubCa" + id)
+    .setAttribute("hidden", "true");
+  console.log(inputsSb);
 }
 
-function modificarSubCaForm(id,nombre){
-  const inputsSb=document.getElementsByClassName(`inputSb${id}`)
-  const tipo=document.getElementById(`selectSubTipo${id}`)
-  console.log(tipo)
-  const arrSb= [...inputsSb]
-  arrSb.forEach(e=>{
-    if(e.tagName=='SELECT' || e.tagName=='button'){
-      e.removeAttribute('disabled')
-    }else{
-      if(e.name == 'valor'){
-        if(tipo.value=='formula'){
-         e.removeAttribute('readonly')
+function modificarSubCaForm(id, nombre) {
+  const inputsSb = document.getElementsByClassName(`inputSb${id}`);
+  const tipo = document.getElementById(`selectSubTipo${id}`);
+  console.log(tipo);
+  const arrSb = [...inputsSb];
+  arrSb.forEach((e) => {
+    if (e.tagName == "SELECT" || e.tagName == "button") {
+      e.removeAttribute("disabled");
+    } else {
+      if (e.name == "valor") {
+        if (tipo.value == "formula") {
+          e.removeAttribute("readonly");
         }
-      }else{
-        e.removeAttribute('readonly')
-    
+      } else {
+        e.removeAttribute("readonly");
       }
     }
-  })
+  });
 
-
-
-  const botonesModificar=document.getElementsByClassName('buttonModificarSub'+nombre)
-  const arrBotonesMod= [...botonesModificar]
-  arrBotonesMod.forEach(b=>{
-    b.setAttribute('hidden','true')
-  })
-  console.log(arrBotonesMod)
-  document.getElementById('botonGuardarSubCa'+id).removeAttribute('hidden')
-  console.log(inputsSb)
+  const botonesModificar = document.getElementsByClassName(
+    "buttonModificarSub" + nombre
+  );
+  const arrBotonesMod = [...botonesModificar];
+  arrBotonesMod.forEach((b) => {
+    b.setAttribute("hidden", "true");
+  });
+  console.log(arrBotonesMod);
+  document.getElementById("botonGuardarSubCa" + id).removeAttribute("hidden");
+  console.log(inputsSb);
 }
 
-async function guardarCambioCaracteristicaBdd(id,nombre){
-
+async function guardarCambioCaracteristicaBdd(id, nombre) {
   const formCaracteristica = document.getElementsByClassName(
     "formCaracteristica" + nombre
   );
@@ -721,43 +725,44 @@ async function guardarCambioCaracteristicaBdd(id,nombre){
       };
     }
   });
-  let arrayCar= [...formCaracteristica]
+  let arrayCar = [...formCaracteristica];
 
-  arrayCar.forEach(element => {
-    if(element.type=='checkbox'){
-      element.setAttribute('disabled','true')
-    }else{
-      element.setAttribute('readonly','true')
+  arrayCar.forEach((element) => {
+    if (element.type == "checkbox") {
+      element.setAttribute("disabled", "true");
+    } else {
+      element.setAttribute("readonly", "true");
     }
-    
-    
   });
-  document.getElementById('botonModificarCaracteristicaForm'+nombre).removeAttribute('hidden')
-  document.getElementById('botonGuardarCaracteristica'+nombre).setAttribute('hidden','true')
+  document
+    .getElementById("botonModificarCaracteristicaForm" + nombre)
+    .removeAttribute("hidden");
+  document
+    .getElementById("botonGuardarCaracteristica" + nombre)
+    .setAttribute("hidden", "true");
 
-  console.log(caracteristica)
+  console.log(caracteristica);
 }
 
-function validarSelectTipoBusqueda(value){
+function validarSelectTipoBusqueda(value) {
   const input = document.getElementById("inputDescripcionBusqueda");
-  if(value=='examen'){
-    buscarExamen()
-    input.setAttribute('oninput','buscarExamen()')
-  }else{
-    buscarSeccion()
-    input.setAttribute('oninput','buscarSeccion()')
-
+  if (value == "examen") {
+    buscarExamen();
+    input.setAttribute("oninput", "buscarExamen()");
+  } else {
+    buscarSeccion();
+    input.setAttribute("oninput", "buscarSeccion()");
   }
 }
 
-async function detalleSeccion(id){
+async function detalleSeccion(id) {
   const { token } = await login.getToken();
-  const {data: examenes} = await axios.get(
+  const { data: examenes } = await axios.get(
     urlsv + "/api/modulo-examenes/examen-seccion",
-    { headers: { token }, params: { idSeccion:id } }
-  ); 
-  const collapse = document.getElementById(`collapseMenu${id}`)
-  collapse.innerHTML=`
+    { headers: { token }, params: { idSeccion: id } }
+  );
+  const collapse = document.getElementById(`collapseMenu${id}`);
+  collapse.innerHTML = `
   <table class="table table-sm text-center" style="border: 2px solid green; font-size:15px">
   <thead>
     <tr>
@@ -770,30 +775,27 @@ async function detalleSeccion(id){
     
   </tbody>
 </table>
-  `
-  const tBody= document.getElementById(`tBody${id}`)
-  
+  `;
+  const tBody = document.getElementById(`tBody${id}`);
 
-
-  examenes.forEach(c=>{
-    tBody.innerHTML+=`
+  examenes.forEach((c) => {
+    tBody.innerHTML += `
     <tr>
       <td scope="col">${c.id}</td>
       <td scope="col">${c.nombre}</td>
       
     </tr>
-    `
-  })
-
+    `;
+  });
 }
-async function detalleExamen(id){
+async function detalleExamen(id) {
   const { token } = await login.getToken();
-  const {data: caracteristicas} = await axios.get(
+  const { data: caracteristicas } = await axios.get(
     urlsv + "/api/modulo-examenes/caracteristicas-id_ex",
     { headers: { token }, params: { id } }
-  ); 
-  const collapse = document.getElementById(`collapseMenu${id}`)
-  collapse.innerHTML=`
+  );
+  const collapse = document.getElementById(`collapseMenu${id}`);
+  collapse.innerHTML = `
   <table class="table table-sm text-center" style="border: 2px solid green; font-size:15px">
   <thead>
     <tr>
@@ -807,32 +809,32 @@ async function detalleExamen(id){
     
   </tbody>
 </table>
-  `
-  const tBody= document.getElementById(`tBody${id}`)
-  
+  `;
+  const tBody = document.getElementById(`tBody${id}`);
 
-
-  caracteristicas.forEach(c=>{
-    tBody.innerHTML+=`
+  caracteristicas.forEach((c) => {
+    tBody.innerHTML += `
     <tr>
       <td scope="col">${c.nombre}</td>
       <td scope="col">${c.unidad}</td>
       <td scope="col">${c.posicion}</td>
-      <td scope="col">${c.impsiempre == 1 ? 'SI' : 'NO'}</td>
+      <td scope="col">${c.impsiempre == 1 ? "SI" : "NO"}</td>
     </tr>
-    `
-  })
+    `;
+  });
 }
 
-function buscarSeccion(){
+function buscarSeccion() {
   input = document.getElementById("inputDescripcionBusqueda");
-  filtro = seccionesData.filter((sc) => sc.nombre.toLowerCase().includes(input.value.toLowerCase()))
+  filtro = seccionesData.filter((sc) =>
+    sc.nombre.toLowerCase().includes(input.value.toLowerCase())
+  );
 
-  const menuCreacionUl = document.getElementById("menuCreacionUl")
+  const menuCreacionUl = document.getElementById("menuCreacionUl");
 
   menuCreacionUl.innerHTML = "";
   filtro.map((sc) => {
-    menuCreacionUl.innerHTML+=`
+    menuCreacionUl.innerHTML += `
     <li class="list-group-item list-group-item-light list-group-item-action" >
             <div class="row">
               <div class="col-10">
@@ -878,11 +880,8 @@ function buscarSeccion(){
           </div> 
 
 
-    `
-
+    `;
   });
-
-
 }
 
 function buscarExamen() {
@@ -890,11 +889,11 @@ function buscarExamen() {
   filtro = examenes.filter((ex) =>
     ex.nombre.toLowerCase().includes(input.value.toLowerCase())
   );
-  const menuCreacionUl = document.getElementById("menuCreacionUl")
+  const menuCreacionUl = document.getElementById("menuCreacionUl");
 
   menuCreacionUl.innerHTML = "";
   filtro.map((ex) => {
-    menuCreacionUl.innerHTML+=`
+    menuCreacionUl.innerHTML += `
     <li class="list-group-item list-group-item-light list-group-item-action" >
             <div class="row">
               <div class="col-10">
@@ -940,8 +939,7 @@ function buscarExamen() {
           </div> 
 
 
-    `
-
+    `;
   });
 }
 function disabledButton(id) {
