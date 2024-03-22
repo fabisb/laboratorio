@@ -17,6 +17,54 @@ export const getSecciones = async (req, res) => {
   }
 };
 
+export const getCaracteristicasById = async(req,res)=>{
+  console.log('aaabb')
+  const {id} = req.query;
+  try {
+    const [caracteristicas] = await pool.execute(
+      "SELECT * FROM detalles_examen WHERE id_ex = ?",
+      [id]
+    );
+    if (caracteristicas.length == 0) {
+      return await res
+        .status(404)
+        .json({ mensaje: "No se encuentran caracteristicas" });
+    } else {
+      return await res.status(200).json(caracteristicas);
+    }
+  } catch (error) {
+    console.log(error);
+    return await res
+      .status(500)
+      .json({ mensaje: "Ha ocurrido un error en el servidor" });
+  }
+
+}
+
+export const getExamenesBySec = async(req,res)=>{
+  
+  const {id} = req.query;
+  try {
+    const [examenes] = await pool.execute(
+      "SELECT * FROM examenes WHERE id_seccion = ?",
+      [id]
+    );
+    if (examenes.length == 0) {
+      return await res
+        .status(404)
+        .json({ mensaje: "No se encuentran caracteristicas" });
+    } else {
+      return await res.status(200).json(examenes);
+    }
+  } catch (error) {
+    console.log(error);
+    return await res
+      .status(500)
+      .json({ mensaje: "Ha ocurrido un error en el servidor" });
+  }
+
+}
+
 export const getExamenByNombre = async (req, res) => {
   const { nombre } = req.query;
   try {
@@ -73,17 +121,21 @@ export const getExamenById = async (req, res) => {
         [examenes[0].id]
       );
       if (detalles.length > 0) {
+        let detallesIn = ''
+
+        let detallesId=detalles.forEach(d=>detallesIn+=`'${d.id}',`)
+        detallesIn= detallesIn.slice(0,-1)
         const [rangos] = await pool.execute(
-          "SELECT * FROM rangos_detalle WHERE id_det_ex = ?",
-          [detalles[0].id]
+          `SELECT * FROM rangos_detalle WHERE id_det_ex in (${detallesIn})`,
+          
         );
         const [resultados] = await pool.execute(
-          "SELECT * FROM resultados_detalle WHERE id_det_ex = ?",
-          [detalles[0].id]
+          `SELECT * FROM resultados_detalle WHERE id_det_ex in (${detallesIn})`,
+         
         );
         const [subCa] = await pool.execute(
-          "SELECT * FROM subcaracteristicas_detalle WHERE id_det_ex = ?",
-          [detalles[0].id]
+          `SELECT * FROM subcaracteristicas_detalle WHERE id_det_ex in (${detallesIn})`,
+
         );
         return await res
           .status(200)
@@ -143,6 +195,7 @@ export const crearExamen = async (req, res) => {
       "SELECT nombre FROM examenes WHERE nombre = ? ",
       [nombre]
     );
+    console.log(nombreExistente)
     if (nombreExistente.length > 0) {
       return await res.status(400).json({
         mensaje: "El nombre que intenta agregar para este examen ya existe",
@@ -153,7 +206,6 @@ export const crearExamen = async (req, res) => {
         [nombre, seccion]
       );
       /* examenNew.insertId */
-
       await Promise.all(
         await caracteristicas.map(async (ca) => {
           console.log("🚀 ~ awaitcaracteristicas.map ~ ca:", ca);
@@ -165,14 +217,21 @@ export const crearExamen = async (req, res) => {
             .map((dato) => dato.nombre)
             .join(", ");
           const valores = ca.caracteristica.map((dato) => "?").join(", ");
-          const consulta = `INSERT INTO detalles_examen (${columnas}) VALUES ( ${valores})`;
+          const consulta = `INSERT INTO detalles_examen (${columnas}) VALUES (${valores})`;
           // Ejecutar la consulta
           console.log("🚀 ~ awaitcaracteristicas.map ~ consulta:", consulta);
           const [detalle] = await pool.execute(
             consulta,
-            ca.caracteristica.map((dato) => dato.valor || null)
+            ca.caracteristica.map((dato) => {
+              if (dato.nombre == "impsiempre") {
+                return dato.valor;
+              } else if (dato.nombre == "posicion") {
+                return dato.valor || 50;
+              } else {
+                return dato.valor || null;
+              }
+            })
           );
-
           /* detalle.insertId */
           if (ca.subCaracteristicas.length > 0) {
             await Promise.all(

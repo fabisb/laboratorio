@@ -1,5 +1,7 @@
 var examenes = [];
 var idPaciente = "";
+var pacienteObj = {};
+
 
 const render = async () => {
   try {
@@ -15,43 +17,35 @@ const render = async () => {
       urlsv + "/api/examenes/get-bioanalistas",
       { headers: { token } }
     );
+    const menuDiagnosticoUl = document.getElementById("menuDiagnosticoUl")
+    examenes.forEach(ex=>{
+      menuDiagnosticoUl.innerHTML+=`
+      <li  class="list-group-item list-group-item-light list-group-item-action" onclick="abrirResultadosModal('${ex.nombre}','${ex.id}')">
+              <div class="row">
+                <div class="col-10">
+                  <span class="">${ex.nombre}</span>
+  
+                </div>
+                <div class="col-2 d-flex justify-content-end align-content-center">
+                <svg xmlns="http://www.w3.org/2000/svg" style="cursor:pointer" aria-expanded="false" aria-controls="collapseMenu${ex.id}" data-bs-toggle="collapse" data-bs-target="#collapseMenu${ex.id}" onclick="detalleExamen(${ex.id})" width="24" height="24" fill="green" class="bi bi-eye" viewBox="0 0 16 16">
+  <path d="M16 8s-3-5.5-8-5.5S0 8 0 8s3 5.5 8 5.5S16 8 16 8M1.173 8a13 13 0 0 1 1.66-2.043C4.12 4.668 5.88 3.5 8 3.5s3.879 1.168 5.168 2.457A13 13 0 0 1 14.828 8q-.086.13-.195.288c-.335.48-.83 1.12-1.465 1.755C11.879 11.332 10.119 12.5 8 12.5s-3.879-1.168-5.168-2.457A13 13 0 0 1 1.172 8z"/>
+  <path d="M8 5.5a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5M4.5 8a3.5 3.5 0 1 1 7 0 3.5 3.5 0 0 1-7 0"/>
+</svg>
+                 
+                </div>
+  
+              </div>
+            </li> 
+            <div class="collapse" id="collapseMenu${ex.id}">
+            <div class="card card-body">
+            </div>
+            </div> 
+  
+  
+      `
+  
+    })
     
-    const examBody = document.getElementById("tBodyMenuExamen");
-    examenesGet.map((ex) => {
-      examBody.innerHTML += `<tr><td>${ex.id}</td><td>${ex.nombre}</td><td style="cursor:pointer"
-      onclick="abrirModalExamenesCrud(), modificarExamen('${ex.id}')">
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      width="30"
-      height="30"
-      fill="#FACD0B"
-      class="bi bi-pencil-square"
-      viewBox="0 0 20 20"
-    >
-      <path
-        d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"
-      />
-      <path
-        fill-rule="evenodd"
-        d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z"
-      />
-    </svg>
-    </td>
-    <td style="cursor:pointer" onclick="">
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      width="27"
-      height="27"
-      fill="red"
-      class="bi bi-x-lg"
-      viewBox="0 0 20 20"
-    >
-      <path
-        d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8z"
-      />
-    </svg>
-  </td></tr>`;
-    });
   } catch (error) {
     console.log(error);
     if (error.response.data.mensaje) {
@@ -61,53 +55,85 @@ const render = async () => {
     }
   }
 };
-
 function buscarExamen() {
-  input = document.getElementById("inputMenuExamen");
+  input = document.getElementById("examenDiagnosticoInput");
   filtro = examenes.filter((ex) =>
     ex.nombre.toLowerCase().includes(input.value.toLowerCase())
   );
-  const examBody = document.getElementById("tBodyMenuExamen");
-  examBody.innerHTML = "";
+  const menuDiagnosticoUl = document.getElementById("menuDiagnosticoUl")
+
+  menuDiagnosticoUl.innerHTML = "";
   filtro.map((ex) => {
-    examBody.innerHTML += `
-    <tr><td>${ex.id}</td><td>${ex.nombre}</td><td style="cursor:pointer"
-      onclick="abrirModalExamenesCrud(), modificarExamen('${ex.id}')">
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      width="30"
-      height="30"
-      fill="#FACD0B"
-      class="bi bi-pencil-square"
-      viewBox="0 0 20 20"
-    >
-      <path
-        d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"
-      />
-      <path
-        fill-rule="evenodd"
-        d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z"
-      />
-    </svg>
-    </td>
-    <td style="cursor:pointer" onclick="">
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      width="27"
-      height="27"
-      fill="red"
-      class="bi bi-x-lg"
-      viewBox="0 0 20 20"
-    >
-      <path
-        d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8z"
-      />
-    </svg>
-  </td></tr>
-    
-    `;
+    menuDiagnosticoUl.innerHTML+=`
+    <li class="list-group-item list-group-item-light list-group-item-action" >
+            <div class="row">
+              <div class="col-10">
+                <span class="">${ex.nombre}</span>
+
+              </div>
+              <div class="col-2 d-flex justify-content-end align-content-center">
+              <svg xmlns="http://www.w3.org/2000/svg" style="cursor:pointer" width="24" height="24" fill="green" aria-expanded="false" aria-controls="collapseMenu${ex.id}" data-bs-toggle="collapse" data-bs-target="#collapseMenu${ex.id}" onclick="detalleExamen(${ex.id})"class="bi bi-eye" viewBox="0 0 16 16">
+              <path d="M16 8s-3-5.5-8-5.5S0 8 0 8s3 5.5 8 5.5S16 8 16 8M1.173 8a13 13 0 0 1 1.66-2.043C4.12 4.668 5.88 3.5 8 3.5s3.879 1.168 5.168 2.457A13 13 0 0 1 14.828 8q-.086.13-.195.288c-.335.48-.83 1.12-1.465 1.755C11.879 11.332 10.119 12.5 8 12.5s-3.879-1.168-5.168-2.457A13 13 0 0 1 1.172 8z"/>
+              <path d="M8 5.5a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5M4.5 8a3.5 3.5 0 1 1 7 0 3.5 3.5 0 0 1-7 0"/>
+            </svg>
+              
+                
+              
+             
+              </div>
+
+            </div>
+          </li> 
+          <div class="collapse" id="collapseMenu${ex.id}">
+          <div class="card card-body">
+          </div>
+          </div> 
+
+
+    `
+
   });
 }
+
+
+async function detalleExamen(id){
+  const { token } = await login.getToken();
+  const {data: caracteristicas} = await axios.get(
+    urlsv + "/api/modulo-examenes/caracteristicas-id_ex",
+    { headers: { token }, params: { id } }
+  ); 
+  const collapse = document.getElementById(`collapseMenu${id}`)
+  collapse.innerHTML=`
+  <table class="table table-sm text-center" style="border: 2px solid green; font-size:15px">
+  <thead>
+    <tr>
+      <th scope="col">Nombre</th>
+      <th scope="col">Unidad</th>
+      <th scope="col">Posicion</th>
+      <th scope="col">Imprimir</th>
+    </tr>
+  </thead>
+  <tbody id="tBody${id}">
+    
+  </tbody>
+</table>
+  `
+  const tBody= document.getElementById(`tBody${id}`)
+  
+
+
+  caracteristicas.forEach(c=>{
+    tBody.innerHTML+=`
+    <tr>
+      <td scope="col">${c.nombre}</td>
+      <td scope="col">${c.unidad}</td>
+      <td scope="col">${c.posicion}</td>
+      <td scope="col">${c.imprimir}</td>
+    </tr>
+    `
+  })
+}
+
 const cedulaPaciente = async () => {
   console.log("cedulaPaciente");
   const preCedula = document.getElementsByName("pre_cedula")[0].value;
@@ -121,6 +147,8 @@ const cedulaPaciente = async () => {
       "warning"
     );
   }
+
+
   if (preCedula === "N") {
     validarN();
   } else {
@@ -129,6 +157,7 @@ const cedulaPaciente = async () => {
     const fecha = document.getElementsByName("fechaRegistro")[0].value;
     var inputs = [...document.getElementsByTagName("input")];
     const botonModificar = document.getElementById("botonModificar");
+    const botonExamen = document.getElementById("botonExamen")
     inputs.map((inp) => {
       if (
         inp.name != "pre_cedula" &&
@@ -174,6 +203,7 @@ const cedulaPaciente = async () => {
         idPaciente = paciente.id;
 
         console.log("🚀 ~ cedulaPaciente ~ paciente:", paciente);
+        pacienteObj=paciente
         if (paciente.paciente == 404) {
           cedulaAlerta(
             `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-exclamation-triangle-fill" viewBox="0 0 16 16">
@@ -184,6 +214,7 @@ const cedulaPaciente = async () => {
             "primary"
           );
           activarInputs("crearPaciente()");
+          
           /*inputs.map((inp) => {
           inp.removeAttribute("readonly");
           inp.removeAttribute("disabled");
@@ -216,6 +247,9 @@ const cedulaPaciente = async () => {
             () => activarInputs("modificarPaciente()"),
             true
           );
+          botonExamen.addEventListener(
+            "click",()=> abrirModalExamenes(),true
+          )
 
           paciente.fecha_nacimiento = moment(paciente.fecha_nacimiento).format(
             "YYYY-MM-DD"
@@ -623,7 +657,15 @@ const abrirModalExamenes = () => new bootstrap.Modal("#examenes-list").toggle();
 const abrirModalExamenesCrud = () =>
   new bootstrap.Modal("#examenes-crud").toggle();
 
-const ModalExamenesCrud = document.getElementById("examenes-crud");
+const abrirResultadosModal = (examen,idEx) => {
+ const h1Ex = document.getElementById('h1NombreEx')
+
+ h1Ex.innerText=`${examen} - ${pacienteObj.nombre}`
+ new bootstrap.Modal("#resultadosModal").toggle()
+ 
+
+}
+const ModalExamenesCrud = document.getElementById("resultadosModal");
 ModalExamenesCrud.addEventListener(
   "show.bs.modal",
   (event) => {
