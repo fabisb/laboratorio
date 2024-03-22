@@ -1183,8 +1183,8 @@ async function crearExamen() {
   console.log(nombre, seccion);
   console.log(caracteristicas);
   if (nombre == "" || !nombre) {
+    return examenesAlerta("Ingrese un nombre de examen valido", "warning");
   }
-
   try {
     const { token } = await login.getToken();
     const result = await axios.post(
@@ -1193,6 +1193,10 @@ async function crearExamen() {
       { headers: { token } }
     );
     console.log("🚀 ~ crearExamen ~ result:", result);
+    examenesAlerta(
+      "El examen y sus caracteristicas han sido agregados correctamente",
+      "success"
+    );
   } catch (error) {
     console.log(error);
     if (error.response.data.mensaje) {
@@ -1236,7 +1240,7 @@ function crearCaracteristica(nombre) {
     if (c.name == "imp") {
       return {
         nombre: "impsiempre",
-        valor: c.checked,
+        valor: c.checked ? 1 : 0,
       };
     } else {
       return {
