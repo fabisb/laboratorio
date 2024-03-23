@@ -105,8 +105,7 @@ const render = async () => {
     }
   }
 };
-function añadirAcordionItemEx(nombre1,idEx){
-  
+function añadirAcordionItemEx(nombre1, idEx) {
   nombre1 = nombre1.trim();
   const nombre = nombre1.replaceAll(" ", "-");
 
@@ -349,10 +348,10 @@ function añadirAcordionItemEx(nombre1,idEx){
 
 
   `;
-  accordionCaracteristicas.appendChild(divItem)
+  accordionCaracteristicas.appendChild(divItem);
 }
 
-async function crearCaracteristicaBdd(nombre,idEx){
+async function crearCaracteristicaBdd(nombre, idEx) {
   const formCaracteristicas = document.getElementsByClassName(
     "formCaracteristica" + nombre
   );
@@ -551,7 +550,6 @@ async function crearCaracteristicaBdd(nombre,idEx){
   );
   btnModificar.removeAttribute("hidden");
   enableButton("buttonCaracteristica");
-
 }
 
 async function modificarExamen(id) {
@@ -564,12 +562,17 @@ async function modificarExamen(id) {
   const inputExamenNombre = document.getElementById("inputNombreExamen");
   const seccionSelect = document.getElementById("seccionExamenSelect");
   const botonGuardarExamen = document.getElementById("buttonGuardarExamen");
-  botonGuardarExamen.setAttribute('disabled','true')
+  botonGuardarExamen.setAttribute("disabled", "true");
   const accordionDiv = document.getElementById("accordionCaracteristicas");
-  const botonModalCaracteristica=document.getElementById('botonModalCaracteristica')
-  
-  botonModalCaracteristica.removeAttribute('onclick')
-  botonModalCaracteristica.setAttribute('onclick',`validarNombreCaracteristica(true,"${id}")`)
+  const botonModalCaracteristica = document.getElementById(
+    "botonModalCaracteristica"
+  );
+
+  botonModalCaracteristica.removeAttribute("onclick");
+  botonModalCaracteristica.setAttribute(
+    "onclick",
+    `validarNombreCaracteristica(true,"${id}")`
+  );
 
   inputExamenNombre.value = examen.examen.nombre;
   seccionSelect.value = examen.examen.id_seccion;
@@ -626,7 +629,9 @@ async function modificarExamen(id) {
 
                         </td>
                         <td>
-                          <button type="button" class="btn btn-outline-success button${nombre}" onclick="añadirSubCaracteristicaEx(${dt.id},'${nombre}')" id=''>
+                          <button type="button" class="btn btn-outline-success button${nombre}" onclick="añadirSubCaracteristicaEx(${
+      dt.id
+    },'${nombre}')" id="añadirSubCaButton">
 
                             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-file-earmark-plus-fill" viewBox="0 0 16 16">
                               <path d="M9.293 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V4.707A1 1 0 0 0 13.707 4L10 .293A1 1 0 0 0 9.293 0M9.5 3.5v-2l3 3h-2a1 1 0 0 1-1-1M8.5 7v1.5H10a.5.5 0 0 1 0 1H8.5V11a.5.5 0 0 1-1 0V9.5H6a.5.5 0 0 1 0-1h1.5V7a.5.5 0 0 1 1 0"/>
@@ -672,7 +677,9 @@ async function modificarExamen(id) {
 
                         </td>
                         <td>
-                          <button type="button" class="btn btn-outline-success button${nombre}" onclick="añadirRango('${nombre}')">
+                          <button type="button" class="btn btn-outline-success button${nombre}" onclick="añadirRangoEx(${
+      dt.id
+    },'${nombre}')" id="añadirRangoButton">
 
                             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-file-earmark-plus-fill" viewBox="0 0 16 16">
                               <path d="M9.293 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V4.707A1 1 0 0 0 13.707 4L10 .293A1 1 0 0 0 9.293 0M9.5 3.5v-2l3 3h-2a1 1 0 0 1-1-1M8.5 7v1.5H10a.5.5 0 0 1 0 1H8.5V11a.5.5 0 0 1-1 0V9.5H6a.5.5 0 0 1 0-1h1.5V7a.5.5 0 0 1 1 0"/>
@@ -708,7 +715,7 @@ async function modificarExamen(id) {
 
                         </td>
                         <td>
-                          <button type="button" class="btn btn-outline-success button${nombre}" onclick="añadirResultado('${nombre}')">
+                          <button type="button" class="btn btn-outline-success button${nombre}" onclick="añadirResultado('${nombre}')" id="añadirResultadoButton">
 
                             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-file-earmark-plus-fill" viewBox="0 0 16 16">
                               <path d="M9.293 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V4.707A1 1 0 0 0 13.707 4L10 .293A1 1 0 0 0 9.293 0M9.5 3.5v-2l3 3h-2a1 1 0 0 1-1-1M8.5 7v1.5H10a.5.5 0 0 1 0 1H8.5V11a.5.5 0 0 1-1 0V9.5H6a.5.5 0 0 1 0-1h1.5V7a.5.5 0 0 1 1 0"/>
@@ -856,9 +863,6 @@ async function modificarExamen(id) {
   
 <div class="input-group">
 <input type="text" name='valor' id="inputValorSubCa${sb.id}" value="${sb.valor}" onchange="validarInputFormula('${nombre}',event)" readonly class="form-control-sm mx-2 inputSb${sb.id} formSubCaracteristica${nombre}" placeholder="{v} - [+-*/] - ({a}[/]{b})" aria-label="">
-  <button disabled class="btn btn-light p-0 inputSb${sb.id}" onclick='añadirChars("{}",event)' type="button">{  }</button>
-  <button disabled class="btn btn-light p-0 inputSb${sb.id}" onclick='añadirChars("[]",event)' type="button">[  ]</button>
-  <button disabled class="btn btn-light p-0 inputSb${sb.id}" onclick='añadirChars("()",event)' type="button">(  )</button>
 
 </div>
 </td>
@@ -1095,31 +1099,31 @@ onclick="modificarSubCaForm('${sb.id}','${nombre}')"
     });
   });
 }
-function modificarResultadoForm(id,nombre){
-  const resultadoInput= document.getElementById(`resultadoRs${id}`)
-  resultadoInput.removeAttribute("readonly")
-  const btnModi= document.getElementsByClassName(`buttonModificarRs`)
-  const arrBtn = [...btnModi]
-  arrBtn.forEach(e=>{
-    e.setAttribute('hidden','true')
-  })
-  const botonGuardarRs= document.getElementById(`botonGuardarRs${id}`)
-  botonGuardarRs.removeAttribute('hidden')
+function modificarResultadoForm(id, nombre) {
+  const resultadoInput = document.getElementById(`resultadoRs${id}`);
+  resultadoInput.removeAttribute("readonly");
+  const btnModi = document.getElementsByClassName(`buttonModificarRs`);
+  const arrBtn = [...btnModi];
+  arrBtn.forEach((e) => {
+    e.setAttribute("hidden", "true");
+  });
+  const botonGuardarRs = document.getElementById(`botonGuardarRs${id}`);
+  botonGuardarRs.removeAttribute("hidden");
 }
 
-async function guardarCambioRsBdd(id,nombre){
-  const resultadoInput= document.getElementById(`resultadoRs${id}`)
-  
-  resultadoInput.value=resultadoInput.value.slice(0,20)
-  console.log(resultadoInput.value)
-  resultadoInput.setAttribute("readonly",'true')
-  const btnModi= document.getElementsByClassName(`buttonModificarRs`)
-  const arrBtn = [...btnModi]
-  arrBtn.forEach(e=>{
-    e.removeAttribute('hidden')
-  })
-  const botonGuardarRs= document.getElementById(`botonGuardarRs${id}`)
-  botonGuardarRs.setAttribute('hidden','true')
+async function guardarCambioRsBdd(id, nombre) {
+  const resultadoInput = document.getElementById(`resultadoRs${id}`);
+
+  resultadoInput.value = resultadoInput.value.slice(0, 20);
+  console.log(resultadoInput.value);
+  resultadoInput.setAttribute("readonly", "true");
+  const btnModi = document.getElementsByClassName(`buttonModificarRs`);
+  const arrBtn = [...btnModi];
+  arrBtn.forEach((e) => {
+    e.removeAttribute("hidden");
+  });
+  const botonGuardarRs = document.getElementById(`botonGuardarRs${id}`);
+  botonGuardarRs.setAttribute("hidden", "true");
 }
 
 function modificarCaracteristicaForm(nombre) {
@@ -1143,14 +1147,280 @@ function modificarCaracteristicaForm(nombre) {
     .removeAttribute("hidden");
 }
 
-function añadirSubCaracteristicaEx(id,nombre){
+function añadirRangoEx(id, nombre) {
+  disabledButton("añadirRangoButton");
+
+  const trsRango = document.getElementsByClassName("trRango" + nombre);
+  if (trsRango.length >= 5) {
+    return;
+  }
+
+  const tBodyRango = document.getElementById("tBodyRangos" + nombre);
+  const tr = document.createElement("tr");
+  tr.className = "trRango" + nombre;
+  tr.innerHTML = `
+  <td>
+  <div
+    class="mb-3 d-flex align-items-center justify-content-center"
+  >
+
+    <input
+      
+      name="inferior"
+      type="text"
+      onChange="validarInferior(event,'inferior')"
+      class="form-control-sm mx-2 input${nombre} w-50 formRango"
+      id="exampleFormControlInput2"
+    />
+  </div>
+</td>
+<td>
+  <div
+  class="mb-3 d-flex align-items-center justify-content-center"
+>
+ 
+  <input
+    onChange="validarInferior(event,'superior')"
+    name="superior"
+    type="text"
+    class="form-control-sm mx-2 w-50 input${nombre} formRango"
+    id="exampleFormControlInput2"
+  />
+</div>
+</td>
+<td>
+  <div
+    class="mb-3 d-flex align-items-center justify-content-center"
+  >
+
+    <input
+      onChange="validarInferiorEdad(event,'inferior')"
+      name="desde"
+      type="text"
+      class="form-control-sm mx-2 w-50 input${nombre} formRango"
+      id="exampleFormControlInput2"
+    />
+  </div>
+</td>
+<td>
+  <div
+  class="mb-3 d-flex align-items-center justify-content-center"
+>
+ 
+  <input
+    onChange="validarInferiorEdad(event,'superior')"
+    name="hasta"
+    type="text"
+    class="form-control-sm mx-2 w-50 input${nombre} formRango"
+    id="exampleFormControlInput2"
+  />
+</div>
+</td>
+<th scope="row">
+  <select class="form-select form-control-sm select${nombre} formRango" name="genero" aria-label="Default select example">
+    <option value="todos">Genero</option>
+    <option value="masculino">Masculino</option>
+    <option value="femenino">Femenino</option>
+  </select>
+</th>
+<th scope="row"><button class="button${nombre} buttonModificarRango btnIcon" >
+  <svg
+  xmlns="http://www.w3.org/2000/svg"
+  style="cursor: pointer"
+  width="25"
+  height="25"
+  fill="#FACD0B"
+  class="bi bi-pencil-square"
+  viewBox="0 0 20 20"
+  id=""
+  hidden
+  >
+  <path
+    d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"
+  />
+  <path
+    fill-rule="evenodd"
+    d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z"
+  />
+  </svg>
+    </button> </th>
+
+    <td style="cursor:pointer">
+    <button class='button${nombre} btnIcon' id='' onclick="añadirRangoExBdd('${id}','${nombre}',event)">
+      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="blue" class="bi bi-save" viewBox="0 0 16 16">
+        <path d="M2 1a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H9.5a1 1 0 0 0-1 1v7.293l2.646-2.647a.5.5 0 0 1 .708.708l-3.5 3.5a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L7.5 9.293V2a2 2 0 0 1 2-2H14a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2h2.5a.5.5 0 0 1 0 1z"/>
+      </svg>
+    </button>
+    </td>
+<td>
+  <button class="button${nombre} btnIcon" onclick="borrarRango(event,'${nombre}')">
+  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="red"  class="bi bi-x-circle " viewBox="0 0 16 16">
+    <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
+    <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708"/>
+  </svg>     
+  </button>
+  
+</td>
+  `;
+  tBodyRango.appendChild(tr);
+}
+
+async function añadirRangoExBdd(id, nombre, event) {
+  const rango = document.querySelectorAll(`.trRango${nombre}`);
+  let error = false;
+  let rangos = [...rango].map((r) => {
+    if (r.childNodes[5].childNodes[1].childNodes[1].value == "") {
+      if (r.childNodes[7].childNodes[1].childNodes[1].value != "") {
+        error = true;
+        return alerta.alert("Error", "Verifique los campos");
+      }
+    }
+    if (
+      r.childNodes[1].childNodes[1].childNodes[1].value == "" ||
+      r.childNodes[3].childNodes[1].childNodes[1].value == ""
+    ) {
+      error = true;
+      return alerta.alert("Error", "Verifique los campos");
+    }
+
+    if (
+      r.childNodes[1].childNodes[1].childNodes[1].value >
+        r.childNodes[3].childNodes[1].childNodes[1].value ||
+      r.childNodes[5].childNodes[1].childNodes[1].value >
+        r.childNodes[7].childNodes[1].childNodes[1].value
+    ) {
+      error = true;
+      return alerta.alert("Error", "Verifique los campos");
+    }
+  });
+  if (error) {
+    return;
+  }
+  let desde, hasta, inferior, superior, genero;
+  if (event.target.tagName == "path") {
+    console.log(
+      event.target.parentNode.parentNode.parentNode.parentNode.children[4]
+        .children[0]
+    );
+    desde =
+      event.target.parentNode.parentNode.parentNode.parentNode.children[0]
+        .children[0].children[0].value;
+    hasta =
+      event.target.parentNode.parentNode.parentNode.parentNode.children[1]
+        .children[0].children[0].value;
+    inferior =
+      event.target.parentNode.parentNode.parentNode.parentNode.children[2]
+        .children[0].children[0].value;
+    superior =
+      event.target.parentNode.parentNode.parentNode.parentNode.children[3]
+        .children[0].children[0].value;
+    genero =
+      event.target.parentNode.parentNode.parentNode.parentNode.children[4]
+        .children[0].value;
+  }
+  if (event.target.tagName == "svg") {
+    desde =
+      event.target.parentNode.parentNode.parentNode.children[0].children[0]
+        .children[0].value;
+    hasta =
+      event.target.parentNode.parentNode.parentNode.children[1].children[0]
+        .children[0].value;
+    inferior =
+      event.target.parentNode.parentNode.parentNode.children[2].children[0]
+        .children[0].value;
+    superior =
+      event.target.parentNode.parentNode.parentNode.children[3].children[0]
+        .children[0].value;
+    genero =
+      event.target.parentNode.parentNode.parentNode.children[4].children[0]
+        .value;
+  }
+
+  let rangoBdd = {
+    desde,
+    hasta,
+    inferior,
+    superior,
+    genero,
+  };
+  console.log(rangoBdd);
+}
+function añadirResultadoEx(id, nombre) {
+  const trsResultados = document.getElementsByClassName("trResultados");
+  if (trsResultados.length >= 10) {
+    return;
+  }
+  const tBodyResultados = document.getElementById("tBodyResultados" + nombre);
+  const tr = document.createElement("tr");
+  tr.className = "trResultados" + nombre;
+  tr.innerHTML = `
+  <td><div
+                                    class="mb-3 d-flex align-items-center justify-content-center"
+                                  >
+                                  
+                                   
+                                    <input
+                                      onChange="validarResultado(event)"
+                                      name="resultado"
+                                      type="text"
+                                      class="form-control-sm input${nombre} mx-2 w-100 formResultado"
+                                      
+                                    />
+                                  </div></td>
+                                  
+                                  <th scope="row"><button hidden class="button${nombre} buttonModificarR btnIcon" >
+  <svg
+  xmlns="http://www.w3.org/2000/svg"
+  style="cursor: pointer"
+  width="25"
+  height="25"
+  fill="#FACD0B"
+  class="bi bi-pencil-square"
+  viewBox="0 0 20 20"
+  id=""
+  
+  >
+  <path
+    d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"
+  />
+  <path
+    fill-rule="evenodd"
+    d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z"
+  />
+  </svg>
+    </button> </th>
+  
+    <td style="cursor:pointer">
+    <button class='button${nombre} btnIcon' id='' onclick="añadirResultadoExBdd('${id}','${nombre}',event)">
+      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="blue" class="bi bi-save" viewBox="0 0 16 16">
+        <path d="M2 1a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H9.5a1 1 0 0 0-1 1v7.293l2.646-2.647a.5.5 0 0 1 .708.708l-3.5 3.5a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L7.5 9.293V2a2 2 0 0 1 2-2H14a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2h2.5a.5.5 0 0 1 0 1z"/>
+      </svg>
+    </button>
+    
+    </td>
+    
+                                  <td >
+                                    <button class="button${nombre} btnIcon" onclick="borrarResultado(event,'${nombre}')">
+                                      <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="red" class="bi bi-x-circle" viewBox="0 0 16 16">
+                                      <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
+                                      <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708"/>
+                                      </svg>    
+                                    </button>
+                                    
+                                  </td>
+  `;
+  tBodyResultados.appendChild(tr);
+}
+function añadirSubCaracteristicaEx(id, nombre) {
+  disabledButton("añadirSubCaButton");
+
   const trsSubCaracteristica = document.getElementsByClassName(
     "trSubCaracteristica" + nombre
   );
   if (trsSubCaracteristica.length >= 8) {
     return;
   }
-  
+
   const tBodySubCaracteristica = document.getElementById(
     "tBodySubCaracteristica" + nombre
   );
@@ -1181,9 +1451,7 @@ function añadirSubCaracteristicaEx(id,nombre){
   
 <div class="input-group">
 <input type="text" name='valor' onchange="validarInputFormula('${nombre}',event)" readonly class="form-control-sm mx-2 input${nombre} formSubCaracteristica${nombre}" placeholder="{v} - [+-*/] - ({a}[/]{b})" aria-label="">
-  <button disabled class="btn btn-light p-0 " onclick='añadirChars("{}",event)' type="button">{  }</button>
-  <button disabled class="btn btn-light p-0 " onclick='añadirChars("[]",event)' type="button">[  ]</button>
-  <button disabled class="btn btn-light p-0 " onclick='añadirChars("()",event)' type="button">(  )</button>
+ 
 
 </div>
 </td>
@@ -1230,25 +1498,22 @@ hidden
   
 </td>
 `;
-tBodySubCaracteristica.appendChild(tr);
-const botonesModificar = document.getElementsByClassName(
-  "buttonModificarSub" + nombre
-);
-const arrBotonesMod = [...botonesModificar];
-arrBotonesMod.forEach((b) => {
-  b.setAttribute("hidden", "true");
-});
-
-
+  tBodySubCaracteristica.appendChild(tr);
+  const botonesModificar = document.getElementsByClassName(
+    "buttonModificarSub" + nombre
+  );
+  const arrBotonesMod = [...botonesModificar];
+  arrBotonesMod.forEach((b) => {
+    b.setAttribute("hidden", "true");
+  });
 }
 
-async function añadirSubCaBddEx(id,nombre){
-
+async function añadirSubCaBddEx(id, nombre) {
   const subCaracteristica = document.querySelectorAll(
     `.trSubCaracteristica${nombre}`
   );
-  let error=false
-  let subCaracteristicas = [...subCaracteristica]
+  let error = false;
+  let subCaracteristicas = [...subCaracteristica];
   subCaracteristicas.forEach((s, i) => {
     let validarNombre = true;
     for (let k = i + 1; k < subCaracteristica.length; k++) {
@@ -1264,7 +1529,7 @@ async function añadirSubCaBddEx(id,nombre){
         "error",
         "hay mas de una subCaracteristica con el mismo nombre"
       );
-      error=true
+      error = true;
     }
     let variables = [];
     if (
@@ -1273,66 +1538,37 @@ async function añadirSubCaBddEx(id,nombre){
         s.childNodes[0].childNodes[1].value != "formula") ||
       s.childNodes[2].childNodes[1].childNodes[1].value == ""
     ) {
-      error=true
+      error = true;
     }
     if (s.childNodes[0].childNodes[1].value == "formula") {
       if (s.childNodes[4].childNodes[1].childNodes[1].value == "") {
         return undefined;
       }
       let value = s.childNodes[4].childNodes[1].childNodes[1].value;
-      for (let i = 0; i < value.length; i++) {
-        if (value[i] == "{") {
-          let validarCierre = false;
-          let variable = "";
-          for (let j = i + 1; j < value.length; j++) {
-            if (value[j] == "{") {
-              break;
-            }
-            if (value[j] == "}") {
-              variable = value.slice(i + 1, j);
-              validarCierre = true;
-              break;
-            }
-          }
+      let split = value.split(",");
+      let operadores = ["+", "-", "*", "/"];
 
-          if (!validarCierre || variable == "") {
-            error = true;
-            break;
-          } else {
-            variables.push(variable);
-          }
+      for (let il = 0; il < split.length; il++) {
+        const element = split[il];
+        if (!operadores.includes(element) && isNaN(element)) {
+          variables.push(element);
         }
-        if (
-          value[i] == "+" ||
-          value[i] == "-" ||
-          value[i] == "*" ||
-          value[i] == "/"
-        ) {
+        if (operadores.includes(element)) {
+          console.log(split[il - 1], split[il + 1]);
+          console.log(operadores.includes(split[il + 1]));
           if (
-            (value[i - 1] == "}" || value[i - 1] == ")") &&
-            (value[i + 1] == "{" || value[i + 1] == "(")
+            operadores.includes(split[il - 1]) ||
+            operadores.includes(split[il + 1]) ||
+            split[il + 1] == undefined
           ) {
-            continue;
-          } else {
             error = true;
             break;
           }
-        }
-        if (value[i] == "(") {
-          let validarCierre = false;
-
-          for (let j = i + 1; j < value.length; j++) {
-            if (value[j] == "(") {
-              break;
-            }
-            if (value[j] == ")") {
-              variable = value.slice(i + 1, j);
-              validarCierre = true;
-              break;
-            }
-          }
-
-          if (!validarCierre || variable == "") {
+        } else {
+          if (
+            !operadores.includes(split[il + 1]) &&
+            !operadores.includes(split[il - 1])
+          ) {
             error = true;
             break;
           }
@@ -1357,22 +1593,22 @@ async function añadirSubCaBddEx(id,nombre){
       });
 
       if (error) {
-        return alerta.alert('Error','Verifique la sintaxis');
+        return alerta.alert("Error", "Verifique la sintaxis");
       }
     }
-
-    
   });
-  let sbNuevo={
-    tipo:  subCaracteristicas[subCaracteristica.length-1].childNodes[0].childNodes[1].value,
-    valor: subCaracteristicas[subCaracteristica.length-1].childNodes[4].childNodes[1].childNodes[1].value,
-    nombre: subCaracteristicas[subCaracteristica.length-1].childNodes[2].childNodes[1].childNodes[1].value,
-    idCar:id
-  }
-  console.log(sbNuevo)
-
-  
-
+  let sbNuevo = {
+    tipo: subCaracteristicas[subCaracteristica.length - 1].childNodes[0]
+      .childNodes[1].value,
+    valor:
+      subCaracteristicas[subCaracteristica.length - 1].childNodes[4]
+        .childNodes[1].childNodes[1].value,
+    nombre:
+      subCaracteristicas[subCaracteristica.length - 1].childNodes[2]
+        .childNodes[1].childNodes[1].value,
+    idCar: id,
+  };
+  console.log(sbNuevo);
 }
 
 async function guardarCambioSubCaBdd(id, nombre) {
@@ -1382,8 +1618,8 @@ async function guardarCambioSubCaBdd(id, nombre) {
   const subCaracteristica = document.querySelectorAll(
     `.trSubCaracteristica${nombre}`
   );
-  let tr= [...subCaracteristica]
-  let error=false
+  let tr = [...subCaracteristica];
+  let error = false;
   tr.forEach((s, i) => {
     let validarNombre = true;
     for (let k = i + 1; k < subCaracteristica.length; k++) {
@@ -1414,66 +1650,38 @@ async function guardarCambioSubCaBdd(id, nombre) {
       if (s.childNodes[4].childNodes[1].childNodes[1].value == "") {
         return undefined;
       }
-      let error = false;
       let value = s.childNodes[4].childNodes[1].childNodes[1].value;
-      for (let i = 0; i < value.length; i++) {
-        if (value[i] == "{") {
-          let validarCierre = false;
-          let variable = "";
-          for (let j = i + 1; j < value.length; j++) {
-            if (value[j] == "{") {
-              break;
-            }
-            if (value[j] == "}") {
-              variable = value.slice(i + 1, j);
-              validarCierre = true;
-              break;
-            }
-          }
+      let split = value.split(",");
+      let operadores = ["+", "-", "*", "/"];
 
-          if (!validarCierre || variable == "") {
-            error = true;
-            break;
-          } else {
-            variables.push(variable);
-          }
+      for (let il = 0; il < split.length; il++) {
+        const element = split[il];
+        if (!operadores.includes(element) && isNaN(element)) {
+          variables.push(element);
         }
-        if (
-          value[i] == "+" ||
-          value[i] == "-" ||
-          value[i] == "*" ||
-          value[i] == "/"
-        ) {
+        if (operadores.includes(element)) {
+          console.log(split[il - 1], split[il + 1]);
+          console.log(operadores.includes(split[i + 1]));
           if (
-            (value[i - 1] == "}" || value[i - 1] == ")") &&
-            (value[i + 1] == "{" || value[i + 1] == "(")
+            operadores.includes(split[il - 1]) ||
+            operadores.includes(split[il + 1]) ||
+            split[il + 1] == undefined
           ) {
-            continue;
-          } else {
             error = true;
             break;
           }
-        }
-        if (value[i] == "(") {
-          let validarCierre = false;
-
-          for (let j = i + 1; j < value.length; j++) {
-            if (value[j] == "(") {
-              break;
-            }
-            if (value[j] == ")") {
-              variable = value.slice(i + 1, j);
-              validarCierre = true;
-              break;
-            }
-          }
-
-          if (!validarCierre || variable == "") {
+        } else {
+          if (
+            !operadores.includes(split[il + 1]) &&
+            !operadores.includes(split[il - 1])
+          ) {
             error = true;
             break;
           }
         }
       }
+      console.log(variables);
+
       variables.forEach((v) => {
         let validar = false;
         for (let il = 0; il < subCaracteristica.length; il++) {
@@ -1492,15 +1700,14 @@ async function guardarCambioSubCaBdd(id, nombre) {
         }
       });
 
-      if (error==true) {
+      if (error == true) {
         return alerta.alert("Error", "Verifique la sintaxis del  valor");
-        
       }
     }
-    })
-    if(error==true){
-      return
-    }
+  });
+  if (error == true) {
+    return;
+  }
   let subCa = {
     id_subCaracteristica: id,
     subCaracteristica: {
@@ -1510,9 +1717,8 @@ async function guardarCambioSubCaBdd(id, nombre) {
     },
   };
   try {
-    
   } catch (error) {
-    console.log("🚀 ~ tr.forEach ~ error:", error)
+    console.log("🚀 ~ tr.forEach ~ error:", error);
     if (error.response.data.mensaje) {
       return await alerta.alert("Error:", error.response.data.mensaje);
     } else {
@@ -1579,46 +1785,44 @@ function modificarSubCaForm(id, nombre) {
   console.log(inputsSb);
 }
 
-async function modificarRangoForm(id,nombre){
-  const inputRg=document.getElementsByClassName(`inpRg${id}`)
-  console.log(inputRg)
+async function modificarRangoForm(id, nombre) {
+  const inputRg = document.getElementsByClassName(`inpRg${id}`);
+  console.log(inputRg);
   const arrRg = [...inputRg];
   arrRg.forEach((e) => {
     if (e.tagName == "SELECT" || e.tagName == "button") {
       e.removeAttribute("disabled");
     } else {
       e.removeAttribute("readonly");
-      
     }
   });
-  const btnModi=document.getElementsByClassName(`buttonModificarRango${id}`)
+  const btnModi = document.getElementsByClassName(`buttonModificarRango${id}`);
 
-  const arrBtn=[...btnModi]
-  arrBtn.forEach(e=>{
-    e.setAttribute('hidden','true')
-  })
+  const arrBtn = [...btnModi];
+  arrBtn.forEach((e) => {
+    e.setAttribute("hidden", "true");
+  });
 
-  const btnGuardarRg =document.getElementById(`botonGuardarRg${id}`)
-  btnGuardarRg.removeAttribute('hidden')
+  const btnGuardarRg = document.getElementById(`botonGuardarRg${id}`);
+  btnGuardarRg.removeAttribute("hidden");
 }
 
-async function guardarCambioRgBdd(id,nombre){
+async function guardarCambioRgBdd(id, nombre) {
   const rango = document.querySelectorAll(`.trRango${nombre}`);
-  let error = false
+  let error = false;
   let rangos = [...rango].map((r) => {
     if (r.childNodes[5].childNodes[1].childNodes[1].value == "") {
       if (r.childNodes[7].childNodes[1].childNodes[1].value != "") {
-        error=true
-        return alerta.alert("Error","Verifique los campos")
+        error = true;
+        return alerta.alert("Error", "Verifique los campos");
       }
     }
     if (
       r.childNodes[1].childNodes[1].childNodes[1].value == "" ||
       r.childNodes[3].childNodes[1].childNodes[1].value == ""
     ) {
-      error=true
-      return alerta.alert("Error","Verifique los campos")
-
+      error = true;
+      return alerta.alert("Error", "Verifique los campos");
     }
 
     if (
@@ -1627,50 +1831,47 @@ async function guardarCambioRgBdd(id,nombre){
       r.childNodes[5].childNodes[1].childNodes[1].value >
         r.childNodes[7].childNodes[1].childNodes[1].value
     ) {
-      error=true
-      return alerta.alert("Error","Verifique los campos")
-  }
-
-  
+      error = true;
+      return alerta.alert("Error", "Verifique los campos");
+    }
   });
-  if(error){
-    return
+  if (error) {
+    return;
   }
 
-  let desde=document.getElementById(`desde${id}`).value
-  let hasta= document.getElementById(`hasta${id}`).value
-  let inferior= document.getElementById(`inferior${id}`).value
-  let superior= document.getElementById(`superior${id}`).value
-  let genero = document.getElementById(`selectRg${id}`).value
-  let rangoBdd={
-    desde,hasta,inferior,superior,genero
-  }
-  console.log(rangoBdd)
-  const inputRg=document.getElementsByClassName(`inpRg${id}`)
-  console.log(inputRg)
+  let desde = document.getElementById(`desde${id}`).value;
+  let hasta = document.getElementById(`hasta${id}`).value;
+  let inferior = document.getElementById(`inferior${id}`).value;
+  let superior = document.getElementById(`superior${id}`).value;
+  let genero = document.getElementById(`selectRg${id}`).value;
+  let rangoBdd = {
+    desde,
+    hasta,
+    inferior,
+    superior,
+    genero,
+  };
+  console.log(rangoBdd);
+  const inputRg = document.getElementsByClassName(`inpRg${id}`);
+  console.log(inputRg);
   const arrRg = [...inputRg];
   arrRg.forEach((e) => {
     if (e.tagName == "SELECT" || e.tagName == "button") {
-      e.setAttribute("disabled","true");
+      e.setAttribute("disabled", "true");
     } else {
-      e.setAttribute("readonly","true");
-      
+      e.setAttribute("readonly", "true");
     }
   });
-  const btnModi=document.getElementsByClassName(`buttonModificarRango${id}`)
+  const btnModi = document.getElementsByClassName(`buttonModificarRango${id}`);
 
-  const arrBtn=[...btnModi]
-  arrBtn.forEach(e=>{
-    e.removeAttribute('hidden')
-  })
+  const arrBtn = [...btnModi];
+  arrBtn.forEach((e) => {
+    e.removeAttribute("hidden");
+  });
 
-  const btnGuardarRg =document.getElementById(`botonGuardarRg${id}`)
-  btnGuardarRg.setAttribute('hidden','true')
-
-
+  const btnGuardarRg = document.getElementById(`botonGuardarRg${id}`);
+  btnGuardarRg.setAttribute("hidden", "true");
 }
-
-
 
 async function guardarCambioCaracteristicaBdd(id, nombre) {
   const formCaracteristica = document.getElementsByClassName(
@@ -1967,11 +2168,11 @@ function desactivarSelects(nombre) {
   });
 }
 
-function validarNombreCaracteristica(mod,idEx) {
+function validarNombreCaracteristica(mod, idEx) {
   const nombre = document.getElementById("inputCaracteristica").value;
-  if(mod==true){
-    añadirAcordionItemEx(nombre,idEx)
-  }else{
+  if (mod == true) {
+    añadirAcordionItemEx(nombre, idEx);
+  } else {
     añadirAcordionItem(nombre);
   }
 }
@@ -1999,15 +2200,6 @@ function validarSelectSub(nombre, event) {
     event.target.parentNode.parentNode.children[2].firstElementChild.children[0].removeAttribute(
       "readonly"
     );
-    event.target.parentNode.parentNode.children[2].firstElementChild.children[1].removeAttribute(
-      "disabled"
-    );
-    event.target.parentNode.parentNode.children[2].firstElementChild.children[2].removeAttribute(
-      "disabled"
-    );
-    event.target.parentNode.parentNode.children[2].firstElementChild.children[3].removeAttribute(
-      "disabled"
-    );
   } else {
     event.target.parentNode.parentNode.children[2].firstElementChild.children[0].setAttribute(
       "readonly",
@@ -2015,18 +2207,6 @@ function validarSelectSub(nombre, event) {
     );
     event.target.parentNode.parentNode.children[2].firstElementChild.children[0].value =
       "";
-    event.target.parentNode.parentNode.children[2].firstElementChild.children[1].setAttribute(
-      "disabled",
-      "true"
-    );
-    event.target.parentNode.parentNode.children[2].firstElementChild.children[2].setAttribute(
-      "disabled",
-      "true"
-    );
-    event.target.parentNode.parentNode.children[2].firstElementChild.children[3].setAttribute(
-      "disabled",
-      "true"
-    );
   }
 }
 
@@ -2035,7 +2215,7 @@ function añadirChars(char, event) {
   event.target.parentNode.children[0].value += char;
 }
 
-function borrarSubCaracteristica(event, nombre,ex) {
+function borrarSubCaracteristica(event, nombre, ex) {
   const tBody = document.getElementById(`tBodySubCaracteristica${nombre}`);
   console.log(event.target);
   if (event.target.localName == "button") {
@@ -2048,7 +2228,7 @@ function borrarSubCaracteristica(event, nombre,ex) {
   if (event.target.localName == "path") {
     tBody.removeChild(event.target.parentNode.parentNode.parentNode.parentNode);
   }
-  if(ex='ex'){
+  if ((ex = "ex")) {
     const botonesModificar = document.getElementsByClassName(
       "buttonModificarSub" + nombre
     );
@@ -2056,8 +2236,6 @@ function borrarSubCaracteristica(event, nombre,ex) {
     arrBotonesMod.forEach((b) => {
       b.removeAttribute("hidden");
     });
-  
-  
   }
 }
 function borrarResultado(event, nombre) {
@@ -2129,10 +2307,7 @@ function añadirSubCaracteristica(nombre) {
   
 <div class="input-group">
 <input type="text" name='valor' onchange="validarInputFormula('${nombre}',event)" readonly class="form-control-sm mx-2 input${nombre} formSubCaracteristica${nombre}" placeholder="{v} - [+-*/] - ({a}[/]{b})" aria-label="">
-  <button disabled class="btn btn-light p-0 " onclick='añadirChars("{}",event)' type="button">{  }</button>
-  <button disabled class="btn btn-light p-0 " onclick='añadirChars("[]",event)' type="button">[  ]</button>
-  <button disabled class="btn btn-light p-0 " onclick='añadirChars("()",event)' type="button">(  )</button>
-
+  
 </div>
 </td>
 
@@ -2381,83 +2556,38 @@ function crearCaracteristica(nombre) {
       if (s.childNodes[4].childNodes[1].childNodes[1].value == "") {
         return undefined;
       }
+      let variables = [];
       let error = false;
+      let operadores = ["+", "-", "*", "/"];
       let value = s.childNodes[4].childNodes[1].childNodes[1].value;
-      for (let i = 0; i < value.length; i++) {
-        if (value[i] == "{") {
-          let validarCierre = false;
-          let variable = "";
-          for (let j = i + 1; j < value.length; j++) {
-            if (value[j] == "{") {
-              break;
-            }
-            if (value[j] == "}") {
-              variable = value.slice(i + 1, j);
-              validarCierre = true;
-              break;
-            }
-          }
+      let split = value.split(",");
 
-          if (!validarCierre || variable == "") {
-            error = true;
-            break;
-          } else {
-            variables.push(variable);
-          }
+      for (let i = 0; i < split.length; i++) {
+        const element = split[i];
+        if (!operadores.includes(element) && isNaN(element)) {
+          variables.push(element);
         }
-        if (
-          value[i] == "+" ||
-          value[i] == "-" ||
-          value[i] == "*" ||
-          value[i] == "/"
-        ) {
+        if (operadores.includes(element)) {
+          console.log(split[i - 1], split[i + 1]);
+          console.log(operadores.includes(split[i + 1]));
           if (
-            (value[i - 1] == "}" || value[i - 1] == ")") &&
-            (value[i + 1] == "{" || value[i + 1] == "(")
+            operadores.includes(split[i - 1]) ||
+            operadores.includes(split[i + 1]) ||
+            split[i + 1] == undefined
           ) {
-            continue;
-          } else {
             error = true;
             break;
           }
-        }
-        if (value[i] == "(") {
-          let validarCierre = false;
-
-          for (let j = i + 1; j < value.length; j++) {
-            if (value[j] == "(") {
-              break;
-            }
-            if (value[j] == ")") {
-              variable = value.slice(i + 1, j);
-              validarCierre = true;
-              break;
-            }
-          }
-
-          if (!validarCierre || variable == "") {
+        } else {
+          if (
+            !operadores.includes(split[i + 1]) &&
+            !operadores.includes(split[i - 1])
+          ) {
             error = true;
             break;
           }
         }
       }
-      variables.forEach((v) => {
-        let validar = false;
-        for (let il = 0; il < subCaracteristica.length; il++) {
-          if (
-            subCaracteristica[il].childNodes[0].childNodes[1].value !=
-              "texto" &&
-            s.childNodes[2].childNodes[1].childNodes[1].value != v &&
-            v == subCaracteristica[il].children[1].children[0].children[0].value
-          ) {
-            validar = true;
-            break;
-          }
-        }
-        if (!validar) {
-          error = true;
-        }
-      });
 
       if (error) {
         return undefined;
@@ -2802,72 +2932,41 @@ function modificarCrtCreacionFront(nombre) {
     (c) => c.caracteristica[0].valor !== nombre
   );
 }
-
 function validarInputFormula(nombre, event) {
   const value = event.target.value;
   let variables = [];
   let error = false;
-  for (let i = 0; i < value.length; i++) {
-    if (value[i] == "{") {
-      let validarCierre = false;
-      let variable = "";
-      for (let j = i + 1; j < value.length; j++) {
-        if (value[j] == "{") {
-          break;
-        }
-        if (value[j] == "}") {
-          variable = value.slice(i + 1, j);
-          validarCierre = true;
-          break;
-        }
-      }
+  let split = value.split(",");
+  let operadores = ["+", "-", "*", "/"];
 
-      if (!validarCierre || variable == "") {
-        error = true;
-        event.target.style.borderColor = "red";
-        break;
-      } else {
-        variables.push(variable);
-      }
+  for (let i = 0; i < split.length; i++) {
+    const element = split[i];
+    if (!operadores.includes(element) && isNaN(element)) {
+      variables.push(element);
     }
-    if (
-      value[i] == "+" ||
-      value[i] == "-" ||
-      value[i] == "*" ||
-      value[i] == "/"
-    ) {
+    if (operadores.includes(element)) {
+      console.log(split[i - 1], split[i + 1]);
+      console.log(operadores.includes(split[i + 1]));
       if (
-        (value[i - 1] == "}" || value[i - 1] == ")") &&
-        (value[i + 1] == "{" || value[i + 1] == "(")
+        operadores.includes(split[i - 1]) ||
+        operadores.includes(split[i + 1]) ||
+        split[i + 1] == undefined
       ) {
-        continue;
-      } else {
         error = true;
-        event.target.style.borderColor = "red";
         break;
       }
-    }
-    if (value[i] == "(") {
-      let validarCierre = false;
-
-      for (let j = i + 1; j < value.length; j++) {
-        if (value[j] == "(") {
-          break;
-        }
-        if (value[j] == ")") {
-          variable = value.slice(i + 1, j);
-          validarCierre = true;
-          break;
-        }
-      }
-
-      if (!validarCierre || variable == "") {
+    } else {
+      if (
+        !operadores.includes(split[i + 1]) &&
+        !operadores.includes(split[i - 1])
+      ) {
         error = true;
-        event.target.style.borderColor = "red";
         break;
       }
     }
   }
+  console.log(variables);
+
   const tBodySub = document.getElementById(`tBodySubCaracteristica${nombre}`);
   variables.forEach((v) => {
     let validar = false;
@@ -2889,6 +2988,8 @@ function validarInputFormula(nombre, event) {
   });
   if (!error) {
     event.target.style.borderColor = "green";
+  } else {
+    event.target.style.borderColor = "red";
   }
 }
 
