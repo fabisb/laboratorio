@@ -1133,8 +1133,27 @@ async function guardarCambioRsBdd(id, nombre) {
   arrBtn.forEach((e) => {
     e.removeAttribute("hidden");
   });
-  const botonGuardarRs = document.getElementById(`botonGuardarRs${id}`);
-  botonGuardarRs.setAttribute("hidden", "true");
+  try {
+    const { token } = await login.getToken();
+    const { data } = await axios.put(
+      urlsv + "/api/modulo-examenes/update-resultado",{
+        id_resultado: id,
+        resultado:resultadoInput.value
+      },{
+         headers: { token },
+      }
+    );
+    console.log("🚀 ~ guardarCambioRsBdd ~ data:", data)
+    const botonGuardarRs = document.getElementById(`botonGuardarRs${id}`);
+    botonGuardarRs.setAttribute("hidden", "true");
+  } catch (error) {
+    console.log("🚀 ~ guardarCambioRsBdd ~ error:", error)
+    if (error.response.data.mensaje) {
+      return await alerta.alert("Error:", error.response.data.mensaje);
+    } else {
+      return await alerta.error();
+    }
+  }
 }
 
 function modificarCaracteristicaForm(nombre) {
@@ -1956,8 +1975,11 @@ async function guardarCambioCaracteristicaBdd(id, nombre) {
   try {
     const { token } = await login.getToken();
     const { data } = await axios.put(
-      urlsv + "/api/modulo-examenes/update-rango",{
-         headers: { token }, params: { idExamen: id }
+      urlsv + "/api/modulo-examenes/update-caracteristica",{
+        id_caracteristica: id,caracteristica
+
+      },{
+         headers: { token }
       }
     );
 
