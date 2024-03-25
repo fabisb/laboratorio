@@ -553,6 +553,9 @@ async function crearCaracteristicaBdd(nombre, idEx) {
 }
 
 async function modificarExamen(id) {
+  try {
+    
+
   const { token } = await login.getToken();
   const { data: examen } = await axios.get(
     urlsv + "/api/modulo-examenes/examen-id",
@@ -1098,6 +1101,14 @@ onclick="modificarSubCaForm('${sb.id}','${nombre}')"
       tBodyResultados.appendChild(tr);
     });
   });
+} catch (error) {
+  console.log("🚀 ~ modificarExamen ~ error:", error)
+  if (error.response.data.mensaje) {
+    return await alerta.alert("Error:", error.response.data.mensaje);
+  } else {
+    return await alerta.error();
+  }
+}
 }
 function modificarResultadoForm(id, nombre) {
   const resultadoInput = document.getElementById(`resultadoRs${id}`);
@@ -1717,16 +1728,25 @@ async function guardarCambioSubCaBdd(id, nombre) {
     },
   };
   try {
-  } catch (error) {
-    console.log("🚀 ~ tr.forEach ~ error:", error);
-    if (error.response.data.mensaje) {
-      return await alerta.alert("Error:", error.response.data.mensaje);
-    } else {
-      return await alerta.error();
-    }
-  }
-  const inputsSb = document.getElementsByClassName(`inputSb${id}`);
-  const arrSb = [...inputsSb];
+      const { token } = await login.getToken();
+      const { data } = await axios.put(
+        urlsv + "/api/modulo-examenes/update-subcaracteristica",{
+          id_subCaracteristica: subCa.id_subCaracteristica,
+          subCaracteristica:subCa.subCaracteristica
+        },{
+           headers: { token },
+        }
+      );
+  
+      console.log("🚀 ~ guardarCambioRgBdd ~ data:", data);
+  
+      
+      
+
+      
+      
+      const inputsSb = document.getElementsByClassName(`inputSb${id}`);
+      const arrSb = [...inputsSb];
   arrSb.forEach((e) => {
     if (e.tagName == "SELECT" || e.tagName == "button") {
       e.setAttribute("disabled", "true");
@@ -1742,16 +1762,25 @@ async function guardarCambioSubCaBdd(id, nombre) {
   });
   const botonesModificar = document.getElementsByClassName(
     "buttonModificarSub" + nombre
-  );
+    );
   const arrBotonesMod = [...botonesModificar];
   arrBotonesMod.forEach((b) => {
     b.removeAttribute("hidden");
   });
   console.log(arrBotonesMod);
   document
-    .getElementById("botonGuardarSubCa" + id)
-    .setAttribute("hidden", "true");
+  .getElementById("botonGuardarSubCa" + id)
+  .setAttribute("hidden", "true");
   console.log(inputsSb);
+  return await alerta.alert("Exitoso:", 'Sub Caracteristica modificada correctamente');
+} catch (error) {
+  console.log("🚀 ~ tr.forEach ~ error:", error);
+  if (error.response.data.mensaje) {
+    return await alerta.alert("Error:", error.response.data.mensaje);
+  } else {
+    return await alerta.error();
+  }
+}
 }
 
 function modificarSubCaForm(id, nombre) {
@@ -1869,8 +1898,32 @@ async function guardarCambioRgBdd(id, nombre) {
     e.removeAttribute("hidden");
   });
 
-  const btnGuardarRg = document.getElementById(`botonGuardarRg${id}`);
-  btnGuardarRg.setAttribute("hidden", "true");
+  try {
+    const { token } = await login.getToken();
+    const { data } = await axios.put(
+      urlsv + "/api/modulo-examenes/update-rango",{
+        id_rango: id,
+        rango:rangoBdd
+      },{
+         headers: { token }
+      }
+    );
+
+    console.log("🚀 ~ guardarCambioRgBdd ~ data:", data);
+
+
+    
+    const btnGuardarRg = document.getElementById(`botonGuardarRg${id}`);
+    btnGuardarRg.setAttribute("hidden", "true");
+    return await alerta.alert("Exito:", 'Rango modificado correctamente');
+  } catch (error) {
+    console.log("🚀 ~ guardarCambioRgBdd ~ error:", error);
+    if (error.response.data.mensaje) {
+      return await alerta.alert("Error:", error.response.data.mensaje);
+    } else {
+      return await alerta.error();
+    }
+  }
 }
 
 async function guardarCambioCaracteristicaBdd(id, nombre) {
@@ -1900,14 +1953,36 @@ async function guardarCambioCaracteristicaBdd(id, nombre) {
       element.setAttribute("readonly", "true");
     }
   });
-  document
-    .getElementById("botonModificarCaracteristicaForm" + nombre)
-    .removeAttribute("hidden");
-  document
-    .getElementById("botonGuardarCaracteristica" + nombre)
-    .setAttribute("hidden", "true");
+  try {
+    const { token } = await login.getToken();
+    const { data } = await axios.put(
+      urlsv + "/api/modulo-examenes/update-rango",{
+         headers: { token }, params: { idExamen: id }
+      }
+    );
 
-  console.log(caracteristica);
+    console.log("🚀 ~ guardarCambioRgBdd ~ data:", data);
+
+    
+    
+
+    document
+      .getElementById("botonModificarCaracteristicaForm" + nombre)
+      .removeAttribute("hidden");
+    document
+      .getElementById("botonGuardarCaracteristica" + nombre)
+      .setAttribute("hidden", "true");
+  
+    console.log(caracteristica);
+    return await alerta.alert("Exito:", 'La caractristica fue modificada correctamente');
+  } catch (error) {
+    console.log("🚀 ~ guardarCambioRgBdd ~ error:", error);
+    if (error.response.data.mensaje) {
+      return await alerta.alert("Error:", error.response.data.mensaje);
+    } else {
+      return await alerta.error();
+    }
+  }
 }
 
 function validarSelectTipoBusqueda(value) {
