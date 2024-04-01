@@ -474,6 +474,7 @@ export const updateSeccion = async (req, res) => {
 
 export const updateCaracteristica = async (req, res) => {
   const { id_caracteristica, caracteristica } = req.body;
+  console.log("🚀 ~ updateCaracteristica ~ req.body:", req.body)
   if (isNaN(id_caracteristica)) {
     return await res
       .status(400)
@@ -486,16 +487,15 @@ export const updateCaracteristica = async (req, res) => {
     );
     if (existente.length > 0) {
       const valores = caracteristica
-        .map(async (dato) => {
+        .map( (dato) => {
           if (dato.nombre == "posicion" && dato.valor <= 0) {
-            return await res.status(400).json({
-              mensaje: "Ingrese una posicion valida para la caracteristica",
-            });
+            throw new Error(`La posición debe ser mayor a cero`);
+            
           }
           return `${dato.nombre} = ?`;
         })
         .join(", ");
-      valores.push({ valor: id_caracteristica });
+      caracteristica.push({ valor: id_caracteristica });
       const [update] = await pool.execute(
         `UPDATE detalles_examen SET ${valores} WHERE id = ?`,
         caracteristica.map((dato) => {
@@ -692,3 +692,37 @@ export const updateResultados = async (req, res) => {
       .json({ mensaje: "Ha ocurrido un error en el servidor" });
   }
 };
+
+export const insertSubCaracteristica = async (req,res)=>{
+  const { newSubCaracteristica } = req.body;
+  console.log("🚀 ~ insertSubCaracteristica ~ newSubCaracteristica:", newSubCaracteristica)
+  const {idCar: id_caracteristica} = newSubCaracteristica;
+  if (
+    !id_caracteristica ||
+    id_caracteristica < 0 ||
+    isNaN(id_caracteristica)
+  ) {
+    return await res
+      .status(400)
+      .json({ mensaje: "El id de la subcaracteristica no es valido" });
+  }
+  try {
+    const [existente] = await pool.execute(
+      "SELECT * FROM detalles_examen WHERE id = ?",
+      [id_caracteristica]
+    );
+    if (existente.length > 0) {
+      //////////////////
+    }else{
+      return await res
+        .status(400)
+        .json({ mensaje: "El id de la caracteristica no existe" });
+    }
+  } catch (error) {
+    console.log("🚀 ~ insertSubCaracteristica ~ error:", error)
+    return await res
+      .status(500)
+      .json({ mensaje: "Ha ocurrido un error en el servidor" }); 
+  }
+
+}

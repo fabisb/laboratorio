@@ -1639,6 +1639,13 @@ async function añadirSubCaBddEx(id, nombre) {
     idCar: id,
   };
   console.log(sbNuevo);
+  const { token } = await login.getToken();
+  
+  const res = await axios.post(urlsv+'/api/modulo-examenes/insert-subcaracteristica',{
+    newSubCaracteristica:sbNuevo
+  },{
+    headers: { token },
+ })
 }
 
 async function guardarCambioSubCaBdd(id, nombre) {
