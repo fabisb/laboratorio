@@ -1101,6 +1101,7 @@ onclick="modificarSubCaForm('${sb.id}','${nombre}')"
       tBodyResultados.appendChild(tr);
     });
   });
+  document.getElementById('busquedaModalCloseBtn').click();
 } catch (error) {
   console.log("🚀 ~ modificarExamen ~ error:", error)
   if (error.response.data.mensaje) {
@@ -1443,7 +1444,6 @@ function añadirResultadoEx(id, nombre) {
 }
 function añadirSubCaracteristicaEx(id, nombre) {
   disabledButton("añadirSubCaButton");
-
   const trsSubCaracteristica = document.getElementsByClassName(
     "trSubCaracteristica" + nombre
   );
@@ -1639,13 +1639,29 @@ async function añadirSubCaBddEx(id, nombre) {
     idCar: id,
   };
   console.log(sbNuevo);
-  const { token } = await login.getToken();
+  try {
+    const { token } = await login.getToken();
   
-  const res = await axios.post(urlsv+'/api/modulo-examenes/insert-subcaracteristica',{
-    newSubCaracteristica:sbNuevo
-  },{
-    headers: { token },
- })
+    const {data} = await axios.post(urlsv+'/api/modulo-examenes/insert-subcaracteristica',{
+      newSubCaracteristica:sbNuevo
+    },{
+      headers: { token },
+   })
+    enableButton('añadirSubCaButton')
+    
+     examenesAlerta('Sub Caracteristica agregada con exito!','success')
+     
+     return modificarExamen(data.examenId)
+  } catch (error) {
+    
+    console.log("🚀 ~ añadirSubCaBddEx ~ error:", error)
+    if (error.response.data.mensaje) {
+      return await alerta.alert("Error:", error.response.data.mensaje);
+    } else {
+      return await alerta.error();
+    }
+  }
+ 
 }
 
 async function guardarCambioSubCaBdd(id, nombre) {
@@ -1767,10 +1783,7 @@ async function guardarCambioSubCaBdd(id, nombre) {
       console.log("🚀 ~ guardarCambioRgBdd ~ data:", data);
   
       
-      
 
-      
-      
       const inputsSb = document.getElementsByClassName(`inputSb${id}`);
       const arrSb = [...inputsSb];
   arrSb.forEach((e) => {
@@ -1793,12 +1806,12 @@ async function guardarCambioSubCaBdd(id, nombre) {
   arrBotonesMod.forEach((b) => {
     b.removeAttribute("hidden");
   });
-  console.log(arrBotonesMod);
   document
   .getElementById("botonGuardarSubCa" + id)
   .setAttribute("hidden", "true");
-  console.log(inputsSb);
-  return await alerta.alert("Exitoso:", 'Sub Caracteristica modificada correctamente');
+  return  examenesAlerta('Sub Caracteristica modificada correctamente','success')
+
+  
 } catch (error) {
   console.log("🚀 ~ tr.forEach ~ error:", error);
   if (error.response.data.mensaje) {

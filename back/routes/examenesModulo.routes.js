@@ -40,6 +40,7 @@ router.put("/update-rango", verifyToken, updateRango);
 router.put("/update-resultado", verifyToken, updateResultados);
 
 //INSERT
-router.put("/insert-subcaracteristica", verifyToken, insertSubCaracteristica);
+router.post("/insert-subcaracteristica", verifyToken, insertSubCaracteristica);
+router.post("/insert-rango", verifyToken, insertSubCaracteristica);
 
 export default router;
