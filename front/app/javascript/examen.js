@@ -1,6 +1,9 @@
 var examenes = [];
 var idPaciente = "";
 var pacienteObj = {};
+let examenesDelPaciente = [];
+var examenDataPc;
+
 
 function retornarSumaString(o){
   
@@ -113,7 +116,7 @@ const render = async () => {
 
               </div>
               <div class="col-2 d-flex justify-content-end align-content-center">
-              <svg xmlns="http://www.w3.org/2000/svg" style="cursor:pointer" onclick="abrirResultadosModal('${ex.nombre}','${ex.id}')" width="24" height="24" fill="green" class="bi bi-check-circle mx-4" viewBox="0 0 16 16">
+              <svg xmlns="http://www.w3.org/2000/svg" style="cursor:pointer" onclick="abrirResultadosModal('${ex.nombre}','${ex.id}','true')" width="24" height="24" fill="green" class="bi bi-check-circle mx-4" viewBox="0 0 16 16">
                 <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
                 <path d="m10.97 4.97-.02.022-3.473 4.425-2.093-2.094a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-1.071-1.05"/>
               </svg>
@@ -161,7 +164,7 @@ function buscarExamen() {
 
               </div>
               <div class="col-2 d-flex justify-content-end align-content-center">
-              <svg xmlns="http://www.w3.org/2000/svg" style="cursor:pointer" onclick="abrirResultadosModal('${ex.nombre}','${ex.id}')" width="24" height="24" fill="green" class="bi bi-check-circle mx-4" viewBox="0 0 16 16">
+              <svg xmlns="http://www.w3.org/2000/svg" style="cursor:pointer" onclick="abrirResultadosModal('${ex.nombre}','${ex.id}','true')" width="24" height="24" fill="green" class="bi bi-check-circle mx-4" viewBox="0 0 16 16">
                 <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
                 <path d="m10.97 4.97-.02.022-3.473 4.425-2.093-2.094a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-1.071-1.05"/>
               </svg>
@@ -748,7 +751,9 @@ const abrirModalExamenes = () => new bootstrap.Modal("#examenes-list").toggle();
 const abrirModalExamenesCrud = () =>
   new bootstrap.Modal("#examenes-crud").toggle();
 
-const abrirResultadosModal = async (examen, idEx) => {
+
+
+const abrirResultadosModal = async (examen, idEx,n) => {
   const h1Ex = document.getElementById("h1NombreEx");
   const tBodyDiagnosticos = document.getElementById("tBodyDiagnosticos");
   tBodyDiagnosticos.innerHTML = "";
@@ -761,6 +766,7 @@ const abrirResultadosModal = async (examen, idEx) => {
     { headers: { token }, params: { idExamen: idEx } }
   );
 
+  examenDataPc=examenData
   examenData.detalles = examenData.detalles.sort(function (a, b) {
     if (a.posicion > b.posicion) {
       return 1;
@@ -853,7 +859,7 @@ const abrirResultadosModal = async (examen, idEx) => {
               <th> SubCaracteristica </th>
               <th>Resultado</th>
               <td></td>
-              <td>  <input class="form-control form-control-sm" type="text" placeholder="Nota" aria-label=".form-control-sm example">              </td>
+              <td>  <input class="form-control form-control-sm" type="text" id='inputNt${ct.id}' placeholder="Nota" aria-label=".form-control-sm example">              </td>
 
             </tr>
       `
@@ -863,9 +869,9 @@ const abrirResultadosModal = async (examen, idEx) => {
           <tr>
                 <td colspan="2"></td>
                 <th scope="row" colspan="">${sb.nombre}</th>
-                <td>  <input class="form-control form-control-sm inputFormula${ct.id} inputSubCaCa${ct.id}" name="rs-${sb.nombre}" type="number" valor="${sb.valor}" id=${sb.nombre}-${sb.id} readonly placeholder="Resultado" aria-label=".form-control-sm example">              </td>
+                <td>  <input id="Rs-${sb.id}" class="form-control form-control-sm inputFormula${ct.id} inputSubCaCa${ct.id}" name="rs-${sb.nombre}" type="number" valor="${sb.valor}" readonly placeholder="Resultado" aria-label=".form-control-sm example">              </td>
                 <td></td>
-                <td>  <input class="form-control form-control-sm inputSubCaCaNota${ct.id}" name="nt-${sb.nombre}" type="text" placeholder="Nota" aria-label=".form-control-sm example">              </td>
+                <td> <input id="Nt-${sb.id}" class="form-control form-control-sm inputSubCaCaNota${ct.id}" name="nt-${sb.nombre}" type="text" placeholder="Nota" aria-label=".form-control-sm example">              </td>
   
               </tr>
           `
@@ -876,9 +882,9 @@ const abrirResultadosModal = async (examen, idEx) => {
             <tr>
                   <td colspan="2"></td>
                   <th scope="row" colspan="">${sb.nombre}</th>
-                  <td>  <input onchange="actualizarResultadosFormula('${ct.id}')" class="form-control form-control-sm inputSubCaCa${ct.id}" name="rs-${sb.nombre}" type="number" placeholder="Resultado" aria-label=".form-control-sm example">              </td>
+                  <td> <input id="Rs-${sb.id}" onchange="actualizarResultadosFormula('${ct.id}')" class="form-control form-control-sm inputSubCaCa${ct.id}" name="rs-${sb.nombre}" type="number" placeholder="Resultado" aria-label=".form-control-sm example">              </td>
                   <td></td>
-                  <td>  <input class="form-control form-control-sm inputSubCaCaNota${ct.id}" name="nt-${sb.nombre}" type="text" placeholder="Nota" aria-label=".form-control-sm example">              </td>
+                  <td>  <input id="Nt-${sb.id}"  class="form-control form-control-sm inputSubCaCaNota${ct.id}" name="nt-${sb.nombre}" type="text" placeholder="Nota" aria-label=".form-control-sm example">              </td>
     
                 </tr>
             `
@@ -888,9 +894,9 @@ const abrirResultadosModal = async (examen, idEx) => {
             <tr>
                   <td colspan="2"></td>
                   <th scope="row" colspan="">${sb.nombre}</th>
-                  <td>  <input  class="form-control form-control-sm inputSubCaCa${ct.id}" name="rs-${sb.nombre}" type="text" placeholder="Resultado" aria-label=".form-control-sm example">              </td>
+                  <td>  <input id="Rs-${sb.id}" class="form-control form-control-sm inputSubCaCa${ct.id}" name="rs-${sb.nombre}" type="text" placeholder="Resultado" aria-label=".form-control-sm example">              </td>
                   <td></td>
-                  <td>  <input class="form-control form-control-sm inputSubCaCaNota${ct.id}" name="nt-${sb.nombre}" type="text" placeholder="Nota" aria-label=".form-control-sm example">              </td>
+                  <td>  <input id="Nt-${sb.id}" class="form-control form-control-sm inputSubCaCaNota${ct.id}" name="nt-${sb.nombre}" type="text" placeholder="Nota" aria-label=".form-control-sm example">              </td>
     
                 </tr>
             `
@@ -900,23 +906,47 @@ const abrirResultadosModal = async (examen, idEx) => {
       })
     }else{
       if(rango){
-        tBodyDiagnosticos.innerHTML += `
-        <tr>
-                    <th scope="row" colspan="2">${ct.nombre}</th>
-                    <td>  <input class="form-control form-control-sm inputExDetallePacCar" name='rs-${ct.id}' type="text" id='inputRs${ct.id}' placeholder="Ingrese Resultado" aria-label=".form-control-sm example">              </td>
-                    <td>${ct.unidad}</td>
-                    <td>${rango.inferior}  -  ${rango.superior}</td>
-                    <td>  <input class="form-control form-control-sm inputExDetallePacNota" name='nt-${ct.id}'  type="text" id='inputNt${ct.id}' placeholder="Nota" aria-label=".form-control-sm example">              </td>
-      
-                  </tr>
-        `;
+       
+        if(resultadosDt.length>0){
+          tBodyDiagnosticos.innerHTML += `
+          <tr>
+                      <th scope="row" colspan="2">${ct.nombre}</th>
+                      <td> <select class="form-select form-select-sm selectRs${ct.nombre} inputExDetallePacCar" rango='${rango.id}' id='inputRs${ct.id}' aria-label="Small select example">
+                      
+                    </select></td>
+                      <td>${ct.unidad}</td>
+                      <td>${rango.inferior}  -  ${rango.superior}</td>
+                      <td>  <input class="form-control form-control-sm inputExDetallePacNota" name='nt-${ct.id}' type="text" id='inputNt${ct.id}' placeholder="Nota" aria-label=".form-control-sm example">              </td>
+        
+                    </tr>
+          `;
+          resultadosDt.forEach(rs=>{
+            document.getElementsByClassName(`selectRs${ct.nombre}`)[0].innerHTML+=`
+            <option value="${rs.resultado}">
+            ${rs.resultado}
+            </option>
+            `
+          })
+        }else{
+          tBodyDiagnosticos.innerHTML += `
+          <tr>
+                      <th scope="row" colspan="2">${ct.nombre}</th>
+                      <td>  <input class="form-control form-control-sm inputExDetallePacCar" rango='${rango.id}' name='rs-${ct.id}' type="text" id='inputRs${ct.id}' placeholder="Ingrese Resultado" aria-label=".form-control-sm example">              </td>
+                      <td>${ct.unidad}</td>
+                      <td>${rango.inferior}  -  ${rango.superior}</td>
+                      <td>  <input class="form-control form-control-sm inputExDetallePacNota" name='nt-${ct.id}' type="text" id='inputNt${ct.id}' placeholder="Nota" aria-label=".form-control-sm example">              </td>
+        
+                    </tr>
+          `;
+        
+        }
       
       }else{
         if(resultadosDt.length>0){
           tBodyDiagnosticos.innerHTML += `
           <tr>
                       <th scope="row" colspan="2">${ct.nombre}</th>
-                      <td> <select class="form-select form-select-sm selectRs${ct.nombre} inputExDetallePacCar" id='inputRs${ct.id}' aria-label="Small select example">
+                      <td> <select class="form-select form-select-sm selectRs${ct.nombre} inputExDetallePacCar" rango='no' id='inputRs${ct.id}' aria-label="Small select example">
                       
                     </select></td>
                       <td>${ct.unidad}</td>
@@ -936,7 +966,7 @@ const abrirResultadosModal = async (examen, idEx) => {
           tBodyDiagnosticos.innerHTML += `
           <tr>
                       <th scope="row" colspan="2">${ct.nombre}</th>
-                      <td>  <input class="form-control form-control-sm inputExDetallePacCar" name='rs-${ct.id}' type="text" id='inputRs${ct.id}' placeholder="Ingrese Resultado" aria-label=".form-control-sm example">              </td>
+                      <td>  <input class="form-control form-control-sm inputExDetallePacCar" name='rs-${ct.id}' rango='no' type="text" id='inputRs${ct.id}' placeholder="Ingrese Resultado" aria-label=".form-control-sm example">              </td>
                       <td>${ct.unidad}</td>
                       <td> - </td>
                       <td>  <input class="form-control form-control-sm inputExDetallePacNota" name='nt-${ct.id}' type="text" id='inputNt${ct.id}' placeholder="Nota" aria-label=".form-control-sm example">              </td>
@@ -953,7 +983,231 @@ const abrirResultadosModal = async (examen, idEx) => {
     
 
   });
+  if(n=='false'){
+    setInputs(idEx)
+  }
+  
+
 };
+
+
+
+function guardarResultadosExamen(){
+
+  const detallesExamenPc = examenDataPc.detalles.map(e=>{
+    const res= document.getElementById('inputRs'+e.id)
+    const nota= document.getElementById('inputNt'+e.id)
+    console.log(nota,res)
+    
+
+    if(res){
+      
+      return {
+       
+        rango:res.attributes.rango.value,
+        resultado: res.value,
+        nota: nota.value,
+        idCar:e.id,
+        nombreCar:e.nombre,
+        imprimir: e.impsiempre
+
+      }
+    }
+    return {
+
+      rango:'no',
+      resultado: 'subCaracteristica',
+      nota: nota.value,
+      idCar:e.id,
+      nombreCar:e.nombre,
+      imprimir: e.impsiempre,
+      unidad:e.unidad
+
+    }
+  })
+  const subCaracteristicas = examenDataPc.subCa.map(e=>{
+    const res= document.getElementById('Rs-'+e.id)
+    const nota= document.getElementById('Nt-'+e.id)
+    console.log(res,nota)
+    return {
+      idSub: e.id,
+      nombreSub:e.nombre,
+      resultado: res.value,
+      idCar: e.id_det_ex,
+      nota: nota.value,
+    }
+
+  })
+  let examenPac= {
+    examenId:examenDataPc.examen.id,
+    examenNombre: examenDataPc.examen.nombre,
+    detallesExamenPc,
+    subCaracteristicasExPc:subCaracteristicas
+  }
+
+
+  examenesDelPaciente.push(examenPac)
+
+  document.getElementById('tHeadLgEx').innerHTML=`
+  <div class="row text-center">
+                    <div class="col-1">
+                      #
+                    </div>
+                    <div class="col-8">
+                      Tipo Examen
+                    </div>
+                    <div class="col-3">Status</div>
+                  </div>
+
+  `
+
+  añadirRowTablaExPac(examenPac)
+
+
+}
+
+function setInputs(idEx){
+  const examen=examenesDelPaciente.find(e=> e.examenId==idEx)
+  
+  examen.detallesExamenPc.forEach(e=>{
+    console.log(`inputRs${e.idCar}`)
+    const res= document.getElementById(`inputRs${e.idCar}`)
+    const nota= document.getElementById(`inputNt${e.idCar}`)
+
+    console.log(res,nota,e)
+    nota.value= e.nota
+    try {
+      res.value=e.resultado
+      
+    } catch (error) {
+      console.log(error) 
+    }
+    
+
+
+  })
+  examen.subCaracteristicasExPc.forEach(e=>{
+    const res= document.getElementById(`Rs-${e.idSub}`)
+    const nota= document.getElementById(`Nt-${e.idSub}`)
+    res.value=e.resultado;
+    nota.value=e.nota
+  })
+  popRowTablaExPac(idEx)
+}
+
+function popRowTablaExPac(idEx){
+  const tBody= document.getElementById(`tBodyLgEx`)
+  const aTabla = document.getElementById(`aTablaExPac${idEx}`)
+
+  examenesDelPaciente=examenesDelPaciente.filter(e=> e.examenId!=idEx)
+
+
+  tBody.removeChild(aTabla)
+}
+
+
+function añadirRowTablaExPac(examenPac){
+  const tBody= document.getElementById(`tBodyLgEx`)
+  const tr = document.getElementsByClassName('liBodyTablaExPac')
+  tBody.innerHTML+=`
+  <a href="#" class="list-group-item list-group-item-action liTableExPac liBodyTablaExPac" id="aTablaExPac${examenPac.examenId}" >
+  <div class="container">
+    <div class="row text-center">
+      <div class="col-1">
+        ${tr.length+1}
+      </div>
+      <div class="col-8 ">
+        <div class="row">
+          <div class="col-9">
+          ${examenPac.examenNombre}
+
+          </div>
+         
+          
+          <div class="col-3 d-flex justify-content-end">
+            
+            <svg xmlns="http://www.w3.org/2000/svg" width="27" height="27" fill="green" class="bi bi-eye svgButton" viewBox="0 0 16 16"  data-bs-toggle="collapse" href="#collapseLiTab${examenPac.examenId}" role="button" aria-expanded="false" aria-controls="collapseLiTab${examenPac.id}">
+            <path d="M16 8s-3-5.5-8-5.5S0 8 0 8s3 5.5 8 5.5S16 8 16 8M1.173 8a13 13 0 0 1 1.66-2.043C4.12 4.668 5.88 3.5 8 3.5s3.879 1.168 5.168 2.457A13 13 0 0 1 14.828 8q-.086.13-.195.288c-.335.48-.83 1.12-1.465 1.755C11.879 11.332 10.119 12.5 8 12.5s-3.879-1.168-5.168-2.457A13 13 0 0 1 1.172 8z"/>
+            <path d="M8 5.5a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5M4.5 8a3.5 3.5 0 1 1 7 0 3.5 3.5 0 0 1-7 0"/>
+            </svg>
+            <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="25"
+            height="25"
+            fill="#FACD0B"
+            class="bi bi-pencil-square mx-4 my-1 svgButton"
+            onclick="abrirResultadosModal('${examenPac.examenNombre}','${examenPac.examenId}','false')"
+            viewBox="0 0 20 20"
+          >
+            <path
+              d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"
+            />
+            <path
+              fill-rule="evenodd"
+              d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z"
+            />
+          </svg>
+          <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="25"
+          height="25"
+          fill="red"
+          class="bi bi-x-lg my-1 svgButton"
+          viewBox="0 0 20 20"
+          onclick="popRowTablaExPac(${examenPac.examenId})"
+        >
+          <path
+            d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8z"
+          />
+        </svg>
+            
+           
+          </div>
+        </div>
+        
+        
+      </div>
+      <div class="col-3">Pendiente por enviar</div>
+    </div>
+  </div>
+  <div class="collapse" id="collapseLiTab${examenPac.examenId}">
+    <div class="card card-body">
+      <table class="table table-sm fs-6">
+        <thead>
+          <tr>
+            <th scope="col">Caracteristica</th>
+            <th scope="col">Resultado</th>
+            <th scope="col">Unidad</th>
+            <th scope="col">Rango</th>
+            <th scope="col">Nota</th>
+          </tr>
+        </thead>
+        <tbody id="tBodyCollapseLi${examenPac.examenId}">
+         
+          
+        </tbody>
+      </table>
+                      </div>
+  </div>
+</a>
+  `
+  const tBodyCollapse = document.getElementById(`tBodyCollapseLi${examenPac.examenId}`)
+  
+
+  examenPac.detallesExamenPc.forEach(e=>{
+    tBodyCollapse.innerHTML+=`
+    <tr>
+            <th scope="row">${e.nombreCar}</th>
+            <td>${e.resultado}</td>
+            <td>${e.unidad ? e.unidad : '-'}</td>
+            <td>${e.rango == 'no' ? '-' : e.rango}</td>
+            <td>${e.nota}</td>
+          </tr>
+    `
+  })
+
+}
+
 
 
 

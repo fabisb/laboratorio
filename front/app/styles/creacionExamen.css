@@ -9,3 +9,10 @@
 ::placeholder {
   font-size: larger;
 }
+.liTableExPac{
+  cursor: initial;
+}
+
+.svgButton{
+  cursor: pointer;
+}

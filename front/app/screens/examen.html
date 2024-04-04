@@ -410,166 +410,33 @@
           <hr style="border-top: solid 3px rgb(255, 196, 0)" />
 
           <div class="row">
-            <table class="table text-center table-bordered">
-              <thead class="">
-                <tr>
-                  <th colspan="3" scope="col">Examenes realizados</th>
-                </tr>
-                <tr>
-                  <th scope="col" class="align-baseline">#</th>
-                  <th scope="col" class="row m-0">
-                    <div
-                      class="col-9 d-flex justify-content-center align-items-center"
-                    >
+            <h1 class="display-6 fw-semibold text-center">Examenes Realizados</h1>
+            <br>
+            <div class="list-group" id="tBodyLgEx">
+              <a href="#" class="list-group-item list-group-item-action fw-semibold liTableExPac">
+                <div class="container" id="tHeadLgEx">
+                  <div class="row text-center">
+                    <div class="col-1">
+                      #
+                    </div>
+                    <div class="col-8">
                       Tipo Examen
                     </div>
-                    <div class="col-2">
-                      <div
-                        class="btn-group p-0"
-                        role="group"
-                        aria-label="Basic mixed styles example"
-                      >
-                        <button type="button" class="btn btn-outline-light">
-                          <input
-                            class="form-check-input"
-                            type="checkbox"
-                            value=""
-                            id="flexCheckDefault"
-                          />
-                        </button>
-
-                        <button type="button" class="btn btn-outline-light">
-                          <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            width="16"
-                            height="16"
-                            fill="black"
-                            class="bi bi-share-fill"
-                            viewBox="0 0 16 16"
-                          >
-                            <path
-                              d="M11 2.5a2.5 2.5 0 1 1 .603 1.628l-6.718 3.12a2.5 2.5 0 0 1 0 1.504l6.718 3.12a2.5 2.5 0 1 1-.488.876l-6.718-3.12a2.5 2.5 0 1 1 0-3.256l6.718-3.12A2.5 2.5 0 0 1 11 2.5"
-                            />
-                          </svg>
-                        </button>
-                        <button type="button" class="btn btn-outline-light">
-                          <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            width="16"
-                            height="16"
-                            fill="green"
-                            class="bi bi-printer-fill"
-                            viewBox="0 0 16 16"
-                          >
-                            <path
-                              d="M5 1a2 2 0 0 0-2 2v1h10V3a2 2 0 0 0-2-2zm6 8H5a1 1 0 0 0-1 1v3a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1v-3a1 1 0 0 0-1-1"
-                            />
-                            <path
-                              d="M0 7a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2h-1v-2a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v2H2a2 2 0 0 1-2-2zm2.5 1a.5.5 0 1 0 0-1 .5.5 0 0 0 0 1"
-                            />
-                          </svg>
-                        </button>
-                      </div>
-                    </div>
-                  </th>
-                  <th scope="col" class="align-baseline">Fecha</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <th scope="row">1</th>
-                  <td class="d-flex justify-content-around">
-                    <span>Hematologia Completa </span>
-
-                    <div
-                      class="btn-group"
-                      role="group"
-                      aria-label="Basic mixed styles example"
-                    >
-                      <button type="button" class="btn btn-outline-light">
-                        <input
-                          class="form-check-input"
-                          type="checkbox"
-                          value=""
-                          id="flexCheckDefault"
-                        />
-                      </button>
-                      <button type="button" class="btn btn-outline-light">
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          width="20"
-                          height="20"
-                          fill="#FACD0B"
-                          class="bi bi-pencil-square"
-                          viewBox="0 0 20 20"
-                        >
-                          <path
-                            d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"
-                          />
-                          <path
-                            fill-rule="evenodd"
-                            d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z"
-                          />
-                        </svg>
-                      </button>
-
-                      <button type="button" class="btn btn-outline-light">
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          width="20"
-                          height="20"
-                          fill="red"
-                          class="bi bi-x-lg"
-                          viewBox="0 0 20 20"
-                        >
-                          <path
-                            d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8z"
-                          />
-                        </svg>
-                      </button>
-                      <button type="button" class="btn btn-outline-light">
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          width="16"
-                          height="16"
-                          fill="black"
-                          class="bi bi-share-fill"
-                          viewBox="0 0 16 16"
-                        >
-                          <path
-                            d="M11 2.5a2.5 2.5 0 1 1 .603 1.628l-6.718 3.12a2.5 2.5 0 0 1 0 1.504l6.718 3.12a2.5 2.5 0 1 1-.488.876l-6.718-3.12a2.5 2.5 0 1 1 0-3.256l6.718-3.12A2.5 2.5 0 0 1 11 2.5"
-                          />
-                        </svg>
-                      </button>
-                      <button type="button" class="btn btn-outline-light">
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          width="16"
-                          height="16"
-                          fill="green"
-                          class="bi bi-printer-fill"
-                          viewBox="0 0 16 16"
-                        >
-                          <path
-                            d="M5 1a2 2 0 0 0-2 2v1h10V3a2 2 0 0 0-2-2zm6 8H5a1 1 0 0 0-1 1v3a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1v-3a1 1 0 0 0-1-1"
-                          />
-                          <path
-                            d="M0 7a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2h-1v-2a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v2H2a2 2 0 0 1-2-2zm2.5 1a.5.5 0 1 0 0-1 .5.5 0 0 0 0 1"
-                          />
-                        </svg>
-                      </button>
-                    </div>
-                  </td>
-                  <td>11-10-2001</td>
-                </tr>
-              </tbody>
-            </table>
+                    <div class="col-3">Fecha</div>
+                  </div>
+                </div>
+              </a>
+          </div>
+          <hr>
+          <div class="d-flex justify-content-end" data-bs-toggle="modal" data-bs-target="#ordenModal">
+            <button class="btn btn-success w-25">Totalizar</button>
           </div>
         </div>
       </div>
     </div>
+    
 
-    <div
+  <div
     class="modal fade"
     id="examenes-list"
     tabindex="-1"
@@ -732,7 +599,8 @@
           type="button"
           class="btn btn-primary"
           data-bs-dismiss="modal"
-          onclick=""
+          id="guardarResultadoExPc"
+          onclick="guardarResultadosExamen()"
         >
           Guardar Resultado
         </button>
@@ -1255,6 +1123,159 @@
             <button class="btn btn-success btn-block" data-bs-dismiss="modal">
               OK
             </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal fade" id="ordenModal" tabindex="-1" aria-labelledby="ordenModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content" style="border: 5px solid #68c0c3;">
+          <div class="modal-header">
+            <h1 class="fs-5" id="ordenLabel">
+              Orden
+            </h1>
+            <img src="../imgs/la-milagrosa-logo.png" width="70" alt="" />
+  
+            
+          </div>
+          <div class="modal-body">
+            <span class="text-center"><h6>Orden</h6></span>
+            <div class="d-flex justify-content-center ">
+              <div class="input-group mb-3 w-75">
+                <select class="form-select w-25" id="inputGroupSelect02">
+                  <option selected>Choose...</option>
+                  <option value="1">One</option>
+                  <option value="2">Two</option>
+                  <option value="3">Three</option>
+                </select>
+                <input type="text" id="inputPassword6" class="form-control w-75" aria-describedby="passwordHelpInline">
+
+              </div>
+              
+            </div>
+            <hr>
+            <div class="row g-3 align-items-center">
+              <div class="col-4">
+                <label for="inputPassword6" class="col-form-label">Paciente: </label>
+              </div>
+              <div class="col-8">
+                <input type="text" id="inputPassword6" class="form-control" aria-describedby="passwordHelpInline">
+              </div>
+              
+            </div>
+            <br>
+            <div class="row">
+              <div class="col-4">
+                <label for="inputGroupSelect02" class="col-form-label">Bioanalista: </label>
+              </div>
+              <div class="col-8">
+                <select class="form-select" id="inputGroupSelect02">
+                  <option selected>Choose...</option>
+                  <option value="1">One</option>
+                  <option value="2">Two</option>
+                  <option value="3">Three</option>
+                </select>
+              </div>
+              
+             
+            </div>
+            <hr>
+            
+            <div class="row my-2">
+              <h4 class="fw-semibold text-center">Examenes Realizados</h4>
+              <br>
+              <div class="list-group" id="tBodyLgEx">
+                <a href="#" class="list-group-item list-group-item-action fw-semibold liTableExPac">
+                  <div class="container" id="tHeadLgEx">
+                    <div class="row text-center">
+                      <div class="col-1">
+                        #
+                      </div>
+                      <div class="col-11">
+                        Tipo Examen
+                      </div>
+                      
+                    </div>
+                  </div>
+                </a>
+                <a href="#" class="list-group-item list-group-item-action fs-6 fw-semibold liTableExPac">
+                  <div class="container" id="tHeadLgEx">
+                    <div class="row text-center">
+                      <div class="col-1">
+                        1
+                      </div>
+                      <div class="col-8">
+                        Hematologia Completa
+                      </div>
+                      <div class="col-3 d-flex justify-content-end">
+                        <div class="form-check mx-2">
+                          <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
+                          
+                        </div>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="green" class="bi bi-eye svgButton" viewBox="0 0 16 16"  data-bs-toggle="collapse" href="#collapseLiTab${examenPac.examenId}" role="button" aria-expanded="false" aria-controls="collapseLiTab${examenPac.id}">
+                          <path d="M16 8s-3-5.5-8-5.5S0 8 0 8s3 5.5 8 5.5S16 8 16 8M1.173 8a13 13 0 0 1 1.66-2.043C4.12 4.668 5.88 3.5 8 3.5s3.879 1.168 5.168 2.457A13 13 0 0 1 14.828 8q-.086.13-.195.288c-.335.48-.83 1.12-1.465 1.755C11.879 11.332 10.119 12.5 8 12.5s-3.879-1.168-5.168-2.457A13 13 0 0 1 1.172 8z"/>
+                          <path d="M8 5.5a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5M4.5 8a3.5 3.5 0 1 1 7 0 3.5 3.5 0 0 1-7 0"/>
+                          </svg>
+                      </div>
+                      
+                    </div>
+                  </div>
+                </a>
+                <a href="#" class="list-group-item list-group-item-action fs-6 fw-semibold liTableExPac">
+                  <div class="container" id="tHeadLgEx">
+                    <div class="row text-center">
+                      <div class="col-1">
+                        1
+                      </div>
+                      <div class="col-8">
+                        Hematologia Completa
+                      </div>
+                      <div class="col-3 d-flex justify-content-end">
+                        <div class="form-check mx-2">
+                          <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
+                          
+                        </div>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="green" class="bi bi-eye svgButton" viewBox="0 0 16 16"  data-bs-toggle="collapse" href="#collapseLiTab${examenPac.examenId}" role="button" aria-expanded="false" aria-controls="collapseLiTab${examenPac.id}">
+                          <path d="M16 8s-3-5.5-8-5.5S0 8 0 8s3 5.5 8 5.5S16 8 16 8M1.173 8a13 13 0 0 1 1.66-2.043C4.12 4.668 5.88 3.5 8 3.5s3.879 1.168 5.168 2.457A13 13 0 0 1 14.828 8q-.086.13-.195.288c-.335.48-.83 1.12-1.465 1.755C11.879 11.332 10.119 12.5 8 12.5s-3.879-1.168-5.168-2.457A13 13 0 0 1 1.172 8z"/>
+                          <path d="M8 5.5a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5M4.5 8a3.5 3.5 0 1 1 7 0 3.5 3.5 0 0 1-7 0"/>
+                          </svg>
+                      </div>
+                      
+                    </div>
+                  </div>
+                </a>
+                <a href="#" class="list-group-item list-group-item-action fs-6 fw-semibold liTableExPac">
+                  <div class="container" id="tHeadLgEx">
+                    <div class="row text-center">
+                      <div class="col-1">
+                        1
+                      </div>
+                      <div class="col-8">
+                        Hematologia Completa
+                      </div>
+                      <div class="col-3 d-flex justify-content-end">
+                        <div class="form-check mx-2">
+                          <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
+                          
+                        </div>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="green" class="bi bi-eye svgButton" viewBox="0 0 16 16"  data-bs-toggle="collapse" href="#collapseLiTab${examenPac.examenId}" role="button" aria-expanded="false" aria-controls="collapseLiTab${examenPac.id}">
+                          <path d="M16 8s-3-5.5-8-5.5S0 8 0 8s3 5.5 8 5.5S16 8 16 8M1.173 8a13 13 0 0 1 1.66-2.043C4.12 4.668 5.88 3.5 8 3.5s3.879 1.168 5.168 2.457A13 13 0 0 1 14.828 8q-.086.13-.195.288c-.335.48-.83 1.12-1.465 1.755C11.879 11.332 10.119 12.5 8 12.5s-3.879-1.168-5.168-2.457A13 13 0 0 1 1.172 8z"/>
+                          <path d="M8 5.5a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5M4.5 8a3.5 3.5 0 1 1 7 0 3.5 3.5 0 0 1-7 0"/>
+                          </svg>
+                      </div>
+                      
+                    </div>
+                  </div>
+                </a>
+            </div>
+            <hr>
+            <br>
+
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+            <button type="button" class="btn btn-success">Guardar Orden</button>
           </div>
         </div>
       </div>
