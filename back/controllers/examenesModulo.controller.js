@@ -750,6 +750,7 @@ export const insertSubCaracteristica = async (req, res) => {
 
 export const insertRango = async (req,res)=>{
   const { id_caracteristica, rango } = req.body;
+  console.log("🚀 ~ insertRango ~ req.body:", req.body)
   const { desde, hasta, inferior, superior, genero } = rango;
   if (
     isNaN(id_caracteristica) ||
@@ -778,10 +779,10 @@ export const insertRango = async (req,res)=>{
       [id_caracteristica]
     );
     if (existente.length > 0) {
-      //////////////////
+      const [nuevoRango] = await pool.execute('INSERT INTO rangos_detalle (`id_det_ex`, `desde`, `hasta`, `inferior`, `superior`, `genero`) VALUES (?,?,?,?,?,?)',[id_caracteristica,desde, hasta, inferior, superior, genero]);
       return await res.status(200).json({
-        mensaje: "El rango #a sido actualizado correctamente",
-        update,
+        mensaje: "Rango insertado correctamente",
+        examenId: existente[0].id_ex,
       });
     } else {
       return await res

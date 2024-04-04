@@ -554,42 +554,40 @@ async function crearCaracteristicaBdd(nombre, idEx) {
 
 async function modificarExamen(id) {
   try {
-    
+    const { token } = await login.getToken();
+    const { data: examen } = await axios.get(
+      urlsv + "/api/modulo-examenes/examen-id",
+      { headers: { token }, params: { idExamen: id } }
+    );
 
-  const { token } = await login.getToken();
-  const { data: examen } = await axios.get(
-    urlsv + "/api/modulo-examenes/examen-id",
-    { headers: { token }, params: { idExamen: id } }
-  );
+    const inputExamenNombre = document.getElementById("inputNombreExamen");
+    const seccionSelect = document.getElementById("seccionExamenSelect");
+    const botonGuardarExamen = document.getElementById("buttonGuardarExamen");
+    botonGuardarExamen.setAttribute("disabled", "true");
+    const accordionDiv = document.getElementById("accordionCaracteristicas");
+    const botonModalCaracteristica = document.getElementById(
+      "botonModalCaracteristica"
+    );
 
-  const inputExamenNombre = document.getElementById("inputNombreExamen");
-  const seccionSelect = document.getElementById("seccionExamenSelect");
-  const botonGuardarExamen = document.getElementById("buttonGuardarExamen");
-  botonGuardarExamen.setAttribute("disabled", "true");
-  const accordionDiv = document.getElementById("accordionCaracteristicas");
-  const botonModalCaracteristica = document.getElementById(
-    "botonModalCaracteristica"
-  );
+    botonModalCaracteristica.removeAttribute("onclick");
+    botonModalCaracteristica.setAttribute(
+      "onclick",
+      `validarNombreCaracteristica(true,"${id}")`
+    );
 
-  botonModalCaracteristica.removeAttribute("onclick");
-  botonModalCaracteristica.setAttribute(
-    "onclick",
-    `validarNombreCaracteristica(true,"${id}")`
-  );
+    inputExamenNombre.value = examen.examen.nombre;
+    seccionSelect.value = examen.examen.id_seccion;
+    accordionDiv.innerHTML = "";
 
-  inputExamenNombre.value = examen.examen.nombre;
-  seccionSelect.value = examen.examen.id_seccion;
-  accordionDiv.innerHTML = "";
+    examen.detalles.forEach((dt) => {
+      const divItem = document.createElement("div");
+      nombre1 = dt.nombre.trim();
+      const nombre = nombre1.replaceAll(" ", "-");
+      caracteristicasCreadas.add(nombre);
+      divItem.className = `accordion-item acordionItemCaracteristica`;
+      divItem.id = `accordionItemCaracteristica${nombre}`;
 
-  examen.detalles.forEach((dt) => {
-    const divItem = document.createElement("div");
-    nombre1 = dt.nombre.trim();
-    const nombre = nombre1.replaceAll(" ", "-");
-    caracteristicasCreadas.add(nombre);
-    divItem.className = `accordion-item acordionItemCaracteristica`;
-    divItem.id = `accordionItemCaracteristica${nombre}`;
-
-    divItem.innerHTML = `
+      divItem.innerHTML = `
   
   
   <h2 class="accordion-header headerCaracteristica"  >
@@ -633,8 +631,8 @@ async function modificarExamen(id) {
                         </td>
                         <td>
                           <button type="button" class="btn btn-outline-success button${nombre}" onclick="añadirSubCaracteristicaEx(${
-      dt.id
-    },'${nombre}')" id="añadirSubCaButton">
+        dt.id
+      },'${nombre}')" id="añadirSubCaButton">
 
                             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-file-earmark-plus-fill" viewBox="0 0 16 16">
                               <path d="M9.293 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V4.707A1 1 0 0 0 13.707 4L10 .293A1 1 0 0 0 9.293 0M9.5 3.5v-2l3 3h-2a1 1 0 0 1-1-1M8.5 7v1.5H10a.5.5 0 0 1 0 1H8.5V11a.5.5 0 0 1-1 0V9.5H6a.5.5 0 0 1 0-1h1.5V7a.5.5 0 0 1 1 0"/>
@@ -681,8 +679,8 @@ async function modificarExamen(id) {
                         </td>
                         <td>
                           <button type="button" class="btn btn-outline-success button${nombre}" onclick="añadirRangoEx(${
-      dt.id
-    },'${nombre}')" id="añadirRangoButton">
+        dt.id
+      },'${nombre}')" id="añadirRangoButton">
 
                             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-file-earmark-plus-fill" viewBox="0 0 16 16">
                               <path d="M9.293 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V4.707A1 1 0 0 0 13.707 4L10 .293A1 1 0 0 0 9.293 0M9.5 3.5v-2l3 3h-2a1 1 0 0 1-1-1M8.5 7v1.5H10a.5.5 0 0 1 0 1H8.5V11a.5.5 0 0 1-1 0V9.5H6a.5.5 0 0 1 0-1h1.5V7a.5.5 0 0 1 1 0"/>
@@ -803,8 +801,8 @@ async function modificarExamen(id) {
                   </td>
                   <td style="cursor:pointer">
                   <button hidden class='button${nombre} btnIcon' id='botonGuardarCaracteristica${nombre}' onclick="guardarCambioCaracteristicaBdd('${
-      dt.id
-    }','${nombre}')">
+        dt.id
+      }','${nombre}')">
                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="blue" class="bi bi-save" viewBox="0 0 16 16">
                       <path d="M2 1a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H9.5a1 1 0 0 0-1 1v7.293l2.646-2.647a.5.5 0 0 1 .708.708l-3.5 3.5a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L7.5 9.293V2a2 2 0 0 1 2-2H14a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2h2.5a.5.5 0 0 1 0 1z"/>
                     </svg>
@@ -826,20 +824,20 @@ async function modificarExamen(id) {
 
 
   `;
-    accordionDiv.appendChild(divItem);
-    const tBodySubCaracteristica = document.getElementById(
-      `tBodySubCaracteristica${nombre}`
-    );
-    const tBody = document.getElementById(`tBodySubCaracteristica${nombre}`);
+      accordionDiv.appendChild(divItem);
+      const tBodySubCaracteristica = document.getElementById(
+        `tBodySubCaracteristica${nombre}`
+      );
+      const tBody = document.getElementById(`tBodySubCaracteristica${nombre}`);
 
-    const subCa = examen.subCa.filter((sb) => dt.id == sb.id_det_ex);
-    const rg = examen.rangos.filter((rg) => dt.id == rg.id_det_ex);
-    const rs = examen.resultados.filter((rs) => dt.id == rs.id_det_ex);
+      const subCa = examen.subCa.filter((sb) => dt.id == sb.id_det_ex);
+      const rg = examen.rangos.filter((rg) => dt.id == rg.id_det_ex);
+      const rs = examen.resultados.filter((rs) => dt.id == rs.id_det_ex);
 
-    subCa.forEach((sb) => {
-      const tr = document.createElement("tr");
-      tr.className = "trSubCaracteristica" + nombre;
-      tr.innerHTML = `<th scope="row">
+      subCa.forEach((sb) => {
+        const tr = document.createElement("tr");
+        tr.className = "trSubCaracteristica" + nombre;
+        tr.innerHTML = `<th scope="row">
   <select id="selectSubTipo${sb.id}" onchange="validarSelectSub('${nombre}',event)" value="${sb.tipo}" disabled class="form-select form-control-sm select${nombre} inputSb${sb.id}" name="select"  aria-label="Default select example">
     <option value="texto">Texto</option>
     <option value="numero">Numero</option>
@@ -910,14 +908,14 @@ onclick="modificarSubCaForm('${sb.id}','${nombre}')"
   
 </td>
 `;
-      tBodySubCaracteristica.appendChild(tr);
-    });
+        tBodySubCaracteristica.appendChild(tr);
+      });
 
-    rg.forEach((r) => {
-      const tBodyRango = document.getElementById("tBodyRangos" + nombre);
-      const tr = document.createElement("tr");
-      tr.className = "trRango" + nombre;
-      tr.innerHTML = `
+      rg.forEach((r) => {
+        const tBodyRango = document.getElementById("tBodyRangos" + nombre);
+        const tr = document.createElement("tr");
+        tr.className = "trRango" + nombre;
+        tr.innerHTML = `
     <td>
     <div
       class="mb-3 d-flex align-items-center justify-content-center"
@@ -1034,16 +1032,16 @@ onclick="modificarSubCaForm('${sb.id}','${nombre}')"
     
   </td>
     `;
-      tBodyRango.appendChild(tr);
-    });
+        tBodyRango.appendChild(tr);
+      });
 
-    rs.forEach((rsl) => {
-      const tBodyResultados = document.getElementById(
-        "tBodyResultados" + nombre
-      );
-      const tr = document.createElement("tr");
-      tr.className = "trResultados" + nombre;
-      tr.innerHTML = `
+      rs.forEach((rsl) => {
+        const tBodyResultados = document.getElementById(
+          "tBodyResultados" + nombre
+        );
+        const tr = document.createElement("tr");
+        tr.className = "trResultados" + nombre;
+        tr.innerHTML = `
     <td><div
                                       class="mb-3 d-flex align-items-center justify-content-center"
                                     >
@@ -1098,18 +1096,18 @@ onclick="modificarSubCaForm('${sb.id}','${nombre}')"
                                       
                                     </td>
     `;
-      tBodyResultados.appendChild(tr);
+        tBodyResultados.appendChild(tr);
+      });
     });
-  });
-  document.getElementById('busquedaModalCloseBtn').click();
-} catch (error) {
-  console.log("🚀 ~ modificarExamen ~ error:", error)
-  if (error.response.data.mensaje) {
-    return await alerta.alert("Error:", error.response.data.mensaje);
-  } else {
-    return await alerta.error();
+    document.getElementById("busquedaModalCloseBtn").click();
+  } catch (error) {
+    console.log("🚀 ~ modificarExamen ~ error:", error);
+    if (error.response.data.mensaje) {
+      return await alerta.alert("Error:", error.response.data.mensaje);
+    } else {
+      return await alerta.error();
+    }
   }
-}
 }
 function modificarResultadoForm(id, nombre) {
   const resultadoInput = document.getElementById(`resultadoRs${id}`);
@@ -1137,18 +1135,20 @@ async function guardarCambioRsBdd(id, nombre) {
   try {
     const { token } = await login.getToken();
     const { data } = await axios.put(
-      urlsv + "/api/modulo-examenes/update-resultado",{
+      urlsv + "/api/modulo-examenes/update-resultado",
+      {
         id_resultado: id,
-        resultado:resultadoInput.value
-      },{
-         headers: { token },
+        resultado: resultadoInput.value,
+      },
+      {
+        headers: { token },
       }
     );
-    console.log("🚀 ~ guardarCambioRsBdd ~ data:", data)
+    console.log("🚀 ~ guardarCambioRsBdd ~ data:", data);
     const botonGuardarRs = document.getElementById(`botonGuardarRs${id}`);
     botonGuardarRs.setAttribute("hidden", "true");
   } catch (error) {
-    console.log("🚀 ~ guardarCambioRsBdd ~ error:", error)
+    console.log("🚀 ~ guardarCambioRsBdd ~ error:", error);
     if (error.response.data.mensaje) {
       return await alerta.alert("Error:", error.response.data.mensaje);
     } else {
@@ -1329,21 +1329,17 @@ async function añadirRangoExBdd(id, nombre, event) {
   }
   let desde, hasta, inferior, superior, genero;
   if (event.target.tagName == "path") {
-    console.log(
-      event.target.parentNode.parentNode.parentNode.parentNode.children[4]
-        .children[0]
-    );
     desde =
-      event.target.parentNode.parentNode.parentNode.parentNode.children[0]
-        .children[0].children[0].value;
-    hasta =
-      event.target.parentNode.parentNode.parentNode.parentNode.children[1]
-        .children[0].children[0].value;
-    inferior =
       event.target.parentNode.parentNode.parentNode.parentNode.children[2]
         .children[0].children[0].value;
-    superior =
+    hasta =
       event.target.parentNode.parentNode.parentNode.parentNode.children[3]
+        .children[0].children[0].value;
+    inferior =
+      event.target.parentNode.parentNode.parentNode.parentNode.children[0]
+        .children[0].children[0].value;
+    superior =
+      event.target.parentNode.parentNode.parentNode.parentNode.children[1]
         .children[0].children[0].value;
     genero =
       event.target.parentNode.parentNode.parentNode.parentNode.children[4]
@@ -1351,16 +1347,17 @@ async function añadirRangoExBdd(id, nombre, event) {
   }
   if (event.target.tagName == "svg") {
     desde =
-      event.target.parentNode.parentNode.parentNode.children[0].children[0]
-        .children[0].value;
-    hasta =
-      event.target.parentNode.parentNode.parentNode.children[1].children[0]
-        .children[0].value;
-    inferior =
       event.target.parentNode.parentNode.parentNode.children[2].children[0]
         .children[0].value;
-    superior =
+    hasta =
       event.target.parentNode.parentNode.parentNode.children[3].children[0]
+        .children[0].value;
+    inferior =
+      event.target.parentNode.parentNode.parentNode.children[0].children[0]
+        .children[0].value;
+
+    superior =
+      event.target.parentNode.parentNode.parentNode.children[1].children[0]
         .children[0].value;
     genero =
       event.target.parentNode.parentNode.parentNode.children[4].children[0]
@@ -1374,7 +1371,34 @@ async function añadirRangoExBdd(id, nombre, event) {
     superior,
     genero,
   };
-  console.log(rangoBdd);
+  console.log("🚀 ~ añadirRangoExBdd ~ rangoBdd:", rangoBdd);
+  try {
+    const { token } = await login.getToken();
+
+    const { data } = await axios.post(
+      urlsv + "/api/modulo-examenes/insert-rango",
+      {
+        rango: rangoBdd,
+        id_caracteristica: id,
+      },
+      {
+        headers: { token },
+      }
+    );
+    enableButton("añadirRangoButton");
+
+    examenesAlerta("Rango agregadao con exito!", "success");
+
+    return modificarExamen(data.examenId);
+  } catch (error) {
+    console.log("🚀 ~ añadirRangoExBdd ~ error:", error);
+
+    if (error.response.data.mensaje) {
+      return await alerta.alert("Error:", error.response.data.mensaje);
+    } else {
+      return await alerta.error();
+    }
+  }
 }
 function añadirResultadoEx(id, nombre) {
   const trsResultados = document.getElementsByClassName("trResultados");
@@ -1641,27 +1665,29 @@ async function añadirSubCaBddEx(id, nombre) {
   console.log(sbNuevo);
   try {
     const { token } = await login.getToken();
-  
-    const {data} = await axios.post(urlsv+'/api/modulo-examenes/insert-subcaracteristica',{
-      newSubCaracteristica:sbNuevo
-    },{
-      headers: { token },
-   })
-    enableButton('añadirSubCaButton')
-    
-     examenesAlerta('Sub Caracteristica agregada con exito!','success')
-     
-     return modificarExamen(data.examenId)
+
+    const { data } = await axios.post(
+      urlsv + "/api/modulo-examenes/insert-subcaracteristica",
+      {
+        newSubCaracteristica: sbNuevo,
+      },
+      {
+        headers: { token },
+      }
+    );
+    enableButton("añadirSubCaButton");
+
+    examenesAlerta("Sub Caracteristica agregada con exito!", "success");
+
+    return modificarExamen(data.examenId);
   } catch (error) {
-    
-    console.log("🚀 ~ añadirSubCaBddEx ~ error:", error)
+    console.log("🚀 ~ añadirSubCaBddEx ~ error:", error);
     if (error.response.data.mensaje) {
       return await alerta.alert("Error:", error.response.data.mensaje);
     } else {
       return await alerta.error();
     }
   }
- 
 }
 
 async function guardarCambioSubCaBdd(id, nombre) {
@@ -1770,56 +1796,57 @@ async function guardarCambioSubCaBdd(id, nombre) {
     },
   };
   try {
-      const { token } = await login.getToken();
-      const { data } = await axios.put(
-        urlsv + "/api/modulo-examenes/update-subcaracteristica",{
-          id_subCaracteristica: subCa.id_subCaracteristica,
-          subCaracteristica:subCa.subCaracteristica
-        },{
-           headers: { token },
-        }
-      );
-  
-      console.log("🚀 ~ guardarCambioRgBdd ~ data:", data);
-  
-      
+    const { token } = await login.getToken();
+    const { data } = await axios.put(
+      urlsv + "/api/modulo-examenes/update-subcaracteristica",
+      {
+        id_subCaracteristica: subCa.id_subCaracteristica,
+        subCaracteristica: subCa.subCaracteristica,
+      },
+      {
+        headers: { token },
+      }
+    );
 
-      const inputsSb = document.getElementsByClassName(`inputSb${id}`);
-      const arrSb = [...inputsSb];
-  arrSb.forEach((e) => {
-    if (e.tagName == "SELECT" || e.tagName == "button") {
-      e.setAttribute("disabled", "true");
-    } else {
-      if (e.name == "valor") {
-        if (tipo.value == "formula") {
+    console.log("🚀 ~ guardarCambioRgBdd ~ data:", data);
+
+    const inputsSb = document.getElementsByClassName(`inputSb${id}`);
+    const arrSb = [...inputsSb];
+    arrSb.forEach((e) => {
+      if (e.tagName == "SELECT" || e.tagName == "button") {
+        e.setAttribute("disabled", "true");
+      } else {
+        if (e.name == "valor") {
+          if (tipo.value == "formula") {
+            e.setAttribute("readonly", "true");
+          }
+        } else {
           e.setAttribute("readonly", "true");
         }
-      } else {
-        e.setAttribute("readonly", "true");
       }
-    }
-  });
-  const botonesModificar = document.getElementsByClassName(
-    "buttonModificarSub" + nombre
+    });
+    const botonesModificar = document.getElementsByClassName(
+      "buttonModificarSub" + nombre
     );
-  const arrBotonesMod = [...botonesModificar];
-  arrBotonesMod.forEach((b) => {
-    b.removeAttribute("hidden");
-  });
-  document
-  .getElementById("botonGuardarSubCa" + id)
-  .setAttribute("hidden", "true");
-  return  examenesAlerta('Sub Caracteristica modificada correctamente','success')
-
-  
-} catch (error) {
-  console.log("🚀 ~ tr.forEach ~ error:", error);
-  if (error.response.data.mensaje) {
-    return await alerta.alert("Error:", error.response.data.mensaje);
-  } else {
-    return await alerta.error();
+    const arrBotonesMod = [...botonesModificar];
+    arrBotonesMod.forEach((b) => {
+      b.removeAttribute("hidden");
+    });
+    document
+      .getElementById("botonGuardarSubCa" + id)
+      .setAttribute("hidden", "true");
+    return examenesAlerta(
+      "Sub Caracteristica modificada correctamente",
+      "success"
+    );
+  } catch (error) {
+    console.log("🚀 ~ tr.forEach ~ error:", error);
+    if (error.response.data.mensaje) {
+      return await alerta.alert("Error:", error.response.data.mensaje);
+    } else {
+      return await alerta.error();
+    }
   }
-}
 }
 
 function modificarSubCaForm(id, nombre) {
@@ -1940,21 +1967,21 @@ async function guardarCambioRgBdd(id, nombre) {
   try {
     const { token } = await login.getToken();
     const { data } = await axios.put(
-      urlsv + "/api/modulo-examenes/update-rango",{
+      urlsv + "/api/modulo-examenes/update-rango",
+      {
         id_rango: id,
-        rango:rangoBdd
-      },{
-         headers: { token }
+        rango: rangoBdd,
+      },
+      {
+        headers: { token },
       }
     );
 
     console.log("🚀 ~ guardarCambioRgBdd ~ data:", data);
 
-
-    
     const btnGuardarRg = document.getElementById(`botonGuardarRg${id}`);
     btnGuardarRg.setAttribute("hidden", "true");
-    return await alerta.alert("Exito:", 'Rango modificado correctamente');
+    return await alerta.alert("Exito:", "Rango modificado correctamente");
   } catch (error) {
     console.log("🚀 ~ guardarCambioRgBdd ~ error:", error);
     if (error.response.data.mensaje) {
@@ -1995,18 +2022,17 @@ async function guardarCambioCaracteristicaBdd(id, nombre) {
   try {
     const { token } = await login.getToken();
     const { data } = await axios.put(
-      urlsv + "/api/modulo-examenes/update-caracteristica",{
-        id_caracteristica: id,caracteristica
-
-      },{
-         headers: { token }
+      urlsv + "/api/modulo-examenes/update-caracteristica",
+      {
+        id_caracteristica: id,
+        caracteristica,
+      },
+      {
+        headers: { token },
       }
     );
 
     console.log("🚀 ~ guardarCambioRgBdd ~ data:", data);
-
-    
-    
 
     document
       .getElementById("botonModificarCaracteristicaForm" + nombre)
@@ -2014,9 +2040,12 @@ async function guardarCambioCaracteristicaBdd(id, nombre) {
     document
       .getElementById("botonGuardarCaracteristica" + nombre)
       .setAttribute("hidden", "true");
-  
+
     console.log(caracteristica);
-    return await alerta.alert("Exito:", 'La caractristica fue modificada correctamente');
+    return await alerta.alert(
+      "Exito:",
+      "La caractristica fue modificada correctamente"
+    );
   } catch (error) {
     console.log("🚀 ~ guardarCambioRgBdd ~ error:", error);
     if (error.response.data.mensaje) {
