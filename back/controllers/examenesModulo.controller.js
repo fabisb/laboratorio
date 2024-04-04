@@ -474,6 +474,7 @@ export const updateSeccion = async (req, res) => {
 
 export const updateCaracteristica = async (req, res) => {
   const { id_caracteristica, caracteristica } = req.body;
+  console.log("🚀 ~ updateCaracteristica ~ req.body:", req.body);
   if (isNaN(id_caracteristica)) {
     return await res
       .status(400)
@@ -486,16 +487,14 @@ export const updateCaracteristica = async (req, res) => {
     );
     if (existente.length > 0) {
       const valores = caracteristica
-        .map(async (dato) => {
+        .map((dato) => {
           if (dato.nombre == "posicion" && dato.valor <= 0) {
-            return await res.status(400).json({
-              mensaje: "Ingrese una posicion valida para la caracteristica",
-            });
+            throw new Error(`La posición debe ser mayor a cero`);
           }
           return `${dato.nombre} = ?`;
         })
         .join(", ");
-      valores.push({ valor: id_caracteristica });
+      caracteristica.push({ valor: id_caracteristica });
       const [update] = await pool.execute(
         `UPDATE detalles_examen SET ${valores} WHERE id = ?`,
         caracteristica.map((dato) => {
@@ -529,6 +528,7 @@ export const updateCaracteristica = async (req, res) => {
 
 export const updateSubCaracteristica = async (req, res) => {
   const { id_subCaracteristica, subCaracteristica } = req.body;
+  console.log("🚀 ~ updateSubCaracteristica ~ req.body:", req.body)
   if (
     !id_subCaracteristica ||
     id_subCaracteristica < 0 ||
@@ -546,27 +546,26 @@ export const updateSubCaracteristica = async (req, res) => {
     if (existente.length > 0) {
       const subCaracteristicaMap = Object.entries(subCaracteristica).map(
         ([key, value]) => {
-          console.log("🚀 ~ updateSubCaracteristica ~ value:", value);
-          console.log("🚀 ~ updateSubCaracteristica ~ key:", key);
+
           if (key != "id") {
             return { nombre: key, valor: value };
           }
         }
       );
       const valores = subCaracteristicaMap
-        .map(async (dato) => {
+        .map( (dato) => {
           if (dato.nombre != "valor" && dato.valor == "") {
-            return await res.status(400).json({
-              mensaje: `Ingrese un ${dato.nombre} valido para la sub caracteristica`,
-            });
+            throw new Error(`Ingrese un ${dato.nombre} valido para la sub caracteristica`);
+
+           
           }
           return `${dato.nombre} = ?`;
         })
         .join(", ");
-      valores.push({ valor: id_subCaracteristica });
+        subCaracteristicaMap.push({ valor: id_subCaracteristica });
       const [update] = await pool.execute(
         `UPDATE subcaracteristicas_detalle SET ${valores} WHERE id = ?`,
-        subCaracteristica.map((dato) => {
+        subCaracteristicaMap.map((dato) => {
           if (dato.nombre == "valor") {
             return dato.valor || null;
           } else {
@@ -692,3 +691,107 @@ export const updateResultados = async (req, res) => {
       .json({ mensaje: "Ha ocurrido un error en el servidor" });
   }
 };
+
+export const insertSubCaracteristica = async (req, res) => {
+  const { newSubCaracteristica } = req.body;
+  console.log(
+    "🚀 ~ insertSubCaracteristica ~ newSubCaracteristica:",
+    newSubCaracteristica
+  );
+  const { idCar: id_caracteristica } = newSubCaracteristica;
+  if (!id_caracteristica || id_caracteristica < 0 || isNaN(id_caracteristica)) {
+    return await res
+      .status(400)
+      .json({ mensaje: "El id de la subcaracteristica no es valido" });
+  }
+  try {
+    const [existente] = await pool.execute(
+      "SELECT * FROM detalles_examen WHERE id = ?",
+      [id_caracteristica]
+    );
+    if (existente.length > 0) {
+      if (newSubCaracteristica.tipo == "" || !newSubCaracteristica.tipo) {
+        return await res.status(400).json({
+          mensaje: "Ingrese un tipo de sub-caracteristica valido",
+        });
+      }
+      if (newSubCaracteristica.nombre == "" || !newSubCaracteristica.nombre) {
+        return await res.status(400).json({
+          mensaje: "Ingrese un nombre de sub-caracteristica valido",
+        });
+      }
+      const [subCa] = await pool.execute(
+        "INSERT INTO `subcaracteristicas_detalle`(`tipo`, `nombre`, `valor`, `id_det_ex`) VALUES (?,?,?,?)",
+        [
+          newSubCaracteristica.tipo,
+          newSubCaracteristica.nombre,
+          newSubCaracteristica.valor,
+          id_caracteristica,
+        ]
+      );
+      return await res
+        .status(200)
+        .json({
+          examenId: existente[0].id_ex,
+          mensaje: "Sub Caracteristica insertada correctamente",
+        });
+    } else {
+      return await res
+        .status(400)
+        .json({ mensaje: "El id de la caracteristica no existe" });
+    }
+  } catch (error) {
+    console.log("🚀 ~ insertSubCaracteristica ~ error:", error);
+    return await res
+      .status(500)
+      .json({ mensaje: "Ha ocurrido un error en el servidor" });
+  }
+};
+
+export const insertRango = async (req,res)=>{
+  const { id_caracteristica, rango } = req.body;
+  const { desde, hasta, inferior, superior, genero } = rango;
+  if (
+    isNaN(id_caracteristica) ||
+    isNaN(desde) ||
+    isNaN(hasta) ||
+    isNaN(inferior) ||
+    isNaN(superior)
+  ) {
+    return await res
+      .status(400)
+      .json({ mensaje: "Alguno de los valores no son numericos" });
+  }
+  if (
+    inferior == null ||
+    superior == null ||
+    inferior == "" ||
+    superior == ""
+  ) {
+    return await res
+      .status(400)
+      .json({ mensaje: "Los valores inferior o superior no son validos" });
+  }
+  try {
+    const [existente] = await pool.execute(
+      "SELECT * FROM detalles_examen WHERE id = ?",
+      [id_caracteristica]
+    );
+    if (existente.length > 0) {
+      //////////////////
+      return await res.status(200).json({
+        mensaje: "El rango #a sido actualizado correctamente",
+        update,
+      });
+    } else {
+      return await res
+        .status(400)
+        .json({ mensaje: "El id del rango no existe" });
+    }
+  } catch (error) {
+    console.log("🚀 ~ updateRango ~ error:", error);
+    return await res
+      .status(500)
+      .json({ mensaje: "Ha ocurrido un error en el servidor" });
+  }
+}

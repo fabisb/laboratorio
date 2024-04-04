@@ -54,10 +54,7 @@ export const loginController = async (req, res, next) => {
 
     if (id.length > 0) {
       const comparacionClave = await bcrypt.compare(pass, id[0].password);
-      console.log(
-        "🚀 ~ loginController2 ~ comparacionClave:",
-        comparacionClave
-      );
+
       if (comparacionClave) {
         var token = await jwt.sign(
           { id: id[0].id, user, nivel: id[0].nivel },
@@ -167,10 +164,7 @@ export const verifyToken = async (req, res, next) => {
   try {
     var decoded = await jwt.verify(token, "secret");
     if (decoded) {
-      console.log(
-        "🚀 ~ file: login.controller.js:31 ~ verifyToken ~ decoded:",
-        decoded
-      );
+
       req.user = decoded;
       await next();
     }
@@ -186,7 +180,6 @@ export const verifyToken = async (req, res, next) => {
 export const imagen = async (req, res, next) => {
   console.log("imagen");
   const { img, cedula, nombre, colegio } = req.body;
-  console.log("🚀 ~ imagen ~ req.body:", req.body);
   try {
     await pool.execute(
       "INSERT INTO bioanalistas (foto_carnet, cedula, nombre, colegio) VALUES (?,?,?,?)",
