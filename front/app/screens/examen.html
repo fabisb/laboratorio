@@ -429,7 +429,7 @@
           </div>
           <hr>
           <div class="d-flex justify-content-end" data-bs-toggle="modal" data-bs-target="#ordenModal">
-            <button class="btn btn-success w-25">Totalizar</button>
+            <button class="btn btn-success w-25" onclick="abrirModalTotalizar()" id="totalizarButton" hidden>Totalizar</button>
           </div>
         </div>
       </div>
@@ -454,6 +454,8 @@
           
         </div>
         <div class="modal-body container" >
+          <div class="alert alert-danger" id="alertaExamen" hidden role="alert"></div>
+
           <h1 class="display-6 text-center">Diagnosticos</h1>
           <hr>
           <div class="d-flex justify-content-center">
@@ -496,6 +498,8 @@
         
       </div>
       <div class="modal-body container" >
+          
+    
         <h5 class="text-center" id="h1NombreEx"></h5>
         <hr>
         <table class="table table-sm fs-6 text-center" >
@@ -510,78 +514,6 @@
             </tr>
           </thead>
           <tbody id="tBodyDiagnosticos">
-            <tr>
-              <th scope="row" colspan="2">Hemoglobina</th>
-              <td>  <input class="form-control form-control-sm" type="text" placeholder=".form-control-sm" aria-label=".form-control-sm example">              </td>
-              <td>g/dl</td>
-              <td>16 - 20</td>
-              <td>  <input class="form-control form-control-sm" type="text" placeholder=".form-control-sm" aria-label=".form-control-sm example">              </td>
-
-            </tr>
-            <tr>
-              <th scope="row" colspan="2">Leucocitos</th>
-              <td>  <input class="form-control form-control-sm" type="text" placeholder=".form-control-sm" aria-label=".form-control-sm example">              </td>
-              <td>g/dl</td>
-              <td>16 - 20</td>
-              <td>  <input class="form-control form-control-sm" type="text" placeholder=".form-control-sm" aria-label=".form-control-sm example">              </td>
-
-            </tr>
-            <tr >
-              <th scope="row" colspan="2">Formula Leucocitaria</th>
-              <th> SubCaracteristica </th>
-              <th>Resultado</th>
-              <td></td>
-              <td>  <input class="form-control form-control-sm" type="text" placeholder=".form-control-sm" aria-label=".form-control-sm example">              </td>
-
-            </tr>
-            <tr>
-              <td colspan="2"></td>
-              <th scope="row" colspan="">linfocitos</th>
-              <td>  <input class="form-control form-control-sm" type="text" placeholder=".form-control-sm" aria-label=".form-control-sm example">              </td>
-              <td></td>
-              <td>  <input class="form-control form-control-sm" type="text" placeholder=".form-control-sm" aria-label=".form-control-sm example">              </td>
-
-            </tr>
-            <tr>
-              <td colspan="2"></td>
-              <th scope="row" colspan="">linfocitos</th>
-              <td>  <input class="form-control form-control-sm" type="text" placeholder=".form-control-sm" aria-label=".form-control-sm example">              </td>
-              <td></td>
-              <td>  <input class="form-control form-control-sm" type="text" placeholder=".form-control-sm" aria-label=".form-control-sm example">              </td>
-
-            </tr>
-            <tr>
-              <td colspan="2"></td>
-              <th scope="row" colspan="">linfocitos</th>
-              <td>  <input class="form-control form-control-sm" type="text" placeholder=".form-control-sm" aria-label=".form-control-sm example">              </td>
-              <td></td>
-              <td>  <input class="form-control form-control-sm" type="text" placeholder=".form-control-sm" aria-label=".form-control-sm example">              </td>
-
-            </tr>
-            <tr>
-              <td colspan="2"></td>
-              <th scope="row" colspan="">linfocitos</th>
-              <td>  <input class="form-control form-control-sm" type="text" placeholder=".form-control-sm" aria-label=".form-control-sm example">              </td>
-              <td></td>
-              <td>  <input class="form-control form-control-sm" type="text" placeholder=".form-control-sm" aria-label=".form-control-sm example">              </td>
-
-            </tr>
-            <tr>
-              <td colspan="2"></td>
-              <th scope="row" colspan="">Total</th>
-              <td>  <input class="form-control form-control-sm" type="text" placeholder=".form-control-sm" aria-label=".form-control-sm example">              </td>
-              <td></td>
-              <td>  <input class="form-control form-control-sm" type="text" placeholder=".form-control-sm" aria-label=".form-control-sm example">              </td>
-
-            </tr>
-            <tr>
-              <th scope="row" colspan="2">Leucocitos</th>
-              <td>  <input class="form-control form-control-sm" type="text" placeholder=".form-control-sm" aria-label=".form-control-sm example">              </td>
-              <td>g/dl</td>
-              <td>16 - 20</td>
-              <td>  <input class="form-control form-control-sm" type="text" placeholder=".form-control-sm" aria-label=".form-control-sm example">              </td>
-
-            </tr>
           </tbody>
         </table>
         
@@ -1130,6 +1062,7 @@
 
     <div class="modal fade" id="ordenModal" tabindex="-1" aria-labelledby="ordenModalLabel" aria-hidden="true">
       <div class="modal-dialog">
+      
         <div class="modal-content" style="border: 5px solid #68c0c3;">
           <div class="modal-header">
             <h1 class="fs-5" id="ordenLabel">
@@ -1143,13 +1076,13 @@
             <span class="text-center"><h6>Orden</h6></span>
             <div class="d-flex justify-content-center ">
               <div class="input-group mb-3 w-75">
-                <select class="form-select w-25" id="inputGroupSelect02">
-                  <option selected>Choose...</option>
-                  <option value="1">One</option>
-                  <option value="2">Two</option>
-                  <option value="3">Three</option>
+                <select class="form-select w-25" id="selectOrden" onchange="validarSelectOrden()">
+                  <option selected value="orden">O</option>
+                  <option value="clave">C</option>
+                  <option value="no">N</option>
+                  
                 </select>
-                <input type="text" id="inputPassword6" class="form-control w-75" aria-describedby="passwordHelpInline">
+                <input type="number" min="0" id="inputOrden" class="form-control w-75">
 
               </div>
               
@@ -1157,10 +1090,10 @@
             <hr>
             <div class="row g-3 align-items-center">
               <div class="col-4">
-                <label for="inputPassword6" class="col-form-label">Paciente: </label>
+                <label for="inputPacienteOrden" class="col-form-label">Paciente: </label>
               </div>
               <div class="col-8">
-                <input type="text" id="inputPassword6" class="form-control" aria-describedby="passwordHelpInline">
+                <input type="text" id="inputPacienteOrden" class="form-control">
               </div>
               
             </div>
@@ -1170,11 +1103,8 @@
                 <label for="inputGroupSelect02" class="col-form-label">Bioanalista: </label>
               </div>
               <div class="col-8">
-                <select class="form-select" id="inputGroupSelect02">
-                  <option selected>Choose...</option>
-                  <option value="1">One</option>
-                  <option value="2">Two</option>
-                  <option value="3">Three</option>
+                <select class="form-select" id="selectBioAnalista">
+                 
                 </select>
               </div>
               
@@ -1185,9 +1115,9 @@
             <div class="row my-2">
               <h4 class="fw-semibold text-center">Examenes Realizados</h4>
               <br>
-              <div class="list-group" id="tBodyLgEx">
+              <div class="list-group" id="tBodyLgExOrd">
                 <a href="#" class="list-group-item list-group-item-action fw-semibold liTableExPac">
-                  <div class="container" id="tHeadLgEx">
+                  <div class="container" id="tHeadLgOrd">
                     <div class="row text-center">
                       <div class="col-1">
                         #
@@ -1259,25 +1189,29 @@
                           <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
                           
                         </div>
-                        <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="green" class="bi bi-eye svgButton" viewBox="0 0 16 16"  data-bs-toggle="collapse" href="#collapseLiTab${examenPac.examenId}" role="button" aria-expanded="false" aria-controls="collapseLiTab${examenPac.id}">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="green" class="bi bi-eye svgButton" viewBox="0 0 16 16"  data-bs-toggle="collapse" href="#collapseOrdenEx2" role="button" aria-expanded="false" aria-controls="collapseOrdenEx2">
                           <path d="M16 8s-3-5.5-8-5.5S0 8 0 8s3 5.5 8 5.5S16 8 16 8M1.173 8a13 13 0 0 1 1.66-2.043C4.12 4.668 5.88 3.5 8 3.5s3.879 1.168 5.168 2.457A13 13 0 0 1 14.828 8q-.086.13-.195.288c-.335.48-.83 1.12-1.465 1.755C11.879 11.332 10.119 12.5 8 12.5s-3.879-1.168-5.168-2.457A13 13 0 0 1 1.172 8z"/>
                           <path d="M8 5.5a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5M4.5 8a3.5 3.5 0 1 1 7 0 3.5 3.5 0 0 1-7 0"/>
                           </svg>
                       </div>
-                      
+                      <div class="collapse" id="collapseOrdenEx2">
+
+                        fffffffffffff
+                      </div>
                     </div>
                   </div>
                 </a>
             </div>
             <hr>
             <br>
-
+            </div>
           </div>
           <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+            
             <button type="button" class="btn btn-success">Guardar Orden</button>
           </div>
         </div>
+      
       </div>
     </div>
     <!-- Modal para confirmar modificar examen -->

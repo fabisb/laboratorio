@@ -4,93 +4,74 @@ var pacienteObj = {};
 let examenesDelPaciente = [];
 var examenDataPc;
 
-
-function retornarSumaString(o){
-  
-  
-  while(o.includes('*')){
-  
-      for (let index = 0; index < o.length; index++) {
-        const element = o[index];
-        if(element == '*'){
-          const a = parseFloat(o[index-1]);
-          const b= parseFloat(o[index+1]);
-          let total = a*b;
-          o=o.slice(0,index-1).concat(total).concat(o.slice(index+2))
-
-          break;
-        }
-       
-
-
-
-        
-      }
-    
-  }
-  while(o.includes('/')){
-  
+function retornarSumaString(o) {
+  while (o.includes("*")) {
     for (let index = 0; index < o.length; index++) {
       const element = o[index];
-      if(element == '/'){
-  const a = parseFloat(o[index-1]);
-          const b= parseFloat(o[index+1]);        let total = a/b;
-        o=o.slice(0,index-1).concat(total).concat(o.slice(index+2))
+      if (element == "*") {
+        const a = parseFloat(o[index - 1]);
+        const b = parseFloat(o[index + 1]);
+        let total = a * b;
+        o = o
+          .slice(0, index - 1)
+          .concat(total)
+          .concat(o.slice(index + 2));
 
         break;
       }
-     
-
-
-
-      
     }
-  
-}
-while(o.includes('+')){
-  
-  for (let index = 0; index < o.length; index++) {
-    const element = o[index];
-    if(element == '+'){
-  const a = parseFloat(o[index-1]);
-          const b= parseFloat(o[index+1]);      let total = a+b;
-      o=o.slice(0,index-1).concat(total).concat(o.slice(index+2))
-      console.log(o)
-      break;
+  }
+  while (o.includes("/")) {
+    for (let index = 0; index < o.length; index++) {
+      const element = o[index];
+      if (element == "/") {
+        const a = parseFloat(o[index - 1]);
+        const b = parseFloat(o[index + 1]);
+        let total = a / b;
+        o = o
+          .slice(0, index - 1)
+          .concat(total)
+          .concat(o.slice(index + 2));
+
+        break;
+      }
     }
-   
-
-
-
-    
+  }
+  while (o.includes("+")) {
+    for (let index = 0; index < o.length; index++) {
+      const element = o[index];
+      if (element == "+") {
+        const a = parseFloat(o[index - 1]);
+        const b = parseFloat(o[index + 1]);
+        let total = a + b;
+        o = o
+          .slice(0, index - 1)
+          .concat(total)
+          .concat(o.slice(index + 2));
+        console.log(o);
+        break;
+      }
+    }
+  }
+  while (o.includes("-")) {
+    for (let index = 0; index < o.length; index++) {
+      const element = o[index];
+      if (element == "-") {
+        const a = parseFloat(o[index - 1]);
+        const b = parseFloat(o[index + 1]);
+        let total = a - b;
+        o = o
+          .slice(0, index - 1)
+          .concat(total)
+          .concat(o.slice(index + 2));
+        console.log(o);
+        break;
+      }
+    }
   }
 
+  return o[0];
 }
-while(o.includes('-')){
-  
-  for (let index = 0; index < o.length; index++) {
-    const element = o[index];
-    if(element == '-'){
-  const a = parseFloat(o[index-1]);
-          const b= parseFloat(o[index+1]);      let total = a-b;
-      o=o.slice(0,index-1).concat(total).concat(o.slice(index+2))
-      console.log(o)
-      break;
-    }
-   
-
-
-
-    
-  }
-
-}
-
-
-
-  return o[0]
-}
-
 
 const render = async () => {
   try {
@@ -106,6 +87,13 @@ const render = async () => {
       urlsv + "/api/examenes/get-bioanalistas",
       { headers: { token } }
     );
+    const selectBio = document.getElementById("selectBioAnalista");
+    bioanalistas.forEach((b) => {
+      selectBio.innerHTML += `
+      <option value='${b.id}'>${b.nombre}</option>
+      `;
+    });
+
     const menuDiagnosticoUl = document.getElementById("menuDiagnosticoUl");
     examenes.forEach((ex) => {
       menuDiagnosticoUl.innerHTML += `
@@ -747,17 +735,119 @@ const reloadPage = async () => {
   else location.reload();
 };
 
+function validarSelectOrden() {
+  const selectOrden =document.getElementById('selectOrden')
+  const inputOrden = document.getElementById('inputOrden')
+  if(selectOrden.value == 'no'){
+    inputOrden.setAttribute('disabled','true')
+
+  }else{
+    try {
+      inputOrden.removeAttribute('disabled')
+    } catch (error) {
+      
+    }
+  }
+}
+const abrirModalTotalizar = () => {
+  console.log(examenesDelPaciente);
+  const tBodyOrden = document.getElementById(`tBodyLgExOrd`);
+  const tr = document.getElementsByClassName("liBodyTablaExPacOrd");
+  const pacienteInput = document.getElementById("inputPacienteOrden");
+  pacienteInput.value = pacienteObj.nombre;
+
+  console.log(tr);
+  tBodyOrden.innerHTML = "";
+
+  examenesDelPaciente.forEach((ex) => {
+    tBodyOrden.innerHTML += `
+    <a href="#" class="list-group-item list-group-item-action fs-6 fw-semibold liBodyTablaExPacOrd">
+    <div class="container">
+      <div class="row text-center">
+        <div class="col-1">
+          ${tr.length + 1}
+        </div>
+        <div class="col-8">
+          ${ex.examenNombre}
+        </div>
+        <div class="col-3 d-flex justify-content-end">
+          <div class="form-check mx-2">
+            <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
+            
+          </div>
+          <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="green" class="bi bi-eye svgButton" viewBox="0 0 16 16"  data-bs-toggle="collapse" href="#collapseOrdenEx${
+            ex.examenId
+          }" role="button" aria-expanded="false" aria-controls="collapseOrdenEx${
+      ex.examenId
+    }">
+            <path d="M16 8s-3-5.5-8-5.5S0 8 0 8s3 5.5 8 5.5S16 8 16 8M1.173 8a13 13 0 0 1 1.66-2.043C4.12 4.668 5.88 3.5 8 3.5s3.879 1.168 5.168 2.457A13 13 0 0 1 14.828 8q-.086.13-.195.288c-.335.48-.83 1.12-1.465 1.755C11.879 11.332 10.119 12.5 8 12.5s-3.879-1.168-5.168-2.457A13 13 0 0 1 1.172 8z"/>
+            <path d="M8 5.5a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5M4.5 8a3.5 3.5 0 1 1 7 0 3.5 3.5 0 0 1-7 0"/>
+            </svg>
+        </div>
+        <div class="collapse" id="collapseOrdenEx${ex.examenId}">
+        <table class="table table-sm">
+        <thead>
+          <tr>
+            <th scope="col">Caracteristica</th>
+            <th scope="col">Resultado</th>
+            <th scope="col">Nota</th>
+            
+          </tr>
+        </thead>
+        <tbody id='tBodyOrdenCollapseEx${ex.examenId}'>
+          
+        </tbody>
+      </table>
+          
+        </div>
+      </div>
+    </div>
+  </a>
+    `;
+    const tBodyOrdenCollapse = document.getElementById(
+      `tBodyOrdenCollapseEx${ex.examenId}`
+    );
+    ex.detallesExamenPc.forEach((dt) => {
+      tBodyOrdenCollapse.innerHTML += `
+    <tr>
+      <td scope="col">${dt.nombreCar}</td>
+      <td scope="col">${dt.resultado}</td>
+      <td scope="col">${dt.nota}</td>
+      
+    </tr>
+
+`;
+    });
+  });
+
+  new bootstrap.Modal("#ordenModal").toggle();
+};
+
 const abrirModalExamenes = () => new bootstrap.Modal("#examenes-list").toggle();
 const abrirModalExamenesCrud = () =>
   new bootstrap.Modal("#examenes-crud").toggle();
 
-
-
-const abrirResultadosModal = async (examen, idEx,n) => {
+const abrirResultadosModal = async (examen, idEx, n) => {
   const h1Ex = document.getElementById("h1NombreEx");
   const tBodyDiagnosticos = document.getElementById("tBodyDiagnosticos");
   tBodyDiagnosticos.innerHTML = "";
   h1Ex.innerText = `${examen} - ${pacienteObj.nombre} - ${pacienteObj.edad}`;
+  const alertaExamen = document.getElementById('alertaExamen')
+  const examenF=examenesDelPaciente.filter(ex=>ex.examenId == idEx)
+  if(examenF.length>0){
+    console.log(alertaExamen)
+  
+    alertaExamen.innerHTML+=`
+    El examen ${examen} ya ha sido evaluado para el paciente ${pacienteObj.nombre}
+    `
+    alertaExamen.removeAttribute('hidden')
+    setTimeout(() => {
+      alertaExamen.setAttribute('hidden','true')
+      alertaExamen.innerHTML=''
+    }, "5000");
+    return
+  }
+  
   new bootstrap.Modal("#resultadosModal").toggle();
 
   const { token } = await login.getToken();
@@ -766,7 +856,7 @@ const abrirResultadosModal = async (examen, idEx,n) => {
     { headers: { token }, params: { idExamen: idEx } }
   );
 
-  examenDataPc=examenData
+  examenDataPc = examenData;
   examenData.detalles = examenData.detalles.sort(function (a, b) {
     if (a.posicion > b.posicion) {
       return 1;
@@ -781,15 +871,17 @@ const abrirResultadosModal = async (examen, idEx,n) => {
   let edad = parseInt(pacienteObj.edad.split(";")[0].split(" ")[0]);
   let generoPc = pacienteObj.genero == "Hombre" ? "masculino" : "femenino";
   examenData.detalles.forEach((ct) => {
-    let resultadosDt= examenData.resultados.filter(r=>r.id_det_ex == ct.id)
+    let resultadosDt = examenData.resultados.filter(
+      (r) => r.id_det_ex == ct.id
+    );
 
     let rangosDt = examenData.rangos.filter((r) => {
       return r.id_det_ex == ct.id;
     });
-    let subDt = examenData.subCa.filter((s=>{
+    let subDt = examenData.subCa.filter((s) => {
       return s.id_det_ex == ct.id;
-    }))
-    
+    });
+
     subDt.sort(function (a, b) {
       if (a.tipo < b.tipo) {
         return 1;
@@ -799,9 +891,9 @@ const abrirResultadosModal = async (examen, idEx,n) => {
       }
       // a must be equal to b
       return 0;
-    })
+    });
     let rango;
-    
+
     let filtro1 = rangosDt.filter(
       (el) =>
         el.desde < edad &&
@@ -817,43 +909,41 @@ const abrirResultadosModal = async (examen, idEx,n) => {
       (el) => el.desde < edad && edad < el.hasta && el.genero == "todos"
     );
 
-    if(filtro3.length>0){
+    if (filtro3.length > 0) {
       let menor = 100000000;
       let index;
       filtro3.forEach((f, il) => {
         if (edad - f.desde < menor) {
-          menor = edad-f.desde;
+          menor = edad - f.desde;
           index = il;
         }
       });
       rango = filtro3[index];
-
     }
-    if(filtro2.length>0){
+    if (filtro2.length > 0) {
       let menor = 100000000;
       let index;
       filtro2.forEach((f, il) => {
         if (edad - f.desde < menor) {
-          menor = edad-f.desde;
+          menor = edad - f.desde;
           index = il;
         }
       });
       rango = filtro2[index];
-
     }
     if (filtro1.length > 0) {
       let menor = 100000000;
       let index;
       filtro1.forEach((f, il) => {
         if (edad - f.desde < menor) {
-          menor = edad-f.desde;
+          menor = edad - f.desde;
           index = il;
         }
       });
       rango = filtro1[index];
     }
-    if(subDt.length>0){
-      tBodyDiagnosticos.innerHTML+=`
+    if (subDt.length > 0) {
+      tBodyDiagnosticos.innerHTML += `
       <tr >
               <th scope="row" colspan="2">${ct.nombre}</th>
               <th> SubCaracteristica </th>
@@ -862,10 +952,10 @@ const abrirResultadosModal = async (examen, idEx,n) => {
               <td>  <input class="form-control form-control-sm" type="text" id='inputNt${ct.id}' placeholder="Nota" aria-label=".form-control-sm example">              </td>
 
             </tr>
-      `
-      subDt.forEach(sb=>{
-        if(sb.tipo=="formula"){
-          tBodyDiagnosticos.innerHTML+=`
+      `;
+      subDt.forEach((sb) => {
+        if (sb.tipo == "formula") {
+          tBodyDiagnosticos.innerHTML += `
           <tr>
                 <td colspan="2"></td>
                 <th scope="row" colspan="">${sb.nombre}</th>
@@ -874,11 +964,10 @@ const abrirResultadosModal = async (examen, idEx,n) => {
                 <td> <input id="Nt-${sb.id}" class="form-control form-control-sm inputSubCaCaNota${ct.id}" name="nt-${sb.nombre}" type="text" placeholder="Nota" aria-label=".form-control-sm example">              </td>
   
               </tr>
-          `
-  
-        }else{
-          if(sb.tipo=="numero"){
-            tBodyDiagnosticos.innerHTML+=`
+          `;
+        } else {
+          if (sb.tipo == "numero") {
+            tBodyDiagnosticos.innerHTML += `
             <tr>
                   <td colspan="2"></td>
                   <th scope="row" colspan="">${sb.nombre}</th>
@@ -887,10 +976,9 @@ const abrirResultadosModal = async (examen, idEx,n) => {
                   <td>  <input id="Nt-${sb.id}"  class="form-control form-control-sm inputSubCaCaNota${ct.id}" name="nt-${sb.nombre}" type="text" placeholder="Nota" aria-label=".form-control-sm example">              </td>
     
                 </tr>
-            `
-    
-          }else{
-            tBodyDiagnosticos.innerHTML+=`
+            `;
+          } else {
+            tBodyDiagnosticos.innerHTML += `
             <tr>
                   <td colspan="2"></td>
                   <th scope="row" colspan="">${sb.nombre}</th>
@@ -899,15 +987,13 @@ const abrirResultadosModal = async (examen, idEx,n) => {
                   <td>  <input id="Nt-${sb.id}" class="form-control form-control-sm inputSubCaCaNota${ct.id}" name="nt-${sb.nombre}" type="text" placeholder="Nota" aria-label=".form-control-sm example">              </td>
     
                 </tr>
-            `
-    
+            `;
           }
         }
-      })
-    }else{
-      if(rango){
-       
-        if(resultadosDt.length>0){
+      });
+    } else {
+      if (rango) {
+        if (resultadosDt.length > 0) {
           tBodyDiagnosticos.innerHTML += `
           <tr>
                       <th scope="row" colspan="2">${ct.nombre}</th>
@@ -920,14 +1006,16 @@ const abrirResultadosModal = async (examen, idEx,n) => {
         
                     </tr>
           `;
-          resultadosDt.forEach(rs=>{
-            document.getElementsByClassName(`selectRs${ct.nombre}`)[0].innerHTML+=`
+          resultadosDt.forEach((rs) => {
+            document.getElementsByClassName(
+              `selectRs${ct.nombre}`
+            )[0].innerHTML += `
             <option value="${rs.resultado}">
             ${rs.resultado}
             </option>
-            `
-          })
-        }else{
+            `;
+          });
+        } else {
           tBodyDiagnosticos.innerHTML += `
           <tr>
                       <th scope="row" colspan="2">${ct.nombre}</th>
@@ -938,11 +1026,9 @@ const abrirResultadosModal = async (examen, idEx,n) => {
         
                     </tr>
           `;
-        
         }
-      
-      }else{
-        if(resultadosDt.length>0){
+      } else {
+        if (resultadosDt.length > 0) {
           tBodyDiagnosticos.innerHTML += `
           <tr>
                       <th scope="row" colspan="2">${ct.nombre}</th>
@@ -955,14 +1041,16 @@ const abrirResultadosModal = async (examen, idEx,n) => {
         
                     </tr>
           `;
-          resultadosDt.forEach(rs=>{
-            document.getElementsByClassName(`selectRs${ct.nombre}`)[0].innerHTML+=`
+          resultadosDt.forEach((rs) => {
+            document.getElementsByClassName(
+              `selectRs${ct.nombre}`
+            )[0].innerHTML += `
             <option value="${rs.resultado}">
             ${rs.resultado}
             </option>
-            `
-          })
-        }else{
+            `;
+          });
+        } else {
           tBodyDiagnosticos.innerHTML += `
           <tr>
                       <th scope="row" colspan="2">${ct.nombre}</th>
@@ -973,82 +1061,63 @@ const abrirResultadosModal = async (examen, idEx,n) => {
         
                     </tr>
           `;
-        
         }
       }
-      
-        
-  
     }
-    
-
   });
-  if(n=='false'){
-    setInputs(idEx)
+  if (n == "false") {
+    setInputs(idEx);
   }
-  
-
 };
 
+function guardarResultadosExamen() {
+  const detallesExamenPc = examenDataPc.detalles.map((e) => {
+    const res = document.getElementById("inputRs" + e.id);
+    const nota = document.getElementById("inputNt" + e.id);
+    console.log(nota, res);
 
-
-function guardarResultadosExamen(){
-
-  const detallesExamenPc = examenDataPc.detalles.map(e=>{
-    const res= document.getElementById('inputRs'+e.id)
-    const nota= document.getElementById('inputNt'+e.id)
-    console.log(nota,res)
-    
-
-    if(res){
-      
+    if (res) {
       return {
-       
-        rango:res.attributes.rango.value,
+        rango: res.attributes.rango.value,
         resultado: res.value,
         nota: nota.value,
-        idCar:e.id,
-        nombreCar:e.nombre,
-        imprimir: e.impsiempre
-
-      }
+        idCar: e.id,
+        nombreCar: e.nombre,
+        imprimir: e.impsiempre,
+      };
     }
     return {
-
-      rango:'no',
-      resultado: 'subCaracteristica',
+      rango: "no",
+      resultado: "subCaracteristica",
       nota: nota.value,
-      idCar:e.id,
-      nombreCar:e.nombre,
+      idCar: e.id,
+      nombreCar: e.nombre,
       imprimir: e.impsiempre,
-      unidad:e.unidad
-
-    }
-  })
-  const subCaracteristicas = examenDataPc.subCa.map(e=>{
-    const res= document.getElementById('Rs-'+e.id)
-    const nota= document.getElementById('Nt-'+e.id)
-    console.log(res,nota)
+      unidad: e.unidad,
+    };
+  });
+  const subCaracteristicas = examenDataPc.subCa.map((e) => {
+    const res = document.getElementById("Rs-" + e.id);
+    const nota = document.getElementById("Nt-" + e.id);
+    console.log(res, nota);
     return {
       idSub: e.id,
-      nombreSub:e.nombre,
+      nombreSub: e.nombre,
       resultado: res.value,
       idCar: e.id_det_ex,
       nota: nota.value,
-    }
-
-  })
-  let examenPac= {
-    examenId:examenDataPc.examen.id,
+    };
+  });
+  let examenPac = {
+    examenId: examenDataPc.examen.id,
     examenNombre: examenDataPc.examen.nombre,
     detallesExamenPc,
-    subCaracteristicasExPc:subCaracteristicas
-  }
+    subCaracteristicasExPc: subCaracteristicas,
+  };
 
+  examenesDelPaciente.push(examenPac);
 
-  examenesDelPaciente.push(examenPac)
-
-  document.getElementById('tHeadLgEx').innerHTML=`
+  document.getElementById("tHeadLgEx").innerHTML = `
   <div class="row text-center">
                     <div class="col-1">
                       #
@@ -1059,62 +1128,61 @@ function guardarResultadosExamen(){
                     <div class="col-3">Status</div>
                   </div>
 
-  `
+  `;
 
-  añadirRowTablaExPac(examenPac)
-
-
+  añadirRowTablaExPac(examenPac);
+  document.getElementById(`totalizarButton`).removeAttribute("hidden");
 }
 
-function setInputs(idEx){
-  const examen=examenesDelPaciente.find(e=> e.examenId==idEx)
-  
-  examen.detallesExamenPc.forEach(e=>{
-    console.log(`inputRs${e.idCar}`)
-    const res= document.getElementById(`inputRs${e.idCar}`)
-    const nota= document.getElementById(`inputNt${e.idCar}`)
+function setInputs(idEx) {
+  const examen = examenesDelPaciente.find((e) => e.examenId == idEx);
 
-    console.log(res,nota,e)
-    nota.value= e.nota
+  examen.detallesExamenPc.forEach((e) => {
+    console.log(`inputRs${e.idCar}`);
+    const res = document.getElementById(`inputRs${e.idCar}`);
+    const nota = document.getElementById(`inputNt${e.idCar}`);
+
+    console.log(res, nota, e);
+    nota.value = e.nota;
     try {
-      res.value=e.resultado
-      
+      res.value = e.resultado;
     } catch (error) {
-      console.log(error) 
+      console.log(error);
     }
-    
-
-
-  })
-  examen.subCaracteristicasExPc.forEach(e=>{
-    const res= document.getElementById(`Rs-${e.idSub}`)
-    const nota= document.getElementById(`Nt-${e.idSub}`)
-    res.value=e.resultado;
-    nota.value=e.nota
-  })
-  popRowTablaExPac(idEx)
+  });
+  examen.subCaracteristicasExPc.forEach((e) => {
+    const res = document.getElementById(`Rs-${e.idSub}`);
+    const nota = document.getElementById(`Nt-${e.idSub}`);
+    res.value = e.resultado;
+    nota.value = e.nota;
+  });
+  popRowTablaExPac(idEx);
 }
 
-function popRowTablaExPac(idEx){
-  const tBody= document.getElementById(`tBodyLgEx`)
-  const aTabla = document.getElementById(`aTablaExPac${idEx}`)
+function popRowTablaExPac(idEx) {
+  const tBody = document.getElementById(`tBodyLgEx`);
+  const aTabla = document.getElementById(`aTablaExPac${idEx}`);
 
-  examenesDelPaciente=examenesDelPaciente.filter(e=> e.examenId!=idEx)
+  examenesDelPaciente = examenesDelPaciente.filter((e) => e.examenId != idEx);
 
-
-  tBody.removeChild(aTabla)
+  tBody.removeChild(aTabla);
+  const tr = document.getElementsByClassName("liBodyTablaExPac");
+  if (tr.length == 0) {
+    document.getElementById("totalizarButton").setAttribute("hidden", "true");
+  }
 }
 
-
-function añadirRowTablaExPac(examenPac){
-  const tBody= document.getElementById(`tBodyLgEx`)
-  const tr = document.getElementsByClassName('liBodyTablaExPac')
-  tBody.innerHTML+=`
-  <a href="#" class="list-group-item list-group-item-action liTableExPac liBodyTablaExPac" id="aTablaExPac${examenPac.examenId}" >
+function añadirRowTablaExPac(examenPac) {
+  const tBody = document.getElementById(`tBodyLgEx`);
+  const tr = document.getElementsByClassName("liBodyTablaExPac");
+  tBody.innerHTML += `
+  <a href="#" class="list-group-item list-group-item-action liTableExPac liBodyTablaExPac" id="aTablaExPac${
+    examenPac.examenId
+  }" >
   <div class="container">
     <div class="row text-center">
       <div class="col-1">
-        ${tr.length+1}
+        ${tr.length + 1}
       </div>
       <div class="col-8 ">
         <div class="row">
@@ -1126,7 +1194,11 @@ function añadirRowTablaExPac(examenPac){
           
           <div class="col-3 d-flex justify-content-end">
             
-            <svg xmlns="http://www.w3.org/2000/svg" width="27" height="27" fill="green" class="bi bi-eye svgButton" viewBox="0 0 16 16"  data-bs-toggle="collapse" href="#collapseLiTab${examenPac.examenId}" role="button" aria-expanded="false" aria-controls="collapseLiTab${examenPac.id}">
+            <svg xmlns="http://www.w3.org/2000/svg" width="27" height="27" fill="green" class="bi bi-eye svgButton" viewBox="0 0 16 16"  data-bs-toggle="collapse" href="#collapseLiTab${
+              examenPac.examenId
+            }" role="button" aria-expanded="false" aria-controls="collapseLiTab${
+    examenPac.id
+  }">
             <path d="M16 8s-3-5.5-8-5.5S0 8 0 8s3 5.5 8 5.5S16 8 16 8M1.173 8a13 13 0 0 1 1.66-2.043C4.12 4.668 5.88 3.5 8 3.5s3.879 1.168 5.168 2.457A13 13 0 0 1 14.828 8q-.086.13-.195.288c-.335.48-.83 1.12-1.465 1.755C11.879 11.332 10.119 12.5 8 12.5s-3.879-1.168-5.168-2.457A13 13 0 0 1 1.172 8z"/>
             <path d="M8 5.5a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5M4.5 8a3.5 3.5 0 1 1 7 0 3.5 3.5 0 0 1-7 0"/>
             </svg>
@@ -1136,7 +1208,9 @@ function añadirRowTablaExPac(examenPac){
             height="25"
             fill="#FACD0B"
             class="bi bi-pencil-square mx-4 my-1 svgButton"
-            onclick="abrirResultadosModal('${examenPac.examenNombre}','${examenPac.examenId}','false')"
+            onclick="abrirResultadosModal('${examenPac.examenNombre}','${
+    examenPac.examenId
+  }','false')"
             viewBox="0 0 20 20"
           >
             <path
@@ -1190,58 +1264,53 @@ function añadirRowTablaExPac(examenPac){
                       </div>
   </div>
 </a>
-  `
-  const tBodyCollapse = document.getElementById(`tBodyCollapseLi${examenPac.examenId}`)
-  
+  `;
+  const tBodyCollapse = document.getElementById(
+    `tBodyCollapseLi${examenPac.examenId}`
+  );
 
-  examenPac.detallesExamenPc.forEach(e=>{
-    tBodyCollapse.innerHTML+=`
+  examenPac.detallesExamenPc.forEach((e) => {
+    tBodyCollapse.innerHTML += `
     <tr>
             <th scope="row">${e.nombreCar}</th>
             <td>${e.resultado}</td>
-            <td>${e.unidad ? e.unidad : '-'}</td>
-            <td>${e.rango == 'no' ? '-' : e.rango}</td>
+            <td>${e.unidad ? e.unidad : "-"}</td>
+            <td>${e.rango == "no" ? "-" : e.rango}</td>
             <td>${e.nota}</td>
           </tr>
-    `
-  })
-
+    `;
+  });
 }
 
-
-
-
-
-
-function actualizarResultadosFormula(idCa){
-  const inputsFormula =document.getElementsByClassName(`inputFormula${idCa}`)
-  let arrInputFormula = [...inputsFormula]
-  arrInputFormula.forEach(f=>{
-    valor =f.attributes.valor.value
-    let valorSp= valor.split(',')
-    const operadores = valorSp.filter(e=> e=='+' || e== '-' || e=='*' || e=='/')
-    const inputSubCaCa = document.getElementsByClassName(`inputSubCaCa${idCa}`)
-    const arrInputsSbC = [...inputSubCaCa]
-    console.log(inputSubCaCa)
-    let arrayNumeros=[]
-    valorSp.forEach(v=>{
-      console.log(v)
-      if(v !='+' && v && '-' && v!='*' && v!='/'){
-        const n = arrInputsSbC.find(e=>e.name==`rs-${v}`)
-        console.log(n.value)
-        arrayNumeros.push(n.value != '' ? n.value : 0)
-      }else{
-        arrayNumeros.push(v)
+function actualizarResultadosFormula(idCa) {
+  const inputsFormula = document.getElementsByClassName(`inputFormula${idCa}`);
+  let arrInputFormula = [...inputsFormula];
+  arrInputFormula.forEach((f) => {
+    valor = f.attributes.valor.value;
+    let valorSp = valor.split(",");
+    const operadores = valorSp.filter(
+      (e) => e == "+" || e == "-" || e == "*" || e == "/"
+    );
+    const inputSubCaCa = document.getElementsByClassName(`inputSubCaCa${idCa}`);
+    const arrInputsSbC = [...inputSubCaCa];
+    console.log(inputSubCaCa);
+    let arrayNumeros = [];
+    valorSp.forEach((v) => {
+      console.log(v);
+      if (v != "+" && v && "-" && v != "*" && v != "/") {
+        const n = arrInputsSbC.find((e) => e.name == `rs-${v}`);
+        console.log(n.value);
+        arrayNumeros.push(n.value != "" ? n.value : 0);
+      } else {
+        arrayNumeros.push(v);
       }
-    })
-    
-  
-    console.log(arrayNumeros)
-    let inpf=retornarSumaString(arrayNumeros)
-  
-    f.value=inpf
-  })
- 
+    });
+
+    console.log(arrayNumeros);
+    let inpf = retornarSumaString(arrayNumeros);
+
+    f.value = inpf;
+  });
 }
 const ModalExamenesCrud = document.getElementById("resultadosModal");
 ModalExamenesCrud.addEventListener(
