@@ -116,7 +116,7 @@ const render = async () => {
 
               </div>
               <div class="col-2 d-flex justify-content-end align-content-center">
-              <svg xmlns="http://www.w3.org/2000/svg" style="cursor:pointer" onclick="abrirResultadosModal('${ex.nombre}','${ex.id}')" width="24" height="24" fill="green" class="bi bi-check-circle mx-4" viewBox="0 0 16 16">
+              <svg xmlns="http://www.w3.org/2000/svg" style="cursor:pointer" onclick="abrirResultadosModal('${ex.nombre}','${ex.id}','true')" width="24" height="24" fill="green" class="bi bi-check-circle mx-4" viewBox="0 0 16 16">
                 <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
                 <path d="m10.97 4.97-.02.022-3.473 4.425-2.093-2.094a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-1.071-1.05"/>
               </svg>
@@ -164,7 +164,7 @@ function buscarExamen() {
 
               </div>
               <div class="col-2 d-flex justify-content-end align-content-center">
-              <svg xmlns="http://www.w3.org/2000/svg" style="cursor:pointer" onclick="abrirResultadosModal('${ex.nombre}','${ex.id}')" width="24" height="24" fill="green" class="bi bi-check-circle mx-4" viewBox="0 0 16 16">
+              <svg xmlns="http://www.w3.org/2000/svg" style="cursor:pointer" onclick="abrirResultadosModal('${ex.nombre}','${ex.id}','true')" width="24" height="24" fill="green" class="bi bi-check-circle mx-4" viewBox="0 0 16 16">
                 <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
                 <path d="m10.97 4.97-.02.022-3.473 4.425-2.093-2.094a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-1.071-1.05"/>
               </svg>
@@ -751,7 +751,9 @@ const abrirModalExamenes = () => new bootstrap.Modal("#examenes-list").toggle();
 const abrirModalExamenesCrud = () =>
   new bootstrap.Modal("#examenes-crud").toggle();
 
-const abrirResultadosModal = async (examen, idEx) => {
+
+
+const abrirResultadosModal = async (examen, idEx,n) => {
   const h1Ex = document.getElementById("h1NombreEx");
   const tBodyDiagnosticos = document.getElementById("tBodyDiagnosticos");
   tBodyDiagnosticos.innerHTML = "";
@@ -981,9 +983,14 @@ const abrirResultadosModal = async (examen, idEx) => {
     
 
   });
+  if(n=='false'){
+    setInputs(idEx)
+  }
   
 
 };
+
+
 
 function guardarResultadosExamen(){
 
@@ -1059,11 +1066,51 @@ function guardarResultadosExamen(){
 
 }
 
+function setInputs(idEx){
+  const examen=examenesDelPaciente.find(e=> e.examenId==idEx)
+  
+  examen.detallesExamenPc.forEach(e=>{
+    console.log(`inputRs${e.idCar}`)
+    const res= document.getElementById(`inputRs${e.idCar}`)
+    const nota= document.getElementById(`inputNt${e.idCar}`)
+
+    console.log(res,nota,e)
+    nota.value= e.nota
+    try {
+      res.value=e.resultado
+      
+    } catch (error) {
+      console.log(error) 
+    }
+    
+
+
+  })
+  examen.subCaracteristicasExPc.forEach(e=>{
+    const res= document.getElementById(`Rs-${e.idSub}`)
+    const nota= document.getElementById(`Nt-${e.idSub}`)
+    res.value=e.resultado;
+    nota.value=e.nota
+  })
+  popRowTablaExPac(idEx)
+}
+
+function popRowTablaExPac(idEx){
+  const tBody= document.getElementById(`tBodyLgEx`)
+  const aTabla = document.getElementById(`aTablaExPac${idEx}`)
+
+  examenesDelPaciente=examenesDelPaciente.filter(e=> e.examenId!=idEx)
+
+
+  tBody.removeChild(aTabla)
+}
+
+
 function añadirRowTablaExPac(examenPac){
   const tBody= document.getElementById(`tBodyLgEx`)
   const tr = document.getElementsByClassName('liBodyTablaExPac')
   tBody.innerHTML+=`
-  <a href="#" class="list-group-item list-group-item-action liTableExPac liBodyTablaExPac" >
+  <a href="#" class="list-group-item list-group-item-action liTableExPac liBodyTablaExPac" id="aTablaExPac${examenPac.examenId}" >
   <div class="container">
     <div class="row text-center">
       <div class="col-1">
@@ -1089,6 +1136,7 @@ function añadirRowTablaExPac(examenPac){
             height="25"
             fill="#FACD0B"
             class="bi bi-pencil-square mx-4 my-1 svgButton"
+            onclick="abrirResultadosModal('${examenPac.examenNombre}','${examenPac.examenId}','false')"
             viewBox="0 0 20 20"
           >
             <path
@@ -1106,6 +1154,7 @@ function añadirRowTablaExPac(examenPac){
           fill="red"
           class="bi bi-x-lg my-1 svgButton"
           viewBox="0 0 20 20"
+          onclick="popRowTablaExPac(${examenPac.examenId})"
         >
           <path
             d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8z"
