@@ -717,7 +717,9 @@ async function modificarExamen(id) {
 
                         </td>
                         <td>
-                          <button type="button" class="btn btn-outline-success button${nombre}" onclick="añadirResultado('${nombre}')" id="añadirResultadoButton">
+                          <button type="button" class="btn btn-outline-success button${nombre}" onclick="añadirResultadoEx('${
+        dt.id
+      }','${nombre}')" id="añadirResultadoButton">
 
                             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-file-earmark-plus-fill" viewBox="0 0 16 16">
                               <path d="M9.293 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V4.707A1 1 0 0 0 13.707 4L10 .293A1 1 0 0 0 9.293 0M9.5 3.5v-2l3 3h-2a1 1 0 0 1-1-1M8.5 7v1.5H10a.5.5 0 0 1 0 1H8.5V11a.5.5 0 0 1-1 0V9.5H6a.5.5 0 0 1 0-1h1.5V7a.5.5 0 0 1 1 0"/>
@@ -1148,6 +1150,7 @@ async function guardarCambioRsBdd(id, nombre) {
     console.log("🚀 ~ guardarCambioRsBdd ~ data:", data);
     const botonGuardarRs = document.getElementById(`botonGuardarRs${id}`);
     botonGuardarRs.setAttribute("hidden", "true");
+    examenesAlerta("Rango modificado con exito!", "success");
   } catch (error) {
     console.log("🚀 ~ guardarCambioRsBdd ~ error:", error);
     if (error.response.data.mensaje) {
@@ -1372,7 +1375,6 @@ async function añadirRangoExBdd(id, nombre, event) {
     superior,
     genero,
   };
-  console.log("🚀 ~ añadirRangoExBdd ~ rangoBdd:", rangoBdd);
   try {
     const { token } = await login.getToken();
 
@@ -1388,7 +1390,7 @@ async function añadirRangoExBdd(id, nombre, event) {
     );
     enableButton("añadirRangoButton");
 
-    examenesAlerta("Rango agregadao con exito!", "success");
+    examenesAlerta("Rango agregado con exito!", "success");
 
     return modificarExamen(data.examenId);
   } catch (error) {
@@ -1407,6 +1409,8 @@ function añadirResultadoEx(id, nombre) {
     return;
   }
   const tBodyResultados = document.getElementById("tBodyResultados" + nombre);
+  disabledButton("añadirResultadoButton");
+
   const tr = document.createElement("tr");
   tr.className = "trResultados" + nombre;
   tr.innerHTML = `
@@ -1467,14 +1471,53 @@ function añadirResultadoEx(id, nombre) {
   `;
   tBodyResultados.appendChild(tr);
 }
+async function añadirResultadoExBdd(id, nombre) {
+  console.log("añadirResultadoExBdd");
+  console.log(
+    event.target.parentNode.parentNode.parentNode.children[0].children[0]
+      .children[0].value
+  );
+  const resultado =
+    event.target.parentNode.parentNode.parentNode.children[0].children[0]
+      .children[0].value;
+  if (resultado == "" || resultado == null || resultado == undefined) {
+    return alerta.alert("Error", "Verifique el campo resultado");
+  }
+  try {
+    const { token } = await login.getToken();
+
+    const { data } = await axios.post(
+      urlsv + "/api/modulo-examenes/insert-resultado",
+      {
+        resultado,
+        id_caracteristica: id,
+      },
+      {
+        headers: { token },
+      }
+    );
+
+    enableButton("añadirRangoButton");
+    examenesAlerta("Rango agregado con exito!", "success");
+
+    return modificarExamen(data.examenId);
+  } catch (error) {
+    console.log("🚀 ~ añadirResultadoExBdd ~ error:", error);
+    if (error.response.data.mensaje) {
+      return await alerta.alert("Error:", error.response.data.mensaje);
+    } else {
+      return await alerta.error();
+    }
+  }
+}
 function añadirSubCaracteristicaEx(id, nombre) {
-  disabledButton("añadirSubCaButton");
   const trsSubCaracteristica = document.getElementsByClassName(
     "trSubCaracteristica" + nombre
   );
   if (trsSubCaracteristica.length >= 8) {
     return;
   }
+  disabledButton("añadirSubCaButton");
 
   const tBodySubCaracteristica = document.getElementById(
     "tBodySubCaracteristica" + nombre
@@ -1836,6 +1879,8 @@ async function guardarCambioSubCaBdd(id, nombre) {
     document
       .getElementById("botonGuardarSubCa" + id)
       .setAttribute("hidden", "true");
+    enableButton("añadirSubCaButton");
+
     return examenesAlerta(
       "Sub Caracteristica modificada correctamente",
       "success"
@@ -2363,6 +2408,8 @@ function añadirChars(char, event) {
 }
 
 function borrarSubCaracteristica(event, nombre, ex) {
+  enableButton("añadirSubCaButton");
+
   const tBody = document.getElementById(`tBodySubCaracteristica${nombre}`);
   console.log(event.target);
   if (event.target.localName == "button") {
@@ -2386,6 +2433,8 @@ function borrarSubCaracteristica(event, nombre, ex) {
   }
 }
 function borrarResultado(event, nombre) {
+  enableButton("añadirResultadoButton");
+
   const tBody = document.getElementById(`tBodyResultados${nombre}`);
 
   console.log(event.target);
@@ -2401,6 +2450,8 @@ function borrarResultado(event, nombre) {
   }
 }
 function borrarRango(event, nombre) {
+  enableButton("añadirRangoButton");
+
   const tBody = document.getElementById(`tBodyRangos${nombre}`);
 
   console.log(event.target);

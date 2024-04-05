@@ -528,7 +528,7 @@ export const updateCaracteristica = async (req, res) => {
 
 export const updateSubCaracteristica = async (req, res) => {
   const { id_subCaracteristica, subCaracteristica } = req.body;
-  console.log("🚀 ~ updateSubCaracteristica ~ req.body:", req.body)
+  console.log("🚀 ~ updateSubCaracteristica ~ req.body:", req.body);
   if (
     !id_subCaracteristica ||
     id_subCaracteristica < 0 ||
@@ -546,23 +546,22 @@ export const updateSubCaracteristica = async (req, res) => {
     if (existente.length > 0) {
       const subCaracteristicaMap = Object.entries(subCaracteristica).map(
         ([key, value]) => {
-
           if (key != "id") {
             return { nombre: key, valor: value };
           }
         }
       );
       const valores = subCaracteristicaMap
-        .map( (dato) => {
+        .map((dato) => {
           if (dato.nombre != "valor" && dato.valor == "") {
-            throw new Error(`Ingrese un ${dato.nombre} valido para la sub caracteristica`);
-
-           
+            throw new Error(
+              `Ingrese un ${dato.nombre} valido para la sub caracteristica`
+            );
           }
           return `${dato.nombre} = ?`;
         })
         .join(", ");
-        subCaracteristicaMap.push({ valor: id_subCaracteristica });
+      subCaracteristicaMap.push({ valor: id_subCaracteristica });
       const [update] = await pool.execute(
         `UPDATE subcaracteristicas_detalle SET ${valores} WHERE id = ?`,
         subCaracteristicaMap.map((dato) => {
@@ -694,10 +693,7 @@ export const updateResultados = async (req, res) => {
 
 export const insertSubCaracteristica = async (req, res) => {
   const { newSubCaracteristica } = req.body;
-  console.log(
-    "🚀 ~ insertSubCaracteristica ~ newSubCaracteristica:",
-    newSubCaracteristica
-  );
+
   const { idCar: id_caracteristica } = newSubCaracteristica;
   if (!id_caracteristica || id_caracteristica < 0 || isNaN(id_caracteristica)) {
     return await res
@@ -729,12 +725,10 @@ export const insertSubCaracteristica = async (req, res) => {
           id_caracteristica,
         ]
       );
-      return await res
-        .status(200)
-        .json({
-          examenId: existente[0].id_ex,
-          mensaje: "Sub Caracteristica insertada correctamente",
-        });
+      return await res.status(200).json({
+        examenId: existente[0].id_ex,
+        mensaje: "Sub Caracteristica insertada correctamente",
+      });
     } else {
       return await res
         .status(400)
@@ -748,9 +742,9 @@ export const insertSubCaracteristica = async (req, res) => {
   }
 };
 
-export const insertRango = async (req,res)=>{
+export const insertRango = async (req, res) => {
   const { id_caracteristica, rango } = req.body;
-  console.log("🚀 ~ insertRango ~ req.body:", req.body)
+  console.log("🚀 ~ insertRango ~ req.body:", req.body);
   const { desde, hasta, inferior, superior, genero } = rango;
   if (
     isNaN(id_caracteristica) ||
@@ -779,7 +773,10 @@ export const insertRango = async (req,res)=>{
       [id_caracteristica]
     );
     if (existente.length > 0) {
-      const [nuevoRango] = await pool.execute('INSERT INTO rangos_detalle (`id_det_ex`, `desde`, `hasta`, `inferior`, `superior`, `genero`) VALUES (?,?,?,?,?,?)',[id_caracteristica,desde, hasta, inferior, superior, genero]);
+      const [nuevoRango] = await pool.execute(
+        "INSERT INTO rangos_detalle (`id_det_ex`, `desde`, `hasta`, `inferior`, `superior`, `genero`) VALUES (?,?,?,?,?,?)",
+        [id_caracteristica, desde, hasta, inferior, superior, genero]
+      );
       return await res.status(200).json({
         mensaje: "Rango insertado correctamente",
         examenId: existente[0].id_ex,
@@ -795,4 +792,43 @@ export const insertRango = async (req,res)=>{
       .status(500)
       .json({ mensaje: "Ha ocurrido un error en el servidor" });
   }
-}
+};
+export const insertResultado = async (req, res) => {
+  const { id_caracteristica, resultado } = req.body;
+
+  if (!id_caracteristica || id_caracteristica < 0 || isNaN(id_caracteristica)) {
+    return await res
+      .status(400)
+      .json({ mensaje: "El id del resultado no es valido" });
+  }
+  if (resultado == "" || resultado == null || resultado == undefined) {
+    return await res
+      .status(400)
+      .json({ mensaje: "El campo de resultado no es valido" });
+  }
+  try {
+    const [existente] = await pool.execute(
+      "SELECT * FROM detalles_examen WHERE id = ?",
+      [id_caracteristica]
+    );
+    if (existente.length > 0) {
+      const [resultadoInsertado] = await pool.execute(
+        "INSERT INTO `resultados_detalle`(`resultado`, `id_det_ex`) VALUES (?,?)",
+        [resultado, id_caracteristica]
+      );
+      return await res.status(200).json({
+        examenId: existente[0].id_ex,
+        mensaje: "Resultado insertadao correctamente",
+      });
+    } else {
+      return await res
+        .status(400)
+        .json({ mensaje: "El id de la caracteristica no existe" });
+    }
+  } catch (error) {
+    console.log("🚀 ~ insertResultado ~ error:", error);
+    return await res
+      .status(500)
+      .json({ mensaje: "Ha ocurrido un error en el servidor" });
+  }
+};
