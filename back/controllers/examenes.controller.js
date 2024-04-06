@@ -253,6 +253,70 @@ export const crearExamen = async (req, res) => {
       .json({ mensaje: "Ha ocurrido un error en el servidor" });
   }
 };
+export const crearOrden = async (req, res) => {
+  const {orden} = req.body;
+  var ordenId
+  console.log("🚀 ~ crearOrden ~ Orden:", orden);
+  try {
+    const [validarOrden] = await pool.execute(`SELECT id FROM ordenes WHERE orden='${orden.orden}' AND clave = '${orden.clave}'`)
+    if(validarOrden.length > 0) {
+      return await res
+      .status(400)
+      .json({ mensaje: "Ya existe una orden con ese numero y clave"});
+    }
+    if(orden.clave == 'no'){
+      const [ordenBdd] = await pool.execute(
+        `INSERT INTO ordenes(clave, id_paciente, id_bio) VALUES ('${orden.clave}','${orden.idPac}','${orden.id_bio}')`
+      )
+      ordenId=ordenBdd.insertId
+  
+      const updateOrden = await pool.execute(
+        `UPDATE ordenes SET orden= '${ordenBdd.insertId}' where id= '${ordenBdd.insertId}'`
+      )
+  
+      
+    }else{
+      const [ordenBdd] = await pool.execute(
+        `INSERT INTO ordenes(clave, id_paciente,orden, id_bio) VALUES ('${orden.clave}','${orden.idPac}','${orden.orden}','${orden.id_bio}')`
+      )
+      ordenId=ordenBdd.insertId
+  
+  
+      
+    }
+    for await (const ex of orden.examenes) {
+      const [examenBdd] = await pool.execute(`
+      INSERT INTO examenes_paciente(id_orden, id_ex, id_pac, id_bio) VALUES ('${ordenId}','${ex.id_ex}','${ex.idPac}','${orden.id_bio}')
+      `)
+      for await (const dt of ex.detallesExamen){
+        const [detalleBdd] = await pool.execute(`
+        INSERT INTO detalles_examenes_paciente(id_dt, id_ex, id_ex_pac, id_rango, resultado, nota) VALUES ('${dt.id_dt}','${ex.id_ex}','${examenBdd.insertId}','${dt.id_rango}','${dt.resultado}','${dt.nota}')
+        `)
+        for await (const sb of dt.subCaracteristicasDt){
+          const [subCaracteristicaBdd] = await pool.execute(`
+          INSERT INTO detalle_subcaracteristica_paciente(id_det_ex, id_detalle_sub, resultado, nota) VALUES ('${detalleBdd.insertId}','${sb.id_detalle_sub}','${sb.resultado}','${sb.nota}')
+          `)
+        }
+        
+      }
+    }
+    
+  
+
+    return await res
+      .status(200)
+      .json({ mensaje: "Orden ingresada con exito" });
+  } catch (error) {
+    console.log(error);
+    return await res
+      .status(500)
+      .json({ mensaje: "Ha ocurrido un error en el servidor" });
+  }
+
+  
+  
+  
+};
 
 export const getBioanalistas = async (req, res) => {
   try {

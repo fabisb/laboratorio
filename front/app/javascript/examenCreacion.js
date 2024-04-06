@@ -2408,7 +2408,12 @@ function añadirChars(char, event) {
 }
 
 function borrarSubCaracteristica(event, nombre, ex) {
+  try {
   enableButton("añadirSubCaButton");
+    
+  } catch (error) {
+    
+  }
 
   const tBody = document.getElementById(`tBodySubCaracteristica${nombre}`);
   console.log(event.target);
@@ -2433,7 +2438,12 @@ function borrarSubCaracteristica(event, nombre, ex) {
   }
 }
 function borrarResultado(event, nombre) {
+  try {
   enableButton("añadirResultadoButton");
+    
+  } catch (error) {
+    
+  }
 
   const tBody = document.getElementById(`tBodyResultados${nombre}`);
 
@@ -2450,7 +2460,12 @@ function borrarResultado(event, nombre) {
   }
 }
 function borrarRango(event, nombre) {
+  try {
   enableButton("añadirRangoButton");
+    
+  } catch (error) {
+    
+  }
 
   const tBody = document.getElementById(`tBodyRangos${nombre}`);
 
@@ -2802,10 +2817,12 @@ function crearCaracteristica(nombre) {
   subCaracteristicas = subCaracteristicas.filter((s) => s != undefined);
 
   const rango = document.querySelectorAll(`.trRango${nombre}`);
+  console.log(rango)
 
   let rangos = [...rango].map((r) => {
     if (r.childNodes[5].childNodes[1].childNodes[1].value == "") {
-      if (r.childNodes[7].childNodes[1].childNodes[1].value != "") {
+      if (r.childNodes[7].childNodes[1].childNodes[1].value == "") {
+        
         return undefined;
       }
     }
@@ -2813,15 +2830,18 @@ function crearCaracteristica(nombre) {
       r.childNodes[1].childNodes[1].childNodes[1].value == "" ||
       r.childNodes[3].childNodes[1].childNodes[1].value == ""
     ) {
+      
       return undefined;
     }
 
     if (
-      r.childNodes[1].childNodes[1].childNodes[1].value >
-        r.childNodes[3].childNodes[1].childNodes[1].value ||
-      r.childNodes[5].childNodes[1].childNodes[1].value >
-        r.childNodes[7].childNodes[1].childNodes[1].value
+      parseFloat(r.childNodes[1].childNodes[1].childNodes[1].value) >
+        parseFloat(r.childNodes[3].childNodes[1].childNodes[1].value) ||
+      parseFloat(r.childNodes[5].childNodes[1].childNodes[1].value) >
+        parseFloat(r.childNodes[7].childNodes[1].childNodes[1].value)
     ) {
+    
+
       return undefined;
     }
 
@@ -2833,9 +2853,11 @@ function crearCaracteristica(nombre) {
       genero: r.children[4].children[0].value,
     };
   });
+  
 
   rangos = rangos.filter((r) => r != undefined);
   const resultado = document.querySelectorAll(`.trResultados${nombre}`);
+  console.log(rangos, resultado,subCaracteristica);
 
   const resultados = [...resultado].map((rs) => {
     return rs.children[0].children[0].children[0].value.slice(0, 20);

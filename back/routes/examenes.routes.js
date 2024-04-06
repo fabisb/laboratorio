@@ -1,6 +1,6 @@
 import express from "express";
 import { verifyToken } from "../controllers/login.controller.js";
-import { getBioanalistas, getPaciente,getExamenes,crearExamen,modificarExamen,getExamen, getPacienteHijo } from "../controllers/examenes.controller.js";
+import { getBioanalistas, getPaciente,getExamenes,crearExamen,modificarExamen,getExamen, getPacienteHijo,crearOrden } from "../controllers/examenes.controller.js";
 var router = express.Router();
 
 //GET
@@ -13,6 +13,8 @@ router.get("/get-examenes", verifyToken,getExamenes);
 //POST
 router.post("/get-examen",getExamen);
 router.post("/crear-examen", verifyToken,crearExamen);
+router.post("/crear-orden", verifyToken,crearOrden);
+
 
 //PUT
 
