@@ -385,7 +385,8 @@ const desactivarInputs = () => {
       inp.name != "childName" &&
       inp.name != "fechaRegistro" &&
       inp.name != "fecha_nacimiento" &&
-      !inp.className.includes("inputExamen")
+      !inp.className.includes("inputExamen") &&
+      inp.id != 'inputOrden'
     ) {
       inp.setAttribute("readonly", "true");
     }
@@ -1070,6 +1071,68 @@ const abrirResultadosModal = async (examen, idEx, n) => {
   }
 };
 
+async function guardarOrden(){
+  const selectOrden=document.getElementById("selectOrden");
+  const inputOrden=document.getElementById("inputOrden");
+  const selectBioAnalista=document.getElementById("selectBioAnalista");
+
+  
+  let examenes = [
+
+  ]
+  
+  examenesDelPaciente.forEach(ex=>{
+    let detallesExamen = []
+    
+    
+    ex.detallesExamenPc.forEach(dt=>{
+      let subCaracteristicasDt = []
+      ex.subCaracteristicasExPc.filter(sb=>sb.idCar == dt.idCar).forEach(sb=>{
+        subCaracteristicasDt.push({
+          id_dt:dt.idCar,
+          id_detalle_sub:sb.idSub,
+          resultado:sb.resultado,
+          nota:sb.nota
+        })
+      })
+      detallesExamen.push({
+        id_dt:dt.idCar,
+        id_ex:ex.examenId,
+        id_rango:dt.rango,
+        resultado:dt.resultado,
+        nota:dt.nota,
+        subCaracteristicasDt
+      })
+    })
+    examenes.push({
+      id_ex:ex.examenId,
+      idPac: pacienteObj.id,
+      id_bio: selectBioAnalista.value,
+      detallesExamen,
+    })
+  
+  })
+  let orden={
+    idPac: pacienteObj.id,
+    orden: inputOrden.value,
+    clave: selectOrden.value,
+    id_bio: selectBioAnalista.value,
+    examenes
+  }
+  const { token } = await login.getToken();
+  
+  const res = await axios.post(
+    urlsv + "/api/examenes/crear-orden",
+    { orden },
+    { headers: { token } }
+  );
+
+  console.log(res)
+  
+
+  
+}
+
 function guardarResultadosExamen() {
   const detallesExamenPc = examenDataPc.detalles.map((e) => {
     const res = document.getElementById("inputRs" + e.id);
@@ -1133,6 +1196,7 @@ function guardarResultadosExamen() {
   añadirRowTablaExPac(examenPac);
   document.getElementById(`totalizarButton`).removeAttribute("hidden");
 }
+
 
 function setInputs(idEx) {
   const examen = examenesDelPaciente.find((e) => e.examenId == idEx);

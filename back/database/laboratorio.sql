@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 15-03-2024 a las 04:44:57
--- Versión del servidor: 10.4.28-MariaDB
--- Versión de PHP: 8.2.4
+-- Tiempo de generación: 06-04-2024 a las 05:28:46
+-- Versión del servidor: 10.4.32-MariaDB
+-- Versión de PHP: 8.2.12
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -421,7 +421,19 @@ INSERT INTO `detalles_examen` (`id`, `id_ex`, `nombre`, `posicion`, `unidad`, `i
 (350, 97, 'globulos', 1, 'ml', 1, 'activo'),
 (351, 99, 'caracteristica', 1, 'gr', 1, 'activo'),
 (352, 100, 'caracteristica', 1, 'gr', 1, 'activo'),
-(353, 101, 'fas', 1, 'rango', 1, 'activo');
+(353, 101, 'fas', 1, 'rango', 1, 'activo'),
+(354, 102, 'hemoglobina', 1, 'gr/dl', 1, 'activo'),
+(355, 102, 'Leucocitos', 3, 'l/mm3', 1, 'activo'),
+(356, 102, 'Color', 4, '', 1, 'activo'),
+(357, 102, 'Formula Leucocitaria', 2, '%/seg', 1, 'activo'),
+(358, 103, 'Hemoglobina', 1, 'g/dl', 1, 'activo'),
+(359, 104, 'aaaa', 0, '', 1, 'activo'),
+(360, 105, 'dd', 1, 'gr/dl', 1, 'activo'),
+(361, 106, 'rr', 0, '', 1, 'activo'),
+(362, 107, 'Hemoglobina', 1, 'g/dl', 1, 'activo'),
+(363, 107, 'leucocitos', 4, 'g/mm3', 1, 'activo'),
+(364, 107, 'color', 3, '', 1, 'activo'),
+(365, 107, 'Formula Leucocitaria', 2, '$/seg', 1, 'activo');
 
 -- --------------------------------------------------------
 
@@ -435,8 +447,50 @@ CREATE TABLE `detalles_examenes_paciente` (
   `id_ex` int(11) NOT NULL,
   `id_ex_pac` int(11) NOT NULL,
   `id_rango` int(11) NOT NULL,
-  `resultado` mediumtext NOT NULL
+  `resultado` mediumtext NOT NULL,
+  `nota` varchar(80) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `detalles_examenes_paciente`
+--
+
+INSERT INTO `detalles_examenes_paciente` (`id`, `id_dt`, `id_ex`, `id_ex_pac`, `id_rango`, `resultado`, `nota`) VALUES
+(1, 362, 107, 5, 12, '1', '2'),
+(2, 365, 107, 5, 0, 'subCaracteristica', '3'),
+(3, 364, 107, 5, 0, 'amarillo', '31'),
+(4, 363, 107, 5, 16, '', '55'),
+(5, 358, 103, 6, 0, '50', '10'),
+(6, 362, 107, 7, 12, '1', '2'),
+(7, 365, 107, 7, 0, 'subCaracteristica', '3'),
+(8, 364, 107, 7, 0, 'amarillo', '31'),
+(9, 363, 107, 7, 16, '', '55'),
+(10, 358, 103, 8, 0, '50', '10');
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `detalle_subcaracteristica_paciente`
+--
+
+CREATE TABLE `detalle_subcaracteristica_paciente` (
+  `id` int(11) NOT NULL,
+  `id_det_ex` int(11) NOT NULL,
+  `id_detalle_sub` int(11) NOT NULL,
+  `resultado` varchar(80) NOT NULL,
+  `nota` varchar(80) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `detalle_subcaracteristica_paciente`
+--
+
+INSERT INTO `detalle_subcaracteristica_paciente` (`id`, `id_det_ex`, `id_detalle_sub`, `resultado`, `nota`) VALUES
+(1, 7, 16, '4', '5'),
+(2, 7, 17, '6', '7'),
+(3, 7, 18, '8', '9'),
+(4, 7, 19, '10', '11'),
+(5, 7, 20, '13', '12');
 
 -- --------------------------------------------------------
 
@@ -555,7 +609,13 @@ INSERT INTO `examenes` (`id`, `nombre`, `id_seccion`) VALUES
 (98, 'aa', 2),
 (99, 'aass', 2),
 (100, 'aasss', 2),
-(101, 'ssss', 1);
+(101, 'ssss', 1),
+(102, 'hematologiaCompleta2', 2),
+(103, 'hematologia3', 2),
+(104, 'aaaa', 1),
+(105, 'hh', 1),
+(106, 'eee', 2),
+(107, 'hematologiaCompleta4', 2);
 
 -- --------------------------------------------------------
 
@@ -565,6 +625,7 @@ INSERT INTO `examenes` (`id`, `nombre`, `id_seccion`) VALUES
 
 CREATE TABLE `examenes_paciente` (
   `id` int(11) NOT NULL,
+  `id_orden` int(11) NOT NULL,
   `id_ex` int(11) NOT NULL,
   `id_pac` int(11) NOT NULL,
   `id_bio` int(11) NOT NULL,
@@ -572,6 +633,20 @@ CREATE TABLE `examenes_paciente` (
   `fecha_actualizacion` timestamp NULL DEFAULT NULL,
   `id_usuario` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `examenes_paciente`
+--
+
+INSERT INTO `examenes_paciente` (`id`, `id_orden`, `id_ex`, `id_pac`, `id_bio`, `fecha`, `fecha_actualizacion`, `id_usuario`) VALUES
+(1, 5, 107, 24, 44, '2024-04-06 03:08:14', NULL, 0),
+(2, 6, 107, 24, 44, '2024-04-06 03:09:26', NULL, 0),
+(3, 7, 107, 24, 44, '2024-04-06 03:11:01', NULL, 0),
+(4, 7, 103, 24, 44, '2024-04-06 03:11:01', NULL, 0),
+(5, 8, 107, 24, 44, '2024-04-06 03:19:01', NULL, 0),
+(6, 8, 103, 24, 44, '2024-04-06 03:19:01', NULL, 0),
+(7, 9, 107, 24, 44, '2024-04-06 03:22:30', NULL, 0),
+(8, 9, 103, 24, 44, '2024-04-06 03:22:31', NULL, 0);
 
 -- --------------------------------------------------------
 
@@ -594,6 +669,36 @@ INSERT INTO `niveles_usuario` (`id`, `nombre`, `descripcion`) VALUES
 (2, 'Coordinador', 'Nivel medio de usuario'),
 (3, 'Administrador', 'Nivel alto de usuario'),
 (4, 'Superior', 'Nivel mas alto de usuario');
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `ordenes`
+--
+
+CREATE TABLE `ordenes` (
+  `id` int(11) NOT NULL,
+  `clave` varchar(5) NOT NULL,
+  `orden` int(11) NOT NULL,
+  `id_paciente` int(11) NOT NULL,
+  `id_bio` int(11) NOT NULL,
+  `fecha` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `ordenes`
+--
+
+INSERT INTO `ordenes` (`id`, `clave`, `orden`, `id_paciente`, `id_bio`, `fecha`) VALUES
+(1, '0', 1, 24, 44, '2024-04-06 02:54:00'),
+(2, 'clave', 5, 24, 44, '2024-04-06 02:55:50'),
+(3, 'clave', 5, 24, 44, '2024-04-06 02:57:58'),
+(4, 'orden', 5, 24, 44, '2024-04-06 03:06:00'),
+(5, 'orden', 6, 24, 44, '2024-04-06 03:08:14'),
+(6, 'orden', 8, 24, 44, '2024-04-06 03:09:26'),
+(7, 'orden', 9, 24, 44, '2024-04-06 03:11:01'),
+(8, 'orden', 10, 24, 44, '2024-04-06 03:19:01'),
+(9, 'orden', 11, 24, 44, '2024-04-06 03:22:30');
 
 -- --------------------------------------------------------
 
@@ -621,7 +726,7 @@ CREATE TABLE `pacientes` (
 INSERT INTO `pacientes` (`id`, `cedula`, `nombre`, `direccion`, `telefono`, `correo`, `fecha_nacimiento`, `pre_cedula`, `genero`, `foto_carnet`) VALUES
 (24, 28582670, 'Antony', 'Soler2', '04146680992', 'antonymanuelbeni77tez@gmail.com', '2001-10-12', 'V', 'Mujer', NULL),
 (25, 29666666, 'Antony Benitez', 'pppppp', '04146680987', 'antonymanuelbenitez@gmail.com', '2023-08-01', 'V', 'Hombre', NULL),
-(26, 28146771, 'Fabian Silva', 'El Silencio', '04146308395', 'silvabravofabian@gmail.com', '2002-12-17', 'V', 'Hombre', NULL),
+(26, 28146771, 'Fabian Silva', 'El Silencio', '04146308395', 'silvabravofabian@gmail.com', '2015-01-15', 'V', 'Hombre', NULL),
 (31, 28146771, 'Fabiansito', 'El Silencio', '04146308395', 'silvabravofabian@gmail.com', '2020-12-17', 'N', 'Hombre', NULL),
 (32, 28146771, 'Olivia', 'El Silencio', '04146308395', 'silvabravofabian@gmail.com', '2023-12-18', 'N', 'Hombre', NULL),
 (33, 28146772, 'Fabian 2', 'El silencio', '04146308395', 'fabian2@gmail.com', '2002-12-17', 'V', 'Hombre', NULL),
@@ -640,21 +745,31 @@ CREATE TABLE `rangos_detalle` (
   `hasta` int(11) DEFAULT NULL,
   `inferior` decimal(5,2) NOT NULL,
   `superior` decimal(5,2) NOT NULL,
-  `genero` varchar(10) DEFAULT NULL
+  `genero` varchar(10) DEFAULT NULL,
+  `status` varchar(8) NOT NULL DEFAULT 'activo'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Volcado de datos para la tabla `rangos_detalle`
 --
 
-INSERT INTO `rangos_detalle` (`id`, `id_det_ex`, `desde`, `hasta`, `inferior`, `superior`, `genero`) VALUES
-(1, 349, 0, 0, 1.00, 15.00, 'Mujer'),
-(2, 349, 0, 0, 2.00, 16.00, 'Hombre'),
-(3, 351, 0, 0, 14.00, 15.00, 'femenino'),
-(4, 351, 0, 0, 10.00, 15.00, 'masculino'),
-(5, 352, 0, 0, 10.00, 15.00, 'masculino'),
-(6, 352, 0, 0, 14.00, 15.00, 'femenino'),
-(7, 353, 0, 0, 21.00, 23.00, 'todos');
+INSERT INTO `rangos_detalle` (`id`, `id_det_ex`, `desde`, `hasta`, `inferior`, `superior`, `genero`, `status`) VALUES
+(1, 349, 0, 0, 1.00, 15.00, 'Mujer', 'activo'),
+(2, 349, 0, 0, 2.00, 16.00, 'Hombre', 'activo'),
+(3, 351, 0, 0, 14.00, 15.00, 'femenino', 'activo'),
+(4, 351, 0, 0, 10.00, 15.00, 'masculino', 'activo'),
+(5, 352, 0, 0, 10.00, 15.00, 'masculino', 'activo'),
+(6, 352, 0, 0, 14.00, 15.00, 'femenino', 'activo'),
+(7, 353, 0, 0, 21.00, 23.00, 'todos', 'activo'),
+(8, 359, 2, 5, 1.00, 15.00, 'todos', 'activo'),
+(9, 360, 18, 100, 10.00, 16.00, 'masculino', 'activo'),
+(10, 360, 18, 100, 9.00, 15.00, 'femenino', 'activo'),
+(11, 360, 0, 18, 6.00, 13.00, 'todos', 'activo'),
+(12, 362, 18, 100, 9.00, 15.00, 'femenino', 'activo'),
+(13, 362, 18, 100, 10.00, 16.00, 'masculino', 'activo'),
+(14, 362, 0, 18, 6.00, 13.00, 'todos', 'activo'),
+(15, 363, 10, 30, 10.00, 20.00, 'todos', 'activo'),
+(16, 363, 20, 25, 15.00, 18.00, 'todos', 'activo');
 
 -- --------------------------------------------------------
 
@@ -674,7 +789,14 @@ CREATE TABLE `resultados_detalle` (
 
 INSERT INTO `resultados_detalle` (`id`, `resultado`, `id_det_ex`) VALUES
 (1, 'rojo', 350),
-(2, 'azul', 350);
+(2, 'azul', 350),
+(3, 'Rojo', 356),
+(4, 'Verde', 356),
+(5, 'Azul', 356),
+(6, 'amarillo', 364),
+(7, 'verde', 364),
+(8, 'rojo', 364),
+(9, 'azul', 364);
 
 -- --------------------------------------------------------
 
@@ -707,19 +829,35 @@ CREATE TABLE `subcaracteristicas_detalle` (
   `tipo` tinytext NOT NULL,
   `nombre` tinytext NOT NULL,
   `valor` text DEFAULT NULL,
-  `id_det_ex` int(11) NOT NULL
+  `id_det_ex` int(11) NOT NULL,
+  `status` varchar(8) NOT NULL DEFAULT 'activo'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Volcado de datos para la tabla `subcaracteristicas_detalle`
 --
 
-INSERT INTO `subcaracteristicas_detalle` (`id`, `tipo`, `nombre`, `valor`, `id_det_ex`) VALUES
-(1, 'texto', 'color', '', 350),
-(2, 'numero', 'numero', '', 351),
-(3, 'formula', 'formula', '{numero}+{numero}', 351),
-(4, 'numero', 'numero', '', 352),
-(5, 'formula', 'formula', '{numero}+{numero}', 352);
+INSERT INTO `subcaracteristicas_detalle` (`id`, `tipo`, `nombre`, `valor`, `id_det_ex`, `status`) VALUES
+(1, 'texto', 'color', '', 350, 'activo'),
+(2, 'numero', 'numero', '', 351, 'activo'),
+(3, 'formula', 'formula', '{numero}+{numero}', 351, 'activo'),
+(4, 'numero', 'numero', '', 352, 'activo'),
+(5, 'formula', 'formula', '{numero}+{numero}', 352, 'activo'),
+(6, 'numero', 'b', '', 357, 'activo'),
+(7, 'numero', 'a', '', 357, 'activo'),
+(8, 'numero', 'd', '', 357, 'activo'),
+(9, 'numero', 'c', '', 357, 'activo'),
+(10, 'formula', 'total', 'a,+,b,+,c,+,d', 357, 'activo'),
+(11, 'numero', 'a', '', 361, 'activo'),
+(12, 'numero', 'c', '', 361, 'activo'),
+(13, 'numero', 'b', '', 361, 'activo'),
+(14, 'numero', 'd', '', 361, 'activo'),
+(15, 'formula', 'total', 'a,+,b,+,c,+,d', 361, 'activo'),
+(16, 'numero', 'a', '', 365, 'activo'),
+(17, 'numero', 'b', '', 365, 'activo'),
+(18, 'numero', 'c', '', 365, 'activo'),
+(19, 'numero', 'd', '', 365, 'activo'),
+(20, 'formula', 'total', 'a,*,b,/,c,+,d', 365, 'activo');
 
 -- --------------------------------------------------------
 
@@ -772,6 +910,12 @@ ALTER TABLE `detalles_examenes_paciente`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indices de la tabla `detalle_subcaracteristica_paciente`
+--
+ALTER TABLE `detalle_subcaracteristica_paciente`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indices de la tabla `examenes`
 --
 ALTER TABLE `examenes`
@@ -787,6 +931,12 @@ ALTER TABLE `examenes_paciente`
 -- Indices de la tabla `niveles_usuario`
 --
 ALTER TABLE `niveles_usuario`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indices de la tabla `ordenes`
+--
+ALTER TABLE `ordenes`
   ADD PRIMARY KEY (`id`);
 
 --
@@ -841,31 +991,43 @@ ALTER TABLE `bioanalistas`
 -- AUTO_INCREMENT de la tabla `detalles_examen`
 --
 ALTER TABLE `detalles_examen`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=354;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=366;
 
 --
 -- AUTO_INCREMENT de la tabla `detalles_examenes_paciente`
 --
 ALTER TABLE `detalles_examenes_paciente`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+
+--
+-- AUTO_INCREMENT de la tabla `detalle_subcaracteristica_paciente`
+--
+ALTER TABLE `detalle_subcaracteristica_paciente`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT de la tabla `examenes`
 --
 ALTER TABLE `examenes`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=102;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=108;
 
 --
 -- AUTO_INCREMENT de la tabla `examenes_paciente`
 --
 ALTER TABLE `examenes_paciente`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT de la tabla `niveles_usuario`
 --
 ALTER TABLE `niveles_usuario`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+
+--
+-- AUTO_INCREMENT de la tabla `ordenes`
+--
+ALTER TABLE `ordenes`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT de la tabla `pacientes`
@@ -877,13 +1039,13 @@ ALTER TABLE `pacientes`
 -- AUTO_INCREMENT de la tabla `rangos_detalle`
 --
 ALTER TABLE `rangos_detalle`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
 
 --
 -- AUTO_INCREMENT de la tabla `resultados_detalle`
 --
 ALTER TABLE `resultados_detalle`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT de la tabla `seccion_examen`
@@ -895,7 +1057,7 @@ ALTER TABLE `seccion_examen`
 -- AUTO_INCREMENT de la tabla `subcaracteristicas_detalle`
 --
 ALTER TABLE `subcaracteristicas_detalle`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
 
 --
 -- AUTO_INCREMENT de la tabla `users`
