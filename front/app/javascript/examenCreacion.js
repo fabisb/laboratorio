@@ -752,7 +752,7 @@ async function modificarExamen(id) {
                 <tr>
                   <th scope="row">Unidad</th>
                   <td colspan='2'><input type="text" readonly value='${
-                    dt.unidad
+                    dt.unidad != null ? dt.unidad : ""
                   }' class="form-control input${nombre} formCaracteristica${nombre}" name="unidad" placeholder='Unidad'></td>
                   
                 </tr>
@@ -795,7 +795,9 @@ async function modificarExamen(id) {
                   </th>
                   <td >
                     
-                    <button class='button${nombre} btnIcon' >
+                    <button onclick="borrarCaracteristicaForm('${nombre}','${
+        dt.id
+      }')" class='button${nombre} btnIcon' >
                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="red" class="bi bi-x-circle" viewBox="0 0 16 16">
                       <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
                       <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708"/>
@@ -902,7 +904,7 @@ onclick="modificarSubCaForm('${sb.id}','${nombre}')"
                   </button>
                   </td>
 <td>
-  <button class="button${nombre} btnIcon" >
+  <button onclick="borrarSubCaracteristica(event,'${nombre}','','${sb.id}')" class="button${nombre} btnIcon" >
   <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="red"  class="bi bi-x-circle" viewBox="0 0 16 16">
   <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
   <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708"/>
@@ -1026,7 +1028,7 @@ onclick="modificarSubCaForm('${sb.id}','${nombre}')"
 
     
   <td>
-    <button class="button${nombre} btnIcon" onclick="borrarRango(event,'${nombre}')">
+    <button class="button${nombre} btnIcon" onclick="borrarRango(event,'${nombre}','${r.id}')">
     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="red"  class="bi bi-x-circle " viewBox="0 0 16 16">
       <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
       <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708"/>
@@ -1090,7 +1092,7 @@ onclick="modificarSubCaForm('${sb.id}','${nombre}')"
     </td>
 
                                     <td >
-                                      <button class="button${nombre} btnIcon" onclick="borrarResultado(event,'${nombre}')">
+                                      <button class="button${nombre} btnIcon" onclick="borrarResultado(event,'${nombre}','${rsl.id}')">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="red" class="bi bi-x-circle" viewBox="0 0 16 16">
                                         <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
                                         <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708"/>
@@ -2088,11 +2090,17 @@ async function guardarCambioCaracteristicaBdd(id, nombre) {
       .setAttribute("hidden", "true");
 
     console.log(caracteristica);
-    return await alerta.alert(
-      "Exito:",
-      "La caractristica fue modificada correctamente"
-    );
+
+    examenesAlerta("Caracteristica modificada con exito!", "success");
+
+    return modificarExamen(data.examenId);
   } catch (error) {
+    document
+      .getElementById("botonModificarCaracteristicaForm" + nombre)
+      .removeAttribute("hidden");
+    document
+      .getElementById("botonGuardarCaracteristica" + nombre)
+      .setAttribute("hidden", "true");
     console.log("🚀 ~ guardarCambioRgBdd ~ error:", error);
     if (error.response.data.mensaje) {
       return await alerta.alert("Error:", error.response.data.mensaje);
@@ -2407,63 +2415,152 @@ function añadirChars(char, event) {
   event.target.parentNode.children[0].value += char;
 }
 
-function borrarSubCaracteristica(event, nombre, ex) {
-  enableButton("añadirSubCaButton");
+async function borrarSubCaracteristica(event, nombre, ex, id) {
+  try {
+    enableButton("añadirSubCaButton");
+  } catch (error) {}
+  try {
+    if (id) {
+      const { token } = await login.getToken();
+      const { data } = await axios.delete(
+        urlsv + "/api/modulo-examenes/delete-subcaracteristica",
+        {
+          headers: { token },
+          data: { id_subCa: id },
+        }
+      );
+    }
+    const tBody = document.getElementById(`tBodySubCaracteristica${nombre}`);
+    if (event.target.localName == "button") {
+      tBody.removeChild(event.target.parentNode.parentNode);
+    }
 
-  const tBody = document.getElementById(`tBodySubCaracteristica${nombre}`);
-  console.log(event.target);
-  if (event.target.localName == "button") {
-    tBody.removeChild(event.target.parentNode.parentNode);
+    if (event.target.localName == "svg") {
+      tBody.removeChild(event.target.parentNode.parentNode.parentNode);
+    }
+    if (event.target.localName == "path") {
+      tBody.removeChild(
+        event.target.parentNode.parentNode.parentNode.parentNode
+      );
+    }
+    if (ex == "ex") {
+      const botonesModificar = document.getElementsByClassName(
+        "buttonModificarSub" + nombre
+      );
+      const arrBotonesMod = [...botonesModificar];
+      arrBotonesMod.forEach((b) => {
+        b.removeAttribute("hidden");
+      });
+    }
+    examenesAlerta("Sub Caracteristica Anulada con exito", "warning");
+  } catch (error) {
+    console.log("🚀 ~ borrarSubCaracteristica ~ error:", error);
+    if (error.response.data.mensaje) {
+      return await alerta.alert("Error:", error.response.data.mensaje);
+    } else {
+      return await alerta.error();
+    }
   }
+}
+async function borrarResultado(event, nombre, id) {
+  try {
+    enableButton("añadirResultadoButton");
+  } catch (error) {}
 
-  if (event.target.localName == "svg") {
-    tBody.removeChild(event.target.parentNode.parentNode.parentNode);
+  try {
+    if (id) {
+      const { token } = await login.getToken();
+      const { data } = await axios.delete(
+        urlsv + "/api/modulo-examenes/delete-resultado",
+        {
+          headers: { token },
+          data: { id_resultado: id },
+        }
+      );
+    }
+
+    const tBody = document.getElementById(`tBodyResultados${nombre}`);
+    if (event.target.localName == "button") {
+      tBody.removeChild(event.target.parentNode.parentNode);
+    }
+
+    if (event.target.localName == "svg") {
+      tBody.removeChild(event.target.parentNode.parentNode.parentNode);
+    }
+    if (event.target.localName == "path") {
+      tBody.removeChild(
+        event.target.parentNode.parentNode.parentNode.parentNode
+      );
+    }
+    examenesAlerta("Resultado eliminado con exito", "warning");
+  } catch (error) {
+    console.log("🚀 ~ error:", error);
+    if (error.response.data.mensaje) {
+      return await alerta.alert("Error:", error.response.data.mensaje);
+    } else {
+      return await alerta.error();
+    }
   }
-  if (event.target.localName == "path") {
-    tBody.removeChild(event.target.parentNode.parentNode.parentNode.parentNode);
+}
+async function borrarRango(event, nombre, id) {
+  try {
+    enableButton("añadirRangoButton");
+  } catch (error) {}
+  try {
+    if (id) {
+      const { token } = await login.getToken();
+      const { data } = await axios.delete(
+        urlsv + "/api/modulo-examenes/delete-rango",
+        {
+          headers: { token },
+          data: { id_rango: id },
+        }
+      );
+    }
+    const tBody = document.getElementById(`tBodyRangos${nombre}`);
+
+    console.log(event.target);
+    if (event.target.localName == "button") {
+      tBody.removeChild(event.target.parentNode.parentNode);
+    }
+
+    if (event.target.localName == "svg") {
+      tBody.removeChild(event.target.parentNode.parentNode.parentNode);
+    }
+    if (event.target.localName == "path") {
+      tBody.removeChild(
+        event.target.parentNode.parentNode.parentNode.parentNode
+      );
+    }
+    examenesAlerta("Rango eliminado con exito", "warning");
+  } catch (error) {
+    console.log("🚀 ~ borrarRango ~ error:", error);
+    if (error.response.data.mensaje) {
+      return await alerta.alert("Error:", error.response.data.mensaje);
+    } else {
+      return await alerta.error();
+    }
   }
-  if ((ex = "ex")) {
-    const botonesModificar = document.getElementsByClassName(
-      "buttonModificarSub" + nombre
+}
+async function borrarCaracteristicaForm(nombre, id) {
+  try {
+    const { token } = await login.getToken();
+    const { data } = await axios.delete(
+      urlsv + "/api/modulo-examenes/delete-caracteristica",
+      {
+        headers: { token },
+        data: { id_ca: id },
+      }
     );
-    const arrBotonesMod = [...botonesModificar];
-    arrBotonesMod.forEach((b) => {
-      b.removeAttribute("hidden");
-    });
-  }
-}
-function borrarResultado(event, nombre) {
-  enableButton("añadirResultadoButton");
-
-  const tBody = document.getElementById(`tBodyResultados${nombre}`);
-
-  console.log(event.target);
-  if (event.target.localName == "button") {
-    tBody.removeChild(event.target.parentNode.parentNode);
-  }
-
-  if (event.target.localName == "svg") {
-    tBody.removeChild(event.target.parentNode.parentNode.parentNode);
-  }
-  if (event.target.localName == "path") {
-    tBody.removeChild(event.target.parentNode.parentNode.parentNode.parentNode);
-  }
-}
-function borrarRango(event, nombre) {
-  enableButton("añadirRangoButton");
-
-  const tBody = document.getElementById(`tBodyRangos${nombre}`);
-
-  console.log(event.target);
-  if (event.target.localName == "button") {
-    tBody.removeChild(event.target.parentNode.parentNode);
-  }
-
-  if (event.target.localName == "svg") {
-    tBody.removeChild(event.target.parentNode.parentNode.parentNode);
-  }
-  if (event.target.localName == "path") {
-    tBody.removeChild(event.target.parentNode.parentNode.parentNode.parentNode);
+    examenesAlerta("Caracteristica Anulada con exito", "warning");
+    return modificarExamen(data.examenId);
+  } catch (error) {
+    console.log("🚀 ~ borrarCaracteristicaForm ~ error:", error);
+    if (error.response.data.mensaje) {
+      return await alerta.alert("Error:", error.response.data.mensaje);
+    } else {
+      return await alerta.error();
+    }
   }
 }
 

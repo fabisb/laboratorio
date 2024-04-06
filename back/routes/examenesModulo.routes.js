@@ -3,6 +3,10 @@ import { verifyToken } from "../controllers/login.controller.js";
 import {
   crearExamen,
   crearSeccion,
+  deleteCaracteristica,
+  deleteRango,
+  deleteResultado,
+  deleteSubCaracteristica,
   getCaracteristicasById,
   getExamenById,
   getExamenByNombre,
@@ -45,5 +49,15 @@ router.put("/update-resultado", verifyToken, updateResultados);
 router.post("/insert-subcaracteristica", verifyToken, insertSubCaracteristica);
 router.post("/insert-rango", verifyToken, insertRango);
 router.post("/insert-resultado", verifyToken, insertResultado);
+
+//DELETE
+router.delete("/delete-caracteristica", verifyToken, deleteCaracteristica);
+router.delete(
+  "/delete-subcaracteristica",
+  verifyToken,
+  deleteSubCaracteristica
+);
+router.delete("/delete-rango", verifyToken, deleteRango);
+router.delete("/delete-resultado", verifyToken, deleteResultado);
 
 export default router;

@@ -100,6 +100,7 @@ export const getExamenes = async (req, res) => {
       .json({ mensaje: "Ha ocurrido un error en el servidor" });
   }
 };
+
 export const getExamenById = async (req, res) => {
   const { idExamen } = req.query;
   try {
@@ -114,7 +115,7 @@ export const getExamenById = async (req, res) => {
     } else {
       //return await res.status(200).json(examenes);
       const [detalles] = await pool.execute(
-        "SELECT * FROM detalles_examen WHERE id_ex = ?",
+        "SELECT * FROM detalles_examen WHERE id_ex = ? AND status = 'activo'",
         [examenes[0].id]
       );
       if (detalles.length > 0) {
@@ -123,13 +124,13 @@ export const getExamenById = async (req, res) => {
         let detallesId = detalles.forEach((d) => (detallesIn += `'${d.id}',`));
         detallesIn = detallesIn.slice(0, -1);
         const [rangos] = await pool.execute(
-          `SELECT * FROM rangos_detalle WHERE id_det_ex in (${detallesIn})`
+          `SELECT * FROM rangos_detalle WHERE id_det_ex in (${detallesIn}) AND status = 'activo'`
         );
         const [resultados] = await pool.execute(
           `SELECT * FROM resultados_detalle WHERE id_det_ex in (${detallesIn})`
         );
         const [subCa] = await pool.execute(
-          `SELECT * FROM subcaracteristicas_detalle WHERE id_det_ex in (${detallesIn})`
+          `SELECT * FROM subcaracteristicas_detalle WHERE id_det_ex in (${detallesIn}) AND status = 'activo'`
         );
         return await res
           .status(200)
@@ -512,6 +513,7 @@ export const updateCaracteristica = async (req, res) => {
         mensaje:
           "La caracteristica #" + id_caracteristica + " ha sido actualizada",
         update,
+        examenId: existente[0].id_ex,
       });
     } else {
       return await res
@@ -520,9 +522,15 @@ export const updateCaracteristica = async (req, res) => {
     }
   } catch (error) {
     console.log("🚀 ~ updateCaracteristica ~ error:", error);
-    return await res
-      .status(500)
-      .json({ mensaje: "Ha ocurrido un error en el servidor" });
+    if (error == "Error: La posición debe ser mayor a cero") {
+      return await res
+        .status(400)
+        .json({ mensaje: "La posición debe ser mayor a cero" });
+    } else {
+      return await res
+        .status(500)
+        .json({ mensaje: "Ha ocurrido un error en el servidor" });
+    }
   }
 };
 
@@ -799,7 +807,7 @@ export const insertResultado = async (req, res) => {
   if (!id_caracteristica || id_caracteristica < 0 || isNaN(id_caracteristica)) {
     return await res
       .status(400)
-      .json({ mensaje: "El id del resultado no es valido" });
+      .json({ mensaje: "El id de la caracteristica no es valido" });
   }
   if (resultado == "" || resultado == null || resultado == undefined) {
     return await res
@@ -818,7 +826,7 @@ export const insertResultado = async (req, res) => {
       );
       return await res.status(200).json({
         examenId: existente[0].id_ex,
-        mensaje: "Resultado insertadao correctamente",
+        mensaje: "Resultado insertado correctamente",
       });
     } else {
       return await res
@@ -827,6 +835,138 @@ export const insertResultado = async (req, res) => {
     }
   } catch (error) {
     console.log("🚀 ~ insertResultado ~ error:", error);
+    return await res
+      .status(500)
+      .json({ mensaje: "Ha ocurrido un error en el servidor" });
+  }
+};
+
+export const deleteResultado = async (req, res) => {
+  const { id_resultado } = req.body;
+  if (!id_resultado || id_resultado < 0 || isNaN(id_resultado)) {
+    return await res
+      .status(400)
+      .json({ mensaje: "El id del resultado no es valido" });
+  }
+  try {
+    const [existente] = await pool.execute(
+      "SELECT * FROM resultados_detalle WHERE id = ?",
+      [id_resultado]
+    );
+    if (existente.length > 0) {
+      const [resultadoDelete] = await pool.execute(
+        "DELETE FROM `resultados_detalle` WHERE id = ?",
+        [id_resultado]
+      );
+      return await res.status(200).json({
+        mensaje: "Resultado eliminado correctamente",
+      });
+    } else {
+      return await res
+        .status(400)
+        .json({ mensaje: "El resultado que intenta eliminar no existe" });
+    }
+  } catch (error) {
+    console.log("🚀 ~ deleteResultado ~ error:", error);
+    return await res
+      .status(500)
+      .json({ mensaje: "Ha ocurrido un error en el servidor" });
+  }
+};
+export const deleteRango = async (req, res) => {
+  const { id_rango } = req.body;
+  if (!id_rango || id_rango < 0 || isNaN(id_rango)) {
+    return await res
+      .status(400)
+      .json({ mensaje: "El id del rango no es valido" });
+  }
+  try {
+    const [existente] = await pool.execute(
+      "SELECT * FROM rangos_detalle WHERE id = ?",
+      [id_rango]
+    );
+    if (existente.length > 0) {
+      const [rangoDelete] = await pool.execute(
+        "UPDATE `rangos_detalle` SET `status` = ? WHERE id = ?",
+        ["nulo", id_rango]
+      );
+      return await res.status(200).json({
+        mensaje: "Rango eliminado correctamente",
+      });
+    } else {
+      return await res
+        .status(400)
+        .json({ mensaje: "El rango que intenta eliminar no existe" });
+    }
+  } catch (error) {
+    console.log("🚀 ~ deleteRango ~ error:", error);
+    return await res
+      .status(500)
+      .json({ mensaje: "Ha ocurrido un error en el servidor" });
+  }
+};
+
+export const deleteSubCaracteristica = async (req, res) => {
+  const { id_subCa } = req.body;
+  if (!id_subCa || id_subCa < 0 || isNaN(id_subCa)) {
+    return await res
+      .status(400)
+      .json({ mensaje: "El id de la sub caracteristica no es valido" });
+  }
+  try {
+    const [existente] = await pool.execute(
+      "SELECT * FROM subcaracteristicas_detalle WHERE id = ?",
+      [id_subCa]
+    );
+    if (existente.length > 0) {
+      const [subCaNulo] = await pool.execute(
+        "UPDATE `subcaracteristicas_detalle` SET `status` = ? WHERE id = ?",
+        ["nulo", id_subCa]
+      );
+      return await res.status(200).json({
+        mensaje: "Sub Caracteristica anulada correctamente",
+      });
+    } else {
+      return await res.status(400).json({
+        mensaje: "La sub caracteristica que intenta eliminar no existe",
+      });
+    }
+  } catch (error) {
+    console.log("🚀 ~ deleteSubCaracteristica ~ error:", error);
+    return await res
+      .status(500)
+      .json({ mensaje: "Ha ocurrido un error en el servidor" });
+  }
+};
+
+export const deleteCaracteristica = async (req, res) => {
+  const { id_ca } = req.body;
+  if (!id_ca || id_ca < 0 || isNaN(id_ca)) {
+    return await res
+      .status(400)
+      .json({ mensaje: "El id de la caracteristica no es valido" });
+  }
+  try {
+    const [existente] = await pool.execute(
+      "SELECT * FROM detalles_examen WHERE id = ?",
+      [id_ca]
+    );
+    if (existente.length > 0) {
+      const [CaNulo] = await pool.execute(
+        "UPDATE `detalles_examen` SET `status` = ? WHERE id = ?",
+        ["nulo", id_ca]
+      );
+      return await res.status(200).json({
+        mensaje: "Caracteristica anulada correctamente",
+        examenId: existente[0].id_ex,
+      });
+    } else {
+      return await res
+        .status(400)
+        .json({ mensaje: "La caracteristica que intenta eliminar no existe" });
+    }
+  } catch (error) {
+    console.log("🚀 ~ deleteCaracteristica ~ error:", error);
     return await res
       .status(500)
       .json({ mensaje: "Ha ocurrido un error en el servidor" });
