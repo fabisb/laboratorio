@@ -295,30 +295,7 @@ const cedulaPaciente = async () => {
           );
           activarInputs("crearPaciente()");
 
-          /*inputs.map((inp) => {
-          inp.removeAttribute("readonly");
-          inp.removeAttribute("disabled");
-        });
-        document.getElementsByName("edad")[0].setAttribute("readonly", "true");
-        const botonGuardar = document.getElementById("botonGuardar");
-        if (!botonGuardar) {
-          document.getElementById("divRadios").innerHTML += `
-          <button type="button" onclick="crearPaciente()" class="btn btn-outline-primary" id="botonGuardar">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="16"
-                      height="16"
-                      fill="currentColor"
-                      class="bi bi-floppy2"
-                      viewBox="0 0 16 16"
-                    >
-                      <path
-                        d="M1.5 0h11.586a1.5 1.5 0 0 1 1.06.44l1.415 1.414A1.5 1.5 0 0 1 16 2.914V14.5a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 0 14.5v-13A1.5 1.5 0 0 1 1.5 0M1 1.5v13a.5.5 0 0 0 .5.5H2v-4.5A1.5 1.5 0 0 1 3.5 9h9a1.5 1.5 0 0 1 1.5 1.5V15h.5a.5.5 0 0 0 .5-.5V2.914a.5.5 0 0 0-.146-.353l-1.415-1.415A.5.5 0 0 0 13.086 1H13v3.5A1.5 1.5 0 0 1 11.5 6h-7A1.5 1.5 0 0 1 3 4.5V1H1.5a.5.5 0 0 0-.5.5m9.5-.5a.5.5 0 0 0-.5.5v3a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 0-.5-.5z"
-                      />
-                    </svg>
-                  </button>
-          `;
-        }*/
+       
         } else {
           console.log(botonModificar);
           desactivarInputs();
@@ -1187,6 +1164,40 @@ async function guardarOrden(){
   
 }
 
+async function pedirCaracteristicas(id){
+  console.log(id)
+  const tBody=document.getElementById(`tBodyCollapseLi${id}`)
+  tBody.innerHTML=''
+  try {
+    const { token } = await login.getToken();
+    
+    const { data: caracteristicas} = await axios.get(
+      urlsv + "/api/examenes/get-caracteristicasExamenPaciente",
+      {
+        params: {
+          id
+        },
+        headers: { token },
+      }
+    );
+    console.log(caracteristicas)
+    caracteristicas.caracteristicasData.forEach(ct=>{
+      tBody.innerHTML+=`
+      <tr>
+                  <td scope="col">${ct.nombre}</td>
+                  <td scope="col">${ct.resultado}</td>
+                  <td scope="col">${ct.unidad}</td>
+                  <td scope="col">${ct.rango ? ct.rango.inferior + ' - '+ ct.rango.superior : 'no'}</td>
+                  <td scope="col">${ct.nota}</td>
+                </tr>
+      `
+    })
+  
+  } catch (error) {
+    console.log(error)
+  }
+}
+
 async function buscarExamenesPaciente(){
   const fechaExamen = document.getElementById('fechaExamenInput')
   const preCedula = document.getElementsByName("pre_cedula")[0].value;
@@ -1211,11 +1222,9 @@ async function buscarExamenesPaciente(){
     console.log(examenes)
 
     const tBody = document.getElementById(`tBodyLgEx`);
-    examenes.forEach(ex=>{
+    examenes.examenesData.forEach(ex=>{
       tBody.innerHTML += `
-      <a href="#" class="list-group-item list-group-item-action liTableExPac liBodyTablaExPac" id="aTablaExPac${
-        ex.id
-      }" >
+      <a href="#" class="list-group-item list-group-item-action liTableExPac liBodyTablaExPac" id="aTablaExPac${ex.id}" >
       <div class="container">
         <div class="row text-center">
           <div class="col-1">
@@ -1224,14 +1233,14 @@ async function buscarExamenesPaciente(){
           <div class="col-8 ">
             <div class="row">
               <div class="col-9">
-              ${ex.nombre}
+              ${ex.nombreEx}
     
               </div>
              
               
               <div class="col-3 d-flex justify-content-end">
                 
-                <svg xmlns="http://www.w3.org/2000/svg" width="27" height="27" fill="green" class="bi bi-eye svgButton" viewBox="0 0 16 16"  >
+                <svg xmlns="http://www.w3.org/2000/svg" width="27" height="27" fill="green" onclick="pedirCaracteristicas(${ex.id})"  data-bs-toggle="collapse" data-bs-target="#collapseLiTab${ex.id}" class="bi bi-eye svgButton" viewBox="0 0 16 16"  >
                 <path d="M16 8s-3-5.5-8-5.5S0 8 0 8s3 5.5 8 5.5S16 8 16 8M1.173 8a13 13 0 0 1 1.66-2.043C4.12 4.668 5.88 3.5 8 3.5s3.879 1.168 5.168 2.457A13 13 0 0 1 14.828 8q-.086.13-.195.288c-.335.48-.83 1.12-1.465 1.755C11.879 11.332 10.119 12.5 8 12.5s-3.879-1.168-5.168-2.457A13 13 0 0 1 1.172 8z"/>
                 <path d="M8 5.5a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5M4.5 8a3.5 3.5 0 1 1 7 0 3.5 3.5 0 0 1-7 0"/>
                 </svg>
@@ -1259,7 +1268,7 @@ async function buscarExamenesPaciente(){
               fill="red"
               class="bi bi-x-lg my-1 svgButton"
               viewBox="0 0 20 20"
-              onclick="popRowTablaExPac(${examenPac.examenId})"
+              onclick=""
             >
               <path
                 d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8z"
@@ -1272,10 +1281,10 @@ async function buscarExamenesPaciente(){
             
             
           </div>
-          <div class="col-3">Pendiente por enviar</div>
+          <div class="col-3">${ex.fecha.split('T')[0]}</div>
         </div>
       </div>
-      <div class="collapse" id="collapseLiTab${examenPac.examenId}">
+      <div class="collapse" id="collapseLiTab${ex.id}">
         <div class="card card-body">
           <table class="table table-sm fs-6">
             <thead>
@@ -1287,7 +1296,7 @@ async function buscarExamenesPaciente(){
                 <th scope="col">Nota</th>
               </tr>
             </thead>
-            <tbody id="tBodyCollapseLi${examenPac.examenId}">
+            <tbody id="tBodyCollapseLi${ex.id}">
              
               
             </tbody>
@@ -1312,7 +1321,23 @@ function guardarResultadosExamen() {
     const res = document.getElementById("inputRs" + e.id);
     const nota = document.getElementById("inputNt" + e.id);
     console.log(nota, res);
-
+    if(examenesDelPaciente.length==0){
+      document.getElementById("tBodyLgEx").innerHTML=`
+      <a href="#" class="list-group-item list-group-item-action fw-semibold liTableExPac">
+                <div class="container" id="tHeadLgEx">
+                  <div class="row text-center">
+                    <div class="col-1">
+                      #
+                    </div>
+                    <div class="col-8">
+                      Tipo Examen
+                    </div>
+                    <div class="col-3">Fecha</div>
+                  </div>
+                </div>
+              </a>
+      `
+    }
     if (res) {
       return {
         rango: res.attributes.rango.value,

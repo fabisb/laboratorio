@@ -337,6 +337,47 @@ export const getBioanalistas = async (req, res) => {
       .json({ mensaje: "Ha ocurrido un error en el servidor" });
   }
 };
+
+export const getCaracteristicasExamenPaciente = async (req, res) => {
+  const { id} = req.query;
+  console.log(id)
+  if (id== '' || !id ) {
+    return await res.status(400).json({mensaje:'Los datos enviados no son validos'});
+    
+  }
+  try {
+    const [caracteristicas] = await pool.execute(
+      "SELECT * FROM detalles_examenes_paciente WHERE id_ex_pac = ?",
+      [id]
+    );
+    console.log(caracteristicas)
+
+    if (caracteristicas.length > 0) {
+      
+      let caracteristicasData =[]
+
+      for await (const ct of caracteristicas) {
+        const [nombre] = await pool.execute(`SELECT nombre,unidad FROM detalles_examen where id=${ct.id_dt}`)
+        const [rango] = await pool.execute(`SELECT inferior,superior FROM rangos_detalle where id=${ct.id_rango}`)
+        caracteristicasData.push({
+          nombre: nombre[0].nombre,
+          unidad: nombre[0].unidad,
+          rango: rango[0],
+          resultado: ct.resultado,
+          nota: ct.nota
+        })
+      }
+      return await res
+      .status(200)
+      .json({ caracteristicasData });
+    }
+  } catch (error) {
+    console.log(error);
+    return await res
+      .status(500)
+      .json({ mensaje: "Ha ocurrido un error en el servidor" });
+  }
+};
 export const getExamenesPaciente = async (req, res) => {
   const { cedula, preCedula,fecha } = req.query;
 
