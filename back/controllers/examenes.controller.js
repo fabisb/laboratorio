@@ -337,6 +337,47 @@ export const getBioanalistas = async (req, res) => {
       .json({ mensaje: "Ha ocurrido un error en el servidor" });
   }
 };
+export const getExamenesPaciente = async (req, res) => {
+  const { cedula, preCedula,fecha } = req.query;
+
+  if (cedula == '' || !cedula ) {
+    return await res.status(400).json({mensaje:'Los datos enviados no son validos'});
+    
+  }
+  try {
+    const [paciente] = await pool.execute(
+      "SELECT * FROM pacientes WHERE cedula = ? AND pre_cedula = ?",
+      [cedula, preCedula]
+    );
+    if (paciente.length > 0) {
+      const [examenes] = await pool.execute(`SELECT * FROM examenes_paciente where id_pac ='${paciente[0].id}'`)
+      let examenesData =[]
+
+      for await (const ex of examenes) {
+        const [examen] = await pool.execute(`SELECT * FROM examenes where id=${ex.id_ex}`)
+        examenesData.push({
+          id:ex.id,
+          id_bio:ex.id_bio,
+          nombreEx:examen[0].nombre,
+          id_ex:ex.id_ex,
+          fecha:ex.fecha
+        })
+      }
+      return await res
+      .status(200)
+      .json({ examenesData });
+    } else {
+      return await res
+        .status(400)
+        .json({ mensaje: "No se ha encontrado el paciente", paciente: 404 });
+    }
+  } catch (error) {
+    console.log(error);
+    return await res
+      .status(500)
+      .json({ mensaje: "Ha ocurrido un error en el servidor" });
+  }
+};
 export const getPaciente = async (req, res) => {
   const { cedula, preCedula } = req.query;
 

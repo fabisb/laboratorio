@@ -241,7 +241,7 @@ const cedulaPaciente = async () => {
       if (
         inp.name != "pre_cedula" &&
         inp.name != "cedula" &&
-        inp.name != "fecha"
+        inp.name != "fechaRegistro"
       ) {
         inp.value = "";
       }
@@ -385,6 +385,7 @@ const desactivarInputs = () => {
       inp.name != "childName" &&
       inp.name != "fechaRegistro" &&
       inp.name != "fecha_nacimiento" &&
+      inp.name != "fechaRegistro" &&
       !inp.className.includes("inputExamen") &&
       inp.id != 'inputOrden'
     ) {
@@ -1119,18 +1120,191 @@ async function guardarOrden(){
     id_bio: selectBioAnalista.value,
     examenes
   }
-  const { token } = await login.getToken();
+  try {
+    const { token } = await login.getToken();
   
-  const res = await axios.post(
-    urlsv + "/api/examenes/crear-orden",
-    { orden },
-    { headers: { token } }
-  );
+    const res = await axios.post(
+      urlsv + "/api/examenes/crear-orden",
+      { orden },
+      { headers: { token } }
+    );
+    console.log(res)
+  
+    if(res.status == 200){
+      const ordenModal =   new bootstrap.Modal(document.getElementById('ordenModal'))
+      ordenModal.hide()
+      const backdrop=document.getElementsByClassName('modal-backdrop')
+      const arrBackdrop=[...backdrop]
+      arrBackdrop.forEach(e=>{
+        e.className='modal-backdrop fade'
+        e.setAttribute('hidden','true')
+      })
+      
+   
+      const alertaModal=new bootstrap.Modal("#confirmacion-orden-modal",{
+      }).toggle()
+      
+      
+      document.getElementById(`messageAlertaExamenP`).innerText=`Orden creada exitosamente!`
+      document.getElementById("totalizarButton").setAttribute('hidden','true')
+      document.getElementById('tBodyLgEx').innerHTML=`
+      <a href="#" class="list-group-item list-group-item-action fw-semibold liTableExPac">
+                  <div class="container" id="tHeadLgEx">
+                    <div class="row text-center">
+                      <div class="col-1">
+                        #
+                      </div>
+                      <div class="col-8">
+                        Tipo Examen
+                      </div>
+                      <div class="col-3">Fecha</div>
+                    </div>
+                  </div>
+                </a>
+      `
+      examenesDelPaciente=[]
+  
+    }
+   
+  
+  } catch (error) {
+    const ordenModal =   new bootstrap.Modal(document.getElementById('ordenModal'))
+    ordenModal.hide()
+    const backdrop=document.getElementsByClassName('modal-backdrop')
+    const arrBackdrop=[...backdrop]
+    arrBackdrop.forEach(e=>{
+      e.className='modal-backdrop fade'
+      e.setAttribute('hidden','true')
+    })
+    
+    const alertaModal=new bootstrap.Modal("#error-orden-modal",{
+    }).toggle()
+    
+    
+    document.getElementById(`messageAlertaExamenErrorP`).innerText=`${error.response.data.mensaje}`  }
+  
 
-  console.log(res)
   
+}
 
-  
+async function buscarExamenesPaciente(){
+  const fechaExamen = document.getElementById('fechaExamenInput')
+  const preCedula = document.getElementsByName("pre_cedula")[0].value;
+
+  const cedula = document.getElementsByName("cedula")[0].value;
+
+  console.log(fechaExamen.value)
+  try {
+    const { token } = await login.getToken();
+    console.log(pacienteObj)
+    const { data: examenes} = await axios.get(
+      urlsv + "/api/examenes/get-examenesPaciente",
+      {
+        params: {
+          cedula,
+          preCedula,
+          fecha: fechaExamen.value != '' ? fechaExamen.value : 'no'
+        },
+        headers: { token },
+      }
+    );
+    console.log(examenes)
+
+    const tBody = document.getElementById(`tBodyLgEx`);
+    examenes.forEach(ex=>{
+      tBody.innerHTML += `
+      <a href="#" class="list-group-item list-group-item-action liTableExPac liBodyTablaExPac" id="aTablaExPac${
+        ex.id
+      }" >
+      <div class="container">
+        <div class="row text-center">
+          <div class="col-1">
+            ${ex.id}
+          </div>
+          <div class="col-8 ">
+            <div class="row">
+              <div class="col-9">
+              ${ex.nombre}
+    
+              </div>
+             
+              
+              <div class="col-3 d-flex justify-content-end">
+                
+                <svg xmlns="http://www.w3.org/2000/svg" width="27" height="27" fill="green" class="bi bi-eye svgButton" viewBox="0 0 16 16"  >
+                <path d="M16 8s-3-5.5-8-5.5S0 8 0 8s3 5.5 8 5.5S16 8 16 8M1.173 8a13 13 0 0 1 1.66-2.043C4.12 4.668 5.88 3.5 8 3.5s3.879 1.168 5.168 2.457A13 13 0 0 1 14.828 8q-.086.13-.195.288c-.335.48-.83 1.12-1.465 1.755C11.879 11.332 10.119 12.5 8 12.5s-3.879-1.168-5.168-2.457A13 13 0 0 1 1.172 8z"/>
+                <path d="M8 5.5a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5M4.5 8a3.5 3.5 0 1 1 7 0 3.5 3.5 0 0 1-7 0"/>
+                </svg>
+                <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="25"
+                height="25"
+                fill="#FACD0B"
+                class="bi bi-pencil-square mx-4 my-1 svgButton"
+                onclick=""
+                viewBox="0 0 20 20"
+              >
+                <path
+                  d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"
+                />
+                <path
+                  fill-rule="evenodd"
+                  d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z"
+                />
+              </svg>
+              <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="25"
+              height="25"
+              fill="red"
+              class="bi bi-x-lg my-1 svgButton"
+              viewBox="0 0 20 20"
+              onclick="popRowTablaExPac(${examenPac.examenId})"
+            >
+              <path
+                d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8z"
+              />
+            </svg>
+                
+               
+              </div>
+            </div>
+            
+            
+          </div>
+          <div class="col-3">Pendiente por enviar</div>
+        </div>
+      </div>
+      <div class="collapse" id="collapseLiTab${examenPac.examenId}">
+        <div class="card card-body">
+          <table class="table table-sm fs-6">
+            <thead>
+              <tr>
+                <th scope="col">Caracteristica</th>
+                <th scope="col">Resultado</th>
+                <th scope="col">Unidad</th>
+                <th scope="col">Rango</th>
+                <th scope="col">Nota</th>
+              </tr>
+            </thead>
+            <tbody id="tBodyCollapseLi${examenPac.examenId}">
+             
+              
+            </tbody>
+          </table>
+                          </div>
+      </div>
+    </a>
+      `;
+    
+    })
+ 
+    
+
+  } catch (error) {
+    console.log(error)
+  }
+
 }
 
 function guardarResultadosExamen() {
