@@ -13,6 +13,7 @@ import {
   getExamenBySeccion,
   getExamenes,
   getSecciones,
+  insertCaracteristica,
   insertRango,
   insertResultado,
   insertSubCaracteristica,
@@ -46,6 +47,7 @@ router.put("/update-rango", verifyToken, updateRango);
 router.put("/update-resultado", verifyToken, updateResultados);
 
 //INSERT
+router.post("/insert-caracteristica", verifyToken, insertCaracteristica);
 router.post("/insert-subcaracteristica", verifyToken, insertSubCaracteristica);
 router.post("/insert-rango", verifyToken, insertRango);
 router.post("/insert-resultado", verifyToken, insertResultado);

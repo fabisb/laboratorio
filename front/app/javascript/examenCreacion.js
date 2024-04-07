@@ -542,15 +542,49 @@ async function crearCaracteristicaBdd(nombre, idEx) {
     subCaracteristicas,
     rangos,
     resultados,
+    idEx,
   });
-  disabledButtonByClass("button" + nombre);
-  desactivarInputs(nombre);
-  desactivarSelects(nombre);
-  const btnModificar = document.getElementById(
-    `botonModificarCaracteristica${nombre}`
-  );
-  btnModificar.removeAttribute("hidden");
-  enableButton("buttonCaracteristica");
+  const caracteristicas = [
+    {
+      caracteristica,
+      subCaracteristicas,
+      rangos,
+      resultados,
+    },
+  ];
+  try {
+    const { token } = await login.getToken();
+
+    const { data } = await axios.post(
+      urlsv + "/api/modulo-examenes/insert-caracteristica",
+      {
+        caracteristicas,
+        idEx,
+      },
+      {
+        headers: { token },
+      }
+    );
+
+    disabledButtonByClass("button" + nombre);
+    desactivarInputs(nombre);
+    desactivarSelects(nombre);
+    const btnModificar = document.getElementById(
+      `botonModificarCaracteristica${nombre}`
+    );
+    btnModificar.removeAttribute("hidden");
+    enableButton("buttonCaracteristica");
+
+    examenesAlerta("Caracteristica agregada con exito!", "success");
+    return modificarExamen(data.examenId);
+  } catch (error) {
+    console.log("🚀 ~ subCaracteristicas ~ error:", error);
+    if (error.response.data.mensaje) {
+      return await alerta.alert("Error:", error.response.data.mensaje);
+    } else {
+      return await alerta.error();
+    }
+  }
 }
 
 async function modificarExamen(id) {
@@ -843,10 +877,20 @@ async function modificarExamen(id) {
         const tr = document.createElement("tr");
         tr.className = "trSubCaracteristica" + nombre;
         tr.innerHTML = `<th scope="row">
-  <select id="selectSubTipo${sb.id}" onchange="validarSelectSub('${nombre}',event)" value="${sb.tipo}" disabled class="form-select form-control-sm select${nombre} inputSb${sb.id}" name="select"  aria-label="Default select example">
-    <option value="texto">Texto</option>
-    <option value="numero">Numero</option>
-    <option value="formula">Formula</option>
+  <select id="selectSubTipo${
+    sb.id
+  }" onchange="validarSelectSub('${nombre}',event)" value="${
+          sb.tipo
+        }" disabled class="form-select form-control-sm select${nombre} inputSb${
+          sb.id
+        }" name="select"  aria-label="Default select example">
+    <option ${sb.tipo == "texto" ? "selected" : ""} value="texto">Texto</option>
+    <option ${
+      sb.tipo == "numero" ? "selected" : ""
+    } value="numero">Numero</option>
+    <option ${
+      sb.tipo == "formula" ? "selected" : ""
+    } value="formula">Formula</option>
   </select>
 </th>
 <td>
@@ -868,7 +912,11 @@ async function modificarExamen(id) {
 <td>
   
 <div class="input-group">
-<input type="text" name='valor' id="inputValorSubCa${sb.id}" value="${sb.valor}" onchange="validarInputFormula('${nombre}',event)" readonly class="form-control-sm mx-2 inputSb${sb.id} formSubCaracteristica${nombre}" placeholder="{v} - [+-*/] - ({a}[/]{b})" aria-label="">
+<input type="text" name='valor' id="inputValorSubCa${sb.id}" value="${
+          sb.valor
+        }" onchange="validarInputFormula('${nombre}',event)" readonly class="form-control-sm mx-2 inputSb${
+          sb.id
+        } formSubCaracteristica${nombre}" placeholder="{v} - [+-*/] - ({a}[/]{b})" aria-label="">
 
 </div>
 </td>
@@ -897,14 +945,18 @@ onclick="modificarSubCaForm('${sb.id}','${nombre}')"
   </button>
 </td>
 <td style="cursor:pointer">
-                  <button hidden class='button${nombre} btnIcon' id='botonGuardarSubCa${sb.id}' onclick="guardarCambioSubCaBdd('${sb.id}','${nombre}')">
+                  <button hidden class='button${nombre} btnIcon' id='botonGuardarSubCa${
+          sb.id
+        }' onclick="guardarCambioSubCaBdd('${sb.id}','${nombre}')">
                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="blue" class="bi bi-save" viewBox="0 0 16 16">
                       <path d="M2 1a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H9.5a1 1 0 0 0-1 1v7.293l2.646-2.647a.5.5 0 0 1 .708.708l-3.5 3.5a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L7.5 9.293V2a2 2 0 0 1 2-2H14a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2h2.5a.5.5 0 0 1 0 1z"/>
                     </svg>
                   </button>
                   </td>
 <td>
-  <button onclick="borrarSubCaracteristica(event,'${nombre}','','${sb.id}')" class="button${nombre} btnIcon" >
+  <button onclick="borrarSubCaracteristica(event,'${nombre}','','${
+          sb.id
+        }')" class="button${nombre} btnIcon" >
   <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="red"  class="bi bi-x-circle" viewBox="0 0 16 16">
   <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
   <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708"/>
@@ -990,13 +1042,25 @@ onclick="modificarSubCaForm('${sb.id}','${nombre}')"
   </div>
   </td>
   <th scope="row">
-    <select id='selectRg${r.id}' class="form-select form-control-sm inpRg${r.id} select${nombre} value="${r.genero}" disabled formRango" name="genero" aria-label="Default select example">
-      <option value="todos">Genero</option>
-      <option value="masculino">Masculino</option>
-      <option value="femenino">Femenino</option>
+    <select id='selectRg${r.id}' class="form-select form-control-sm inpRg${
+          r.id
+        } select${nombre} value="${
+          r.genero
+        }" disabled formRango" name="genero" aria-label="Default select example">
+      <option ${
+        r.genero == "todos" ? "selected" : ""
+      } value="todos">Genero</option>
+      <option ${
+        r.genero == "masculino" ? "selected" : ""
+      } value="masculino">Masculino</option>
+      <option ${
+        r.genero == "femenino" ? "selected" : ""
+      } value="femenino">Femenino</option>
     </select>
   </th>
-  <th scope="row"><button class="button${nombre} buttonModificarRango${r.id} btnIcon" >
+  <th scope="row"><button class="button${nombre} buttonModificarRango${
+          r.id
+        } btnIcon" >
   <svg
   xmlns="http://www.w3.org/2000/svg"
   style="cursor: pointer"
@@ -1019,7 +1083,9 @@ onclick="modificarSubCaForm('${sb.id}','${nombre}')"
     </button> </th>
 
     <td style="cursor:pointer">
-    <button hidden class='button${nombre} btnIcon' id='botonGuardarRg${r.id}' onclick="guardarCambioRgBdd('${r.id}','${nombre}')">
+    <button hidden class='button${nombre} btnIcon' id='botonGuardarRg${
+          r.id
+        }' onclick="guardarCambioRgBdd('${r.id}','${nombre}')">
       <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="blue" class="bi bi-save" viewBox="0 0 16 16">
         <path d="M2 1a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H9.5a1 1 0 0 0-1 1v7.293l2.646-2.647a.5.5 0 0 1 .708.708l-3.5 3.5a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L7.5 9.293V2a2 2 0 0 1 2-2H14a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2h2.5a.5.5 0 0 1 0 1z"/>
       </svg>
@@ -1028,7 +1094,9 @@ onclick="modificarSubCaForm('${sb.id}','${nombre}')"
 
     
   <td>
-    <button class="button${nombre} btnIcon" onclick="borrarRango(event,'${nombre}','${r.id}')">
+    <button class="button${nombre} btnIcon" onclick="borrarRango(event,'${nombre}','${
+          r.id
+        }')">
     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="red"  class="bi bi-x-circle " viewBox="0 0 16 16">
       <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
       <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708"/>
@@ -1149,7 +1217,6 @@ async function guardarCambioRsBdd(id, nombre) {
         headers: { token },
       }
     );
-    console.log("🚀 ~ guardarCambioRsBdd ~ data:", data);
     const botonGuardarRs = document.getElementById(`botonGuardarRs${id}`);
     botonGuardarRs.setAttribute("hidden", "true");
     examenesAlerta("Rango modificado con exito!", "success");
@@ -1309,6 +1376,7 @@ async function añadirRangoExBdd(id, nombre, event) {
     if (r.childNodes[5].childNodes[1].childNodes[1].value == "") {
       if (r.childNodes[7].childNodes[1].childNodes[1].value != "") {
         error = true;
+        console.log("1");
         return alerta.alert("Error", "Verifique los campos");
       }
     }
@@ -1317,16 +1385,20 @@ async function añadirRangoExBdd(id, nombre, event) {
       r.childNodes[3].childNodes[1].childNodes[1].value == ""
     ) {
       error = true;
+      console.log("2");
+
       return alerta.alert("Error", "Verifique los campos");
     }
 
     if (
-      r.childNodes[1].childNodes[1].childNodes[1].value >
-        r.childNodes[3].childNodes[1].childNodes[1].value ||
-      r.childNodes[5].childNodes[1].childNodes[1].value >
-        r.childNodes[7].childNodes[1].childNodes[1].value
+      parseFloat(r.childNodes[1].childNodes[1].childNodes[1].value) >
+        parseFloat(r.childNodes[3].childNodes[1].childNodes[1].value) ||
+      parseFloat(r.childNodes[5].childNodes[1].childNodes[1].value) >
+        parseFloat(r.childNodes[7].childNodes[1].childNodes[1].value)
     ) {
       error = true;
+      console.log("3");
+
       return alerta.alert("Error", "Verifique los campos");
     }
   });
@@ -1499,8 +1571,8 @@ async function añadirResultadoExBdd(id, nombre) {
       }
     );
 
-    enableButton("añadirRangoButton");
-    examenesAlerta("Rango agregado con exito!", "success");
+    enableButton("añadirResultadoButton");
+    examenesAlerta("Resultado agregado con exito!", "success");
 
     return modificarExamen(data.examenId);
   } catch (error) {
@@ -2029,7 +2101,7 @@ async function guardarCambioRgBdd(id, nombre) {
 
     const btnGuardarRg = document.getElementById(`botonGuardarRg${id}`);
     btnGuardarRg.setAttribute("hidden", "true");
-    return await alerta.alert("Exito:", "Rango modificado correctamente");
+    return examenesAlerta("Rango modificado correctamente", "success");
   } catch (error) {
     console.log("🚀 ~ guardarCambioRgBdd ~ error:", error);
     if (error.response.data.mensaje) {
@@ -2754,16 +2826,17 @@ async function crearExamen() {
   }
   try {
     const { token } = await login.getToken();
-    const result = await axios.post(
+    const {data} = await axios.post(
       urlsv + "/api/modulo-examenes/crear-examen",
       { nombre, seccion, caracteristicas },
       { headers: { token } }
     );
-    console.log("🚀 ~ crearExamen ~ result:", result);
     examenesAlerta(
       "El examen y sus caracteristicas han sido agregados correctamente",
       "success"
     );
+    return modificarExamen(data.examenId);
+
   } catch (error) {
     console.log(error);
     if (error.response.data.mensaje) {
@@ -2899,12 +2972,11 @@ function crearCaracteristica(nombre) {
   subCaracteristicas = subCaracteristicas.filter((s) => s != undefined);
 
   const rango = document.querySelectorAll(`.trRango${nombre}`);
-  console.log(rango)
+  console.log(rango);
 
   let rangos = [...rango].map((r) => {
     if (r.childNodes[5].childNodes[1].childNodes[1].value == "") {
       if (r.childNodes[7].childNodes[1].childNodes[1].value == "") {
-        
         return undefined;
       }
     }
@@ -2912,7 +2984,6 @@ function crearCaracteristica(nombre) {
       r.childNodes[1].childNodes[1].childNodes[1].value == "" ||
       r.childNodes[3].childNodes[1].childNodes[1].value == ""
     ) {
-      
       return undefined;
     }
 
@@ -2922,8 +2993,6 @@ function crearCaracteristica(nombre) {
       parseFloat(r.childNodes[5].childNodes[1].childNodes[1].value) >
         parseFloat(r.childNodes[7].childNodes[1].childNodes[1].value)
     ) {
-    
-
       return undefined;
     }
 
@@ -2935,11 +3004,10 @@ function crearCaracteristica(nombre) {
       genero: r.children[4].children[0].value,
     };
   });
-  
 
   rangos = rangos.filter((r) => r != undefined);
   const resultado = document.querySelectorAll(`.trResultados${nombre}`);
-  console.log(rangos, resultado,subCaracteristica);
+  console.log(rangos, resultado, subCaracteristica);
 
   const resultados = [...resultado].map((rs) => {
     return rs.children[0].children[0].children[0].value.slice(0, 20);

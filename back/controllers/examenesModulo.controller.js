@@ -348,6 +348,189 @@ export const crearExamen = async (req, res) => {
       );
       return await res.status(200).json({
         mensaje: "Examen insertado correctamente",
+        examenId: examenNew.insertId
+      });
+    }
+  } catch (error) {
+    console.log(error);
+    return await res
+      .status(500)
+      .json({ mensaje: "Ha ocurrido un error en el servidor" });
+  }
+};
+
+export const insertCaracteristica = async (req, res) => {
+  try {
+    const { caracteristicas, idEx } = req.body;
+    console.log("🚀 ~ insertCaracteristica ~ req.body:", req.body);
+    if (!idEx || idEx < 0 || isNaN(idEx)) {
+      return await res
+        .status(400)
+        .json({ mensaje: "El id del examen no es valido" });
+    }
+    if (caracteristicas.length == 0) {
+      return await res
+        .status(400)
+        .json({ mensaje: "Ingrese caracteristicas validas" });
+    }
+
+    const [nombreExistente] = await pool.execute(
+      "SELECT * FROM examenes WHERE id = ? ",
+      [idEx]
+    );
+    if (nombreExistente.length == 0) {
+      return await res.status(400).json({
+        mensaje:
+          "El examen al que le intenta agregar la caracteristica, no existe",
+      });
+    } else {
+      //VALIDACION
+      for await (const ca of caracteristicas) {
+        for await (const dato of ca.caracteristica) {
+          if (dato.nombre == "" || !dato.nombre) {
+            return await res.status(400).json({
+              mensaje: "Ingrese un nombre de caracteristica valido",
+            });
+          }
+          if (dato.nombre == "nombre" && !dato.valor) {
+            return await res.status(400).json({
+              mensaje: "Ingrese un nombre valido para la caracteristica",
+            });
+          }
+          if (
+            dato.nombre == "impsiempre" &&
+            dato.valor != 1 &&
+            dato.valor != 0
+          ) {
+            return await res.status(400).json({
+              mensaje:
+                "Ingrese un Imprimir Siempre valido para la caracteristica",
+            });
+          }
+        }
+
+        /* detalle.insertId */
+        if (ca.subCaracteristicas.length > 0) {
+          for await (const sub of ca.subCaracteristicas) {
+            if (sub.tipo == "" || !sub.tipo) {
+              return await res.status(400).json({
+                mensaje: "Ingrese un tipo de sub-caracteristica valido",
+              });
+            }
+            if (sub.nombre == "" || !sub.nombre) {
+              return await res.status(400).json({
+                mensaje: "Ingrese un nombre de sub-caracteristica valido",
+              });
+            }
+          }
+        }
+        if (ca.resultados.length > 0) {
+          for await (const resu of ca.resultados) {
+            if (resu == "") {
+              return await res.status(400).json({
+                mensaje: `El resultado '${resu}' no es valido`,
+              });
+            }
+          }
+        }
+        if (ca.rangos.length > 0) {
+          for await (const ran of ca.rangos) {
+            if (isNaN(ran.inferior)) {
+              return await res.status(400).json({
+                mensaje: `El rango inferior: ${ran.inferior} no es valido`,
+              });
+            }
+            if (isNaN(ran.superior)) {
+              return await res.status(400).json({
+                mensaje: `El rango superior: ${ran.superior} no es valido`,
+              });
+            }
+          }
+        }
+      }
+      //VALIDACION
+
+      /* examenNew.insertId */
+      await Promise.all(
+        await caracteristicas.map(async (ca) => {
+          ca.caracteristica.push({
+            nombre: "id_ex",
+            valor: idEx,
+          });
+          const columnas = ca.caracteristica
+            .map((dato) => dato.nombre)
+            .join(", ");
+          const valores = ca.caracteristica.map((dato) => "?").join(", ");
+          const consulta = `INSERT INTO detalles_examen (${columnas}) VALUES (${valores})`;
+          // Ejecutar la consulta
+          const [detalle] = await pool.execute(
+            consulta,
+            ca.caracteristica.map((dato) => {
+              if (
+                dato.nombre == "unidad" ||
+                dato.nombre == "posicion" ||
+                dato.nombre == "impsiempre"
+              ) {
+                return dato.valor;
+              } else {
+                return dato.valor || null;
+              }
+            })
+          );
+          /* detalle.insertId */
+          if (ca.subCaracteristicas.length > 0) {
+            await Promise.all(
+              await ca.subCaracteristicas.map(async (sub) => {
+                if (sub.tipo == "" || !sub.tipo) {
+                  return await res.status(400).json({
+                    mensaje: "Ingrese un tipo de sub-caracteristica valido",
+                  });
+                }
+                if (sub.nombre == "" || !sub.nombre) {
+                  return await res.status(400).json({
+                    mensaje: "Ingrese un nombre de sub-caracteristica valido",
+                  });
+                }
+                const [subCa] = await pool.execute(
+                  "INSERT INTO `subcaracteristicas_detalle`(`tipo`, `nombre`, `valor`, `id_det_ex`) VALUES (?,?,?,?)",
+                  [sub.tipo, sub.nombre, sub.valor, detalle.insertId]
+                );
+              })
+            );
+          }
+
+          if (ca.resultados.length > 0) {
+            await Promise.all(
+              await ca.resultados.map(async (resu) => {
+                const [resultados] = await pool.execute(
+                  "INSERT INTO `resultados_detalle`(`resultado`, `id_det_ex`) VALUES (?,?)",
+                  [resu, detalle.insertId]
+                );
+              })
+            );
+          }
+          if (ca.rangos.length > 0) {
+            await Promise.all(
+              await ca.rangos.map(async (ran) => {
+                const [rangos] = await pool.execute(
+                  "INSERT INTO `rangos_detalle`(`id_det_ex`, `desde`, `hasta`, `inferior`, `superior`, `genero`) VALUES (?,?,?,?,?,?)",
+                  [
+                    detalle.insertId,
+                    ran.desde,
+                    ran.hasta,
+                    ran.inferior,
+                    ran.superior,
+                    ran.genero,
+                  ]
+                );
+              })
+            );
+          }
+        })
+      );
+      return await res.status(200).json({
+        mensaje: "Caracteristica insertada correctamente",
+        examenId: idEx
       });
     }
   } catch (error) {
