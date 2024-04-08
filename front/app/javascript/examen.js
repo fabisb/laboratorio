@@ -802,6 +802,8 @@ const abrirModalTotalizar = () => {
   new bootstrap.Modal("#ordenModal").toggle();
 };
 
+
+
 const abrirModalExamenes = () => new bootstrap.Modal("#examenes-list").toggle();
 const abrirModalExamenesCrud = () =>
   new bootstrap.Modal("#examenes-crud").toggle();
@@ -813,19 +815,23 @@ const abrirResultadosModal = async (examen, idEx, n) => {
   h1Ex.innerText = `${examen} - ${pacienteObj.nombre} - ${pacienteObj.edad}`;
   const alertaExamen = document.getElementById('alertaExamen')
   const examenF=examenesDelPaciente.filter(ex=>ex.examenId == idEx)
-  if(examenF.length>0){
-    console.log(alertaExamen)
-  
-    alertaExamen.innerHTML+=`
-    El examen ${examen} ya ha sido evaluado para el paciente ${pacienteObj.nombre}
-    `
-    alertaExamen.removeAttribute('hidden')
-    setTimeout(() => {
-      alertaExamen.setAttribute('hidden','true')
-      alertaExamen.innerHTML=''
-    }, "5000");
-    return
+  if(n==true){
+    if(examenF.length>0){
+        console.log(alertaExamen)
+      
+        alertaExamen.innerHTML+=`
+        El examen ${examen} ya ha sido evaluado para el paciente ${pacienteObj.nombre}
+        `
+        alertaExamen.removeAttribute('hidden')
+        setTimeout(() => {
+          alertaExamen.setAttribute('hidden','true')
+          alertaExamen.innerHTML=''
+        }, "5000");
+        return
+      }
   }
+
+ 
   
   new bootstrap.Modal("#resultadosModal").toggle();
 
@@ -1457,11 +1463,7 @@ function añadirRowTablaExPac(examenPac) {
           
           <div class="col-3 d-flex justify-content-end">
             
-            <svg xmlns="http://www.w3.org/2000/svg" width="27" height="27" fill="green" class="bi bi-eye svgButton" viewBox="0 0 16 16"  data-bs-toggle="collapse" href="#collapseLiTab${
-              examenPac.examenId
-            }" role="button" aria-expanded="false" aria-controls="collapseLiTab${
-    examenPac.id
-  }">
+            <svg xmlns="http://www.w3.org/2000/svg" width="27" height="27" fill="green" class="bi bi-eye svgButton" viewBox="0 0 16 16"  data-bs-toggle="collapse" href="#collapseLiTab${examenPac.examenId}" role="button" aria-expanded="false" aria-controls="collapseLiTab${examenPac.id}">
             <path d="M16 8s-3-5.5-8-5.5S0 8 0 8s3 5.5 8 5.5S16 8 16 8M1.173 8a13 13 0 0 1 1.66-2.043C4.12 4.668 5.88 3.5 8 3.5s3.879 1.168 5.168 2.457A13 13 0 0 1 14.828 8q-.086.13-.195.288c-.335.48-.83 1.12-1.465 1.755C11.879 11.332 10.119 12.5 8 12.5s-3.879-1.168-5.168-2.457A13 13 0 0 1 1.172 8z"/>
             <path d="M8 5.5a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5M4.5 8a3.5 3.5 0 1 1 7 0 3.5 3.5 0 0 1-7 0"/>
             </svg>
@@ -1471,9 +1473,7 @@ function añadirRowTablaExPac(examenPac) {
             height="25"
             fill="#FACD0B"
             class="bi bi-pencil-square mx-4 my-1 svgButton"
-            onclick="abrirResultadosModal('${examenPac.examenNombre}','${
-    examenPac.examenId
-  }','false')"
+            onclick="abrirResultadosModal('${examenPac.examenNombre}','${examenPac.examenId}','false')"
             viewBox="0 0 20 20"
           >
             <path

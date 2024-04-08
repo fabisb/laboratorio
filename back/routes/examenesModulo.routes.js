@@ -3,6 +3,7 @@ import { verifyToken } from "../controllers/login.controller.js";
 import {
   crearExamen,
   crearSeccion,
+  crearCategoria,
   deleteCaracteristica,
   deleteRango,
   deleteResultado,
@@ -11,8 +12,10 @@ import {
   getExamenById,
   getExamenByNombre,
   getExamenBySeccion,
+  getExamenByCategoria,
   getExamenes,
   getSecciones,
+  getCategorias,
   insertCaracteristica,
   insertRango,
   insertResultado,
@@ -22,23 +25,28 @@ import {
   updateRango,
   updateResultados,
   updateSeccion,
+  updateCategoria,
   updateSubCaracteristica,
 } from "../controllers/examenesModulo.controller.js";
 var router = express.Router();
 
 //GET
 router.get("/secciones", verifyToken, getSecciones);
+router.get("/categorias", verifyToken, getCategorias);
 router.get("/examenes", verifyToken, getExamenes);
 router.get("/examen-id", verifyToken, getExamenById);
 router.get("/examen-nombre", verifyToken, getExamenByNombre);
 router.get("/examen-seccion", verifyToken, getExamenBySeccion);
+router.get("/examen-categoria", verifyToken, getExamenByCategoria);
 router.get("/caracteristicas-id_ex", verifyToken, getCaracteristicasById);
 
 //POST
 router.post("/crear-seccion", verifyToken, crearSeccion);
+router.post("/crear-categoria", verifyToken, crearCategoria);
 router.post("/crear-examen", verifyToken, crearExamen);
 
 //PUT
+router.put("/update-categoria", verifyToken, updateCategoria);
 router.put("/update-seccion", verifyToken, updateSeccion);
 router.put("/update-examen", verifyToken, updateExamen);
 router.put("/update-caracteristica", verifyToken, updateCaracteristica);
