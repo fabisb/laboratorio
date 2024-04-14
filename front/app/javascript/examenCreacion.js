@@ -620,6 +620,7 @@ function modificarCategoriaModal(id,nombre){
 
 }
 
+
 async function modificarCategoria(id){
   const input = document.getElementById('inputCategoriaModificar')
   let value = input.value
@@ -694,6 +695,54 @@ async function modificarSeccion(id){
   
 }
 
+async function modificarExamenTabla(id){
+  const inputExamenNombre = document.getElementById("inputNombreExamen");
+  const seccionSelect = document.getElementById("seccionExamenSelect");
+  const categoriaSelect= document.getElementById("categoriaExamenSelect");
+  console.log(inputExamenNombre.value, seccionSelect.value, categoriaSelect.value)
+  try {
+    const { token } = await login.getToken();
+  const { data } = await axios.put(
+    urlsv + "/api/modulo-examenes/update-examen-tabla",
+    {
+      id_seccion:seccionSelect.value,
+      nombre:inputExamenNombre.value,
+      id_examen: id,
+      id_categoria: categoriaSelect.value
+    },
+    {
+      headers: { token },
+    }
+  );
+  
+ 
+
+
+  examenesAlerta(
+    "El examen ha sido modificado correctamente",
+    "success"
+  );
+
+
+  } catch (error) {
+    return await alerta.alert("Error:", error.response.data.mensaje);
+    
+  }
+}
+
+const reloadPage = async () => {
+  const res = await alerta.alert(
+    "Reiniciar:",
+    "¿Esta seguro que desea reiniciar la ventana? Todos los campos quedaran vacios"
+  );
+  if (res.response == 1) return;
+  else location.reload();
+};
+
+const reloadPageMod = async () => {
+  location.reload();
+};
+
 async function modificarExamen(id) {
   try {
     const { token } = await login.getToken();
@@ -701,15 +750,24 @@ async function modificarExamen(id) {
       urlsv + "/api/modulo-examenes/examen-id",
       { headers: { token }, params: { idExamen: id } }
     );
-
+    console.log(examen)
+    const botonRefrescarFooter = document.getElementById("buttonRefrescarFooter")
     const inputExamenNombre = document.getElementById("inputNombreExamen");
     const seccionSelect = document.getElementById("seccionExamenSelect");
+    const categoriaSelect= document.getElementById("categoriaExamenSelect");
     const botonGuardarExamen = document.getElementById("buttonGuardarExamen");
     botonGuardarExamen.setAttribute("disabled", "true");
     const accordionDiv = document.getElementById("accordionCaracteristicas");
     const botonModalCaracteristica = document.getElementById(
       "botonModalCaracteristica"
     );
+    const botonModificarExamenTab=document.getElementById(`modificarExamenTab`)
+    const refrescar=document.getElementById(`refrescarButton`)
+    refrescar.setAttribute('hidden','true')
+    botonModificarExamenTab.removeAttribute('hidden')
+    botonRefrescarFooter.removeAttribute('hidden')
+    botonModificarExamenTab.setAttribute('onclick',`modificarExamenTabla(${id})`)
+
 
     botonModalCaracteristica.removeAttribute("onclick");
     botonModalCaracteristica.setAttribute(
@@ -719,6 +777,7 @@ async function modificarExamen(id) {
 
     inputExamenNombre.value = examen.examen.nombre;
     seccionSelect.value = examen.examen.id_seccion;
+    categoriaSelect.value = examen.examen.id_categoria;
     accordionDiv.innerHTML = "";
 
     examen.detalles.forEach((dt) => {

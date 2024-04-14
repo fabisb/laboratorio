@@ -27,6 +27,83 @@ export const getExamen = async (req, res) => {
       .json({ mensaje: "ha ocurrido un error el servidor" });
   }
 };
+export const getExamenResultados = async (req, res) => {
+  try {
+    const { id } = req.query;
+    if(id<0 || id=="" ){
+    return await res.status(400).json({mensaje:"El id ingresado no es correcto"})
+      
+    }
+    let detalleResultados=[]
+    console.log(id)
+    const [detalles] = await pool.execute(`
+      SELECT * FROM detalles_examenes_paciente where id_ex_pac = ?
+    `,[id])
+
+    if(detalles.length==0){
+      return await res.status(400).json({mensaje:"El examen no tiene resultados"})
+      
+    }
+
+    for await (const d of detalles) {
+     
+    
+      const [subB] = await pool.execute(`
+      SELECT * FROM detalle_subcaracteristica_paciente where id_det_ex = ?
+    `,[d.id])
+      let sub =[]
+      for await (const s of subB){
+        const [sb] = await pool.execute(`
+        SELECT * FROM subcaracteristicas_detalle where id = ?
+      `,[s.id_detalle_sub])
+      
+        sub.push({
+          id:s.id,
+          id_det_ex:s.id_det_ex,
+          id_detalle_sub:s.id_detalle_sub,
+          resultado:s.resultado,
+          nota:s.nota,
+          nombre:sb[0].nombre,
+          valor:sb[0].valor,
+          tipo:sb[0].tipo
+        })
+      }
+      const [rango] = await pool.execute(`
+      SELECT * FROM rangos_detalle where id = ?
+    `,[d.id_rango])
+      const [caracteristica] = await pool.execute(`
+      SELECT * FROM detalles_examen where id = ?
+    `,[d.id_dt])
+      const [resultados] = await pool.execute(`
+      SELECT * FROM resultados_detalle where id_det_ex = ?
+    `,[d.id_dt])
+
+    
+      detalleResultados.push({
+        id:d.id,
+        id_dt:d.id_dt,
+        id_ex:d.id_ex,
+        id_ex_pac:d.id_ex_pac,
+        nombre:caracteristica[0].nombre,
+        resultado:d.resultado,
+        nota:d.nota,
+        unidad: caracteristica[0].unidad,
+        rango: rango[0],
+        sub,
+        resultados
+      })
+    }
+    
+    return await res.status(200).json(detalleResultados)
+
+  } catch (error) {
+    console.log(error);
+    return await res
+      .status(500)
+      .json({ mensaje: "Ha ocurrido un error en el servidor" });
+  }
+};
+
 
 export const modificarExamen = async (req, res) => {
   const { examen, detalle, idExamen } = req.body;

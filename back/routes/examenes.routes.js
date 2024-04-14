@@ -1,6 +1,6 @@
 import express from "express";
 import { verifyToken } from "../controllers/login.controller.js";
-import { getBioanalistas, getPaciente,getExamenes,getExamenesPaciente,crearExamen,modificarExamen,getExamen, getCaracteristicasExamenPaciente, getPacienteHijo,crearOrden } from "../controllers/examenes.controller.js";
+import { getBioanalistas, getPaciente,getExamenes,getExamenesPaciente,crearExamen,modificarExamen,getExamen, getCaracteristicasExamenPaciente, getPacienteHijo,crearOrden,getExamenResultados } from "../controllers/examenes.controller.js";
 var router = express.Router();
 
 //GET
@@ -10,6 +10,8 @@ router.get("/get-paciente-hijo", verifyToken, getPacienteHijo);
 router.get("/get-examenes", verifyToken,getExamenes);
 router.get("/get-examenesPaciente", verifyToken,getExamenesPaciente);
 router.get("/get-caracteristicasExamenPaciente", verifyToken,getCaracteristicasExamenPaciente);
+router.get("/resultados-examen", verifyToken, getExamenResultados);
+
 
 
 

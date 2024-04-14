@@ -35,6 +35,8 @@ export const getCategorias = async (req, res) => {
 };
 
 
+
+
 export const getCaracteristicasById = async (req, res) => {
   console.log("aaabb");
   const { id } = req.query;
@@ -707,6 +709,15 @@ export const updateSeccion = async (req, res) => {
       .json({ mensaje: "El nombre a ingresar no es valido" });
   }
   try {
+    const [existenteName] = await pool.execute(
+      "SELECT * FROM seccion_examen where nombre = ?",
+      [nombre]
+    );
+    if(existenteName.length>0){
+      return await res.status(200).json({
+        mensaje: `La seccion no se ha podido ingresar por duplicidad en el nombre`,
+      });
+    }
     const [existente] = await pool.execute(
       "SELECT * FROM seccion_examen where id = ?",
       [id_seccion]
@@ -731,6 +742,70 @@ export const updateSeccion = async (req, res) => {
       .json({ mensaje: "Ha ocurrido un error en el servidor" });
   }
 };
+export const updateExamenTabla = async (req, res) => {
+  const { id_categoria,id_seccion, nombre,id_examen } = req.body;
+
+  if (!id_seccion || id_seccion < 0 || isNaN(id_seccion)) {
+    return await res
+      .status(400)
+      .json({ mensaje: "El id de la seccion enviado no es valido" });
+  }
+  if (!id_categoria || id_categoria < 0 || isNaN(id_categoria)) {
+    return await res
+      .status(400)
+      .json({ mensaje: "El id de la categoria enviado no es valido" });
+  }
+  if (!id_categoria || id_categoria < 0 || isNaN(id_categoria)) {
+    return await res
+      .status(400)
+      .json({ mensaje: "El id de la categoria enviado no es valido" });
+  }
+  if (!id_examen || id_examen < 0 || isNaN(id_examen)) {
+    return await res
+      .status(400)
+      .json({ mensaje: "El id del examen enviado no es valido" });
+  }
+  if (!nombre || nombre == "") {
+    return await res
+      .status(400)
+      .json({ mensaje: "El nombre a ingresar no es valido" });
+  }
+  try {
+    const [existente] = await pool.execute(
+      "SELECT * FROM examenes where id = ?",
+      [id_examen]
+    );
+    const [existenteName] = await pool.execute(
+      "SELECT * FROM examenes where nombre = ? AND id != ?",
+      [nombre,id_examen]
+    );
+    if(existenteName.length>0){
+      return await res.status(400).json({
+        mensaje: `El Examen no se ha podido ingresar por duplicidad en el nombre`,
+      });
+    }
+    if (existente.length > 0) {
+      await pool.execute("UPDATE examenes SET nombre = ?, id_categoria=?, id_seccion=? WHERE id = ?", [
+        nombre,
+        id_categoria,
+        id_seccion,
+        id_examen
+      ]);
+      return await res.status(200).json({
+        mensaje: `El examen #${id_examen} ha sido modificado correctamente`,
+      });
+    } else {
+      return await res
+        .status(400)
+        .json({ mensaje: "El id del examen no existe" });
+    }
+  } catch (error) {
+    console.log("🚀 ~ updateExamen ~ error:", error);
+    return await res
+      .status(500)
+      .json({ mensaje: "Ha ocurrido un error en el servidor" });
+  }
+};
 
 export const updateCategoria = async (req, res) => {
   const { id_categoria, nombre } = req.body;
@@ -746,6 +821,15 @@ export const updateCategoria = async (req, res) => {
       .json({ mensaje: "El nombre a ingresar no es valido" });
   }
   try {
+    const [existenteName] = await pool.execute(
+      "SELECT * FROM categoria_examen where nombre = ?",
+      [nombre]
+    );
+    if(existenteName.length>0){
+      return await res.status(200).json({
+        mensaje: `La categoria no se ha podido ingresar por duplicidad en el nombre`,
+      });
+    }
     const [existente] = await pool.execute(
       "SELECT * FROM categoria_examen where id = ?",
       [id_categoria]

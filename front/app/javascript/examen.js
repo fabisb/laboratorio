@@ -802,6 +802,241 @@ const abrirModalTotalizar = () => {
   new bootstrap.Modal("#ordenModal").toggle();
 };
 
+const modificarExamenPacienteBDD = async (examen,idEx,idExPc) => {
+  new bootstrap.Modal("#resultadosModal").toggle();
+  const h1Ex = document.getElementById("h1NombreEx");
+  const tBodyDiagnosticos = document.getElementById("tBodyDiagnosticos");
+  tBodyDiagnosticos.innerHTML = "";
+  h1Ex.innerText = `${examen} - ${pacienteObj.nombre} - ${pacienteObj.edad}`;
+  console.log(examen,idEx,idExPc)
+
+  try {
+    const { token } = await login.getToken();
+    
+    const { data: resultados} = await axios.get(
+      urlsv + "/api/examenes/resultados-examen",
+      {
+        params: {
+          id:idExPc
+        },
+        headers: { token },
+      }
+    );
+    console.log(resultados)
+
+    resultados.forEach((ct) => {
+      
+  
+      
+  
+      
+      if (ct.sub.length > 0) {
+        tBodyDiagnosticos.innerHTML += `
+        <tr >
+                <th scope="row" colspan="2">${ct.nombre}</th>
+                <th> SubCaracteristica </th>
+                <th>Resultado</th>
+                <td></td>
+                <td>  <input readonly class="form-control form-control-sm" type="text" id='inputNt${ct.id}' value="${ct.nota}" placeholder="Nota" aria-label=".form-control-sm example">              </td>
+                <td>
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="orange" class="bi bi-pencil-square" viewBox="0 0 16 16">
+                <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
+                <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z"/>
+              </svg>
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="blue" hidden class="bi bi-save" viewBox="0 0 16 16">
+  <path d="M2 1a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H9.5a1 1 0 0 0-1 1v7.293l2.646-2.647a.5.5 0 0 1 .708.708l-3.5 3.5a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L7.5 9.293V2a2 2 0 0 1 2-2H14a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2h2.5a.5.5 0 0 1 0 1z"/>
+</svg>
+              </td>
+  
+              </tr>
+        `;
+        ct.sub.forEach((sb) => {
+          if (sb.tipo == "formula") {
+            tBodyDiagnosticos.innerHTML += `
+            <tr>
+                  <td colspan="2"></td>
+                  <th scope="row" colspan="">${sb.nombre}</th>
+                  <td>  <input readonly id="Rs-${sb.id}" class="form-control form-control-sm inputFormula${ct.id} inputSubCaCa${ct.id}" name="rs-${sb.nombre}" type="number" valor="${sb.valor}" readonly placeholder="Resultado" aria-label=".form-control-sm example">              </td>
+                  <td></td>
+                  <td> <input readonly id="Nt-${sb.id}" class="form-control form-control-sm inputSubCaCaNota${ct.id}" name="nt-${sb.nombre}" type="text" value="${sb.nota}" placeholder="Nota" aria-label=".form-control-sm example">              </td>
+                  <td>
+                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="orange" class="bi bi-pencil-square" viewBox="0 0 16 16">
+                <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
+                <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z"/>
+              </svg>
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="blue" hidden class="bi bi-save" viewBox="0 0 16 16">
+  <path d="M2 1a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H9.5a1 1 0 0 0-1 1v7.293l2.646-2.647a.5.5 0 0 1 .708.708l-3.5 3.5a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L7.5 9.293V2a2 2 0 0 1 2-2H14a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2h2.5a.5.5 0 0 1 0 1z"/>
+</svg>
+                  </td>
+    
+                </tr>
+            `;
+          } else {
+            if (sb.tipo == "numero") {
+              tBodyDiagnosticos.innerHTML += `
+              <tr>
+                    <td colspan="2"></td>
+                    <th scope="row" colspan="">${sb.nombre}</th>
+                    <td> <input readonly id="Rs-${sb.id}" onchange="actualizarResultadosFormula('${ct.id}')" class="form-control form-control-sm inputSubCaCa${ct.id}" name="rs-${sb.nombre}" type="number" placeholder="Resultado" aria-label=".form-control-sm example">              </td>
+                    <td></td>
+                    <td>  <input readonly id="Nt-${sb.id}"  class="form-control form-control-sm inputSubCaCaNota${ct.id}" value="${sb.nota}" name="nt-${sb.nombre}" type="text" placeholder="Nota" aria-label=".form-control-sm example">              </td>
+                    <td>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="orange" class="bi bi-pencil-square" viewBox="0 0 16 16">
+                <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
+                <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z"/>
+              </svg>
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="blue" hidden class="bi bi-save" viewBox="0 0 16 16">
+  <path d="M2 1a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H9.5a1 1 0 0 0-1 1v7.293l2.646-2.647a.5.5 0 0 1 .708.708l-3.5 3.5a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L7.5 9.293V2a2 2 0 0 1 2-2H14a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2h2.5a.5.5 0 0 1 0 1z"/>
+</svg>
+                    </td>
+      
+                  </tr>
+              `;
+            } else {
+              tBodyDiagnosticos.innerHTML += `
+              <tr>
+                    <td colspan="2"></td>
+                    <th scope="row" colspan="">${sb.nombre}</th>
+                    <td>  <input readonly id="Rs-${sb.id}" class="form-control form-control-sm inputSubCaCa${ct.id}" name="rs-${sb.nombre}" type="text" placeholder="Resultado" aria-label=".form-control-sm example">              </td>
+                    <td></td>
+                    <td>  <input readonly id="Nt-${sb.id}" class="form-control form-control-sm inputSubCaCaNota${ct.id}" value="${sb.nota}" name="nt-${sb.nombre}" type="text" placeholder="Nota" aria-label=".form-control-sm example">              </td>
+                    <td>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="orange" class="bi bi-pencil-square" viewBox="0 0 16 16">
+                <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
+                <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z"/>
+              </svg>
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="blue" hidden class="bi bi-save" viewBox="0 0 16 16">
+  <path d="M2 1a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H9.5a1 1 0 0 0-1 1v7.293l2.646-2.647a.5.5 0 0 1 .708.708l-3.5 3.5a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L7.5 9.293V2a2 2 0 0 1 2-2H14a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2h2.5a.5.5 0 0 1 0 1z"/>
+</svg>
+                    </td>
+      
+                  </tr>
+              `;
+            }
+          }
+        });
+      } else {
+        if (ct.rango) {
+          if (ct.resultados.length > 0) {
+            tBodyDiagnosticos.innerHTML += `
+            <tr>
+                        <th scope="row" colspan="2">${ct.nombre}</th>
+                        <td> <select class="form-select form-select-sm selectRs${ct.nombre} inputExDetallePacCar" rango='${rango.id}' id='inputRs${ct.id}' aria-label="Small select example">
+                        
+                      </select></td>
+                        <td>${ct.unidad}</td>
+                        <td>${ct.rango.inferior}  -  ${ct.rango.superior}</td>
+                        <td>  <input readonly class="form-control form-control-sm inputExDetallePacNota" name='nt-${ct.id}' type="text" id='inputNt${ct.id}' value="${ct.value}" placeholder="Nota" aria-label=".form-control-sm example">              </td>
+                        <td>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="orange" class="bi bi-pencil-square" viewBox="0 0 16 16">
+                <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
+                <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z"/>
+              </svg>
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="blue" hidden class="bi bi-save" viewBox="0 0 16 16">
+  <path d="M2 1a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H9.5a1 1 0 0 0-1 1v7.293l2.646-2.647a.5.5 0 0 1 .708.708l-3.5 3.5a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L7.5 9.293V2a2 2 0 0 1 2-2H14a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2h2.5a.5.5 0 0 1 0 1z"/>
+</svg>
+                        </td>
+          
+                      </tr>
+            `;
+            ct.resultados.forEach((rs) => {
+              document.getElementsByClassName(
+                `selectRs${ct.nombre}`
+              )[0].innerHTML += `
+              <option value="${rs.resultado}">
+              ${rs.resultado}
+              </option>
+              `;
+            });
+            document.getElementsByClassName(
+              `selectRs${ct.nombre}`
+            )[0].value=ct.resultado
+
+          } else {
+            tBodyDiagnosticos.innerHTML += `
+            <tr>
+                        <th scope="row" colspan="2">${ct.nombre}</th>
+                        <td>  <input readonly class="form-control form-control-sm inputExDetallePacCar" rango='${ct.rango.id}' name='rs-${ct.id}' type="text" id='inputRs${ct.id}' value="${ct.resultado}" placeholder="Ingrese Resultado" aria-label=".form-control-sm example">              </td>
+                        <td>${ct.unidad}</td>
+                        <td>${ct.rango.inferior}  -  ${ct.rango.superior}</td>
+                        <td><input readonly class="form-control form-control-sm inputExDetallePacNota" name='nt-${ct.id}' type="text" id='inputNt${ct.id}' value="${ct.nota}" placeholder="Nota" aria-label=".form-control-sm example"></td>
+                        <td>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="orange" class="bi bi-pencil-square" viewBox="0 0 16 16">
+                <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
+                <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z"/>
+              </svg>
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="blue" hidden class="bi bi-save" viewBox="0 0 16 16">
+  <path d="M2 1a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H9.5a1 1 0 0 0-1 1v7.293l2.646-2.647a.5.5 0 0 1 .708.708l-3.5 3.5a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L7.5 9.293V2a2 2 0 0 1 2-2H14a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2h2.5a.5.5 0 0 1 0 1z"/>
+</svg>
+                        </td>
+          
+                      </tr>
+            `;
+          }
+        } else {
+          if (ct.resultados.length > 0) {
+            tBodyDiagnosticos.innerHTML += `
+            <tr>
+                        <th scope="row" colspan="2">${ct.nombre}</th>
+                        <td> <select class="form-select form-select-sm selectRs${ct.nombre} inputExDetallePacCar" rango='no' id='inputRs${ct.id}' aria-label="Small select example">
+                        
+                      </select></td>
+                        <td>${ct.unidad}</td>
+                        <td> - </td>
+                        <td>  <input readonly class="form-control form-control-sm inputExDetallePacNota" name='nt-${ct.id}' type="text" id='inputNt${ct.id}' placeholder="Nota" aria-label=".form-control-sm example"></td>
+                        <td>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="orange" class="bi bi-pencil-square" viewBox="0 0 16 16">
+                <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
+                <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z"/>
+              </svg>
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="blue" hidden class="bi bi-save" viewBox="0 0 16 16">
+  <path d="M2 1a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H9.5a1 1 0 0 0-1 1v7.293l2.646-2.647a.5.5 0 0 1 .708.708l-3.5 3.5a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L7.5 9.293V2a2 2 0 0 1 2-2H14a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2h2.5a.5.5 0 0 1 0 1z"/>
+</svg>
+                        </td>
+          
+                      </tr>
+            `;
+            ct.resultados.forEach((rs) => {
+              document.getElementsByClassName(
+                `selectRs${ct.nombre}`
+              )[0].innerHTML += `
+              <option value="${rs.resultado}">
+              ${rs.resultado}
+              </option>
+              `;
+            });
+          } else {
+            tBodyDiagnosticos.innerHTML += `
+            <tr>
+                        <th scope="row" colspan="2">${ct.nombre}</th>
+                        <td>  <input readonly class="form-control form-control-sm inputExDetallePacCar" name='rs-${ct.id}' rango='no' type="text" id='inputRs${ct.id}' value='${ct.resultado}' placeholder="Ingrese Resultado" aria-label=".form-control-sm example">              </td>
+                        <td>${ct.unidad}</td>
+                        <td> - </td>
+                        <td>  <input readonly class="form-control form-control-sm inputExDetallePacNota" name='nt-${ct.id}' type="text" id='inputNt${ct.id}' value='${ct.nota}' placeholder="Nota" aria-label=".form-control-sm example">              </td>
+                        <td>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="orange" class="bi bi-pencil-square" viewBox="0 0 16 16">
+                <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
+                <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z"/>
+              </svg>
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="blue" hidden class="bi bi-save" viewBox="0 0 16 16">
+  <path d="M2 1a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H9.5a1 1 0 0 0-1 1v7.293l2.646-2.647a.5.5 0 0 1 .708.708l-3.5 3.5a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L7.5 9.293V2a2 2 0 0 1 2-2H14a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2h2.5a.5.5 0 0 1 0 1z"/>
+</svg>
+                        </td>
+          
+                      </tr>
+            `;
+          }
+        }
+      }
+    });
+
+
+  } catch (error) {
+    
+  }
+
+
+}
 
 
 const abrirModalExamenes = () => new bootstrap.Modal("#examenes-list").toggle();
@@ -1256,7 +1491,7 @@ async function buscarExamenesPaciente(){
                 height="25"
                 fill="#FACD0B"
                 class="bi bi-pencil-square mx-4 my-1 svgButton"
-                onclick=""
+                onclick="modificarExamenPacienteBDD('${ex.nombreEx}','${ex.id_ex}','${ex.id}')"
                 viewBox="0 0 20 20"
               >
                 <path
@@ -1983,7 +2218,7 @@ const validarN2 = async () => {
     }
   }
 };
-
+/*
 function handleDatalistInput() {
   const inputValue = document.querySelector("#childName").value;
   const datalistOptions = document.getElementById("#childNameList").children;
@@ -2013,4 +2248,4 @@ function handleDatalistInput() {
       break;
     }
   }
-}
+}*/

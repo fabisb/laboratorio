@@ -22,6 +22,7 @@ import {
   insertSubCaracteristica,
   updateCaracteristica,
   updateExamen,
+  updateExamenTabla,
   updateRango,
   updateResultados,
   updateSeccion,
@@ -40,6 +41,7 @@ router.get("/examen-seccion", verifyToken, getExamenBySeccion);
 router.get("/examen-categoria", verifyToken, getExamenByCategoria);
 router.get("/caracteristicas-id_ex", verifyToken, getCaracteristicasById);
 
+
 //POST
 router.post("/crear-seccion", verifyToken, crearSeccion);
 router.post("/crear-categoria", verifyToken, crearCategoria);
@@ -49,6 +51,7 @@ router.post("/crear-examen", verifyToken, crearExamen);
 router.put("/update-categoria", verifyToken, updateCategoria);
 router.put("/update-seccion", verifyToken, updateSeccion);
 router.put("/update-examen", verifyToken, updateExamen);
+router.put("/update-examen-tabla", verifyToken, updateExamenTabla);
 router.put("/update-caracteristica", verifyToken, updateCaracteristica);
 router.put("/update-subcaracteristica", verifyToken, updateSubCaracteristica);
 router.put("/update-rango", verifyToken, updateRango);
