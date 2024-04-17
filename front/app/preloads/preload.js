@@ -64,6 +64,6 @@ contextBridge.exposeInMainWorld("alerta", {
   },
 });
 
-contextBridge.exposeInMainWorld("imprimir", (data) =>
-  ipcRenderer.send("print", JSON.stringify(data))
+contextBridge.exposeInMainWorld("imprimir", () =>
+  ipcRenderer.send("print", JSON.stringify())
 );

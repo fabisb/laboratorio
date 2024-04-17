@@ -1,8 +1,7 @@
 // Modules to control application life and create native browser window
-const { app, BrowserWindow, ipcMain, dialog } = require("electron");
+const { app, BrowserWindow, ipcMain, dialog, shell } = require("electron");
 const Store = require("electron-store");
 const path = require("path");
-const { PosPrinter } = require("electron-pos-printer");
 
 //RECARGA AUTOMATICA
 /* const electronReload = require("electron-reload");
@@ -238,17 +237,36 @@ ipcMain.handle("errorWindow", async (event, arg) => {
   console.log("🚀 ~ file: main.js:102 ~ ipcMain.handle ~ result:", result);
   return result;
 });
-// This method will be called when Electron has finished
-// initialization and is ready to create browser windows.
-// Some APIs can only be used after this event occurs.
+
+
 ipcMain.on("print", (e, arg) => {
-  const data = JSON.parse(arg);
-  PosPrinter.print(data, {
-    pageSize: "58mm",
-    preview: true,
-    //silent: true,
-  }).catch((e) => console.error(e));
+  console.log('printttt')
+  const mainWindow = new BrowserWindow({
+    width: 800,
+    height: 600,
+    show:false,
+    webPreferences: {
+        nodeIntegration: true
+    }
 });
+
+mainWindow.loadFile("app/screens/examen.html");
+
+// When the page finishes loading, generate the PDF
+mainWindow.webContents.on('did-finish-load', () => {
+    mainWindow.webContents.printToPDF({printBackground:true }).then(data => {
+        // Save the PDF data to a file (you can modify the path)
+        const fs = require('fs');
+        fs.writeFileSync('app/assets/my_generated_pdf.pdf', data);
+        shell.openPath(path.join(__dirname, 'app/assets/my_generated_pdf.pdf'))
+    }).catch(error => {
+        console.error('Error generating PDF:', error);
+    });
+});
+}); 
+
+
+
 app.whenReady().then(() => {
   createWindow();
 
