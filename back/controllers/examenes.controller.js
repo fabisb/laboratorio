@@ -27,6 +27,30 @@ export const getExamen = async (req, res) => {
       .json({ mensaje: "ha ocurrido un error el servidor" });
   }
 };
+
+export const updateSubCaracteristicaCar = async (req,res) =>{
+  const {idCar, nota, subCaracteristicas} = req.body
+
+  
+
+  try {
+    const [notaBdd] = await pool.execute(`UPDATE detalles_examenes_paciente set nota=? where id=?`,[nota,idCar])
+    
+    for (let index = 0; index < subCaracteristicas.length; index++) {
+      const element = subCaracteristicas[index];
+
+
+      const [sb]= await pool.execute(`UPDATE detalle_subcaracteristica_paciente set ${element.campo}=? where id=?`,[element.valor,element.id])
+
+    }
+    return await res.status(200).json({mensaje:"El resultado ha sido modificado exitosamente"})
+
+  } catch (error) {
+    console.log(error)
+    return await res.status(500).json({mensaje:"ERROR DE SERVIDOR"})
+
+  }
+}
 export const getExamenResultados = async (req, res) => {
   try {
     const { id } = req.query;
@@ -104,6 +128,21 @@ export const getExamenResultados = async (req, res) => {
   }
 };
 
+export const modificarResultadoExamen = async (req,res)=>{
+  const {idRes,resultado,nota} = req.body;
+  console.log(idRes,resultado,nota)
+  try {
+    const [r]= await pool.execute(`UPDATE detalles_examenes_paciente set resultado = ?, nota = ? WHERE id = ?`,[resultado,nota,idRes] )
+    return await res.status(200).json({mensaje: `Resultado modificado exitosamente`})
+  } catch (error) {
+    console.log(error);
+    return await res
+      .status(500)
+      .json({ mensaje: "Ha ocurrido un error en el servidor" });
+  }
+  
+  
+}
 
 export const modificarExamen = async (req, res) => {
   const { examen, detalle, idExamen } = req.body;
@@ -468,7 +507,7 @@ export const getExamenesPaciente = async (req, res) => {
       [cedula, preCedula]
     );
     if (paciente.length > 0) {
-      const [examenes] = await pool.execute(`SELECT * FROM examenes_paciente where id_pac ='${paciente[0].id}'`)
+      const [examenes] = fecha=='no' ? await pool.execute(`SELECT * FROM examenes_paciente where id_pac ='${paciente[0].id}'`) : await pool.execute(`SELECT * FROM examenes_paciente where id_pac ='${paciente[0].id}' AND fecha between "${fecha} 00:00:00" AND "${fecha} 23:59:00"`)  
       let examenesData =[]
 
       for await (const ex of examenes) {

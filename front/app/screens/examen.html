@@ -412,7 +412,7 @@
           <div class="row">
             <h1 class="display-6 fw-semibold text-center">Examenes Realizados</h1>
             <br>
-            <div class="list-group" id="tBodyLgEx" style="max-height: 60vh; overflow-y: auto;">
+            <div class="list-group" id="tBodyLgEx" style="max-height: 50vh; overflow-y: auto;">
               <a href="#" class="list-group-item list-group-item-action fw-semibold liTableExPac">
                 <div class="container" id="tHeadLgEx">
                   <div class="row text-center">
@@ -428,7 +428,8 @@
               </a>
           </div>
           <hr>
-          <div class="d-flex justify-content-end" data-bs-toggle="modal" data-bs-target="#ordenModal">
+          <div class="d-flex justify-content-end">
+            <button class="btn btn-info w-25" onclick="abrirModalReimpresion()" id="reimpresionButton" hidden>Reimpresion</button>
             <button class="btn btn-success w-25" onclick="abrirModalTotalizar()" id="totalizarButton" hidden>Totalizar</button>
           </div>
         </div>
@@ -552,10 +553,13 @@
         
       </div>
       <div class="modal-body container" >
-          
+        
     
         <h5 class="text-center" id="h1NombreEx"></h5>
         <hr>
+        <div class="alert text-center" role="alert" hidden id="alertaModificacionExamenBdd">
+          
+        </div>
         <table class="table table-sm fs-6 text-center" >
           <thead> 
             <tr>
@@ -1139,8 +1143,9 @@
             <hr>
             
             <div class="row my-2">
-              
-              <h4 class="fw-semibold text-center">Examenes Realizados</h4>
+              <div class="d-flex justify-content-around">
+                <h4 class="fw-semibold text-center">Examenes Realizados</h4>
+              </div>
               <br>
               <div class="list-group" id="tBodyLgExOrd">
                 <a href="#" class="list-group-item list-group-item-action fw-semibold liTableExPac">
@@ -1236,6 +1241,138 @@
           <div class="modal-footer">
             
             <button type="button" class="btn btn-success"  data-bs-dismiss="modal" onclick="guardarOrden()">Guardar Orden</button>
+          </div>
+        </div>
+      
+      </div>
+    </div>
+
+    <div class="modal fade" id="reimpresionModal" tabindex="-1" aria-labelledby="reimpresionModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+      
+        <div class="modal-content" style="border: 5px solid #68c0c3;">
+          <div class="modal-header">
+            <h1 class="fs-5" id="reimpresionLabel">
+              Reimpresion
+            </h1>
+            <img src="../imgs/la-milagrosa-logo.png" width="70" alt="" />
+  
+            
+          </div>
+          <div class="modal-body">
+            
+            
+            <div class="row g-3 align-items-center">
+              <div class="col-4">
+                <label for="inputPacienteReimpresion" class="col-form-label">Paciente: </label>
+              </div>
+              <div class="col-8">
+                <input type="text" id="inputPacienteReimpresion" class="form-control">
+              </div>
+              
+            </div>
+            <br>
+            <hr>
+            
+            <div class="row my-2">
+              <div class="d-flex justify-content-around">
+                <h4 class="fw-semibold text-center">Examenes</h4>
+              </div>
+              <br>
+              <div class="list-group" id="tBodyLgExRe">
+                <a href="#" class="list-group-item list-group-item-action fw-semibold liTableExPac">
+                  <div class="container" id="tHeadLgRe">
+                    <div class="row text-center">
+                      <div class="col-1">
+                        #
+                      </div>
+                      <div class="col-11">
+                        Tipo Examen
+                      </div>
+                      
+                    </div>
+                  </div>
+                </a>
+                <a href="#" class="list-group-item list-group-item-action fs-6 fw-semibold liTableExPac">
+                  <div class="container" id="tHeadLgExRe">
+                    <div class="row text-center">
+                      <div class="col-1">
+                        1
+                      </div>
+                      <div class="col-8">
+                        Hematologia Completa
+                      </div>
+                      <div class="col-3 d-flex justify-content-end">
+                        <div class="form-check mx-2">
+                          <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
+                          
+                        </div>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="green" class="bi bi-eye svgButton" viewBox="0 0 16 16"  data-bs-toggle="collapse" href="#collapseLiTab${examenPac.examenId}" role="button" aria-expanded="false" aria-controls="collapseLiTab${examenPac.id}">
+                          <path d="M16 8s-3-5.5-8-5.5S0 8 0 8s3 5.5 8 5.5S16 8 16 8M1.173 8a13 13 0 0 1 1.66-2.043C4.12 4.668 5.88 3.5 8 3.5s3.879 1.168 5.168 2.457A13 13 0 0 1 14.828 8q-.086.13-.195.288c-.335.48-.83 1.12-1.465 1.755C11.879 11.332 10.119 12.5 8 12.5s-3.879-1.168-5.168-2.457A13 13 0 0 1 1.172 8z"/>
+                          <path d="M8 5.5a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5M4.5 8a3.5 3.5 0 1 1 7 0 3.5 3.5 0 0 1-7 0"/>
+                          </svg>
+                      </div>
+                      
+                    </div>
+                  </div>
+                </a>
+                <a href="#" class="list-group-item list-group-item-action fs-6 fw-semibold liTableExPac">
+                  <div class="container" id="tHeadLgEx">
+                    <div class="row text-center">
+                      <div class="col-1">
+                        1
+                      </div>
+                      <div class="col-8">
+                        Hematologia Completa
+                      </div>
+                      <div class="col-3 d-flex justify-content-end">
+                        <div class="form-check mx-2">
+                          <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
+                          
+                        </div>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="green" class="bi bi-eye svgButton" viewBox="0 0 16 16"  data-bs-toggle="collapse" href="#collapseLiTab${examenPac.examenId}" role="button" aria-expanded="false" aria-controls="collapseLiTab${examenPac.id}">
+                          <path d="M16 8s-3-5.5-8-5.5S0 8 0 8s3 5.5 8 5.5S16 8 16 8M1.173 8a13 13 0 0 1 1.66-2.043C4.12 4.668 5.88 3.5 8 3.5s3.879 1.168 5.168 2.457A13 13 0 0 1 14.828 8q-.086.13-.195.288c-.335.48-.83 1.12-1.465 1.755C11.879 11.332 10.119 12.5 8 12.5s-3.879-1.168-5.168-2.457A13 13 0 0 1 1.172 8z"/>
+                          <path d="M8 5.5a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5M4.5 8a3.5 3.5 0 1 1 7 0 3.5 3.5 0 0 1-7 0"/>
+                          </svg>
+                      </div>
+                      
+                    </div>
+                  </div>
+                </a>
+                <a href="#" class="list-group-item list-group-item-action fs-6 fw-semibold liTableExPac">
+                  <div class="container" id="tHeadLgEx">
+                    <div class="row text-center">
+                      <div class="col-1">
+                        1
+                      </div>
+                      <div class="col-8">
+                        Hematologia Completa
+                      </div>
+                      <div class="col-3 d-flex justify-content-end">
+                        <div class="form-check mx-2">
+                          <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
+                          
+                        </div>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="green" class="bi bi-eye svgButton" viewBox="0 0 16 16"  data-bs-toggle="collapse" href="#collapseOrdenEx2" role="button" aria-expanded="false" aria-controls="collapseOrdenEx2">
+                          <path d="M16 8s-3-5.5-8-5.5S0 8 0 8s3 5.5 8 5.5S16 8 16 8M1.173 8a13 13 0 0 1 1.66-2.043C4.12 4.668 5.88 3.5 8 3.5s3.879 1.168 5.168 2.457A13 13 0 0 1 14.828 8q-.086.13-.195.288c-.335.48-.83 1.12-1.465 1.755C11.879 11.332 10.119 12.5 8 12.5s-3.879-1.168-5.168-2.457A13 13 0 0 1 1.172 8z"/>
+                          <path d="M8 5.5a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5M4.5 8a3.5 3.5 0 1 1 7 0 3.5 3.5 0 0 1-7 0"/>
+                          </svg>
+                      </div>
+                      <div class="collapse" id="collapseOrdenEx2">
+
+                        fffffffffffff
+                      </div>
+                    </div>
+                  </div>
+                </a>
+            </div>
+            <hr>
+            <br>
+            </div>
+          </div>
+          <div class="modal-footer">
+            
+            <button type="button" class="btn btn-success"  data-bs-dismiss="modal" onclick="reimprimirExamenes()">Reimprimir</button>
           </div>
         </div>
       
