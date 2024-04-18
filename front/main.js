@@ -238,34 +238,47 @@ ipcMain.handle("errorWindow", async (event, arg) => {
   return result;
 });
 
+let examenPDFVar;
+function examenPDFWindow() {
+  if (!examenPDFVar) {
+    examenPDFVar = new BrowserWindow({
+      width: 1024,
+      icon: path.join(__dirname, "app/imgs/icons/app-logo.ico"),
+      height: 768,
+      title: "Menu - Examenes",
+      webPreferences: {
+        preload: path.join(__dirname, "app/preloads/preload.js"),
+        //devTools:false
+      },
+    });
+    examenPDFVar.loadFile("app/screens/examenPlantilla.html");
+    examenPDFVar.on("closed", () => (examenPDFVar = null));
+  } else {
+    examenPDFVar.focus();
+  }
+}
+ipcMain.handle("examenPDFWindow", () => examenPDFWindow());
 
 ipcMain.on("print", (e, arg) => {
-  console.log('printttt')
-  const mainWindow = new BrowserWindow({
-    width: 800,
-    height: 600,
-    show:false,
-    webPreferences: {
-        nodeIntegration: true
-    }
-});
-
-mainWindow.loadFile("app/screens/examen.html");
-
-// When the page finishes loading, generate the PDF
-mainWindow.webContents.on('did-finish-load', () => {
-    mainWindow.webContents.printToPDF({printBackground:true }).then(data => {
+  if (!examenPDFVar) {
+    return;
+  } else {
+    examenPDFVar.webContents
+      .printToPDF({ printBackground: true })
+      .then((data) => {
+        console.log("printToPDF");
         // Save the PDF data to a file (you can modify the path)
-        const fs = require('fs');
-        fs.writeFileSync('app/assets/my_generated_pdf.pdf', data);
-        shell.openPath(path.join(__dirname, 'app/assets/my_generated_pdf.pdf'))
-    }).catch(error => {
-        console.error('Error generating PDF:', error);
-    });
+        const fs = require("fs");
+        fs.writeFileSync("app/assets/my_generated_pdf.pdf", data);
+        shell.openPath(path.join(__dirname, "app/assets/my_generated_pdf.pdf"));
+      })
+      .catch((error) => {
+        console.error("Error generating PDF:", error);
+      });
+  }
+
+  // When the page finishes loading, generate the PDF
 });
-}); 
-
-
 
 app.whenReady().then(() => {
   createWindow();
