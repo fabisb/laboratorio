@@ -14,12 +14,13 @@ contextBridge.exposeInMainWorld("ventanas", {
     await ipcRenderer.invoke("creacionPaciWindow"),
   creacionBioWindow: async () => await ipcRenderer.invoke("creacionBioWindow"),
   creacionExamenWindow: async () =>
-      await ipcRenderer.invoke("creacionExamenWindow"),
-  creacionExWindow: async () =>
-      await ipcRenderer.invoke("creacionExWindow"),
+    await ipcRenderer.invoke("creacionExamenWindow"),
+  creacionExWindow: async () => await ipcRenderer.invoke("creacionExWindow"),
   mainWindow: async () => await ipcRenderer.invoke("createWindow"),
-  menuExamenesWindow: async () => await ipcRenderer.invoke("menuExamenesWindow"),
+  menuExamenesWindow: async () =>
+    await ipcRenderer.invoke("menuExamenesWindow"),
   loginWindow: async () => await ipcRenderer.invoke("loginWindow"),
+  PDFWindow: async () => await ipcRenderer.invoke("examenPDFWindow"),
 });
 contextBridge.exposeInMainWorld("urlsv", "http://localhost:3000");
 
@@ -64,6 +65,7 @@ contextBridge.exposeInMainWorld("alerta", {
   },
 });
 
-contextBridge.exposeInMainWorld("imprimir", (data) =>
-  ipcRenderer.send("print", JSON.stringify(data))
+contextBridge.exposeInMainWorld(
+  "imprimirPDF",
+  async () => await ipcRenderer.send("print", JSON.stringify())
 );

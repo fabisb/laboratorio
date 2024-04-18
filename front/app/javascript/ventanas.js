@@ -5,3 +5,4 @@ const abrirExamenesWindow = () => ventanas.creacionExamenWindow();
 const abrirExWindow = () => ventanas.creacionExWindow();
 const abrirMenuExamenesWindow = () => ventanas.menuExamenesWindow();
 const abrirLoginWindow = () => ventanas.loginWindow();
+const abrirPDFWindow = () => ventanas.PDFWindow();

@@ -1,8 +1,7 @@
 // Modules to control application life and create native browser window
-const { app, BrowserWindow, ipcMain, dialog } = require("electron");
+const { app, BrowserWindow, ipcMain, dialog, shell } = require("electron");
 const Store = require("electron-store");
 const path = require("path");
-const { PosPrinter } = require("electron-pos-printer");
 
 //RECARGA AUTOMATICA
 /* const electronReload = require("electron-reload");
@@ -238,17 +237,49 @@ ipcMain.handle("errorWindow", async (event, arg) => {
   console.log("🚀 ~ file: main.js:102 ~ ipcMain.handle ~ result:", result);
   return result;
 });
-// This method will be called when Electron has finished
-// initialization and is ready to create browser windows.
-// Some APIs can only be used after this event occurs.
+
+let examenPDFVar;
+function examenPDFWindow() {
+  if (!examenPDFVar) {
+    examenPDFVar = new BrowserWindow({
+      width: 1024,
+      icon: path.join(__dirname, "app/imgs/icons/app-logo.ico"),
+      height: 768,
+      title: "Menu - Examenes",
+      webPreferences: {
+        preload: path.join(__dirname, "app/preloads/preload.js"),
+        //devTools:false
+      },
+    });
+    examenPDFVar.loadFile("app/screens/examenPlantilla.html");
+    examenPDFVar.on("closed", () => (examenPDFVar = null));
+  } else {
+    examenPDFVar.focus();
+  }
+}
+ipcMain.handle("examenPDFWindow", () => examenPDFWindow());
+
 ipcMain.on("print", (e, arg) => {
-  const data = JSON.parse(arg);
-  PosPrinter.print(data, {
-    pageSize: "58mm",
-    preview: true,
-    //silent: true,
-  }).catch((e) => console.error(e));
+  if (!examenPDFVar) {
+    return;
+  } else {
+    examenPDFVar.webContents
+      .printToPDF({ printBackground: true })
+      .then((data) => {
+        console.log("printToPDF");
+        // Save the PDF data to a file (you can modify the path)
+        const fs = require("fs");
+        fs.writeFileSync("app/assets/my_generated_pdf.pdf", data);
+        shell.openPath(path.join(__dirname, "app/assets/my_generated_pdf.pdf"));
+      })
+      .catch((error) => {
+        console.error("Error generating PDF:", error);
+      });
+  }
+
+  // When the page finishes loading, generate the PDF
 });
+
 app.whenReady().then(() => {
   createWindow();
 
