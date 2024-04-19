@@ -344,6 +344,8 @@ const cedulaPaciente = async () => {
   }
 };
 
+
+
 const desactivarInputs = () => {
   var inputs = [...document.getElementsByTagName("input")];
   const botonGuardar = document.getElementById("botonGuardar");
@@ -728,6 +730,63 @@ function validarSelectOrden() {
     }
   }
 }
+
+function abrirModalReimpresion(){
+
+  const checksH= document.getElementsByName('checksExamenesBdd')
+  const checks= [...checksH]
+  const checked = checks.filter(e=> e.checked==true)
+  const tBodyOrden = document.getElementById(`tBodyLgExRe`);
+  const pacienteInput = document.getElementById("inputPacienteReimpresion");
+  pacienteInput.value = pacienteObj.nombre;
+
+  tBodyOrden.innerHTML=''
+  if(checked.length>0){
+    checked.forEach(e=>{
+      tBodyOrden.innerHTML+=`
+        
+      <a href="#" class="list-group-item list-group-item-action fs-6 fw-semibold">
+      <div class="container">
+        <div class="row text-center">
+          <div class="col-1">
+            ${e.value}
+          </div>
+          <div class="col-5">
+            ${e.attributes.nombre.value}
+          </div>
+          <div class="col-2 d-flex justify-content-end">
+            <div class="form-check mx-2">
+              <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
+              
+            </div>
+            
+          </div>
+          <div class="col-4 d-flex justify-content-end">
+          ${e.attributes.fecha.value}
+  
+            
+          </div>
+          
+            
+          </div>
+        </div>
+      </div>
+    </a>
+     
+    `
+  
+    })
+  
+    new bootstrap.Modal("#reimpresionModal").toggle();
+  
+  }else{
+    console.log('No tiene nada seleccionado')
+    return 
+
+  }
+
+  
+}
 const abrirModalTotalizar = () => {
   console.log(examenesDelPaciente);
   const tBodyOrden = document.getElementById(`tBodyLgExOrd`);
@@ -751,7 +810,7 @@ const abrirModalTotalizar = () => {
         </div>
         <div class="col-3 d-flex justify-content-end">
           <div class="form-check mx-2">
-            <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
+            <input class="form-check-input" type="checkbox" name="checksOrden" value="${ex.examenId}" >
             
           </div>
           <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="green" class="bi bi-eye svgButton" viewBox="0 0 16 16"  data-bs-toggle="collapse" href="#collapseOrdenEx${
@@ -802,6 +861,54 @@ const abrirModalTotalizar = () => {
   new bootstrap.Modal("#ordenModal").toggle();
 };
 
+async function guardarModSubBdd(id){
+  const inputs=document.getElementsByClassName('inputSc'+id)
+  const nota= document.getElementById(`inputNt${id}`)
+  const alerta=document.getElementById('alertaModificacionExamenBdd')
+
+  let subCa=[]
+  
+
+  for (let i = 0; i < inputs.length; i++) {
+    const element = inputs[i];
+    if(element.attributes.sb){
+      subCa.push({
+        id:element.attributes.sb.value,
+        campo:element.attributes.columna.value,
+        valor: element.value
+      })
+    }
+  }
+  try {
+    const { token } = await login.getToken();
+
+    await axios.put(
+      urlsv + "/api/examenes/update-subCaracteristicasCar",
+      { idCar:id,nota:nota.value,subCaracteristicas:subCa},
+      { headers: { token } }
+    );
+
+    alerta.removeAttribute('hidden')
+    alerta.innerText=`El resultado ha sido modificado exitosamente`;
+    alerta.className=`alert alert-success`
+    desactivarInputsResSb(id)
+    
+    setTimeout(() => {
+      alerta.setAttribute('hidden','true')
+      alerta.innerText='';
+      
+    }, 3000);
+
+
+
+    
+  } catch (error) {
+    
+  }
+  
+  console.log(subCa)
+  
+}
 const modificarExamenPacienteBDD = async (examen,idEx,idExPc) => {
   new bootstrap.Modal("#resultadosModal").toggle();
   const h1Ex = document.getElementById("h1NombreEx");
@@ -809,6 +916,8 @@ const modificarExamenPacienteBDD = async (examen,idEx,idExPc) => {
   tBodyDiagnosticos.innerHTML = "";
   h1Ex.innerText = `${examen} - ${pacienteObj.nombre} - ${pacienteObj.edad}`;
   console.log(examen,idEx,idExPc)
+  const guardarButton=document.getElementById(`guardarResultadoExPc`)
+  guardarButton.setAttribute('hidden','true')
 
   try {
     const { token } = await login.getToken();
@@ -834,16 +943,16 @@ const modificarExamenPacienteBDD = async (examen,idEx,idExPc) => {
         tBodyDiagnosticos.innerHTML += `
         <tr >
                 <th scope="row" colspan="2">${ct.nombre}</th>
-                <th> SubCaracteristica </th>
+                <th> <input disabled class="form-control form-control-sm inputExDetallePacCar" rango='no' name='rs-${ct.id}' type="text" id='inputRs${ct.id}' value="SubCaracteristica" placeholder="Ingrese Resultado" aria-label=".form-control-sm example"> </th>
                 <th>Resultado</th>
                 <td></td>
-                <td>  <input readonly class="form-control form-control-sm" type="text" id='inputNt${ct.id}' value="${ct.nota}" placeholder="Nota" aria-label=".form-control-sm example">              </td>
+                <td>  <input disabled class="inputSc${ct.id} form-control form-control-sm" type="text" id='inputNt${ct.id}' value="${ct.nota}" placeholder="Nota" aria-label=".form-control-sm example">              </td>
                 <td>
-                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="orange" class="bi bi-pencil-square" viewBox="0 0 16 16">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="orange" id="modificarResSvg${ct.id}" onclick="activarInputsResSb(${ct.id})" class="bi bi-pencil-square" viewBox="0 0 16 16">
                 <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
                 <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z"/>
               </svg>
-              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="blue" hidden class="bi bi-save" viewBox="0 0 16 16">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="blue" hidden id="guardarResSvg${ct.id}" onclick="guardarModSubBdd(${ct.id})" class="bi bi-save" viewBox="0 0 16 16">
   <path d="M2 1a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H9.5a1 1 0 0 0-1 1v7.293l2.646-2.647a.5.5 0 0 1 .708.708l-3.5 3.5a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L7.5 9.293V2a2 2 0 0 1 2-2H14a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2h2.5a.5.5 0 0 1 0 1z"/>
 </svg>
               </td>
@@ -856,17 +965,11 @@ const modificarExamenPacienteBDD = async (examen,idEx,idExPc) => {
             <tr>
                   <td colspan="2"></td>
                   <th scope="row" colspan="">${sb.nombre}</th>
-                  <td>  <input readonly id="Rs-${sb.id}" class="form-control form-control-sm inputFormula${ct.id} inputSubCaCa${ct.id}" name="rs-${sb.nombre}" type="number" valor="${sb.valor}" readonly placeholder="Resultado" aria-label=".form-control-sm example">              </td>
+                  <td>  <input disabled id="Rs-${sb.id}"cvalue="${sb.resultado}" class="form-control form-control-sm inputFormula${ct.id} inputSc${ct.id} inputSubCaCa${ct.id}" columna="resultado" sb='${sb.id}' name="rs-${sb.nombre}" type="number" value="${sb.resultado}" valor="${sb.valor}" readonly placeholder="Resultado" aria-label=".form-control-sm example">              </td>
                   <td></td>
-                  <td> <input readonly id="Nt-${sb.id}" class="form-control form-control-sm inputSubCaCaNota${ct.id}" name="nt-${sb.nombre}" type="text" value="${sb.nota}" placeholder="Nota" aria-label=".form-control-sm example">              </td>
+                  <td> <input disabled id="Nt-${sb.id}" class="form-control form-control-sm inputSc${ct.id} inputSubCaCaNota${ct.id}" columna="nota" sb="${sb.id}" name="nt-${sb.nombre}" type="text" value="${sb.nota}" placeholder="Nota" aria-label=".form-control-sm example"></td>
                   <td>
-                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="orange" class="bi bi-pencil-square" viewBox="0 0 16 16">
-                <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
-                <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z"/>
-              </svg>
-              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="blue" hidden class="bi bi-save" viewBox="0 0 16 16">
-  <path d="M2 1a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H9.5a1 1 0 0 0-1 1v7.293l2.646-2.647a.5.5 0 0 1 .708.708l-3.5 3.5a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L7.5 9.293V2a2 2 0 0 1 2-2H14a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2h2.5a.5.5 0 0 1 0 1z"/>
-</svg>
+                  
                   </td>
     
                 </tr>
@@ -877,17 +980,11 @@ const modificarExamenPacienteBDD = async (examen,idEx,idExPc) => {
               <tr>
                     <td colspan="2"></td>
                     <th scope="row" colspan="">${sb.nombre}</th>
-                    <td> <input readonly id="Rs-${sb.id}" onchange="actualizarResultadosFormula('${ct.id}')" class="form-control form-control-sm inputSubCaCa${ct.id}" name="rs-${sb.nombre}" type="number" placeholder="Resultado" aria-label=".form-control-sm example">              </td>
+                    <td> <input disabled id="Rs-${sb.id}" value="${sb.resultado}" onchange="actualizarResultadosFormula('${ct.id}')" class="inputSc${ct.id} form-control form-control-sm inputSubCaCa${ct.id}" columna="resultado" sb="${sb.id}" name="rs-${sb.nombre}" type="number" placeholder="Resultado" aria-label=".form-control-sm example">              </td>
                     <td></td>
-                    <td>  <input readonly id="Nt-${sb.id}"  class="form-control form-control-sm inputSubCaCaNota${ct.id}" value="${sb.nota}" name="nt-${sb.nombre}" type="text" placeholder="Nota" aria-label=".form-control-sm example">              </td>
+                    <td>  <input disabled id="Nt-${sb.id}"  class="form-control inputSc${ct.id} form-control-sm inputSubCaCaNota${ct.id}" value="${sb.nota}" name="nt-${sb.nombre}" columna="nota" sb="${sb.id}" type="text" placeholder="Nota" aria-label=".form-control-sm example">              </td>
                     <td>
-                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="orange" class="bi bi-pencil-square" viewBox="0 0 16 16">
-                <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
-                <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z"/>
-              </svg>
-              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="blue" hidden class="bi bi-save" viewBox="0 0 16 16">
-  <path d="M2 1a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H9.5a1 1 0 0 0-1 1v7.293l2.646-2.647a.5.5 0 0 1 .708.708l-3.5 3.5a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L7.5 9.293V2a2 2 0 0 1 2-2H14a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2h2.5a.5.5 0 0 1 0 1z"/>
-</svg>
+                    
                     </td>
       
                   </tr>
@@ -897,17 +994,11 @@ const modificarExamenPacienteBDD = async (examen,idEx,idExPc) => {
               <tr>
                     <td colspan="2"></td>
                     <th scope="row" colspan="">${sb.nombre}</th>
-                    <td>  <input readonly id="Rs-${sb.id}" class="form-control form-control-sm inputSubCaCa${ct.id}" name="rs-${sb.nombre}" type="text" placeholder="Resultado" aria-label=".form-control-sm example">              </td>
+                    <td>  <input disabled id="Rs-${sb.id}" value="${sb.resultado}" class="form-control form-control-sm inputSc${ct.id} inputSubCaCa${ct.id}" name="rs-${sb.nombre}" columna="resultado" sb="${sb.id}" type="text" placeholder="Resultado" aria-label=".form-control-sm example">              </td>
                     <td></td>
-                    <td>  <input readonly id="Nt-${sb.id}" class="form-control form-control-sm inputSubCaCaNota${ct.id}" value="${sb.nota}" name="nt-${sb.nombre}" type="text" placeholder="Nota" aria-label=".form-control-sm example">              </td>
+                    <td>  <input disabled id="Nt-${sb.id}" class="form-control form-control-sm inputSc${ct.id} inputSubCaCaNota${ct.id}" value="${sb.nota}" columna="nota" sb="${sb.id}" name="nt-${sb.nombre}" type="text" placeholder="Nota" aria-label=".form-control-sm example">              </td>
                     <td>
-                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="orange" class="bi bi-pencil-square" viewBox="0 0 16 16">
-                <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
-                <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z"/>
-              </svg>
-              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="blue" hidden class="bi bi-save" viewBox="0 0 16 16">
-  <path d="M2 1a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H9.5a1 1 0 0 0-1 1v7.293l2.646-2.647a.5.5 0 0 1 .708.708l-3.5 3.5a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L7.5 9.293V2a2 2 0 0 1 2-2H14a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2h2.5a.5.5 0 0 1 0 1z"/>
-</svg>
+                    
                     </td>
       
                   </tr>
@@ -926,13 +1017,13 @@ const modificarExamenPacienteBDD = async (examen,idEx,idExPc) => {
                       </select></td>
                         <td>${ct.unidad}</td>
                         <td>${ct.rango.inferior}  -  ${ct.rango.superior}</td>
-                        <td>  <input readonly class="form-control form-control-sm inputExDetallePacNota" name='nt-${ct.id}' type="text" id='inputNt${ct.id}' value="${ct.value}" placeholder="Nota" aria-label=".form-control-sm example">              </td>
+                        <td>  <input disabled class="form-control form-control-sm inputExDetallePacNota" name='nt-${ct.id}' type="text" id='inputNt${ct.id}' value="${ct.nota}" placeholder="Nota" aria-label=".form-control-sm example">              </td>
                         <td>
-                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="orange" class="bi bi-pencil-square" viewBox="0 0 16 16">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="orange" id="modificarResSvg${ct.id}" onclick="activarInputsRes(${ct.id})" class="bi bi-pencil-square" viewBox="0 0 16 16">
                 <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
                 <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z"/>
               </svg>
-              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="blue" hidden class="bi bi-save" viewBox="0 0 16 16">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="blue" id="guardarResSvg${ct.id}" onclick="modificarResultadoBdd(${ct.id})" hidden class="bi bi-save" viewBox="0 0 16 16">
   <path d="M2 1a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H9.5a1 1 0 0 0-1 1v7.293l2.646-2.647a.5.5 0 0 1 .708.708l-3.5 3.5a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L7.5 9.293V2a2 2 0 0 1 2-2H14a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2h2.5a.5.5 0 0 1 0 1z"/>
 </svg>
                         </td>
@@ -940,14 +1031,25 @@ const modificarExamenPacienteBDD = async (examen,idEx,idExPc) => {
                       </tr>
             `;
             ct.resultados.forEach((rs) => {
-              document.getElementsByClassName(
-                `selectRs${ct.nombre}`
-              )[0].innerHTML += `
-              <option value="${rs.resultado}">
-              ${rs.resultado}
-              </option>
-              `;
+              if(ct.resultado==rs.resultado){
+                document.getElementsByClassName(
+                  `selectRs${ct.nombre}`
+                )[0].innerHTML += `
+                <option selected value="${rs.resultado}">
+                ${rs.resultado}
+                </option>
+                `;
+              }else{
+                document.getElementsByClassName(
+                  `selectRs${ct.nombre}`
+                )[0].innerHTML += `
+                <option value="${rs.resultado}">
+                ${rs.resultado}
+                </option>
+                `;
+              }
             });
+            console.log(document.getElementsByClassName(`selectRs${ct.nombre}`)[0])
             document.getElementsByClassName(
               `selectRs${ct.nombre}`
             )[0].value=ct.resultado
@@ -956,16 +1058,16 @@ const modificarExamenPacienteBDD = async (examen,idEx,idExPc) => {
             tBodyDiagnosticos.innerHTML += `
             <tr>
                         <th scope="row" colspan="2">${ct.nombre}</th>
-                        <td>  <input readonly class="form-control form-control-sm inputExDetallePacCar" rango='${ct.rango.id}' name='rs-${ct.id}' type="text" id='inputRs${ct.id}' value="${ct.resultado}" placeholder="Ingrese Resultado" aria-label=".form-control-sm example">              </td>
+                        <td>  <input disabled class="form-control form-control-sm inputExDetallePacCar" rango='${ct.rango.id}' name='rs-${ct.id}' type="text" id='inputRs${ct.id}' value="${ct.resultado}" placeholder="Ingrese Resultado" aria-label=".form-control-sm example">              </td>
                         <td>${ct.unidad}</td>
                         <td>${ct.rango.inferior}  -  ${ct.rango.superior}</td>
-                        <td><input readonly class="form-control form-control-sm inputExDetallePacNota" name='nt-${ct.id}' type="text" id='inputNt${ct.id}' value="${ct.nota}" placeholder="Nota" aria-label=".form-control-sm example"></td>
+                        <td><input disabled class="form-control form-control-sm inputExDetallePacNota" name='nt-${ct.id}' type="text" id='inputNt${ct.id}' value="${ct.nota}" placeholder="Nota" aria-label=".form-control-sm example"></td>
                         <td>
-                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="orange" class="bi bi-pencil-square" viewBox="0 0 16 16">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="orange" id="modificarResSvg${ct.id}" onclick="activarInputsRes(${ct.id})" class="bi bi-pencil-square" viewBox="0 0 16 16">
                 <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
                 <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z"/>
               </svg>
-              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="blue" hidden class="bi bi-save" viewBox="0 0 16 16">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="blue" id="guardarResSvg${ct.id}" onclick="modificarResultadoBdd(${ct.id})" hidden class="bi bi-save" viewBox="0 0 16 16">
   <path d="M2 1a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H9.5a1 1 0 0 0-1 1v7.293l2.646-2.647a.5.5 0 0 1 .708.708l-3.5 3.5a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L7.5 9.293V2a2 2 0 0 1 2-2H14a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2h2.5a.5.5 0 0 1 0 1z"/>
 </svg>
                         </td>
@@ -978,18 +1080,18 @@ const modificarExamenPacienteBDD = async (examen,idEx,idExPc) => {
             tBodyDiagnosticos.innerHTML += `
             <tr>
                         <th scope="row" colspan="2">${ct.nombre}</th>
-                        <td> <select class="form-select form-select-sm selectRs${ct.nombre} inputExDetallePacCar" rango='no' id='inputRs${ct.id}' aria-label="Small select example">
+                        <td> <select disabled class="form-select form-select-sm selectRs${ct.nombre} inputExDetallePacCar" rango='no' id='inputRs${ct.id}' aria-label="Small select example">
                         
                       </select></td>
                         <td>${ct.unidad}</td>
                         <td> - </td>
-                        <td>  <input readonly class="form-control form-control-sm inputExDetallePacNota" name='nt-${ct.id}' type="text" id='inputNt${ct.id}' placeholder="Nota" aria-label=".form-control-sm example"></td>
+                        <td>  <input disabled class="form-control form-control-sm inputExDetallePacNota" name='nt-${ct.id}' type="text" id='inputNt${ct.id}' value="${ct.nota}" placeholder="Nota" aria-label=".form-control-sm example"></td>
                         <td>
-                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="orange" class="bi bi-pencil-square" viewBox="0 0 16 16">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="orange" id="modificarResSvg${ct.id}" onclick="activarInputsRes(${ct.id})" class="bi bi-pencil-square" viewBox="0 0 16 16">
                 <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
                 <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z"/>
               </svg>
-              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="blue" hidden class="bi bi-save" viewBox="0 0 16 16">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="blue" id="guardarResSvg${ct.id}" onclick="modificarResultadoBdd(${ct.id})" hidden class="bi bi-save" viewBox="0 0 16 16">
   <path d="M2 1a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H9.5a1 1 0 0 0-1 1v7.293l2.646-2.647a.5.5 0 0 1 .708.708l-3.5 3.5a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L7.5 9.293V2a2 2 0 0 1 2-2H14a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2h2.5a.5.5 0 0 1 0 1z"/>
 </svg>
                         </td>
@@ -997,28 +1099,43 @@ const modificarExamenPacienteBDD = async (examen,idEx,idExPc) => {
                       </tr>
             `;
             ct.resultados.forEach((rs) => {
-              document.getElementsByClassName(
-                `selectRs${ct.nombre}`
-              )[0].innerHTML += `
-              <option value="${rs.resultado}">
-              ${rs.resultado}
-              </option>
-              `;
+              if(ct.resultado==rs.resultado){
+                document.getElementsByClassName(
+                  `selectRs${ct.nombre}`
+                )[0].innerHTML += `
+                <option selected value="${rs.resultado}">
+                ${rs.resultado}
+                </option>
+                `;
+              }else{
+                document.getElementsByClassName(
+                  `selectRs${ct.nombre}`
+                )[0].innerHTML += `
+                <option value="${rs.resultado}">
+                ${rs.resultado}
+                </option>
+                `;
+              }
+
+              
             });
+
+          
+
           } else {
             tBodyDiagnosticos.innerHTML += `
             <tr>
                         <th scope="row" colspan="2">${ct.nombre}</th>
-                        <td>  <input readonly class="form-control form-control-sm inputExDetallePacCar" name='rs-${ct.id}' rango='no' type="text" id='inputRs${ct.id}' value='${ct.resultado}' placeholder="Ingrese Resultado" aria-label=".form-control-sm example">              </td>
+                        <td>  <input disabled class="form-control form-control-sm inputExDetallePacCar" name='rs-${ct.id}' rango='no' type="text" id='inputRs${ct.id}' value='${ct.resultado}' placeholder="Ingrese Resultado" aria-label=".form-control-sm example">              </td>
                         <td>${ct.unidad}</td>
                         <td> - </td>
-                        <td>  <input readonly class="form-control form-control-sm inputExDetallePacNota" name='nt-${ct.id}' type="text" id='inputNt${ct.id}' value='${ct.nota}' placeholder="Nota" aria-label=".form-control-sm example">              </td>
+                        <td>  <input disabled class="form-control form-control-sm inputExDetallePacNota" name='nt-${ct.id}' type="text" id='inputNt${ct.id}' value='${ct.nota}' placeholder="Nota" aria-label=".form-control-sm example">              </td>
                         <td>
-                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="orange" class="bi bi-pencil-square" viewBox="0 0 16 16">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="orange" id="modificarResSvg${ct.id}" onclick="activarInputsRes(${ct.id})" class="bi bi-pencil-square" viewBox="0 0 16 16">
                 <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
                 <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z"/>
               </svg>
-              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="blue" hidden class="bi bi-save" viewBox="0 0 16 16">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="blue" id="guardarResSvg${ct.id}" onclick="modificarResultadoBdd(${ct.id})" hidden class="bi bi-save" viewBox="0 0 16 16">
   <path d="M2 1a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H9.5a1 1 0 0 0-1 1v7.293l2.646-2.647a.5.5 0 0 1 .708.708l-3.5 3.5a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L7.5 9.293V2a2 2 0 0 1 2-2H14a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2h2.5a.5.5 0 0 1 0 1z"/>
 </svg>
                         </td>
@@ -1038,6 +1155,108 @@ const modificarExamenPacienteBDD = async (examen,idEx,idExPc) => {
 
 }
 
+function activarInputsResSb(id){
+  const inputs=document.getElementsByClassName('inputSc'+id)
+  console.log(inputs)
+
+  for (let i = 0; i < inputs.length; i++) {
+    const element = inputs[i];
+    element.removeAttribute('disabled')
+    
+  }
+  const svgMod= document.getElementById(`modificarResSvg${id}`)
+  const svgGuardar = document.getElementById(`guardarResSvg${id}`)
+
+  svgMod.setAttribute('hidden','true')
+  
+  svgGuardar.removeAttribute('hidden')
+}
+function desactivarInputsResSb(id){
+  const inputs=document.getElementsByClassName('inputSc'+id)
+  console.log(inputs)
+
+  for (let i = 0; i < inputs.length; i++) {
+    const element = inputs[i];
+    element.setAttribute('disabled','true')
+    
+  }
+  const svgMod= document.getElementById(`modificarResSvg${id}`)
+  const svgGuardar = document.getElementById(`guardarResSvg${id}`)
+
+  svgMod.removeAttribute('hidden')
+  
+  svgGuardar.setAttribute('hidden','true')
+}
+
+async function modificarResultadoBdd(id){
+  const resInp=document.getElementById(`inputRs${id}`)
+  const notInp=document.getElementById(`inputNt${id}`)
+  const alerta=document.getElementById('alertaModificacionExamenBdd')
+ 
+
+  try {
+    const { token } = await login.getToken();
+
+    const {data} = await axios.put(
+      urlsv + "/api/examenes/modificar-resultado-examen",
+      { idRes:id,resultado:resInp.value,nota:notInp.value},
+      { headers: { token } }
+    );
+    alerta.removeAttribute('hidden')
+    alerta.innerText=`El resultado ha sido modificado exitosamente`;
+    alerta.className=`alert alert-success`
+    desactivarInputsRes(id)
+    
+    setTimeout(() => {
+      alerta.setAttribute('hidden','true')
+      alerta.innerText='';
+      
+    }, 3000);
+    
+    
+  } catch (error) {
+    console.log(error)
+    alerta.innerText=error;
+    alerta.className=`alert alert-danger`
+    setTimeout(() => {
+      alerta.setAttribute('hidden','true')
+      alerta.innerText='';
+      
+    }, 3000);
+  }
+
+
+}
+
+function activarInputsRes(id){
+  const svgMod= document.getElementById(`modificarResSvg${id}`)
+  const svgGuardar = document.getElementById(`guardarResSvg${id}`)
+
+  svgMod.setAttribute('hidden','true')
+  
+  svgGuardar.removeAttribute('hidden')
+  document.getElementById(`inputNt${id}`).removeAttribute('disabled')
+  document.getElementById(`inputRs${id}`).removeAttribute('disabled')
+
+
+
+}
+
+
+function desactivarInputsRes(id){
+  const svgMod= document.getElementById(`modificarResSvg${id}`)
+  const svgGuardar = document.getElementById(`guardarResSvg${id}`)
+
+  svgMod.removeAttribute('hidden')
+  
+  svgGuardar.setAttribute('hidden','true')
+  document.getElementById(`inputNt${id}`).setAttribute('disabled','true')
+  document.getElementById(`inputRs${id}`).setAttribute('disabled','true')
+
+ 
+
+}
+
 
 const abrirModalExamenes = () => new bootstrap.Modal("#examenes-list").toggle();
 const abrirModalExamenesCrud = () =>
@@ -1050,7 +1269,11 @@ const abrirResultadosModal = async (examen, idEx, n) => {
   h1Ex.innerText = `${examen} - ${pacienteObj.nombre} - ${pacienteObj.edad}`;
   const alertaExamen = document.getElementById('alertaExamen')
   const examenF=examenesDelPaciente.filter(ex=>ex.examenId == idEx)
-  if(n==true){
+  
+  const guardarButton=document.getElementById(`guardarResultadoExPc`)
+  guardarButton.removeAttribute('hidden')
+  if(n=='true'){
+    
     if(examenF.length>0){
         console.log(alertaExamen)
       
@@ -1291,6 +1514,12 @@ const abrirResultadosModal = async (examen, idEx, n) => {
 };
 
 async function guardarOrden(){
+
+  const checksH=document.getElementsByName(`checksOrden`)
+  const checks = [...checksH]
+  const checked = checks.filter(e=> e.checked == true)
+  console.log(checked)
+
   const selectOrden=document.getElementById("selectOrden");
   const inputOrden=document.getElementById("inputOrden");
   const selectBioAnalista=document.getElementById("selectBioAnalista");
@@ -1442,7 +1671,7 @@ async function pedirCaracteristicas(id){
 async function buscarExamenesPaciente(){
   const fechaExamen = document.getElementById('fechaExamenInput')
   const preCedula = document.getElementsByName("pre_cedula")[0].value;
-
+  
   const cedula = document.getElementsByName("cedula")[0].value;
 
   console.log(fechaExamen.value)
@@ -1463,6 +1692,7 @@ async function buscarExamenesPaciente(){
     console.log(examenes)
 
     const tBody = document.getElementById(`tBodyLgEx`);
+    tBody.innerHTML=''
     examenes.examenesData.forEach(ex=>{
       tBody.innerHTML += `
       <a href="#" class="list-group-item list-group-item-action liTableExPac liBodyTablaExPac" id="aTablaExPac${ex.id}" >
@@ -1471,16 +1701,18 @@ async function buscarExamenesPaciente(){
           <div class="col-1">
             ${ex.id}
           </div>
-          <div class="col-8 ">
+          <div class="col-9">
             <div class="row">
-              <div class="col-9">
+              <div class="col-8">
               ${ex.nombreEx}
     
               </div>
              
-              
               <div class="col-3 d-flex justify-content-end">
+                <div class="form-check me-3">
+                  <input class="form-check-input" type="checkbox" nombre="${ex.nombreEx}" fecha="${ex.fecha.split('T')[0]}" name="checksExamenesBdd" value="${ex.id}" id="check${ex.id}">
                 
+                </div>
                 <svg xmlns="http://www.w3.org/2000/svg" width="27" height="27" fill="green" onclick="pedirCaracteristicas(${ex.id})"  data-bs-toggle="collapse" data-bs-target="#collapseLiTab${ex.id}" class="bi bi-eye svgButton" viewBox="0 0 16 16"  >
                 <path d="M16 8s-3-5.5-8-5.5S0 8 0 8s3 5.5 8 5.5S16 8 16 8M1.173 8a13 13 0 0 1 1.66-2.043C4.12 4.668 5.88 3.5 8 3.5s3.879 1.168 5.168 2.457A13 13 0 0 1 14.828 8q-.086.13-.195.288c-.335.48-.83 1.12-1.465 1.755C11.879 11.332 10.119 12.5 8 12.5s-3.879-1.168-5.168-2.457A13 13 0 0 1 1.172 8z"/>
                 <path d="M8 5.5a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5M4.5 8a3.5 3.5 0 1 1 7 0 3.5 3.5 0 0 1-7 0"/>
@@ -1522,7 +1754,7 @@ async function buscarExamenesPaciente(){
             
             
           </div>
-          <div class="col-3">${ex.fecha.split('T')[0]}</div>
+          <div class="col-2">${ex.fecha.split('T')[0]}</div>
         </div>
       </div>
       <div class="collapse" id="collapseLiTab${ex.id}">
@@ -1548,6 +1780,12 @@ async function buscarExamenesPaciente(){
       `;
     
     })
+    const totalizarButton= document.getElementById('totalizarButton')
+
+    totalizarButton.setAttribute('hidden','true')
+    const reimpresionButton= document.getElementById('reimpresionButton')
+
+    reimpresionButton.removeAttribute('hidden')
  
     
 
@@ -1557,10 +1795,16 @@ async function buscarExamenesPaciente(){
 
 }
 
+
+
 function guardarResultadosExamen() {
   const detallesExamenPc = examenDataPc.detalles.map((e) => {
     const res = document.getElementById("inputRs" + e.id);
     const nota = document.getElementById("inputNt" + e.id);
+   
+    const reimpresionButton= document.getElementById('reimpresionButton')
+
+    reimpresionButton.setAttribute('hidden','true')
     console.log(nota, res);
     if(examenesDelPaciente.length==0){
       document.getElementById("tBodyLgEx").innerHTML=`

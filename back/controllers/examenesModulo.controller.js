@@ -915,6 +915,8 @@ export const updateCaracteristica = async (req, res) => {
   }
 };
 
+
+
 export const updateSubCaracteristica = async (req, res) => {
   const { id_subCaracteristica, subCaracteristica } = req.body;
   console.log("🚀 ~ updateSubCaracteristica ~ req.body:", req.body);
