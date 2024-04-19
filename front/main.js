@@ -26,6 +26,17 @@ ipcMain.handle("getToken", (event, arg) => {
   const token = store.get("token");
   return token;
 });
+
+ipcMain.on("examen", async (event, examen) => {
+  store.delete('examen');
+  await store.set("examen", examen);
+});
+ipcMain.handle("getExamen", (event, arg) => {
+  const examen = store.get("examen");
+  return examen;
+});
+
+
 let mainWindow;
 function createWindow() {
   // Create the browser window.

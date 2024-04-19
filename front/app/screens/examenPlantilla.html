@@ -9,7 +9,7 @@
       href="../../bower_components/bootstrap/dist/css/bootstrap.min.css"
     />
   </head>
-  <body >
+  <body onload="pintarExamen()">
     <main class="container">
       <div class="container m-1 text-center">
         <div class="row">
@@ -31,12 +31,12 @@
                     </h5>
                     <p class="card-text">R.I.F.: J-501761426 / N.I.T.:</p>
                     <p class="card-text">
-                      <small class="text-body-secondary"
+                      <small name="direccion" class="text-body-secondary"
                         >Calle 79 Casa Nro 78 - 179 Sector Macandona, Maracaibo,
                         Edo. Zulia. Zona Postal 4005</small
                       >
                       <br />
-                      <small class="text-body-secondary">E-mail:</small>
+                      <small name="correo" class="text-body-secondary">E-mail:</small>
                     </p>
                   </div>
                 </div>
@@ -51,7 +51,7 @@
                 <div class="col-9 my-auto mx-auto">
                   <div class="card">
                     <div class="container text-center">
-                      <div class="row align-items-center">
+                      <div name="cabecera" class="row align-items-center">
                         <div class="col">
                           <div class="card-body">
                             <ul class="list-group list-group-flush">
@@ -88,6 +88,7 @@
         </div>
         <div class="row my-1">
           <div class="col">
+            
             <div class="card">
               <div class="card-header text-start fw-bolder fs-4">SECCION</div>
             <div class="card">
@@ -129,7 +130,6 @@
                 </table>
               </div>
             </div>
-            </div>
             <div class="card">
               <div class="card-header">HEMATOLOGIA COMPLETA</div>
               <div class="card-body">
@@ -169,6 +169,8 @@
                 </table>
               </div>
             </div>
+            </div>
+          
             <div class="card">
               <div class="card-header text-start fw-bolder fs-4">SECCION</div>
             <div class="card">

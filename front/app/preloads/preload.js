@@ -22,12 +22,12 @@ contextBridge.exposeInMainWorld("ventanas", {
   loginWindow: async () => await ipcRenderer.invoke("loginWindow"),
   PDFWindow: async () => await ipcRenderer.invoke("examenPDFWindow"),
 });
+
 contextBridge.exposeInMainWorld("urlsv", "http://localhost:3000");
 
 contextBridge.exposeInMainWorld("login", {
   login: async (user, pass) => {
     const result = ipcRenderer.sendSync("login", { user, pass });
-    console.log("🚀 ~ file: preload.js:21 ~ login: ~ result:", result);
     return result;
   },
   storeToken: async (token) => {
@@ -36,6 +36,15 @@ contextBridge.exposeInMainWorld("login", {
   },
   getToken: async () => await ipcRenderer.invoke("getToken"),
 });
+
+contextBridge.exposeInMainWorld("examenVar", {
+  store: async (examen) => {
+    await ipcRenderer.send("examen", examen);
+    return;
+  },
+  get: async () => await ipcRenderer.invoke("getExamen"),
+});
+
 contextBridge.exposeInMainWorld("ticket", {
   store: async (producto) => {
     const result = await ipcRenderer.send("setTicketProducto", producto);
