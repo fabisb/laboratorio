@@ -128,6 +128,12 @@ export const getExamenById = async (req, res) => {
       "SELECT * FROM examenes WHERE id = ?",
       [idExamen]
     );
+    const [seccion] = await pool.execute(
+      "SELECT * FROM seccion_examen WHERE id = ?",
+      [examenes[0].id_seccion]
+    );
+    console.log(seccion);
+    
     if (examenes.length == 0) {
       return await res
         .status(404)
@@ -154,9 +160,9 @@ export const getExamenById = async (req, res) => {
         );
         return await res
           .status(200)
-          .json({ examen: examenes[0], detalles, rangos, resultados, subCa });
+          .json({ examen: examenes[0], detalles, rangos, resultados, subCa,seccion });
       } else {
-        return await res.status(200).json({ examen: examenes[0], detalles });
+        return await res.status(200).json({ examen: examenes[0], detalles,seccion});
       }
     }
   } catch (error) {

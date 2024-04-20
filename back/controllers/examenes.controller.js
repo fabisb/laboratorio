@@ -6,6 +6,7 @@ export const getExamen = async (req, res) => {
     const [resultados] = await pool.execute(
       `SELECT * FROM examenes where id = ${id}`
     );
+    
     const [resultadosDetalle] = await pool.execute(
       `SELECT * FROM detalles_examen where id_ex = ${id} AND status = ?`,
       ["activo"]
@@ -417,8 +418,7 @@ export const crearOrden = async (req, res) => {
       }
     }
     
-  
-
+    
     return await res
       .status(200)
       .json({ mensaje: "Orden ingresada con exito" });

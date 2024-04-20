@@ -1299,6 +1299,7 @@ const abrirResultadosModal = async (examen, idEx, n) => {
     { headers: { token }, params: { idExamen: idEx } }
   );
 
+
   examenDataPc = examenData;
   examenData.detalles = examenData.detalles.sort(function (a, b) {
     if (a.posicion > b.posicion) {
@@ -1440,7 +1441,7 @@ const abrirResultadosModal = async (examen, idEx, n) => {
           tBodyDiagnosticos.innerHTML += `
           <tr>
                       <th scope="row" colspan="2">${ct.nombre}</th>
-                      <td> <select class="form-select form-select-sm selectRs${ct.nombre} inputExDetallePacCar" rango='${rango.id}' id='inputRs${ct.id}' aria-label="Small select example">
+                      <td> <select class="form-select form-select-sm selectRs${ct.nombre} inputExDetallePacCar" rango='${rango.id}' inferior='${rango.inferior}' superior='${rango.superior}' id='inputRs${ct.id}' aria-label="Small select example">
                       
                     </select></td>
                       <td>${ct.unidad}</td>
@@ -1462,7 +1463,7 @@ const abrirResultadosModal = async (examen, idEx, n) => {
           tBodyDiagnosticos.innerHTML += `
           <tr>
                       <th scope="row" colspan="2">${ct.nombre}</th>
-                      <td>  <input class="form-control form-control-sm inputExDetallePacCar" rango='${rango.id}' name='rs-${ct.id}' type="text" id='inputRs${ct.id}' placeholder="Ingrese Resultado" aria-label=".form-control-sm example">              </td>
+                      <td>  <input class="form-control form-control-sm inputExDetallePacCar" rango='${rango.id}' inferior='${rango.inferior}' superior='${rango.superior}' name='rs-${ct.id}' type="text" id='inputRs${ct.id}' placeholder="Ingrese Resultado" aria-label=".form-control-sm example">              </td>
                       <td>${ct.unidad}</td>
                       <td>${rango.inferior}  -  ${rango.superior}</td>
                       <td>  <input class="form-control form-control-sm inputExDetallePacNota" name='nt-${ct.id}' type="text" id='inputNt${ct.id}' placeholder="Nota" aria-label=".form-control-sm example">              </td>
@@ -1475,7 +1476,7 @@ const abrirResultadosModal = async (examen, idEx, n) => {
           tBodyDiagnosticos.innerHTML += `
           <tr>
                       <th scope="row" colspan="2">${ct.nombre}</th>
-                      <td> <select class="form-select form-select-sm selectRs${ct.nombre} inputExDetallePacCar" rango='no' id='inputRs${ct.id}' aria-label="Small select example">
+                      <td> <select class="form-select form-select-sm selectRs${ct.nombre} inputExDetallePacCar" rango='no' inferior='no' superior='no' id='inputRs${ct.id}' aria-label="Small select example">
                       
                     </select></td>
                       <td>${ct.unidad}</td>
@@ -1497,7 +1498,7 @@ const abrirResultadosModal = async (examen, idEx, n) => {
           tBodyDiagnosticos.innerHTML += `
           <tr>
                       <th scope="row" colspan="2">${ct.nombre}</th>
-                      <td>  <input class="form-control form-control-sm inputExDetallePacCar" name='rs-${ct.id}' rango='no' type="text" id='inputRs${ct.id}' placeholder="Ingrese Resultado" aria-label=".form-control-sm example">              </td>
+                      <td>  <input class="form-control form-control-sm inputExDetallePacCar" name='rs-${ct.id}' rango='no' inferior='no' superior='no' type="text" id='inputRs${ct.id}' placeholder="Ingrese Resultado" aria-label=".form-control-sm example">              </td>
                       <td>${ct.unidad}</td>
                       <td> - </td>
                       <td>  <input class="form-control form-control-sm inputExDetallePacNota" name='nt-${ct.id}' type="text" id='inputNt${ct.id}' placeholder="Nota" aria-label=".form-control-sm example">              </td>
@@ -1513,7 +1514,8 @@ const abrirResultadosModal = async (examen, idEx, n) => {
   }
 };
 
-async function guardarOrden(){
+
+async function previewPdf(){
 
   const checksH=document.getElementsByName(`checksOrden`)
   const checks = [...checksH]
@@ -1524,10 +1526,92 @@ async function guardarOrden(){
   const inputOrden=document.getElementById("inputOrden");
   const selectBioAnalista=document.getElementById("selectBioAnalista");
 
+  const examenesChecked = []
+
+  checked.forEach(e=>{
+    examenesDelPaciente.forEach(el=>{
+      if(el.examenId==e.value){
+        examenesChecked.push(el)
+      }
+    })
+    
+  })
+  console.log("🚀 ~ previewPdf ~ examenesChecked:", examenesChecked)
+  let examenesPreview =[]
+
+  examenesChecked.forEach(e=>{
+    caracteristicas=[]
+
+    e.detallesExamenPc.forEach(el=>{
+
+      let subCa = e.subCaracteristicasExPc.filter(sb=> sb.idCar == el.idCar)
+      if(el.imprimir == 1){
+        caracteristicas.push(
+          {
+            nombre: el.nombreCar,
+            resultado: el.resultado,
+            inferior:el.inferior,
+            superior:el.superior,
+            unidad:el.unidad,
+            nota: el.nota,
+            imprimir: el.imprimir,
+            subCaracteristicas:subCa
+          }
+        )
+      }else{
+        if(el.resultado!=""){
+          caracteristicas.push(
+            {
+              nombre: el.nombreCar,
+              resultado: el.resultado,
+              inferior:el.inferior,
+              superior:el.superior,
+              unidad:el.unidad,
+              nota: el.nota,
+              imprimir: el.imprimir,
+              subCaracteristicas:subCa
+            }
+          )
+        }
+      }
+      
+    })
+    examenesPreview.push({
+      examen:e.examenNombre,
+      nombreSeccion:e.seccionNombre,
+      caracteristicas
+    })
+
+    
+
+
+    
+  })
+  console.log(examenesPreview)
+  const examen = {
+    orden:`${selectOrden.value}-${inputOrden.value}`,
+
+    bioanalista: selectBioAnalista.value,
+    paciente: pacienteObj,
+    examenes: examenesPreview
+  }
+  await examenVar.store(examen);
+  abrirPDFWindow()
+}
+
+async function guardarOrden(){
+
+
+  const selectOrden=document.getElementById("selectOrden");
+  const inputOrden=document.getElementById("inputOrden");
+  const selectBioAnalista=document.getElementById("selectBioAnalista");
+
   
   let examenes = [
 
   ]
+
+  
   
   examenesDelPaciente.forEach(ex=>{
     let detallesExamen = []
@@ -1569,6 +1653,7 @@ async function guardarOrden(){
   }
   try {
     const { token } = await login.getToken();
+    
   
     const res = await axios.post(
       urlsv + "/api/examenes/crear-orden",
@@ -1826,15 +1911,20 @@ function guardarResultadosExamen() {
     if (res) {
       return {
         rango: res.attributes.rango.value,
+        inferior: res.attributes.inferior.value,
+        superior: res.attributes.superior.value,
         resultado: res.value,
         nota: nota.value,
         idCar: e.id,
         nombreCar: e.nombre,
         imprimir: e.impsiempre,
+        unidad: e.unidad,
       };
     }
     return {
       rango: "no",
+      inferior: "no",
+      superior: "no",
       resultado: "subCaracteristica",
       nota: nota.value,
       idCar: e.id,
@@ -1853,12 +1943,15 @@ function guardarResultadosExamen() {
       resultado: res.value,
       idCar: e.id_det_ex,
       nota: nota.value,
+      tipo: e.tipo
     };
   });
+  console.log(examenDataPc)
   let examenPac = {
     examenId: examenDataPc.examen.id,
     examenNombre: examenDataPc.examen.nombre,
     detallesExamenPc,
+    seccionNombre: examenDataPc.seccion[0].nombre,
     subCaracteristicasExPc: subCaracteristicas,
   };
 

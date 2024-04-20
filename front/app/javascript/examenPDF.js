@@ -7,19 +7,22 @@ const imprimir = async () => {
 };
 
 const pintarExamen = async () => {
-  //const { examen } = await examenVar.get();
-  //console.log("🚀 ~ pintarExamen ~ examen:", examen)
-  const examen = {
-    nombre:'Fabian Silva',
+
+  const examen  = await examenVar.get();
+  console.log("🚀 ~ pintarExamen ~ examen:", examen)
+  /* const examen = {
+    orden:'C-0000',
+    bioanalista:'Rumina Arambulo',
+   paciente:{ nombre:'Fabian Silva',
     cedula:"28146771",
+    pre_cedula:'V',
     direccion:'san francisco',
     telefono:'04146308395',
     correo:'fabian@gmail.com',
     fecha_nacimiento:'17/12/2002',
     edad:'21 años y 5 meses',
-    orden:'C-0000',
-    bioanalista:'Rumina Arambulo',
-    emision:'19/4/2024',
+    emision:'19/4/2024'
+    },
     examenes: [
       {
         examen:'EXAMEN PRUEBA',
@@ -45,21 +48,21 @@ const pintarExamen = async () => {
             superior:'10',
             unidad:'ml',
             nota:'nota 2',
-            subCaracteristicas: [{nombre:'sub2', resultado:'1', nota:'nota 3'},{nombre:'sub2.1', resultado:'1.1', nota:'nota 4'}],
+            subCaracteristicas: [{nombre:'sub2', resultado:'1', nota:'nota 3', tipo:'numero'},{nombre:'sub2.1', resultado:'1.1', nota:'nota 4', tipo:'numero'}],
           },
         ],
       },
     ],
-  };
-  document.getElementsByName("direccion")[0].innerText = examen.direccion;
-  document.getElementsByName("correo")[0].innerText = "Email: " + examen.correo;
+  }; */
+  document.getElementsByName("direccion")[0].innerText = examen.paciente.direccion;
+  document.getElementsByName("correo")[0].innerText = "Email: " + examen.paciente.correo;
   document.getElementsByName("cabecera")[0].innerHTML = `
   <div class="col" style="font-size: small;">
   <div class="card-body">
     <ul class="list-group list-group-flush">
       <li class="list-group-item"><span class="fw-bold">Empresa:</span></li>
-      <li class="list-group-item"><span class="fw-bold">Paciente:</span> <br> ${examen.nombre}</li>
-      <li class="list-group-item"><span class="fw-bold">Cedula:</span><br> ${examen.cedula}</li>
+      <li class="list-group-item"><span class="fw-bold">Paciente:</span> <br> ${examen.paciente.nombre}</li>
+      <li class="list-group-item"><span class="fw-bold">Cedula:</span><br> ${examen.paciente.pre_cedula}-${examen.paciente.cedula}</li>
       <li class="list-group-item"><span class="fw-bold">Factura: </span><br> ${examen.orden}</li>
     </ul>
   </div>
@@ -67,9 +70,9 @@ const pintarExamen = async () => {
 <div class="col" style="font-size: small;">
   <div class="card-body">
     <ul class="list-group list-group-flush">
-      <li class="list-group-item"><span class="fw-bold">Fecha Nacimiento:</span><br> ${examen.fecha_nacimiento}</li>
-      <li class="list-group-item"><span class="fw-bold">Edad:</span><br> ${examen.edad}</li>
-      <li class="list-group-item"><span class="fw-bold">Emision:</span><br> ${examen.emision}</li>
+      <li class="list-group-item"><span class="fw-bold">Fecha Nacimiento:</span><br> ${examen.paciente.fecha_nacimiento}</li>
+      <li class="list-group-item"><span class="fw-bold">Edad:</span><br> ${examen.paciente.edad}</li>
+      <li class="list-group-item"><span class="fw-bold">Emision:</span><br> ${examen?.emision}</li>
     </ul>
   </div>
 </div>
@@ -124,18 +127,10 @@ const pintarExamen = async () => {
               return `
           <tr>
             <th scope="row"></th>
-            <td>${sc.nombre}</td>
+            <td>${sc.nombreSub}</td>
             <td>-</td>
             <td>-</td>
             <td>${sc.resultado}</td>
-          </tr>
-
-          <tr>
-            <th scope="row"></th>
-            <td>total</td>
-            <td>-</td>
-            <td>-</td>
-            <td>COMO SE PINTA EL TOTAL?</td>
           </tr>
           `;
             })

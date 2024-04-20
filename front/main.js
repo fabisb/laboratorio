@@ -33,6 +33,7 @@ ipcMain.on("examen", async (event, examen) => {
 });
 ipcMain.handle("getExamen", (event, arg) => {
   const examen = store.get("examen");
+  console.log("🚀 ~ ipcMain.handle ~ examen:", examen)
   return examen;
 });
 

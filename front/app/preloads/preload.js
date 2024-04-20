@@ -39,6 +39,7 @@ contextBridge.exposeInMainWorld("login", {
 
 contextBridge.exposeInMainWorld("examenVar", {
   store: async (examen) => {
+    console.log("🚀 ~ store: ~ examen:", examen)
     await ipcRenderer.send("examen", examen);
     return;
   },
