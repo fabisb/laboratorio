@@ -1,5 +1,27 @@
 import { pool } from "../database/db.js";
 
+export const crearExamenPendiente = async (req,res)=>{
+  const {examenPac,idPac}=req.body;
+  try {
+    const [examen] = await pool.execute(`INSERT INTO examenes_pendientes (id_ex,id_pac) VALUES (?, ?)`,[examenPac.examenId,idPac])
+
+    for await (const dt of examenPac.detallesExamenPd){
+      const [detalle] = await pool.execute(`INSERT INTO detalles_ex_pendientes(id_dt,id_ex,id_ex_pd,id_rango,resultado,nota) VALUES (?,?,?,?,?,?)`,[dt.id_dt,dt.id_ex,examen.insertId,dt.id_rango,dt.resultado,dt.nota])
+      for await (const sb of dt.subCaracteristicasDt){
+        const [subCaracteristicaDtPd] = await pool.execute(`
+        INSERT INTO detalle_sub_ex_pd(id_det_ex_pd, id_detalle_sub, resultado, nota) VALUES ('${detalle.insertId}','${sb.id_detalle_sub}','${sb.resultado}','${sb.nota}')`)
+      }
+    }
+
+   
+    return await res.status(200).json({examen});
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({error})
+  }
+  
+}
+
 export const getExamen = async (req, res) => {
   const { id } = req.body;
   try {
@@ -553,6 +575,72 @@ export const getPaciente = async (req, res) => {
       return await res
         .status(200)
         .json({ mensaje: "No se ha encontrado el paciente", paciente: 404 });
+    }
+  } catch (error) {
+    console.log(error);
+    return await res
+      .status(500)
+      .json({ mensaje: "Ha ocurrido un error en el servidor" });
+  }
+};
+
+export const deletePendientesPaciente = async (req, res) => {
+  const { id } = req.query;
+
+  console.log(id);
+  try {
+    const [pendiente] = await pool.execute(
+      "SELECT * FROM examenes_pendientes WHERE id= ? ",
+      [id]
+    );
+   
+    if(pendiente.length>0){
+      await pool.execute(`DELETE FROM examenes_pendientes WHERE id= ?`,[id])
+    }else{
+      return await res
+       .status(400)
+       .json({ mensaje: "No se ha encontrado el pendiente", pendiente: 404 });
+    }
+
+    return await res
+     .status(200)
+     .json({ mensaje: "Se ha eliminado el pendiente" });
+
+
+
+    
+  } catch (error) {
+    console.log(error);
+    return await res
+      .status(500)
+      .json({ mensaje: "Ha ocurrido un error en el servidor" });
+  }
+};
+
+export const getPendientesPaciente = async (req, res) => {
+  const { idPac } = req.query;
+
+  
+  try {
+    const [pendientesBdd] = await pool.execute(
+      "SELECT * FROM examenes_pendientes WHERE id_pac = ? AND status = 'pendiente'",
+      [idPac]
+    );
+    let pendientes=[]
+    for await (const pd of pendientesBdd) {
+      const [examen] = await pool.execute("SELECT * FROM examenes where id= ?",[pd.id_ex])
+      pendientes.push({id:pd.id, id_ex:pd.id_ex,id_pac:pd.id_pac,nombre:examen[0].nombre,fecha:pd.fecha});
+
+    }
+
+
+
+    if (pendientes.length > 0) {
+      return await res.status(200).json(pendientes);
+    } else {
+      return await res
+        .status(200)
+        .json({ mensaje: "No se han encontrado examenes pendientes para el paciente"});
     }
   } catch (error) {
     console.log(error);

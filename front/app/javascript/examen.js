@@ -2,6 +2,7 @@ var examenes = [];
 var idPaciente = "";
 var pacienteObj = {};
 let examenesDelPaciente = [];
+let examenesPendientes=[];
 var examenDataPc;
 
 function retornarSumaString(o) {
@@ -135,6 +136,94 @@ const render = async () => {
     }
   }
 };
+
+async function eliminarPendiente(id){
+  try {
+    const { token } = await login.getToken();
+
+    const { data: pendientes } = await axios.get(
+      urlsv + "/api/examenes/delete-pendientes-paciente",
+      {
+        params: {
+          id
+        },
+        headers: { token },
+      }
+    );
+    document.getElementById("alertaExamen").className="alert alert-success"
+    document.getElementById("alertaExamen").innerHTML=`<strong>Examen pendiente eliminado con exito</strong>`
+    document.getElementById("alertaExamen").removeAttribute('hidden')
+    const menuDiagnosticoUl = document.getElementById("menuDiagnosticoUl");
+    cedulaPaciente()
+    
+    menuDiagnosticoUl.innerHTML=""
+    setTimeout(() => {
+       document.getElementById("alertaExamen").setAttribute('hidden','true')
+      document.getElementById("alertaExamen").className="alert alert-danger"
+      document.getElementById("alertaExamen").innerHTML=``
+      
+    }, 3000); 
+
+    
+    
+  } catch (error) {
+    console.log(error);
+  }
+ 
+}
+
+function buscarExamenPendiente(){
+  input = document.getElementById("examenDiagnosticoInput");
+  if(examenesPendientes.length>0){
+    filtro = examenesPendientes.filter((ex) =>
+    ex.nombre.toLowerCase().includes(input.value.toLowerCase())
+    );
+  }else{
+    return
+  }
+  
+  const menuDiagnosticoUl = document.getElementById("menuDiagnosticoUl");
+
+  menuDiagnosticoUl.innerHTML = "";
+  filtro.map((ex) => {
+    menuDiagnosticoUl.innerHTML += `
+    <li class="list-group-item list-group-item-light list-group-item-action" >
+            <div class="row">
+            <div class="col-1">
+                <span class="">${ex.id}</span>
+
+              </div>
+              <div class="col-5">
+                <span class="">${ex.nombre}</span>
+
+              </div>
+              
+              <div class="col-3 d-flex justify-content-end align-content-center">
+              <svg xmlns="http://www.w3.org/2000/svg" style="cursor:pointer" onclick="guardarPendienteOrden(${ex.id})"  width="24" height="24" fill="green" class="bi bi-check-circle mx-4" viewBox="0 0 16 16">
+                <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
+                <path d="m10.97 4.97-.02.022-3.473 4.425-2.093-2.094a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-1.071-1.05"/>
+              </svg>
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" style="cursor:pointer" onclick="eliminarPendiente('${ex.id}')" fill="red" class="bi bi-x-circle" viewBox="0 0 16 16">
+                <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
+                <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708"/>
+              </svg>
+              </div>
+                
+              <div class="col-3">
+                <span class="">${ex.fecha.split("T")[0]}</span>
+
+              </div>
+             
+              
+
+            </div>
+          </li> 
+          
+
+
+    `;
+  });
+}
 function buscarExamen() {
   input = document.getElementById("examenDiagnosticoInput");
   filtro = examenes.filter((ex) =>
@@ -279,6 +368,19 @@ const cedulaPaciente = async () => {
             headers: { token },
           }
         );
+
+        examenesPendientes=[]
+        const { data: pendientes } = await axios.get(
+          urlsv + "/api/examenes/get-pendientes-paciente",
+          {
+            params: {
+              idPac:paciente.id
+            },
+            headers: { token },
+          }
+        );
+        examenesPendientes=pendientes
+
         idPaciente = paciente.id;
 
         console.log("🚀 ~ cedulaPaciente ~ paciente:", paciente);
@@ -780,8 +882,14 @@ function abrirModalReimpresion(){
     new bootstrap.Modal("#reimpresionModal").toggle();
   
   }else{
-    console.log('No tiene nada seleccionado')
-    return 
+    return cedulaAlerta(
+      `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-exclamation-triangle-fill" viewBox="0 0 16 16">
+  <path d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5m.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2"/>
+</svg>  <div>
+      Por favor seleccione un examen a reimprimir
+  </div>`,
+      "warning"
+    );
 
   }
 
@@ -1973,6 +2081,114 @@ function guardarResultadosExamen() {
   añadirRowTablaExPac(examenPac);
   document.getElementById(`totalizarButton`).removeAttribute("hidden");
 }
+
+async function guardarResultadosExamenPd() {
+  const detallesExamenPc = examenDataPc.detalles.map((e) => {
+    const res = document.getElementById("inputRs" + e.id);
+    const nota = document.getElementById("inputNt" + e.id);
+    
+  
+    if (res) {
+      return {
+        rango: res.attributes.rango.value,
+        inferior: res.attributes.inferior.value,
+        superior: res.attributes.superior.value,
+        resultado: res.value,
+        nota: nota.value,
+        idCar: e.id,
+        nombreCar: e.nombre,
+        imprimir: e.impsiempre,
+        unidad: e.unidad,
+      };
+    }
+    return {
+      rango: "no",
+      inferior: "no",
+      superior: "no",
+      resultado: "subCaracteristica",
+      nota: nota.value,
+      idCar: e.id,
+      nombreCar: e.nombre,
+      imprimir: e.impsiempre,
+      unidad: e.unidad,
+    };
+  });
+  const subCaracteristicas = examenDataPc.subCa.map((e) => {
+    const res = document.getElementById("Rs-" + e.id);
+    const nota = document.getElementById("Nt-" + e.id);
+    console.log(res, nota);
+    return {
+      idSub: e.id,
+      nombreSub: e.nombre,
+      resultado: res.value,
+      idCar: e.id_det_ex,
+      nota: nota.value,
+      tipo: e.tipo
+    };
+  });
+  console.log(examenDataPc)
+  
+  let detallesExamenPd=[]
+
+  detallesExamenPc.forEach(dt=>{
+    let subCaracteristicasDt = []
+    subCaracteristicas.filter(sb=>sb.idCar == dt.idCar).forEach(sb=>{
+      subCaracteristicasDt.push({
+        id_dt:dt.idCar,
+        id_detalle_sub:sb.idSub,
+        resultado:sb.resultado,
+        nota:sb.nota
+      })
+    })
+    detallesExamenPd.push({
+      id_dt:dt.idCar,
+      id_ex:examenDataPc.examen.id,
+      id_rango:dt.rango,
+      resultado:dt.resultado,
+      nota:dt.nota,
+      subCaracteristicasDt
+    })
+  })
+
+  let examenPac = {
+    examenId: examenDataPc.examen.id,
+    examenNombre: examenDataPc.examen.nombre,
+    detallesExamenPd,
+    seccionNombre: examenDataPc.seccion[0].nombre,
+  };
+
+  console.log(examenPac)
+  try {
+    const { token } = await login.getToken();
+
+    const res = await axios.post(
+      urlsv + "/api/examenes/crear-examen-pendiente",
+      { examenPac, idPac:pacienteObj.id },
+      { headers: { token } }
+    );
+
+    cedulaPaciente()
+  } catch (error) {
+    console.log(error)
+  }
+ 
+  
+}
+
+function validarSelectDiagnostico(value){
+  const inputDiagnostico = document.getElementById(`examenDiagnosticoInput`)
+  inputDiagnostico.removeAttribute("oninput")
+  if(value=='nuevo'){
+    inputDiagnostico.setAttribute("oninput","buscarExamen()")
+    buscarExamen()
+
+  }else{
+    inputDiagnostico.setAttribute("oninput",`buscarExamenPendiente()`)
+    buscarExamenPendiente()
+  }
+}
+
+
 
 
 function setInputs(idEx) {
