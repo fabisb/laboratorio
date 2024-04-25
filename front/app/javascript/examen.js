@@ -4,6 +4,7 @@ var pacienteObj = {};
 let examenesDelPaciente = [];
 let examenesPendientes=[];
 var examenDataPc;
+let reimpresionArray = [];
 
 function retornarSumaString(o) {
   while (o.includes("*")) {
@@ -170,6 +171,64 @@ async function eliminarPendiente(id){
     console.log(error);
   }
  
+}
+
+async function guardarPendienteOrden(id){
+  try {
+    const { token } = await login.getToken();
+
+    const { data: examen} = await axios.get(
+      urlsv + "/api/examenes/get-pendiente-examen",
+      {
+        params: {
+          id
+        },
+        headers: { token },
+      }
+    );
+    const reimpresionButton= document.getElementById('reimpresionButton')
+
+    reimpresionButton.setAttribute('hidden','true')
+   
+    if(examenesDelPaciente.length==0){
+      document.getElementById("tBodyLgEx").innerHTML=`
+      <a href="#" class="list-group-item list-group-item-action fw-semibold liTableExPac">
+                <div class="container" id="tHeadLgEx">
+                  <div class="row text-center">
+                    <div class="col-1">
+                      #
+                    </div>
+                    <div class="col-8">
+                      Tipo Examen
+                    </div>
+                    <div class="col-3">Fecha</div>
+                  </div>
+                </div>
+              </a>
+      `
+    }
+    examenesDelPaciente.push(examen.examenPac);
+    document.getElementById("tHeadLgEx").innerHTML = `
+    <div class="row text-center">
+                      <div class="col-1">
+                        #
+                      </div>
+                      <div class="col-8">
+                        Tipo Examen
+                      </div>
+                      <div class="col-3">Status</div>
+                    </div>
+
+    `;
+
+  añadirRowTablaExPac(examen.examenPac);
+  document.getElementById(`totalizarButton`).removeAttribute("hidden");
+  eliminarPendiente(id)
+
+  } catch (error) {
+    
+  }
+
 }
 
 function buscarExamenPendiente(){
@@ -833,18 +892,43 @@ function validarSelectOrden() {
   }
 }
 
-function abrirModalReimpresion(){
+async function reimprimirExamenes(){
+  let reimp = reimpresionArray.map(e=> e.id)
+  try {
+    const { token } = await login.getToken();
+    
+  
+    const res = await axios.post(
+      urlsv + "/api/examenes/reimpresion-examen",
+      { reimp },
+      { headers: { token } }
+    );
+    console.log(res.data)
 
-  const checksH= document.getElementsByName('checksExamenesBdd')
-  const checks= [...checksH]
-  const checked = checks.filter(e=> e.checked==true)
+  } catch (error) {
+    
+  }
+}
+
+
+
+function abrirModalReimpresion(){
+  reimpresionArray = [];
+  const checksH= document.getElementsByName('checksExamenesBdd');
+  const checks= [...checksH];
+  const checked = checks.filter(e=> e.checked==true);
   const tBodyOrden = document.getElementById(`tBodyLgExRe`);
   const pacienteInput = document.getElementById("inputPacienteReimpresion");
   pacienteInput.value = pacienteObj.nombre;
 
-  tBodyOrden.innerHTML=''
+  tBodyOrden.innerHTML='';
   if(checked.length>0){
+    
     checked.forEach(e=>{
+      reimpresionArray.push({
+        id:e.value,
+        nombre:e.attributes.nombre.value
+      })
       tBodyOrden.innerHTML+=`
         
       <a href="#" class="list-group-item list-group-item-action fs-6 fw-semibold">
@@ -853,16 +937,10 @@ function abrirModalReimpresion(){
           <div class="col-1">
             ${e.value}
           </div>
-          <div class="col-5">
+          <div class="col-7">
             ${e.attributes.nombre.value}
           </div>
-          <div class="col-2 d-flex justify-content-end">
-            <div class="form-check mx-2">
-              <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
-              
-            </div>
-            
-          </div>
+          
           <div class="col-4 d-flex justify-content-end">
           ${e.attributes.fecha.value}
   
@@ -1739,6 +1817,8 @@ async function guardarOrden(){
         id_dt:dt.idCar,
         id_ex:ex.examenId,
         id_rango:dt.rango,
+        inferior:dt.inferior,
+        superior:dt.superior,
         resultado:dt.resultado,
         nota:dt.nota,
         subCaracteristicasDt
@@ -2144,6 +2224,8 @@ async function guardarResultadosExamenPd() {
       id_dt:dt.idCar,
       id_ex:examenDataPc.examen.id,
       id_rango:dt.rango,
+      inferior:dt.inferior,
+      superior:dt.superior,
       resultado:dt.resultado,
       nota:dt.nota,
       subCaracteristicasDt

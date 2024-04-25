@@ -1,12 +1,72 @@
 import { pool } from "../database/db.js";
 
+export const getExamenReimpresion = async(req,res)=>{
+  const {reimp} = req.body
+
+  try {
+    let examenes=[]
+    for await (const ex of reimp){
+      const [examen]= await pool.execute(`SELECT * FROM examenes_paciente where id = ?`,[ex])
+      const [infoExamen] = await pool.execute(`SELECT * FROM examenes where id =?`, [examen[0].id_ex])
+      const [seccion]= await pool.execute(`SELECT * FROM seccion_examen WHERE id = ?`, [infoExamen[0].id_seccion])
+
+      const [detalles]= await pool.execute(`SELECT * FROM detalles_examenes_paciente where id_ex_pac= ?`,[ex])
+      let detalles2 =detalles
+      let caracteristicas =[]
+      for await (const dt of detalles2){
+
+        const [detalleInfo] = await pool.execute(`SELECT * FROM detalles_examen WHERE id = '${dt.id_dt}'`)
+        console.log(detalleInfo)
+        const [subCar]= await pool.execute(`SELECT * FROM detalle_subcaracteristica_paciente where id_det_ex = '${dt.id}'`)
+        let subCaracteristicas=[]
+        for await (const sb of subCar) {
+          const [subCaInfo]= await pool.execute(`SELECT * FROM subcaracteristicas_detalle WHERE id=${sb.id_detalle_sub}`)
+          subCaracteristicas.push({
+            idSub:subCaInfo[0].id,
+            nombreSub:subCaInfo[0].nombre,
+            resultado:sb.resultado,
+            idCar:dt.id_dt,
+            nota:sb.nota,
+            tipo:subCaInfo[0].tipo
+          })
+        }
+        
+        
+        caracteristicas.push({
+          nombre:detalleInfo[0].nombre,
+          resultado:dt.resultado,
+          nota:dt.nota,
+          unidad: detalleInfo[0].unidad,
+          inferior:dt.inferior,
+          superior:dt.superior,
+          imprimir:detalleInfo[0].impsiempre,
+          subCaracteristicas
+        })
+      }
+      
+      examenes.push({
+        examen: infoExamen[0].nombre,
+        seccion: seccion[0].nombre,
+        caracteristicas
+      })
+    }
+    return await res.status(200).json({examenes});
+    
+  } catch (error) {
+    console.log(error)
+    return res.status(500).json({error})
+
+  }
+
+}
+
 export const crearExamenPendiente = async (req,res)=>{
   const {examenPac,idPac}=req.body;
   try {
     const [examen] = await pool.execute(`INSERT INTO examenes_pendientes (id_ex,id_pac) VALUES (?, ?)`,[examenPac.examenId,idPac])
 
     for await (const dt of examenPac.detallesExamenPd){
-      const [detalle] = await pool.execute(`INSERT INTO detalles_ex_pendientes(id_dt,id_ex,id_ex_pd,id_rango,resultado,nota) VALUES (?,?,?,?,?,?)`,[dt.id_dt,dt.id_ex,examen.insertId,dt.id_rango,dt.resultado,dt.nota])
+      const [detalle] = await pool.execute(`INSERT INTO detalles_ex_pendientes(id_dt,id_ex,id_ex_pd,id_rango,resultado,nota,inferior,superior) VALUES (?,?,?,?,?,?,?,?)`,[dt.id_dt,dt.id_ex,examen.insertId,dt.id_rango,dt.resultado,dt.nota,dt.inferior,dt.superior])
       for await (const sb of dt.subCaracteristicasDt){
         const [subCaracteristicaDtPd] = await pool.execute(`
         INSERT INTO detalle_sub_ex_pd(id_det_ex_pd, id_detalle_sub, resultado, nota) VALUES ('${detalle.insertId}','${sb.id_detalle_sub}','${sb.resultado}','${sb.nota}')`)
@@ -21,6 +81,79 @@ export const crearExamenPendiente = async (req,res)=>{
   }
   
 }
+export const getPendienteExamen = async (req, res) => {
+  const { id } = req.query;
+  
+  try {
+    const [pendiente] = await pool.execute(
+      `SELECT * FROM examenes_pendientes where id = ${id}`
+    );
+
+    const [examen] = await pool.execute(
+      `SELECT * FROM examenes where id = ${pendiente[0].id_ex}`
+    );
+    const [seccion] = await pool.execute(
+      `SELECT * FROM seccion_examen where id =${examen[0].id_seccion}`
+    )
+
+    const [detalles] = await pool.execute(
+      `SELECT * FROM detalles_ex_pendientes where id_ex_pd = ${pendiente[0].id}`
+    )
+    let detallesExamenPc=[]
+    let subCaracteristicasExPc=[]
+
+    for await (const dt of detalles) {
+      const [caracteristica] = await pool.execute(
+        `SELECT * FROM detalles_examen where id = ${dt.id_dt}`
+      )
+
+      const [sub] = await pool.execute(
+        `SELECT * FROM detalle_sub_ex_pd where id_det_ex_pd = ${dt.id}`
+      )
+      for await (const sb of sub){
+        const [subCa] = await pool.execute(
+          `SELECT * FROM subcaracteristicas_detalle where id= ${sb.id_detalle_sub}`
+        )
+        
+        subCaracteristicasExPc.push({
+          idSub:sb.id_detalle_sub,
+          nombreSub: subCa[0].nombre,
+          resultado: sb.resultado,
+          nota: sb.nota,
+          tipo:subCa[0].tipo
+        })
+      }
+      detallesExamenPc.push({
+        idCar:caracteristica[0].id,
+        rango:dt.id_rango,
+        inferior:dt.inferior,
+        superior:dt.superior,
+        resultado: dt.resultado,
+        nota: dt.nota,
+        nombreCar: caracteristica[0].nombre,
+        imprimir: caracteristica[0].impsiempre,
+        unidad:caracteristica[0].unidad
+      })
+    }
+
+    
+   
+    return await res
+      .status(200)
+      .json({ examenPac:{
+        examenId:examen[0].id,
+        examenNombre:examen[0].nombre,
+        detallesExamenPc,
+        subCaracteristicasExPc,
+        seccionNombre: seccion[0].nombre
+      }});
+  } catch (error) {
+    console.log(error)
+    return await res
+      .status(500)
+      .json({ mensaje: "ha ocurrido un error el servidor" });
+  }
+};
 
 export const getExamen = async (req, res) => {
   const { id } = req.body;
@@ -429,7 +562,7 @@ export const crearOrden = async (req, res) => {
       `)
       for await (const dt of ex.detallesExamen){
         const [detalleBdd] = await pool.execute(`
-        INSERT INTO detalles_examenes_paciente(id_dt, id_ex, id_ex_pac, id_rango, resultado, nota) VALUES ('${dt.id_dt}','${ex.id_ex}','${examenBdd.insertId}','${dt.id_rango}','${dt.resultado}','${dt.nota}')
+        INSERT INTO detalles_examenes_paciente(id_dt, id_ex, id_ex_pac, id_rango,superior,inferior, resultado, nota) VALUES ('${dt.id_dt}','${ex.id_ex}','${examenBdd.insertId}','${dt.id_rango}','${dt.superior}','${dt.inferior}','${dt.resultado}','${dt.nota}')
         `)
         for await (const sb of dt.subCaracteristicasDt){
           const [subCaracteristicaBdd] = await pool.execute(`
@@ -593,9 +726,18 @@ export const deletePendientesPaciente = async (req, res) => {
       "SELECT * FROM examenes_pendientes WHERE id= ? ",
       [id]
     );
+    
    
     if(pendiente.length>0){
+      const [caracteristicas] = await pool.execute(`SELECT * FROM detalles_ex_pendientes where id_ex_pd= ?`,[id])
+      for await(const ct of caracteristicas){
+        await pool.execute(`DELETE FROM detalle_sub_ex_pd WHERE id_det_ex_pd= ?`,[ct.id])
+        
+      }
       await pool.execute(`DELETE FROM examenes_pendientes WHERE id= ?`,[id])
+      await pool.execute(`DELETE FROM detalles_ex_pendientes WHERE id_ex_pd= ?`,[id])
+      
+      
     }else{
       return await res
        .status(400)
