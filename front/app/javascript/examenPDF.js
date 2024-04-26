@@ -11,17 +11,40 @@ const imprimir = async () => {
 
 const pintarExamen = async () => {
   const examen = await examenVar.get();
+  console.log("🚀 ~ pintarExamen ~ examen:", examen)
   const { token } = await login.getToken();
-  const { data: bioanalista } = await axios.get(urlsv + "/api/users/firma", {
-    headers: { token },
-    params: { idBioanalista: examen.bioanalista },
+  var imageUrl = '';
+  var bioanalista;
+  var reimpresion = false;
+  console.log(examen.orden)
+  if (examen.orden == 'Reimpresion') reimpresion = true;
+  if (reimpresion == false) {
+    
+    const { data } = await axios.get(urlsv + "/api/users/firma", {
+      headers: { token },
+      params: { idBioanalista: examen.bioanalista },
+    });
+    bioanalista = data;
+    console.log("🚀 ~ pintarExamen ~ bioanalista:", bioanalista);
+    //const imageUrl = await syncFiles(firmaImg.foto_firma)
+    imageUrl = bioanalista.foto_firma;
+  }
+  console.log("🚀 ~ pintarExamen ~ reimpresion:", reimpresion)
+
+  examen.examenes.forEach(ex => {
+    ex.caracteristicas.sort(function (a, b) {
+      if (a.posicion > b.posicion) {
+        return 1;
+      }
+      if (a.posicion< b.posicion) {
+        return -1;
+      }
+      // a must be equal to b
+      return 0;
+    });
   });
-  console.log("🚀 ~ pintarExamen ~ bioanalista:", bioanalista);
-  //const imageUrl = await syncFiles(firmaImg.foto_firma)
-  const imageUrl = bioanalista.foto_firma;
 
-
-  console.log("🚀 ~ pintarExamen ~ examen:", examen);
+  
 
   document.getElementsByName("direccion")[0].innerText =
     examen.paciente.direccion;
@@ -52,14 +75,19 @@ const pintarExamen = async () => {
   const seccionesSet = new Set(examen.examenes.map((e) => e.nombreSeccion));
   console.log("🚀 ~ pintarExamen ~ seccionesSet:", seccionesSet)
   document.getElementsByName("firmaBioanalista")[0].innerHTML = `
-  <img id='bioanalistaFirma'  class="card-img-top w-50 mx-auto my-auto" alt="firma Ej">
-          <div class="card-body text-center">
-            <h4>Lcd. ${bioanalista.nombre}</h4>
-            <h5>BIOANALISTA</h5>
-            <h5>C.I.: ${bioanalista.cedula} - COBIOZUL: ${bioanalista.colegio} - MSDS: ${bioanalista.ministerio} </h5>
-          </div>
+  
+  ${reimpresion == true ? `<div class="card-body text-center">
+  <h4>REIMPRESION</h4>
+</div>`: `
+<img id='bioanalistaFirma'  class="card-img-top w-50 mx-auto my-auto" alt="firma Ej">
+<div class="card-body text-center">
+  <h4>Lcd. ${bioanalista?.nombre}</h4>
+  <h5>BIOANALISTA</h5>
+  <h5>C.I.: ${bioanalista?.cedula} - COBIOZUL: ${bioanalista?.colegio} - MSDS: ${bioanalista?.ministerio} </h5>
+</div>`}  
   `;
-  document.getElementById("bioanalistaFirma").src = imageUrl;
+
+   reimpresion == false ?  document.getElementById("bioanalistaFirma").src = imageUrl : '';
   document.getElementsByName("examenContainer")[0].innerHTML = [...seccionesSet]
     .map((s) => {
       return `

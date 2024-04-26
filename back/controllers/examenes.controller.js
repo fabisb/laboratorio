@@ -46,7 +46,7 @@ export const getExamenReimpresion = async(req,res)=>{
       
       examenes.push({
         examen: infoExamen[0].nombre,
-        seccion: seccion[0].nombre,
+        nombreSeccion: seccion[0].nombre,
         caracteristicas
       })
     }

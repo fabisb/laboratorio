@@ -364,6 +364,7 @@ async function detalleExamen(id) {
 
 const cedulaPaciente = async () => {
   console.log("cedulaPaciente");
+  examenesDelPaciente=[];
 
   document.getElementById('buscarPacienteButton').setAttribute('disabled', 'disabled')
 
@@ -904,8 +905,17 @@ async function reimprimirExamenes(){
       { reimp },
       { headers: { token } }
     );
-    console.log(res.data)
+    console.log(res.data);
 
+    const examen = {
+      orden: 'Reimpresion',
+      paciente: pacienteObj,
+      examenes: res.data.examenes
+    }
+    console.log("🚀 ~ previewPdf ~ examen:", examen)
+    await examenVar.store(examen);
+    abrirPDFWindow()
+    
   } catch (error) {
     
   }
@@ -2116,6 +2126,7 @@ function guardarResultadosExamen() {
         nombreCar: e.nombre,
         imprimir: e.impsiempre,
         unidad: e.unidad,
+        posicion: e.posicion
       };
     }
     return {
@@ -2128,6 +2139,7 @@ function guardarResultadosExamen() {
       nombreCar: e.nombre,
       imprimir: e.impsiempre,
       unidad: e.unidad,
+      posicion: e.posicion
     };
   });
   const subCaracteristicas = examenDataPc.subCa.map((e) => {
@@ -2188,6 +2200,7 @@ async function guardarResultadosExamenPd() {
         nombreCar: e.nombre,
         imprimir: e.impsiempre,
         unidad: e.unidad,
+        posicion:e.posicion
       };
     }
     return {
@@ -2200,6 +2213,7 @@ async function guardarResultadosExamenPd() {
       nombreCar: e.nombre,
       imprimir: e.impsiempre,
       unidad: e.unidad,
+      posicion:e.posicion
     };
   });
   const subCaracteristicas = examenDataPc.subCa.map((e) => {
