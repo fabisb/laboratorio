@@ -216,6 +216,9 @@ async function detalleExamen(id) {
 
 const cedulaPaciente = async () => {
   console.log("cedulaPaciente");
+
+  document.getElementById('buscarPacienteButton').setAttribute('disabled', 'disabled')
+
   const preCedula = document.getElementsByName("pre_cedula")[0].value;
   if (preCedula != "E" && preCedula != "V" && preCedula != "N") {
     return cedulaAlerta(
@@ -299,16 +302,10 @@ const cedulaPaciente = async () => {
         } else {
           console.log(botonModificar);
           desactivarInputs();
-          botonModificar.addEventListener(
-            "click",
-            () => activarInputs("modificarPaciente()"),
-            true
-          );
-          botonExamen.addEventListener(
-            "click",
-            () => abrirModalExamenes(),
-            true
-          );
+          
+          botonModificar.setAttribute('onclick','activarInputs("modificarPaciente()")')
+          botonExamen.setAttribute('onclick','abrirModalExamenes()')
+         
 
           paciente.fecha_nacimiento = moment(paciente.fecha_nacimiento).format(
             "YYYY-MM-DD"
@@ -342,6 +339,10 @@ const cedulaPaciente = async () => {
       }
     }
   }
+
+  setTimeout(() => {
+    document.getElementById('buscarPacienteButton').removeAttribute('disabled');
+  }, 1500);
 };
 
 
@@ -1519,14 +1520,15 @@ async function previewPdf(){
 
   const checksH=document.getElementsByName(`checksOrden`)
   const checks = [...checksH]
-  const checked = checks.filter(e=> e.checked == true)
+  let checked = checks.filter(e=> e.checked == true)
   console.log(checked)
 
   const selectOrden=document.getElementById("selectOrden");
   const inputOrden=document.getElementById("inputOrden");
   const selectBioAnalista=document.getElementById("selectBioAnalista");
 
-  const examenesChecked = []
+  let examenesChecked = []
+  
 
   checked.forEach(e=>{
     examenesDelPaciente.forEach(el=>{
@@ -1536,11 +1538,14 @@ async function previewPdf(){
     })
     
   })
+  if(checked.length==0){
+    examenesChecked = examenesDelPaciente
+  }
   console.log("🚀 ~ previewPdf ~ examenesChecked:", examenesChecked)
   let examenesPreview =[]
 
   examenesChecked.forEach(e=>{
-    caracteristicas=[]
+    const caracteristicas=[]
 
     e.detallesExamenPc.forEach(el=>{
 
@@ -1589,14 +1594,16 @@ async function previewPdf(){
   })
   console.log(examenesPreview)
   const examen = {
-    orden:`${selectOrden.value}-${inputOrden.value}`,
+    orden: selectOrden.value == 'no' ? `Cortesia` : `${selectOrden.value}-${inputOrden.value}`,
 
     bioanalista: selectBioAnalista.value,
     paciente: pacienteObj,
     examenes: examenesPreview
   }
+  console.log("🚀 ~ previewPdf ~ examen:", examen)
   await examenVar.store(examen);
   abrirPDFWindow()
+  
 }
 
 async function guardarOrden(){
@@ -1663,6 +1670,7 @@ async function guardarOrden(){
     console.log(res)
   
     if(res.status == 200){
+
       const ordenModal =   new bootstrap.Modal(document.getElementById('ordenModal'))
       ordenModal.hide()
       const backdrop=document.getElementsByClassName('modal-backdrop')
@@ -1694,8 +1702,9 @@ async function guardarOrden(){
                   </div>
                 </a>
       `
-      examenesDelPaciente=[]
-  
+      
+      previewPdf()
+      examenesDelPaciente = []
     }
    
   

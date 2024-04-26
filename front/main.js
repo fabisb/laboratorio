@@ -2,7 +2,6 @@
 const { app, BrowserWindow, ipcMain, dialog, shell } = require("electron");
 const Store = require("electron-store");
 const path = require("path");
-
 //RECARGA AUTOMATICA
 /* const electronReload = require("electron-reload");
 const env = process.env.NODE_ENV || "development";
@@ -28,15 +27,14 @@ ipcMain.handle("getToken", (event, arg) => {
 });
 
 ipcMain.on("examen", async (event, examen) => {
-  store.delete('examen');
+  store.delete("examen");
   await store.set("examen", examen);
 });
 ipcMain.handle("getExamen", (event, arg) => {
   const examen = store.get("examen");
-  console.log("🚀 ~ ipcMain.handle ~ examen:", examen)
+  console.log("🚀 ~ ipcMain.handle ~ examen:", examen);
   return examen;
 });
-
 
 let mainWindow;
 function createWindow() {

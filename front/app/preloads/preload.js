@@ -79,3 +79,4 @@ contextBridge.exposeInMainWorld(
   "imprimirPDF",
   async () => await ipcRenderer.send("print", JSON.stringify())
 );
+

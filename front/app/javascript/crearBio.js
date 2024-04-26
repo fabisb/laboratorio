@@ -27,7 +27,6 @@ const agregarBioanalista = async (event) => {
 
   const paciente = [];
   const firma = await subirImagen();
-  console.log("🚀 ~ agregarBioanalista ~ firma:", firma);
   /*   let firmaBi;
   new Promise(()=>{
 

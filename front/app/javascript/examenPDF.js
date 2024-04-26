@@ -1,61 +1,32 @@
 const imprimir = async () => {
+  const botones = document.getElementsByName('botones')[0];
+  botones.hidden = true;
   try {
-    await imprimirPDF();
+    await imprimirPDF() ;
   } catch (error) {
     console.log("🚀 ~ imprimir ~ error:", error);
+    botones.removeAttribute('hidden')
   }
 };
 
 const pintarExamen = async () => {
+  const examen = await examenVar.get();
+  const { token } = await login.getToken();
+  const { data: bioanalista } = await axios.get(urlsv + "/api/users/firma", {
+    headers: { token },
+    params: { idBioanalista: examen.bioanalista },
+  });
+  console.log("🚀 ~ pintarExamen ~ bioanalista:", bioanalista);
+  //const imageUrl = await syncFiles(firmaImg.foto_firma)
+  const imageUrl = bioanalista.foto_firma;
 
-  const examen  = await examenVar.get();
-  console.log("🚀 ~ pintarExamen ~ examen:", examen)
-  /* const examen = {
-    orden:'C-0000',
-    bioanalista:'Rumina Arambulo',
-   paciente:{ nombre:'Fabian Silva',
-    cedula:"28146771",
-    pre_cedula:'V',
-    direccion:'san francisco',
-    telefono:'04146308395',
-    correo:'fabian@gmail.com',
-    fecha_nacimiento:'17/12/2002',
-    edad:'21 años y 5 meses',
-    emision:'19/4/2024'
-    },
-    examenes: [
-      {
-        examen:'EXAMEN PRUEBA',
-        idExamen:'1',
-        seccion:'10',
-        nombreSeccion:'HEMATOLOGIA COMPLETA',
-        caracteristicas: [
-          {
-            idCar:'2',
-            nombre:'Car 1',
-            resultado:'Resultado 1',
-            inferior:'10',
-            superior:'15',
-            unidad:'gr',
-            nota:'nota 1',
-            subCaracteristicas: [{nombre:'sub1', resultado:'0', nota:'nota 5'}],
-          },
-          {
-            idCar:'3',
-            nombre:'Car 2',
-            resultado:'Resultado 2',
-            inferior:'5',
-            superior:'10',
-            unidad:'ml',
-            nota:'nota 2',
-            subCaracteristicas: [{nombre:'sub2', resultado:'1', nota:'nota 3', tipo:'numero'},{nombre:'sub2.1', resultado:'1.1', nota:'nota 4', tipo:'numero'}],
-          },
-        ],
-      },
-    ],
-  }; */
-  document.getElementsByName("direccion")[0].innerText = examen.paciente.direccion;
-  document.getElementsByName("correo")[0].innerText = "Email: " + examen.paciente.correo;
+
+  console.log("🚀 ~ pintarExamen ~ examen:", examen);
+
+  document.getElementsByName("direccion")[0].innerText =
+    examen.paciente.direccion;
+  document.getElementsByName("correo")[0].innerText =
+    "Email: " + examen.paciente.correo;
   document.getElementsByName("cabecera")[0].innerHTML = `
   <div class="col" style="font-size: small;">
   <div class="card-body">
@@ -72,16 +43,26 @@ const pintarExamen = async () => {
     <ul class="list-group list-group-flush">
       <li class="list-group-item"><span class="fw-bold">Fecha Nacimiento:</span><br> ${examen.paciente.fecha_nacimiento}</li>
       <li class="list-group-item"><span class="fw-bold">Edad:</span><br> ${examen.paciente.edad}</li>
-      <li class="list-group-item"><span class="fw-bold">Emision:</span><br> ${examen?.emision}</li>
+      <li class="list-group-item"><span class="fw-bold">Emision:</span><br> ${moment().format('DD-MM-YYYY')}</li>
     </ul>
   </div>
 </div>
   `;
 
   const seccionesSet = new Set(examen.examenes.map((e) => e.nombreSeccion));
-
-  document.getElementsByName('examenContainer')[0].innerHTML= [...seccionesSet].map((s) => {
-    return `
+  console.log("🚀 ~ pintarExamen ~ seccionesSet:", seccionesSet)
+  document.getElementsByName("firmaBioanalista")[0].innerHTML = `
+  <img id='bioanalistaFirma'  class="card-img-top w-50 mx-auto my-auto" alt="firma Ej">
+          <div class="card-body text-center">
+            <h4>Lcd. ${bioanalista.nombre}</h4>
+            <h5>BIOANALISTA</h5>
+            <h5>C.I.: ${bioanalista.cedula} - COBIOZUL: ${bioanalista.colegio} - MSDS: ${bioanalista.ministerio} </h5>
+          </div>
+  `;
+  document.getElementById("bioanalistaFirma").src = imageUrl;
+  document.getElementsByName("examenContainer")[0].innerHTML = [...seccionesSet]
+    .map((s) => {
+      return `
     <div class="card">
     <div class="card-header text-start fw-bolder fs-4">${s}</div>
     ${examen.examenes
@@ -150,5 +131,6 @@ const pintarExamen = async () => {
       })
       .join("")}
   </div>`;
-  }).join('');
+    })
+    .join("");
 };

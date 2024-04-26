@@ -34,8 +34,8 @@ async function loguear(e) {
   }
   try {
     const { data } = await axios.post(urlsv + "/api/users/login", { user, pass });
-    console.log("🚀 ~ file: renderer.js:26 ~ loguear ~ res:", data);
     await login.storeToken(data);
+ 
   } catch (error) {
     console.log(error);
     if (error.response.data.mensaje) {
