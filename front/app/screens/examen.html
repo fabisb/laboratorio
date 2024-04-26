@@ -429,6 +429,7 @@
           </div>
           <hr>
           <div class="d-flex justify-content-end">
+            
             <button class="btn btn-info w-25" onclick="abrirModalReimpresion()" id="reimpresionButton" hidden>Reimpresion</button>
             <button class="btn btn-success w-25" onclick="abrirModalTotalizar()" id="totalizarButton" hidden>Totalizar</button>
           </div>
@@ -460,6 +461,10 @@
           <h1 class="display-6 text-center">Diagnosticos</h1>
           <hr>
           <div class="d-flex justify-content-center">
+            <select class="form-select w-25 mx-2" onchange="validarSelectDiagnostico(value)" aria-label="Default select example">
+              <option value="nuevo" selected>Nuevo</option>
+              <option value="pendiente">Pendiente</option>
+            </select>
             <input type="text" id="examenDiagnosticoInput" oninput="buscarExamen()" class="form-control w-50 inputExamen" placeholder="Examen" aria-label="Username" aria-describedby="addon-wrapping">
 
           </div>
@@ -587,408 +592,29 @@
         </button>
         <button
           type="button"
-          class="btn btn-primary"
+          class="btn btn-warning"
+          data-bs-dismiss="modal"
+          id="guardarResultadoPdExPc"
+          onclick="guardarResultadosExamenPd()"
+        >
+          Guardar Resultado
+        </button>
+        <button
+          type="button"
+          class="btn btn-success"
           data-bs-dismiss="modal"
           id="guardarResultadoExPc"
           onclick="guardarResultadosExamen()"
         >
-          Guardar Resultado
+          Añadir a orden
         </button>
+
       </div>
     </div>
   </div>
 </div>
 
-    <div id="examenes-crud" class="modal fade" tabindex="-1">
-      <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title">Modulo Examenes</h5>
-            <button
-              type="button"
-              class="btn-close"
-              data-bs-dismiss="modal"
-              aria-label="Close"
-            ></button>
-          </div>
-          <div class="modal-body">
-            <div class="row">
-              <div class="row d-flex justify-content-center">
-                <div
-                  class="alert text-center"
-                  style="width: 75%"
-                  hidden
-                  role="alert"
-                  id="alertaCaracteristicas"
-                ></div>
-              </div>
-              <div class="row d-flex justify-content-center">
-                <div
-                  class="alert text-center"
-                  style="width: 75%"
-                  hidden
-                  role="alert"
-                  id="alertaCaracteristicasRangos"
-                ></div>
-              </div>
-              <div class="mb-3 col-12 d-flex justify-content-center">
-                <div class="w-50">
-                  <label for="examenNameCrud" class="form-label">Examen</label>
-                  <input
-                    type="text"
-                    class="form-control inputExamen"
-                    id="examenNameCrud"
-                    placeholder=""
-                  />
-                </div>
-              </div>
-              <div class="col-12">
-                <table class="table text-center" id="tableDetalles">
-                  <thead>
-                    <tr>
-                      <th scope="col">Nombre</th>
-                      <th scope="col">Posicion</th>
-                      <th scope="col">Unidad</th>
-                      <th>Imp</th>
-                      <th>Modificar</th>
-                      <th>Eliminar</th>
-                    </tr>
-                  </thead>
-                  <tbody id="tBodyDetalles"></tbody>
-                  <tfoot>
-                    <tr class="">
-                      <td colspan="4"></td>
-                      <td colspan="2">
-                        <button
-                          class="btn btn-outline-success"
-                          type="button"
-                          data-bs-toggle="collapse"
-                          data-bs-target="#collapseExample"
-                          aria-expanded="false"
-                          aria-controls="collapseExample"
-                          id="botonAbrirCollapseCaracteristica"
-                        >
-                          <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            width="25"
-                            height="25"
-                            fill="currentColor"
-                            class="bi bi-plus-circle"
-                            viewBox="0 0 16 16"
-                          >
-                            <path
-                              d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"
-                            />
-                            <path
-                              d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4"
-                            />
-                          </svg>
-                        </button>
-                      </td>
-                    </tr>
-                  </tfoot>
-                </table>
-              </div>
-              <div class="">
-                <div class="collapse" id="collapseExample">
-                  <form
-                    id="caracteristicaForm"
-                    onsubmit="event.preventDefault(),pushDetalle(),borrarAlerta()"
-                  >
-                    <hr />
-                    <div class="row">
-                      <div class="col-6">
-                        <div class="col-12 d-flex justify-content-center">
-                          <div class="mb-3 w-75">
-                            <label
-                              for="nombreDetalleExamenCrud"
-                              class="form-label"
-                              >Nombre</label
-                            >
-                            <input
-                              name="caracteristicaNombre"
-                              type="text"
-                              class="form-control inputExamen"
-                              id="nombreDetalleExamenCrud"
-                              placeholder=""
-                            />
-                          </div>
-                        </div>
-                        <!--<div class="col-12 d-flex justify-content-center">
-                        <div class="mb-3 w-75">
-                          <label for="inferiorExamenCrud" class="form-label"
-                            >Inferior</label
-                          >
-                          <input
-                            name="caracteristicaInferior"
-                            type="text"
-                            class="form-control inputExamen"
-                            id="inferiorExamenCrud"
-                            placeholder=""
-                          />
-                        </div>
-                      </div>
-                      <div class="col-12 d-flex justify-content-center">
-                        <div class="mb-3 w-75">
-                          <label for="superiorExamenCrud" class="form-label"
-                            >Superior</label
-                          >
-                          <input
-                            name="caracteristicaSuperior"
-                            type="text"
-                            class="form-control inputExamen"
-                            id="superiorExamenCrud"
-                            placeholder=""
-                          />
-                        </div>
-                      </div>
-                      -->
-
-                        <div class="col-12 d-flex justify-content-center">
-                          <div class="mb-3 w-75">
-                            <label for="unidadExamenCrud" class="form-label"
-                              >Unidad</label
-                            >
-                            <input
-                              name="caracteristicaUnidad"
-                              type="text"
-                              class="form-control inputExamen"
-                              id="unidadExamenCrud"
-                              placeholder=""
-                            />
-                          </div>
-                        </div>
-                        <div class="col-12 d-flex justify-content-center">
-                          <div class="mb-3 w-75">
-                            <label for="ordenExamenCrud" class="form-label"
-                              >Orden</label
-                            >
-                            <input
-                              name="caracteristicaOrden"
-                              type="number"
-                              min="0"
-                              step="1"
-                              class="form-control inputExamen"
-                              id="ordenExamenCrud"
-                              placeholder=""
-                            />
-                          </div>
-                        </div>
-                      </div>
-
-                      <div class="col-6">
-                        <div class="row">
-                          <div class="col-6">
-                            <h1 class="display-5 text-center">Resultados</h1>
-                          </div>
-                          <div
-                            class="col-6 d-flex align-content-center justify-content-center"
-                            style="cursor: pointer"
-                            onclick="addInput()"
-                          >
-                            <svg
-                              xmlns="http://www.w3.org/2000/svg"
-                              width="45"
-                              height="45"
-                              fill="green"
-                              class="bi bi-plus-circle"
-                              viewBox="0 0 16 16"
-                            >
-                              <path
-                                d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"
-                              />
-                              <path
-                                d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4"
-                              />
-                            </svg>
-                          </div>
-                        </div>
-                        <div
-                          class="container"
-                          id="inputContainerResultados"
-                          style="max-height: 200px; overflow-y: auto"
-                        >
-                          <input
-                            name="resultadoInput"
-                            class="form-control inputExamen"
-                            type="text"
-                            placeholder="Ingrese un resultado unico en el examen"
-                            aria-label="default input example"
-                          />
-                          <input
-                            name="resultadoInput"
-                            class="form-control inputExamen"
-                            type="text"
-                            placeholder="Ingrese un resultado unico en el examen"
-                            aria-label="default input example"
-                          />
-                        </div>
-                      </div>
-                      <hr />
-                    </div>
-
-                    <div class="row">
-                      <h1 class="display-6">Rangos</h1>
-                      <hr />
-                      <div>
-                        <table class="table table-bordered fs-6">
-                          <thead>
-                            <tr>
-                              <th scope="col">Inferior</th>
-                              <th scope="col">Superior</th>
-                              <th scope="col" class="text-center" colspan="2">
-                                Rango de Edad
-                              </th>
-                              <th scope="col">Genero</th>
-                            </tr>
-                          </thead>
-                          <tbody id="tableRangosBody">
-                            <tr class="tr-rango">
-                              <td scope="row">
-                                <input
-                                  name="rangoSup"
-                                  type="number"
-                                  min="0"
-                                  max="150"
-                                  class="form-control inputExamenRango"
-                                  id="superiorExamenCrud0"
-                                  placeholder=""
-                                />
-                              </td>
-                              <td scope="row">
-                                <input
-                                  name="rangoInf"
-                                  type="number"
-                                  min="0"
-                                  max="150"
-                                  class="form-control inputExamenRango"
-                                  id="inferiorExamenCrud0"
-                                  placeholder=""
-                                />
-                              </td>
-                              <td scope="row">
-                                <input
-                                  name="rangoDesde"
-                                  type="number"
-                                  min="0"
-                                  max="150"
-                                  class="form-control inputExamenRango"
-                                  id="DesdeExamenCrud0"
-                                  placeholder="Desde"
-                                />
-                              </td>
-                              <td scope="row">
-                                <input
-                                  name="rangoHasta"
-                                  min="0"
-                                  max="150"
-                                  type="number"
-                                  class="form-control inputExamenRango"
-                                  id="HastaExamenCrud0"
-                                  placeholder="Hasta"
-                                />
-                              </td>
-                              <td scope="row">
-                                <select
-                                  class="form-select form-select-sm inputExamenRango"
-                                  id="selectRango0"
-                                  name="rangoSelect"
-                                  aria-label="Small select example"
-                                >
-                                  <option selected>Genero</option>
-                                  <option value="Hombre">Masculino</option>
-                                  <option value="Mujer">Femenino</option>
-                                </select>
-                            </td>
-                            
-                              
-                            </tr>
-                          </tbody>
-                          <tfoot>
-                            <tr>
-                              <td colspan="4"></td>
-                              <td class="text-center">
-                                <svg
-                                  xmlns="http://www.w3.org/2000/svg"
-                                  width="30"
-                                  height="30"
-                                  fill="green"
-                                  class="bi bi-check-circle"
-                                  viewBox="0 0 16 16"
-                                  onclick="añadirRowRango()"
-                                >
-                                  <path
-                                    d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"
-                                  />
-                                  <path
-                                    d="m10.97 4.97-.02.022-3.473 4.425-2.093-2.094a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-1.071-1.05"
-                                  />
-                                </svg>
-                              </td>
-                            </tr>
-                          </tfoot>
-                        </table>
-                      </div>
-                    </div>
-                    <div class="row my-3">
-                      <div class="col d-flex justify-content-center">
-                        <button type="submit" class="btn btn-outline-primary">
-                          <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            width="30"
-                            height="30"
-                            fill="currentColor"
-                            class="bi bi-floppy2"
-                            viewBox="0 0 16 16"
-                          >
-                            <path
-                              d="M1.5 0h11.586a1.5 1.5 0 0 1 1.06.44l1.415 1.414A1.5 1.5 0 0 1 16 2.914V14.5a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 0 14.5v-13A1.5 1.5 0 0 1 1.5 0M1 1.5v13a.5.5 0 0 0 .5.5H2v-4.5A1.5 1.5 0 0 1 3.5 9h9a1.5 1.5 0 0 1 1.5 1.5V15h.5a.5.5 0 0 0 .5-.5V2.914a.5.5 0 0 0-.146-.353l-1.415-1.415A.5.5 0 0 0 13.086 1H13v3.5A1.5 1.5 0 0 1 11.5 6h-7A1.5 1.5 0 0 1 3 4.5V1H1.5a.5.5 0 0 0-.5.5m9.5-.5a.5.5 0 0 0-.5.5v3a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 0-.5-.5z"
-                            />
-                          </svg>
-                        </button>
-                      </div>
-                      <div class="col d-flex justify-content-center">
-                        <button
-                          type="button"
-                          data-bs-toggle="collapse"
-                          data-bs-target="#collapseExample"
-                          aria-expanded="false"
-                          aria-controls="collapseExample"
-                          class="btn-close"
-                          aria-label="Close"
-                        ></button>
-                      </div>
-                    </div>
-                  </form>
-                </div>
-              </div>
-
-              <!--
-            
-            
-          -->
-            </div>
-          </div>
-          <div class="modal-footer">
-            <button
-              type="button"
-              class="btn btn-secondary"
-              data-bs-dismiss="modal"
-            >
-              Cerrar
-            </button>
-            <button
-              type="button"
-              class="btn btn-primary"
-              id="btnGuardarExamen"
-              onclick="guardarExamen()"
-            >
-              Ok
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
+ 
 
     <!-- Modal para agregar un paciente -->
     <div id="confirmacion-modal" class="modal fade">
@@ -1228,7 +854,7 @@
                       </div>
                       <div class="collapse" id="collapseOrdenEx2">
 
-                        fffffffffffff
+                        
                       </div>
                     </div>
                   </div>
