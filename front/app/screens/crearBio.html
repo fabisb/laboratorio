@@ -1,229 +1,295 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="../styles/creacionBio.css">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="../styles/creacionBio.css" />
     <link
-    rel="stylesheet"
-    href="../../bower_components/bootstrap/dist/css/bootstrap.min.css"
-  />
-  <link rel="stylesheet" href="../styles/modalConfirmacion.css" />
+      rel="stylesheet"
+      href="../../bower_components/bootstrap/dist/css/bootstrap.min.css"
+    />
+    <link rel="stylesheet" href="../styles/modalConfirmacion.css" />
+    <link rel="stylesheet" href="../styles/radioUser.css" />
 
     <title>Creacion - Bioanalista</title>
-</head>
-<body onload="render()" style="background: rgb(214,255,242);
-background: linear-gradient(180deg, rgba(214,255,242,1) 05%, rgba(255,255,255,1) 11%, rgba(255,255,255,1) 89%, rgba(214,255,242,1) 95%);">
-<main>
- 
-    <div id="formBody" class="form-body" style="background: rgb(214,255,242);
-    background: linear-gradient(180deg, rgba(214,255,242,1) 05%, rgba(255,255,255,1) 11%, rgba(255,255,255,1) 89%, rgba(214,255,242,1) 95%);">
-      <div class="row">
-        <div class="form-holder">
-          <div class="form-content">
-            <div class="form-items">
-              <div class="d-flex justify-content-center">
-                <img src="../imgs/la-milagrosa-logo.png" width="120" alt="" />
-              </div>
-              <hr>
-              <h3>Registro de Bioanalista</h3>
-              <p>Ingrese los siguientes datos.</p>
-              <form onsubmit="agregarBioanalista(event), event.preventDefault()" class="requires-validation" novalidate>
-                <div class="col-md-12">
-                  <div class="d-flex">
-                    <select
-                      class="w-25 form-select mt-3 rounded-end-0"
-                      name="pre_cedula"
-                      required
-                    >
-                      <option selected value="V">V</option>
-                      <option value="E">E</option>
-                    </select>
+  </head>
+  <body
+    onload="render()"
+    style="
+      background: rgb(214, 255, 242);
+      background: linear-gradient(
+        180deg,
+        rgba(214, 255, 242, 1) 05%,
+        rgba(255, 255, 255, 1) 11%,
+        rgba(255, 255, 255, 1) 89%,
+        rgba(214, 255, 242, 1) 95%
+      );
+      overflow-x: hidden;
+    "
+  >
+    <main>
+      <div
+        class="form-body"
+        style="
+          background: rgb(214, 255, 242);
+          background: linear-gradient(
+            180deg,
+            rgba(214, 255, 242, 1) 05%,
+            rgba(255, 255, 255, 1) 11%,
+            rgba(255, 255, 255, 1) 89%,
+            rgba(214, 255, 242, 1) 95%
+          );
+        "
+      >
+        <div class="row">
+          <div id="formBody" class="form-holder col-8">
+            <div class="form-content">
+              <div class="form-items">
+                <div class="d-flex justify-content-center">
+                  <img src="../imgs/la-milagrosa-logo.png" width="120" alt="" />
+                </div>
+                <hr />
+                <h3>Registro de Bioanalista</h3>
+                <p>Ingrese los siguientes datos.</p>
+                <form
+                  onsubmit="agregarBioanalista(event), event.preventDefault()"
+                  class="requires-validation"
+                  novalidate
+                >
+                  <div class="col-md-12">
+                    <div class="d-flex">
+                      <select
+                        class="w-25 form-select mt-3 rounded-end-0"
+                        name="pre_cedula"
+                        required
+                      >
+                        <option selected value="V">V</option>
+                        <option value="E">E</option>
+                      </select>
+                      <input
+                        class="form-control rounded-0"
+                        type="number"
+                        min="0"
+                        name="cedula"
+                        placeholder="Cedula"
+                        required
+                      />
+                      <button
+                        type="button"
+                        class="btn btn-warning rounded-start-0 mt-3"
+                        onclick="buscarUsuario()"
+                      >
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="16"
+                          height="16"
+                          fill="currentColor"
+                          class="bi bi-search"
+                          viewBox="0 0 16 16"
+                        >
+                          <path
+                            d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"
+                          />
+                        </svg>
+                      </button>
+                    </div>
+                  </div>
+                  <div class="col-md-12">
                     <input
-                      class="form-control rounded-start-0"
-                      type="number"
-                      min="0"
-                      name="cedula"
-                      placeholder="Cedula"
+                      class="form-control"
+                      type="text"
+                      name="nombre"
+                      placeholder="Nombre Completo"
                       required
                     />
+                    <div class="valid-feedback">Nombre valido</div>
+                    <div class="invalid-feedback">
+                      El nombre no puede ser vacio!
+                    </div>
                   </div>
-                </div>
-                <div class="col-md-12">
-                  <input
-                    class="form-control"
-                    type="text"
-                    name="nombre"
-                    placeholder="Nombre Completo"
-                    required
-                  />
-                  <div class="valid-feedback">Nombre valido</div>
-                  <div class="invalid-feedback">
-                    El nombre no puede ser vacio!
-                  </div>
-                </div>
 
-                <div class="col-md-12">
-                  <input
-                    class="form-control"
-                    type="text"
-                    name="colegio"
-                    placeholder="Colegio"
-                    required
-                  />
-                  <div class="valid-feedback">Correo electronico valido</div>
-                  <div class="invalid-feedback">
-                    El correo electronico no puede estar vacio!
+                  <div class="col-md-12">
+                    <input
+                      class="form-control"
+                      type="text"
+                      name="colegio"
+                      placeholder="Colegio"
+                      required
+                    />
+                    <div class="valid-feedback">Correo electronico valido</div>
+                    <div class="invalid-feedback">
+                      El correo electronico no puede estar vacio!
+                    </div>
                   </div>
-                </div>
 
-                <div class="col-md-12">
-                  <input
-                    class="form-control mt-3"
-                    type="text"
-                    name="telefono"
-                    placeholder="Numero de Telefono"
-                    required
-                  />
-                  <div class="valid-feedback">Numero de telefono valido</div>
-                  <div class="invalid-feedback">
-                    El numero de telefono no puede estar vacio!
+                  <div class="col-md-12">
+                    <input
+                      class="form-control mt-3"
+                      type="text"
+                      name="telefono"
+                      placeholder="Numero de Telefono"
+                      required
+                    />
+                    <div class="valid-feedback">Numero de telefono valido</div>
+                    <div class="invalid-feedback">
+                      El numero de telefono no puede estar vacio!
+                    </div>
                   </div>
-                </div>
 
-                <div class="col-md-12">
-                  <input
-                    class="form-control"
-                    type="text"
-                    name="direccion"
-                    placeholder="Direccion"
-                    required
-                  />
-                  <div class="valid-feedback">Direccion Valida</div>
-                  <div class="invalid-feedback">
-                    La direccion no puede estar vacio!
+                  <div class="col-md-12">
+                    <input
+                      class="form-control"
+                      type="text"
+                      name="direccion"
+                      placeholder="Direccion"
+                      required
+                    />
+                    <div class="valid-feedback">Direccion Valida</div>
+                    <div class="invalid-feedback">
+                      La direccion no puede estar vacio!
+                    </div>
                   </div>
-                </div>
-                <div class="col-md-12">
-                  <input
-                    class="form-control mt-3"
-                    type="date"
-                    name="ingreso"
-                    
-                    placeholder="Fecha de Ingreso"
-                    required
-                    min="1920-01-01"
-                  />
-                  <div class="valid-feedback">Fecha de Ingreso Valida</div>
-                  <div class="invalid-feedback">
-                    La fecha de Ingreso no puede estar vacia!
+                  <div class="col-md-12">
+                    <input
+                      class="form-control mt-3"
+                      type="date"
+                      name="ingreso"
+                      placeholder="Fecha de Ingreso"
+                      required
+                      min="1920-01-01"
+                    />
+                    <div class="valid-feedback">Fecha de Ingreso Valida</div>
+                    <div class="invalid-feedback">
+                      La fecha de Ingreso no puede estar vacia!
+                    </div>
                   </div>
-                </div>
 
-                <div class="col-md-12 mt-3">
-                
+                  <div class="col-md-12 mt-3">
                     <div>
-
-                      <input  type="file" name="firma" class="form-control" id="file">
+                      <input
+                        type="file"
+                        name="firma"
+                        class="form-control"
+                        id="file"
+                      />
                     </div>
-                </div>
+                  </div>
 
-                <div class="form-button mt-3 row ">
-                  <div class="col d-flex justify-content-center">
-                    <button id="submit" type="submit" class="btn-lg btn btn-success">
-                      Registrar
-                    </button>
-                  </div>
-                  
-                  <div class="col d-flex justify-content-center ">
-                    <div class="btn-group" role="group" aria-label="Basic example">
-                      <button type="button" onclick="cambiarCrearBio()" class="btn btn-lg active btn-outline-success">Bioanalista</button>
-                      <button type="button" onclick="cambiarCrearUsuario()" class="btn btn-lg btn-outline-success">Usuario</button>
-                      
+                  <div class="form-button mt-3 row">
+                    <div class="col d-flex justify-content-center">
+                      <button
+                        id="submit"
+                        type="submit"
+                        class="btn-lg btn btn-success"
+                      >
+                        Registrar
+                      </button>
                     </div>
-                    
                   </div>
-                </div>
-              </form>
+                </form>
+              </div>
             </div>
           </div>
+          <div class="col-4">
+            <section class="radio-section">
+              <div class="radio-list">
+                <div class="radio-item">
+                  <input name="radio" id="radio1" type="radio" /><label
+                    for="radio1"
+                    >ADMINISTRADOR</label
+                  >
+                </div>
+                <div class="radio-item">
+                  <input
+                    onclick="cambiarCrearBio()"
+                    name="radio"
+                    id="radio2"
+                    type="radio"
+                  /><label for="radio2">BIOANALISTA</label>
+                </div>
+                <div class="radio-item">
+                  <input
+                    onclick="cambiarCrearUsuario()"
+                    name="radio"
+                    id="radio3"
+                    type="radio"
+                  /><label for="radio3">AUXILIAR</label>
+                </div>
+              </div>
+            </section>
+          </div>
         </div>
-        
+        <!--  -->
       </div>
-      <!--  -->
-    </div>
-  
-    
-      <img id="imgPrueba">
-</main>
-<div id="confirmacion-modalPaci" class="modal fade">
-  <div class="modal-dialog modal-confirm">
-    <div class="modal-content">
-      <div class="modal-header">
-        <div class="icon-box">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            height="58"
-            viewBox="0 -960 960 960"
-            width="58"
-          >
-            <path
-              d="M382-240 154-468l57-57 171 171 367-367 57 57-424 424Z"
-            />
-          </svg>
-        </div>
-        <h4 class="modal-title">Agregado!</h4>
-      </div>
-      <div class="modal-body">
-        <p class="text-center">
-          El usuario ha sido agregado correctamente.
-        </p>
-      </div>
-      <div class="modal-footer">
-        <button class="btn btn-success btn-block" data-bs-dismiss="modal">
-          OK
-        </button>
-      </div>
-    </div>
-  </div>
-</div>
-<div id="confirmacion-modalBio" class="modal fade">
-  <div class="modal-dialog modal-confirm">
-    <div class="modal-content">
-      <div class="modal-header">
-        <div class="icon-box">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            height="58"
-            viewBox="0 -960 960 960"
-            width="58"
-          >
-            <path
-              d="M382-240 154-468l57-57 171 171 367-367 57 57-424 424Z"
-            />
-          </svg>
-        </div>
-        <h4 class="modal-title">Agregado!</h4>
-      </div>
-      <div class="modal-body">
-        <p class="text-center">
-          El bioanalista ha sido agregado correctamente.
-        </p>
-      </div>
-      <div class="modal-footer">
-        <button class="btn btn-success btn-block" data-bs-dismiss="modal">
-          OK
-        </button>
-      </div>
-    </div>
-  </div>
-</div>
 
-      <script src="../javascript/crearBio.js"></script>
-      <script src="../modules/axios.min.js"></script>
-      <script src="../../bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+      <img id="imgPrueba" />
+    </main>
+    <div id="confirmacion-modalPaci" class="modal fade">
+      <div class="modal-dialog modal-confirm">
+        <div class="modal-content">
+          <div class="modal-header">
+            <div class="icon-box">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                height="58"
+                viewBox="0 -960 960 960"
+                width="58"
+              >
+                <path
+                  d="M382-240 154-468l57-57 171 171 367-367 57 57-424 424Z"
+                />
+              </svg>
+            </div>
+            <h4 class="modal-title">Agregado!</h4>
+          </div>
+          <div class="modal-body">
+            <p class="text-center">
+              El usuario ha sido agregado correctamente.
+            </p>
+          </div>
+          <div class="modal-footer">
+            <button class="btn btn-success btn-block" data-bs-dismiss="modal">
+              OK
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div id="confirmacion-modalBio" class="modal fade">
+      <div class="modal-dialog modal-confirm">
+        <div class="modal-content">
+          <div class="modal-header">
+            <div class="icon-box">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                height="58"
+                viewBox="0 -960 960 960"
+                width="58"
+              >
+                <path
+                  d="M382-240 154-468l57-57 171 171 367-367 57 57-424 424Z"
+                />
+              </svg>
+            </div>
+            <h4 class="modal-title">Agregado!</h4>
+          </div>
+          <div class="modal-body">
+            <p class="text-center">
+              El bioanalista ha sido agregado correctamente.
+            </p>
+          </div>
+          <div class="modal-footer">
+            <button class="btn btn-success btn-block" data-bs-dismiss="modal">
+              OK
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="../javascript/crearBio.js"></script>
+    <script src="../modules/axios.min.js"></script>
+    <script src="../../bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
     <script src="../../bower_components/moment/moment.js"></script>
-
-  
-</body>
+  </body>
 </html>
