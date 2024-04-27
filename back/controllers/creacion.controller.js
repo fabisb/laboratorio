@@ -1,6 +1,19 @@
 import { pool } from "../database/db.js";
 import moment from "moment";
 import bcrypt from "bcrypt";
+
+export const buscarUsuario = async (req,res)=>{
+  const { id } = req.query;
+  if(id<0 || id=="" || !id){
+    return await res.status(400).json({mensaje:"El id ingresado no es correcto"})
+      
+    }
+}
+export const editarUsuario = async  (req, res) => {
+  const {  id } = req.body;
+
+}
+
 export const agregarPacienteController = async (req, res) => {
   const { paciente, idPaciente } = req.body;
   console.log("🚀 ~ agregarPacienteController ~ idPaciente:", idPaciente)

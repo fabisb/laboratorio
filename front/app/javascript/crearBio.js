@@ -222,8 +222,6 @@ const cambiarCrearBio = ()=>{
   const form = document.getElementById("formBody");
 form.innerHTML =
 `
-<div class="row">
-        <div class="form-holder">
           <div class="form-content">
             <div class="form-items">
               <div class="d-flex justify-content-center">
@@ -336,37 +334,23 @@ form.innerHTML =
                     <button id="submit" type="submit" class="btn-lg btn btn-success">
                       Registrar
                     </button>
-                  </div>
-                  
-                  <div class="col d-flex justify-content-center ">
-                    <div class="btn-group" role="group" aria-label="Basic example">
-                      <button type="button" onclick="cambiarCrearBio()" class="btn btn-lg active btn-outline-success">Bioanalista</button>
-                      <button type="button" onclick="cambiarCrearUsuario()" class="btn btn-lg btn-outline-success">Usuario</button>
-                      
-                    </div>
-                    
-                  </div>
+                  </div>                          
                 </div>
               </form>
             </div>
           </div>
-        </div>
-        
-      </div>
 `;
 }
 const cambiarCrearUsuario = () => {
   const form = document.getElementById("formBody");
       form.innerHTML = `
-    <div class="row">
-    <div class="form-holder">
       <div class="form-content">
         <div class="form-items">
         <div class="d-flex justify-content-center">
                 <img src="../imgs/la-milagrosa-logo.png" width="120" alt="" />
               </div>
               <hr>
-          <h3>Registro de Usuario</h3>
+          <h3>Registro de Auxiliar</h3>
           <p>Ingrese los siguientes datos.</p>
           <form onsubmit="agregarUsuario(event), event.preventDefault()" class="requires-validation" novalidate>
             <div class="col-md-12">
@@ -473,22 +457,15 @@ const cambiarCrearUsuario = () => {
                     <button id="submit" type="submit" class="btn-lg btn btn-success">
                       Registrar
                     </button>
-                  </div>
-                  
-                  <div class="col d-flex justify-content-center ">
-                    <div class="btn-group" role="group" aria-label="Basic example">
-                      <button type="button" onclick="cambiarCrearBio()" class="btn btn-lg btn-outline-success">Bioanalista</button>
-                      <button type="button" onclick="cambiarCrearUsuario()" class="btn btn-lg active btn-outline-success">Usuario</button>
-                      
-                    </div>
-            </div>
+                  </div>                          
           </form>
         </div>
       </div>
-    </div>
-
-  </div>
     `;
 
   }
 
+
+  const buscarUsuario = () =>{
+    
+  }
