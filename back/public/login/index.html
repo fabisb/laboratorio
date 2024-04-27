@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="shortcut icon" href="../img/la-milagrosa-logo.png" />
+    <link rel="stylesheet" href="login.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+    />
+
+    <title>La Milagrosa</title>
+  </head>
+  <body >
+    <div class="container w-100 h-100 text-center" id="login">
+        <div class="container">
+          <div class="row">
+            <div class="col-lg-12 col-xl-11 mx-auto w-50">
+              <div
+                class="card flex-row border-0 shadow rounded-3 overflow-hidden"
+              >
+                
+                <div class="card-body p-4 p-sm-5">
+                    <img src="../img/la-milagrosa-logo.png" alt="">
+                  
+                  <br>
+                  <br>
+                  <hr>
+                  <form onsubmit="loguear(event)">
+                    <div class="form-floating mb-3">
+                      <input
+                        type="number"
+                        class="form-control"
+                        id="userLog"
+                        placeholder="myusername"
+                        required
+                        autofocus
+                      />
+                      <label for="floatingInputUsername">Cedula</label>
+                    </div>
+  
+                    <div class="form-floating mb-3">
+                      <input
+                        type="password"
+                        class="form-control"
+                        id="passwordLog"
+                        required
+                        placeholder="Password"
+                      />
+                      <label for="floatingPassword">Password</label>
+                    </div>
+  
+                    <div class="d-grid mb-2">
+                      <button
+                        type="submit"
+                        id="buttonLogin"
+                      >
+                        INICIAR SESION
+                      </button>
+                    </div>
+  
+                   
+  
+    
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+     
+  
+      <div hidden class="container text-center" id="isLogAdmin"></div>
+      <script src="../../bower_components/jquery/dist/jquery.min.js"></script>
+      <script src="../../bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+   
+  </body>
+  <script src="login.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</html>

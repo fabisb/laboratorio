@@ -20,11 +20,14 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
 app.use(express.json({ limit: "20mb" }));
 
+app.use("/inicio",express.static(path.join(__dirname, "public/inicio")))
+
 app.use("/api/", indexRouter);
 app.use("/api/creacion", creacionRouter);
 app.use("/api/examenes", examenesRouter);
 app.use("/api/modulo-examenes", moduloExamenesRouter);
 app.use("/api/users", usersRouter);
 app.use("/api/productos", productosRouter);
+
 
 export default app;
