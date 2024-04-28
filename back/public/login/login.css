@@ -1,0 +1,19 @@
+#buttonLogin{
+    padding: 0.75em;
+    width: 100%;
+    margin: 0;
+    background: rgb(28,132,132);
+    background: linear-gradient(87deg, rgba(28,132,132,1) 30%, rgba(104,192,195,1) 50%, rgba(28,132,132,1) 80%);
+    border: none;
+    color: white;
+    font-size: x-large;
+    transition: all 1.5s;
+}
+
+#buttonLogin:hover{
+    background: rgba(104,192,195,1);
+    background: linear-gradient(87deg, rgba(104,192,195,1) 30%, rgba(28,132,132) 50%, rgba(104,192,195,1) 80%);
+
+    color: black ;
+
+}
