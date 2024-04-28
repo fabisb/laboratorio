@@ -2,24 +2,110 @@ import { pool } from "../database/db.js";
 import moment from "moment";
 import bcrypt from "bcrypt";
 
-export const buscarUsuario = async (req,res)=>{
-  const { id } = req.query;
-  if(id<0 || id=="" || !id){
-    return await res.status(400).json({mensaje:"El id ingresado no es correcto"})
-      
+export const buscarBioanalista = async (req,res)=>{
+  const { cedula, pre_cedula } = req.query;
+  console.log("🚀 ~ buscarBioanalista ~ req.query:", req.query)
+  try {
+    if (cedula < 0 || cedula == "" || !cedula) {
+      return await res
+        .status(400)
+        .json({ mensaje: "La cedula ingresado no es correcto" });
     }
+    if (pre_cedula == "" || !pre_cedula) {
+      return await res
+        .status(400)
+        .json({ mensaje: "La pre_cedula ingresado no es correcto" });
+    }
+    const [bio] = await pool.execute(
+      "SELECT id, cedula, nombre, ingreso, telefono, direccion, colegio, ministerio, pre_cedula, status FROM bioanalistas WHERE cedula = ? AND pre_cedula = ?",
+      [cedula, pre_cedula]
+    );
+    console.log("🚀 ~ buscarBioanalista ~ bio:", bio)
+    return await res.status(200).json(bio[0]);
+  } catch (error) {
+    console.log(error);
+    return await res.status(500).json({ mensaje: "ERROR DE SERVIDOR" });
+  }
 }
-export const editarUsuario = async  (req, res) => {
-  const {  id } = req.body;
 
+export const editarBioanalista = async (req,res)=>{
+  
 }
+
+export const buscarUsuario = async (req, res) => {
+  const { cedula, pre_cedula } = req.query;
+  console.log("🚀 ~ buscarUsuario ~ req.query:", req.query);
+  try {
+    if (cedula < 0 || cedula == "" || !cedula) {
+      return await res
+        .status(400)
+        .json({ mensaje: "La cedula ingresado no es correcto" });
+    }
+    if (pre_cedula == "" || !pre_cedula) {
+      return await res
+        .status(400)
+        .json({ mensaje: "La pre_cedula ingresado no es correcto" });
+    }
+    const [user] = await pool.execute(
+      "SELECT * FROM users WHERE cedula = ? AND pre_cedula = ?",
+      [cedula, pre_cedula]
+    );
+    console.log("🚀 ~ buscarUsuario ~ user:", user);
+    return await res.status(200).json(user[0]);
+  } catch (error) {
+    console.log(error);
+    return await res.status(500).json({ mensaje: "ERROR DE SERVIDOR" });
+  }
+};
+export const editarUsuario = async (req, res) => {
+  const { id, nombre, correo, telefono, direccion, nivel, password } = req.body;
+  console.log("🚀 ~ editarUsuario ~ req.body:", req.body);
+  try {
+    if (id < 0 || id == "" || !id) {
+      return await res
+        .status(400)
+        .json({ mensaje: "El id ingresado no es correcto" });
+    }
+    if (
+      nombre == "" ||
+      correo == "" ||
+      telefono == "" ||
+      direccion == "" ||
+      nivel == "" ||
+      password == ""
+    ) {
+      return await res.status(400).json({ mensaje: "Algun dato no es valido" });
+    }
+
+    const [user] = await pool.execute("SELECT * FROM users WHERE id = ?", [id]);
+    if (user.length == 0) {
+      return await res
+        .status(404)
+        .json({ mensaje: "El usuario que intenta editar no existe" });
+    }
+    let claveEncriptada = "";
+    claveEncriptada = await bcrypt.hash(password, 2);
+
+    const [userUpdate] = await pool.execute(
+      "UPDATE users SET password = ?, nombre = ?, correo = ?, telefono = ?, direccion = ?, nivel = ? WHERE id = ?",
+      [claveEncriptada, nombre, correo, telefono, direccion, nivel, id]
+    );
+    return await res
+      .status(200)
+      .json({ mensaje: "Usuario modificado correctamente" });
+  } catch (error) {
+    console.log(error);
+    return await res.status(500).json({ mensaje: "ERROR DE SERVIDOR" });
+  }
+};
 
 export const agregarPacienteController = async (req, res) => {
   const { paciente, idPaciente } = req.body;
-  console.log("🚀 ~ agregarPacienteController ~ idPaciente:", idPaciente)
+  console.log("🚀 ~ agregarPacienteController ~ idPaciente:", idPaciente);
   console.log("🚀 ~ agregarPacienteController ~ paciente:", paciente);
   let cedulaValidacion;
-  let preCedulaVal = '', nombreVal = ''
+  let preCedulaVal = "",
+    nombreVal = "";
 
   const validacion = paciente.some((el) => {
     if (el.value == "") {
@@ -58,7 +144,7 @@ export const agregarPacienteController = async (req, res) => {
       }
     }
     if (el.name == "nombre") {
-      nombreVal = el.value
+      nombreVal = el.value;
       if (!isNaN(el.value)) {
         console.log("Ingrese un nombre valido");
         return true;
@@ -81,12 +167,10 @@ export const agregarPacienteController = async (req, res) => {
       }
     }
     if (el.name == "pre_cedula") {
-      if (el.value  != 'E' && el.value  != 'V' && el.value  != 'N') {
-        console.log('Ingrese pre Cedula Valida')
+      if (el.value != "E" && el.value != "V" && el.value != "N") {
+        console.log("Ingrese pre Cedula Valida");
         return true;
-        
-      }else{
-
+      } else {
         preCedulaVal = el.value;
       }
     }
@@ -104,9 +188,9 @@ export const agregarPacienteController = async (req, res) => {
     if (req.body.new) {
       const [cedulaExistente] = await pool.execute(
         "SELECT cedula FROM pacientes WHERE cedula = ? AND pre_cedula = ? AND nombre = ?",
-        [cedulaValidacion,preCedulaVal,nombreVal]
+        [cedulaValidacion, preCedulaVal, nombreVal]
       );
-      
+
       if (cedulaExistente.length > 0) {
         return await res.status(401).json({
           mensaje:
@@ -127,13 +211,16 @@ export const agregarPacienteController = async (req, res) => {
         .status(200)
         .json({ mensaje: "Paciente registrado con exito" });
     } else {
-      console.log('EDITANDO')
+      console.log("EDITANDO");
       const [cedulaExistente] = await pool.execute(
         "SELECT cedula FROM pacientes WHERE cedula = ? AND pre_cedula = ? AND id = ?",
-        [cedulaValidacion,preCedulaVal, idPaciente]
+        [cedulaValidacion, preCedulaVal, idPaciente]
       );
-      console.log("🚀 ~ agregarPacienteController ~ cedulaExistente:", cedulaExistente)
-      if ((cedulaExistente.length == 0)) {
+      console.log(
+        "🚀 ~ agregarPacienteController ~ cedulaExistente:",
+        cedulaExistente
+      );
+      if (cedulaExistente.length == 0) {
         return await res.status(401).json({
           mensaje:
             "La cedula que esta intentando modificar no coincide con el id",

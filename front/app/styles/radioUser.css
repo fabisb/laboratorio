@@ -40,7 +40,7 @@
 	top: calc(50% - 12px);
 }
 .radio-item label:before {
-	background: #81cff3;
+	background: #81f3da;
 	height: 19px;
 	width: 19px;
 	left: 19px;
@@ -51,7 +51,7 @@
 	transition: 0.4s ease-in-out 0s;
 }
 .radio-item [type="radio"]:checked ~ label {
-	border-color: #81cff3;
+	border-color: #81f3da;
 }
 .radio-item [type="radio"]:checked ~ label::before {
 	opacity: 1;
