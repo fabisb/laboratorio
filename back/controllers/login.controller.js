@@ -208,7 +208,7 @@ export async function loginEspejo(req, res) {
   }
   try {
     const [id] = await pool.execute(
-      "SELECT id, nivel, password FROM users WHERE cedula = ?",
+      "SELECT id, nivel, password, nombre FROM users WHERE cedula = ?",
       [user]
     );
 
@@ -229,7 +229,7 @@ export async function loginEspejo(req, res) {
           secure: true,
           sameSite: true,
         });
-        res.cookie("username", user, {
+        res.cookie("username", id[0].nombre, {
           maxAge: 60000 * 60 * 2,
           secure: true,
           sameSite: true,
@@ -239,7 +239,7 @@ export async function loginEspejo(req, res) {
           secure: true,
           sameSite: true,
         });
-        return await res.status(200).json({ token, username: user });
+        return await res.status(200).json({ token, username: id[0].nombre });
       } else {
         return await res.status(404).json({
           mensaje: "Contraseña no valida",
