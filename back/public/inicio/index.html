@@ -209,6 +209,8 @@
                     type="date"
                     placeholder=".form-control-sm"
                     aria-label=".form-control-sm example"
+                    id="fecha_filtro"
+                    onblur="traerExamenesByFecha(value)"
                   />
                 </div>
               </div>
@@ -601,6 +603,8 @@
   </body>
   <script src="inicio.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-  <script src="../modules/axios.min.js"></script>
+  <script src="../login/modules/axios.min.js"></script>
+  <script src="../login/modules/moment.min.js"></script>
+
 
 </html>
