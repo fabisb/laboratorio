@@ -2,9 +2,8 @@ import { pool } from "../database/db.js";
 import moment from "moment";
 import bcrypt from "bcrypt";
 
-export const buscarBioanalista = async (req,res)=>{
+export const buscarBioanalista = async (req, res) => {
   const { cedula, pre_cedula } = req.query;
-  console.log("🚀 ~ buscarBioanalista ~ req.query:", req.query)
   try {
     if (cedula < 0 || cedula == "" || !cedula) {
       return await res
@@ -20,17 +19,12 @@ export const buscarBioanalista = async (req,res)=>{
       "SELECT id, cedula, nombre, ingreso, telefono, direccion, colegio, ministerio, pre_cedula, status FROM bioanalistas WHERE cedula = ? AND pre_cedula = ?",
       [cedula, pre_cedula]
     );
-    console.log("🚀 ~ buscarBioanalista ~ bio:", bio)
     return await res.status(200).json(bio[0]);
   } catch (error) {
     console.log(error);
     return await res.status(500).json({ mensaje: "ERROR DE SERVIDOR" });
   }
-}
-
-export const editarBioanalista = async (req,res)=>{
-  
-}
+};
 
 export const buscarUsuario = async (req, res) => {
   const { cedula, pre_cedula } = req.query;
@@ -57,6 +51,66 @@ export const buscarUsuario = async (req, res) => {
     return await res.status(500).json({ mensaje: "ERROR DE SERVIDOR" });
   }
 };
+
+export const editarBioanalista = async (req, res) => {
+  const {
+    id,
+    nombre,
+    telefono,
+    colegio,
+    ministerio,
+    direccion,
+    ingreso,
+    firma,
+  } = req.body;
+  if (id < 0 || id == "" || !id) {
+    return await res
+      .status(400)
+      .json({ mensaje: "El id ingresado no es correcto" });
+  }
+  if (
+    nombre == "" ||
+    telefono == "" ||
+    colegio == "" ||
+    ministerio == "" ||
+    direccion == "" ||
+    ingreso == ""
+  ) {
+    return await res.status(400).json({ mensaje: "Algun dato no es valido" });
+  }
+  try {
+    const [user] = await pool.execute(
+      "SELECT * FROM bioanalistas WHERE id = ?",
+      [id]
+    );
+    if (user.length == 0) {
+      return await res
+        .status(404)
+        .json({ mensaje: "El usuario que intenta editar no existe" });
+    } else {
+      const [bioUpdate] = await pool.execute(
+        "UPDATE bioanalistas SET nombre = ?, ingreso = ?, telefono = ?, direccion = ?, colegio = ?, ministerio = ?, foto_firma = ? WHERE id = ?",
+        [
+          nombre,
+          ingreso,
+          telefono,
+          direccion,
+          colegio,
+          ministerio,
+          firma !== "" ? firma : null,
+          id,
+        ]
+      );
+      return await res
+        .status(200)
+        .json({ mensaje: "Bioanalista modificado correctamente" });
+    }
+  } catch (error) {
+    console.log(error);
+    return await res.status(500).json({ mensaje: "ERROR DE SERVIDOR" });
+  }
+};
+
 export const editarUsuario = async (req, res) => {
   const { id, nombre, correo, telefono, direccion, nivel, password } = req.body;
   console.log("🚀 ~ editarUsuario ~ req.body:", req.body);
@@ -258,7 +312,6 @@ export const agregarBioanalistaController = async (req, res) => {
   } else {
     paciente.push({ value: null, name: "foto_firma" });
   }
-  console.log("🚀 ~ agregarBioanalistaController ~ paciente:", paciente);
   let cedulaValidacion;
 
   const validacion = paciente.some((el) => {

@@ -101,8 +101,7 @@ const agregarBioanalista = async (event) => {
   if (validacion) {
     return console.log("SE HA ENCONTRADO ALGUN ERROR");
   }
-  console.log("🚀 ~ agregarPaciente ~ paciente:", paciente);
-  console.log(firma);
+
   try {
     await axios.post(
       urlsv + "/api/creacion/agregar-bioanalista",
@@ -515,7 +514,7 @@ const buscarBio = async () => {
   const cedula = document.getElementsByName("cedula")[0].value;
   if (pre_cedula == "" || cedula == "") {
     //CREAR ALERTA PARA VALIDACION
-    return
+    return;
   }
   try {
     const { token } = await login.getToken();
@@ -530,13 +529,14 @@ const buscarBio = async () => {
         headers: { token },
       }
     );
-    console.log("🚀 ~ buscarBio ~ bio:", bio)
     document.getElementsByName("nombre")[0].value = bio.nombre;
     document.getElementsByName("telefono")[0].value = bio.telefono;
     document.getElementsByName("colegio")[0].value = bio.colegio;
     document.getElementsByName("ministerio")[0].value = bio.ministerio;
     document.getElementsByName("direccion")[0].value = bio.direccion;
-    document.getElementsByName("ingreso")[0].value = moment(bio.ingreso).format('YYYY-MM-DD') ;
+    document.getElementsByName("ingreso")[0].value = moment(bio.ingreso).format(
+      "YYYY-MM-DD"
+    );
     document.getElementById("btnHolder").innerHTML = `
     <button
     type="button"
@@ -545,12 +545,57 @@ const buscarBio = async () => {
   >
     Modificar
   </button>
-  
     `;
   } catch (error) {
-    console.log("🚀 ~ buscarBio ~ error:", error)
-    return
+    console.log("🚀 ~ buscarBio ~ error:", error);
+    return;
     //CREAR ALERTA EN CASO DE ERROR
+  }
+};
+const modificarBio = async (id) => {
+  if (id < 0 || id == "" || !id) {
+    //ALERTAS PARA VALIDACION
+    console.log("ERROR EN ID");
+    return;
+  }
+
+  const nombre = document.getElementsByName("nombre")[0].value;
+  const telefono = document.getElementsByName("telefono")[0].value;
+  const colegio = document.getElementsByName("colegio")[0].value;
+  const ministerio = document.getElementsByName("ministerio")[0].value;
+  const direccion = document.getElementsByName("direccion")[0].value;
+  const ingreso = document.getElementsByName("ingreso")[0].value;
+  if (
+    nombre == "" ||
+    telefono == "" ||
+    colegio == "" ||
+    ministerio == "" ||
+    direccion == "" ||
+    ingreso == ""
+  ) {
+    //ALERTAS PARA VALIDACION
+    console.log("ERROR EN DATO");
+    return;
+  }
+  
+  try {
+    const firma = await subirImagen();
+    const { token } = await login.getToken();
+    await axios.put(
+      urlsv + "/api/creacion/editar-bioanalista",
+      { id, nombre, telefono, colegio, ministerio, direccion, ingreso, firma },
+      { headers: { token } }
+    );
+    const modal = new bootstrap.Modal("#confirmacion-modalBio");
+    modal.show();
+    cambiarCrearBio();
+  } catch (error) {
+    console.log(error);
+    if (error.response.data.mensaje) {
+      return await alerta.alert("Error:", error.response.data.mensaje);
+    } else {
+      return await alerta.error();
+    }
   }
 };
 const buscarUsuario = async () => {
@@ -560,7 +605,7 @@ const buscarUsuario = async () => {
   console.log("🚀 ~ buscarUsuario ~ cedula:", cedula);
   if (pre_cedula == "" || cedula == "") {
     //CREAR ALERTA PARA VALIDACION
-    return
+    return;
   }
   try {
     const { token } = await login.getToken();
@@ -639,4 +684,3 @@ const modificarUsuario = async (id) => {
     }
   }
 };
-
