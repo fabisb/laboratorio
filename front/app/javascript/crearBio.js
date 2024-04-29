@@ -101,8 +101,7 @@ const agregarBioanalista = async (event) => {
   if (validacion) {
     return console.log("SE HA ENCONTRADO ALGUN ERROR");
   }
-  console.log("🚀 ~ agregarPaciente ~ paciente:", paciente);
-  console.log(firma);
+
   try {
     await axios.post(
       urlsv + "/api/creacion/agregar-bioanalista",
@@ -127,71 +126,71 @@ const agregarUsuario = async (event) => {
   const usuario = [];
   const validacion = [...event.target].some((el) => {
     if (el.tagName == "SELECT" || el.tagName == "INPUT") {
-        if (el.value == "") {
-          console.log(`Campo ${el.name} vacio`);
-          return true;
-        }
-        if (el.name == "telefono") {
-          let validarletra = false;
+      if (el.value == "") {
+        console.log(`Campo ${el.name} vacio`);
+        return true;
+      }
+      if (el.name == "telefono") {
+        let validarletra = false;
 
-          for (let i = 0; i < el.value.length; i++) {
-            const c = el.value[i];
-            if (c == "+") {
-              if (i != 0) {
-                validarletra = true;
-              }
-            } else {
-              if (isNaN(parseInt(c))) {
-                validarletra == true;
-              }
+        for (let i = 0; i < el.value.length; i++) {
+          const c = el.value[i];
+          if (c == "+") {
+            if (i != 0) {
+              validarletra = true;
+            }
+          } else {
+            if (isNaN(parseInt(c))) {
+              validarletra == true;
             }
           }
-
-          if (validarletra) {
-            console.log(`Campo ${el.name} invalido`);
-            return true;
-          }
         }
 
-        if (el.name == "cedula") {
-          if (el.value < 0) {
-            console.log("Ingrese una cedula valida");
-            return true;
-          }
+        if (validarletra) {
+          console.log(`Campo ${el.name} invalido`);
+          return true;
         }
-        if (el.name == "nombre") {
-          if (!isNaN(el.value)) {
-            console.log("Ingrese un nombre valido");
-            return true;
-          }
-        }
-        if (el.name == "correo") {
-          if (el.value.split("@")[0] == "" || el.value.split("@")[1] == "") {
-            console.log("Ingrese un correo valido");
-            return true;
-          }
-          if (!el.value.split("@")[1].split(".")[1].includes("com")) {
-            console.log("Ingrese un correo valido");
-            return true;
-          }
-        }
+      }
 
-        if (el.name != 'password') {
-          
-          const elemento = { value: el.value, name: el.name };
-          usuario.push(elemento);
+      if (el.name == "cedula") {
+        if (el.value < 0) {
+          console.log("Ingrese una cedula valida");
+          return true;
         }
-      
+      }
+      if (el.name == "nombre") {
+        if (!isNaN(el.value)) {
+          console.log("Ingrese un nombre valido");
+          return true;
+        }
+      }
+      if (el.name == "correo") {
+        if (el.value.split("@")[0] == "" || el.value.split("@")[1] == "") {
+          console.log("Ingrese un correo valido");
+          return true;
+        }
+        if (!el.value.split("@")[1].split(".")[1].includes("com")) {
+          console.log("Ingrese un correo valido");
+          return true;
+        }
+      }
+
+      if (el.name != "password") {
+        const elemento = { value: el.value, name: el.name };
+        usuario.push(elemento);
+      }
     }
   });
   if (validacion) {
     console.log("SE HA ENCONTRADO ALGUN ERROR");
-    return await alerta.alert("Error:", 'Se ha encontrado algun error al ingresar alguno de los datos');
-
+    return await alerta.alert(
+      "Error:",
+      "Se ha encontrado algun error al ingresar alguno de los datos"
+    );
   }
   console.log("🚀 ~ agregarPaciente ~ usuario:", usuario);
-  const clave = document.getElementsByName('password')[0].value;
-  const nivel = document.getElementsByName('nivel')[0].value;
+  const clave = document.getElementsByName("password")[0].value;
+  const nivel = document.getElementsByName("nivel")[0].value;
   try {
     await axios.post(
       urlsv + "/api/creacion/agregar-usuario",
@@ -213,15 +212,12 @@ const agregarUsuario = async (event) => {
 const render = () => {
   const fechaActual = moment().format("YYYY-MM-DD");
   console.log(fechaActual);
-  document
-    .getElementsByName("ingreso")[0]
-    .setAttribute("max", fechaActual);
+  document.getElementsByName("ingreso")[0].setAttribute("max", fechaActual);
 };
 
-const cambiarCrearBio = ()=>{
+const cambiarCrearBio = () => {
   const form = document.getElementById("formBody");
-form.innerHTML =
-`
+  form.innerHTML = `
           <div class="form-content">
             <div class="form-items">
               <div class="d-flex justify-content-center">
@@ -233,22 +229,40 @@ form.innerHTML =
               <form onsubmit="agregarBioanalista(event), event.preventDefault()" class="requires-validation" novalidate>
                 <div class="col-md-12">
                   <div class="d-flex">
-                    <select
-                      class="w-25 form-select mt-3 rounded-end-0"
-                      name="pre_cedula"
-                      required
-                    >
-                      <option selected value="V">V</option>
-                      <option value="E">E</option>
-                    </select>
-                    <input
-                      class="form-control rounded-start-0"
-                      type="number"
-                      min="0"
-                      name="cedula"
-                      placeholder="Cedula"
-                      required
+                  <select
+                  class="w-25 form-select mt-3 rounded-end-0"
+                  name="pre_cedula"
+                  required
+                >
+                  <option selected value="V">V</option>
+                  <option value="E">E</option>
+                </select>
+                <input
+                  class="form-control rounded-0"
+                  type="number"
+                  min="0"
+                  name="cedula"
+                  placeholder="Cedula"
+                  required
+                />
+                <button
+                  type="button"
+                  class="btn btn-warning rounded-start-0 mt-3"
+                  onclick="buscarBio()"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="16"
+                    height="16"
+                    fill="currentColor"
+                    class="bi bi-search"
+                    viewBox="0 0 16 16"
+                  >
+                    <path
+                      d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"
                     />
+                  </svg>
+                </button>
                   </div>
                 </div>
                 <div class="col-md-12">
@@ -273,9 +287,22 @@ form.innerHTML =
                     placeholder="Colegio"
                     required
                   />
-                  <div class="valid-feedback">Correo electronico valido</div>
+                  <div class="valid-feedback">Colegio valido</div>
                   <div class="invalid-feedback">
-                    El correo electronico no puede estar vacio!
+                    El Colegio no puede estar vacio!
+                  </div>
+                </div>
+                <div class="col-md-12">
+                  <input
+                    class="form-control"
+                    type="text"
+                    name="ministerio"
+                    placeholder="Ministerio"
+                    required
+                  />
+                  <div class="valid-feedback">Ministerio valido</div>
+                  <div class="invalid-feedback">
+                    El Ministerio no puede estar vacio!
                   </div>
                 </div>
 
@@ -330,7 +357,7 @@ form.innerHTML =
                 </div>
 
                 <div class="form-button mt-3 row ">
-                  <div class="col d-flex justify-content-center">
+                  <div  id="btnHolder" class="col d-flex justify-content-center">
                     <button id="submit" type="submit" class="btn-lg btn btn-success">
                       Registrar
                     </button>
@@ -340,37 +367,55 @@ form.innerHTML =
             </div>
           </div>
 `;
-}
-const cambiarCrearUsuario = () => {
+};
+const cambiarCrearUsuario = (nivel) => {
   const form = document.getElementById("formBody");
-      form.innerHTML = `
+  form.innerHTML = `
       <div class="form-content">
         <div class="form-items">
         <div class="d-flex justify-content-center">
                 <img src="../imgs/la-milagrosa-logo.png" width="120" alt="" />
               </div>
               <hr>
-          <h3>Registro de Auxiliar</h3>
+          <h3>Registro de ${nivel == 3 ? 'Administrador' : 'Auxiliar' }</h3>
           <p>Ingrese los siguientes datos.</p>
           <form onsubmit="agregarUsuario(event), event.preventDefault()" class="requires-validation" novalidate>
             <div class="col-md-12">
               <div class="d-flex">
-                <select
-                  class="w-25 form-select mt-3 rounded-end-0"
-                  name="pre_cedula"
-                  required
-                >
-                  <option selected value="V">V</option>
-                  <option value="E">E</option>
-                </select>
-                <input
-                  class="form-control rounded-start-0"
-                  type="number"
-                  min="0"
-                  name="cedula"
-                  placeholder="Cedula"
-                  required
+              <select
+              class="w-25 form-select mt-3 rounded-end-0"
+              name="pre_cedula"
+              required
+            >
+              <option selected value="V">V</option>
+              <option value="E">E</option>
+            </select>
+            <input
+              class="form-control rounded-0"
+              type="number"
+              min="0"
+              name="cedula"
+              placeholder="Cedula"
+              required
+            />
+            <button
+              type="button"
+              class="btn btn-warning rounded-start-0 mt-3"
+              onclick="buscarUsuario()"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="16"
+                height="16"
+                fill="currentColor"
+                class="bi bi-search"
+                viewBox="0 0 16 16"
+              >
+                <path
+                  d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"
                 />
+              </svg>
+            </button>
               </div>
             </div>
             <div class="col-md-12">
@@ -445,15 +490,14 @@ const cambiarCrearUsuario = () => {
             <select
             class="form-select selectNivelUsuario mt-3 rounded-end-0"
             name="nivel"
-            required
+            disabled
+            hidden
           >
-            <option selected value="3">Administrador</option>
-            <option value="2">Coordinador</option>
-            <option value="1">Usuario</option>
+            <option selected value="${nivel}">Nivel</option>
           </select>
             </div>
             <div class="form-button mt-3 row ">
-                  <div class="col d-flex justify-content-center">
+                  <div  id="btnHolder" class="col d-flex justify-content-center">
                     <button id="submit" type="submit" class="btn-lg btn btn-success">
                       Registrar
                     </button>
@@ -462,10 +506,188 @@ const cambiarCrearUsuario = () => {
         </div>
       </div>
     `;
+};
 
+const buscarBio = async () => {
+  const pre_cedula = document.getElementsByName("pre_cedula")[0].value;
+  const cedula = document.getElementsByName("cedula")[0].value;
+  if (pre_cedula == "" || cedula == "") {
+    //CREAR ALERTA PARA VALIDACION
+    return;
+  }
+  try {
+    const { token } = await login.getToken();
+
+    const { data: bio } = await axios.get(
+      urlsv + "/api/creacion/buscar-bioanalista",
+      {
+        params: {
+          cedula,
+          pre_cedula,
+        },
+        headers: { token },
+      }
+    );
+    document.getElementsByName("nombre")[0].value = bio.nombre;
+    document.getElementsByName("telefono")[0].value = bio.telefono;
+    document.getElementsByName("colegio")[0].value = bio.colegio;
+    document.getElementsByName("ministerio")[0].value = bio.ministerio;
+    document.getElementsByName("direccion")[0].value = bio.direccion;
+    document.getElementsByName("ingreso")[0].value = moment(bio.ingreso).format(
+      "YYYY-MM-DD"
+    );
+    document.getElementById("btnHolder").innerHTML = `
+    <button
+    type="button"
+    class="btn-lg btn btn-warning"
+    onclick="modificarBio('${bio.id}')"
+  >
+    Modificar
+  </button>
+    `;
+  } catch (error) {
+    console.log("🚀 ~ buscarBio ~ error:", error);
+    if (error.response.data.mensaje) {
+      return await alerta.alert("Error:", error.response.data.mensaje);
+    } else {
+      return await alerta.error();
+    }
+    //CREAR ALERTA EN CASO DE ERROR
+  }
+};
+const modificarBio = async (id) => {
+  if (id < 0 || id == "" || !id) {
+    //ALERTAS PARA VALIDACION
+    console.log("ERROR EN ID");
+    return;
   }
 
-
-  const buscarUsuario = () =>{
-    
+  const nombre = document.getElementsByName("nombre")[0].value;
+  const telefono = document.getElementsByName("telefono")[0].value;
+  const colegio = document.getElementsByName("colegio")[0].value;
+  const ministerio = document.getElementsByName("ministerio")[0].value;
+  const direccion = document.getElementsByName("direccion")[0].value;
+  const ingreso = document.getElementsByName("ingreso")[0].value;
+  if (
+    nombre == "" ||
+    telefono == "" ||
+    colegio == "" ||
+    ministerio == "" ||
+    direccion == "" ||
+    ingreso == ""
+  ) {
+    //ALERTAS PARA VALIDACION
+    console.log("ERROR EN DATO");
+    return;
   }
+  
+  try {
+    const firma = await subirImagen();
+    const { token } = await login.getToken();
+    await axios.put(
+      urlsv + "/api/creacion/editar-bioanalista",
+      { id, nombre, telefono, colegio, ministerio, direccion, ingreso, firma },
+      { headers: { token } }
+    );
+    const modal = new bootstrap.Modal("#confirmacion-modalBio");
+    modal.show();
+    cambiarCrearBio();
+  } catch (error) {
+    console.log(error);
+    if (error.response.data.mensaje) {
+      return await alerta.alert("Error:", error.response.data.mensaje);
+    } else {
+      return await alerta.error();
+    }
+  }
+};
+const buscarUsuario = async () => {
+  const pre_cedula = document.getElementsByName("pre_cedula")[0].value;
+  console.log("🚀 ~ buscarUsuario ~ pre_cedula:", pre_cedula);
+  const cedula = document.getElementsByName("cedula")[0].value;
+  console.log("🚀 ~ buscarUsuario ~ cedula:", cedula);
+  if (pre_cedula == "" || cedula == "") {
+    //CREAR ALERTA PARA VALIDACION
+    return;
+  }
+  try {
+    const { token } = await login.getToken();
+
+    const { data: user } = await axios.get(
+      urlsv + "/api/creacion/buscar-usuario",
+      {
+        params: {
+          cedula,
+          pre_cedula,
+        },
+        headers: { token },
+      }
+    );
+    console.log("🚀 ~ buscarUsuario ~ user:", user);
+    document.getElementsByName("nombre")[0].value = user.nombre;
+    document.getElementsByName("telefono")[0].value = user.telefono;
+    document.getElementsByName("correo")[0].value = user.correo;
+    document.getElementsByName("direccion")[0].value = user.direccion;
+    document.getElementById("btnHolder").innerHTML = `
+    <button
+    type="button"
+    class="btn-lg btn btn-warning"
+    onclick="modificarUsuario('${user.id}')"
+  >
+    Modificar
+  </button>
+  
+    `;
+  } catch (error) {
+    console.log("🚀 ~ buscarUsuario ~ error:", error);
+    if (error.response.data.mensaje) {
+      return await alerta.alert("Error:", error.response.data.mensaje);
+    } else {
+      return await alerta.error();
+    }
+  }
+};
+const modificarUsuario = async (id) => {
+  const direccion = document.getElementsByName("direccion")[0].value;
+  const nombre = document.getElementsByName("nombre")[0].value;
+  const telefono = document.getElementsByName("telefono")[0].value;
+  const correo = document.getElementsByName("correo")[0].value;
+  const password = document.getElementsByName("password")[0].value;
+  const nivel = document.getElementsByName("nivel")[0].value;
+
+  if (id < 0 || id == "" || !id) {
+    //ALERTAS PARA VALIDACION
+    console.log("ERROR EN ID");
+    return;
+  }
+  if (
+    nombre == "" ||
+    correo == "" ||
+    telefono == "" ||
+    direccion == "" ||
+    nivel == "" ||
+    password == ""
+  ) {
+    //ALERTAS PARA VALIDACION
+    console.log("ERROR EN DATO");
+    return;
+  }
+  try {
+    const { token } = await login.getToken();
+    await axios.put(
+      urlsv + "/api/creacion/editar-usuario",
+      { id, direccion, nombre, telefono, correo, password, nivel },
+      { headers: { token } }
+    );
+    const modal = new bootstrap.Modal("#confirmacion-modalPaci");
+    modal.show();
+    cambiarCrearUsuario();
+  } catch (error) {
+    console.log(error);
+    if (error.response.data.mensaje) {
+      return await alerta.alert("Error:", error.response.data.mensaje);
+    } else {
+      return await alerta.error();
+    }
+  }
+};
