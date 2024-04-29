@@ -368,7 +368,7 @@ const cambiarCrearBio = () => {
           </div>
 `;
 };
-const cambiarCrearUsuario = () => {
+const cambiarCrearUsuario = (nivel) => {
   const form = document.getElementById("formBody");
   form.innerHTML = `
       <div class="form-content">
@@ -377,7 +377,7 @@ const cambiarCrearUsuario = () => {
                 <img src="../imgs/la-milagrosa-logo.png" width="120" alt="" />
               </div>
               <hr>
-          <h3>Registro de Auxiliar</h3>
+          <h3>Registro de ${nivel == 3 ? 'Administrador' : 'Auxiliar' }</h3>
           <p>Ingrese los siguientes datos.</p>
           <form onsubmit="agregarUsuario(event), event.preventDefault()" class="requires-validation" novalidate>
             <div class="col-md-12">
@@ -490,11 +490,10 @@ const cambiarCrearUsuario = () => {
             <select
             class="form-select selectNivelUsuario mt-3 rounded-end-0"
             name="nivel"
-            required
+            disabled
+            hidden
           >
-            <option selected value="3">Administrador</option>
-            <option value="2">Coordinador</option>
-            <option value="1">Usuario</option>
+            <option selected value="${nivel}">Nivel</option>
           </select>
             </div>
             <div class="form-button mt-3 row ">
@@ -548,7 +547,11 @@ const buscarBio = async () => {
     `;
   } catch (error) {
     console.log("🚀 ~ buscarBio ~ error:", error);
-    return;
+    if (error.response.data.mensaje) {
+      return await alerta.alert("Error:", error.response.data.mensaje);
+    } else {
+      return await alerta.error();
+    }
     //CREAR ALERTA EN CASO DE ERROR
   }
 };
@@ -637,7 +640,11 @@ const buscarUsuario = async () => {
     `;
   } catch (error) {
     console.log("🚀 ~ buscarUsuario ~ error:", error);
-    //CREAR ALERTA EN CASO DE ERROR
+    if (error.response.data.mensaje) {
+      return await alerta.alert("Error:", error.response.data.mensaje);
+    } else {
+      return await alerta.error();
+    }
   }
 };
 const modificarUsuario = async (id) => {

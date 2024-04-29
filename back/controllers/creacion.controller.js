@@ -19,7 +19,13 @@ export const buscarBioanalista = async (req, res) => {
       "SELECT id, cedula, nombre, ingreso, telefono, direccion, colegio, ministerio, pre_cedula, status FROM bioanalistas WHERE cedula = ? AND pre_cedula = ?",
       [cedula, pre_cedula]
     );
-    return await res.status(200).json(bio[0]);
+    if (bio.length == 0) {
+      return await res
+        .status(404)
+        .json({ mensaje: "No se ha encontrado un bioanalista con esa cedula" });
+    } else {
+      return await res.status(200).json(bio[0]);
+    }
   } catch (error) {
     console.log(error);
     return await res.status(500).json({ mensaje: "ERROR DE SERVIDOR" });
@@ -44,8 +50,13 @@ export const buscarUsuario = async (req, res) => {
       "SELECT * FROM users WHERE cedula = ? AND pre_cedula = ?",
       [cedula, pre_cedula]
     );
-    console.log("🚀 ~ buscarUsuario ~ user:", user);
-    return await res.status(200).json(user[0]);
+    if (user.length == 0) {
+      return await res
+        .status(404)
+        .json({ mensaje: "No se encontró a usuario con esa cedula" });
+    } else {
+      return await res.status(200).json(user[0]);
+    }
   } catch (error) {
     console.log(error);
     return await res.status(500).json({ mensaje: "ERROR DE SERVIDOR" });
