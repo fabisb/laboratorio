@@ -11,6 +11,8 @@ import examenesRouter from "./routes/examenes.routes.js";
 import moduloExamenesRouter from "./routes/examenesModulo.routes.js";
 import usersRouter from "./routes/users.routes.js";
 import productosRouter from "./routes/producto.routes.js";
+import espejoRouter from "./routes/espejo.routes.js";
+
 
 var app = express();
 
@@ -27,6 +29,7 @@ app.use("/api/creacion", creacionRouter);
 app.use("/api/examenes", examenesRouter);
 app.use("/api/modulo-examenes", moduloExamenesRouter);
 app.use("/api/users", usersRouter);
+app.use("/api/espejo", espejoRouter);
 app.use("/api/productos", productosRouter);
 
 

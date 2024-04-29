@@ -186,17 +186,21 @@
                   <select
                     class="form-select form-select-sm w-25"
                     aria-label="Small select example"
+                    id="selectFiltro"
+                    onchange="validarSelect(value)"
                   >
-                    <option selected>C.I</option>
-                    <option value="1">Paciente</option>
-                    <option value="2">Examen</option>
-                    <option value="3">Bioanalista</option>
+                    <option value="buscarCedula(value)" selected>C.I</option>
+                    <option value="buscarPaciente(value)">Paciente</option>
+                    <option value="buscarExamen(value)">Examen</option>
+                    <option value="buscarBioanalista(value)">Bioanalista</option>
                   </select>
                   <input
                     class="form-control form-control-sm w-75"
                     type="text"
-                    placeholder=".form-control-sm"
+                    placeholder="Escriba la cadena a buscar"
                     aria-label=".form-control-sm example"
+                    oninput="buscarCedula(value)"
+                    id="inputFiltro"
                   />
                 </div>
                 <div class="col d-flex justify-content-center">
@@ -217,7 +221,7 @@
                 >
                   <thead class="">
                     <tr>
-                      <th colspan="9">EXAMENES DEL DIA</th>
+                      <th colspan="10">EXAMENES DEL DIA</th>
                     </tr>
                     <br class="brsm" style="display: none" />
 
@@ -227,10 +231,11 @@
                       <th scope="col" class="headTable">PACIENTE</th>
                       <th scope="col" class="headTable">EXAMEN</th>
                       <th scope="col" class="headTable">BIOANALISTA</th>
+                      <th scope="col" class="headTable">HORA</th>
                       <th scope="col" colspan="3" class="headTable">STATUS</th>
                     </tr>
                   </thead>
-                  <tbody>
+                  <tbody id="tBodyExamenesDia">
                     <tr>
                         <td scope="col">1</td>
                         <td scope="col">28582670</td>
@@ -537,7 +542,7 @@
                   <br class="brsm" />
 
                   <tr>
-                    <th colspan="4">RESULTADOS HEMATOLOGIA COMPLETA #1</th>
+                    <th colspan="4" id="headTableDetalle">RESULTADOS HEMATOLOGIA COMPLETA #1</th>
                   </tr>
                   <br class="brsm" />
 
@@ -548,7 +553,7 @@
                     <th scope="col" class="headTable">RANGO</th>
                   </tr>
                 </thead>
-                <tbody>
+                <tbody id="tBodyDetalle">
                   <tr>
                     <td scope="col">Hemoglobina</td>
                     <td scope="col">10</td>
