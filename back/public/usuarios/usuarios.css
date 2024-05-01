@@ -1,17 +1,3 @@
-#inicio{
-  background: rgba(104,192,195,1);
-  background: linear-gradient(87deg, rgba(104,192,195,1) 30%, rgba(28,132,132) 50%, rgba(104,192,195,1) 80%);
-
-  color: black ;
-}
-
-#inicioButton{
-  background: rgba(104,192,195,1);
-  background: linear-gradient(87deg, rgba(104,192,195,1) 30%, rgba(28,132,132) 50%, rgba(104,192,195,1) 80%);
-
-  color: black ;
-}
-
 body {
     background: #ecf3f3;
    
@@ -876,5 +862,17 @@ body {
     }
 
   }
+
+#usuario{
+    background: rgba(104,192,195,1);
+    background: linear-gradient(87deg, rgba(104,192,195,1) 30%, rgba(28,132,132) 50%, rgba(104,192,195,1) 80%);
+
+    color: black ;
+}
   
- 
+#usuarioButton{
+    background: rgba(104,192,195,1);
+    background: linear-gradient(87deg, rgba(104,192,195,1) 30%, rgba(28,132,132) 50%, rgba(104,192,195,1) 80%);
+
+    color: black ;
+}

@@ -22,22 +22,27 @@ app.use(cookieParser());
 app.use(express.json({ limit: "20mb" }));
 
 app.use("/assets", express.static(path.join(__dirname, "public/assets")));
-
-app.use(
-  "/inicio",
-  verifyCookie,
-  express.static(path.join(__dirname, "public/inicio"))
-);
 app.use(
   "/login",
   clearCookie,
   express.static(path.join(__dirname, "public/login"))
 );
 app.use(
+  "/inicio",
+  verifyCookie,
+  express.static(path.join(__dirname, "public/inicio"))
+);
+app.use(
   "/pacientes",
-  clearCookie,
+  verifyCookie,
   express.static(path.join(__dirname, "public/pacientes"))
 );
+app.use(
+  "/usuarios",
+  verifyCookie,
+  express.static(path.join(__dirname, "public/usuarios"))
+);
+
 app.use("/api/", indexRouter);
 app.use("/api/creacion", creacionRouter);
 app.use("/api/examenes", examenesRouter);

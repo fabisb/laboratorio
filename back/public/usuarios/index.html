@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>La Milagrosa</title>
+    <link rel="shortcut icon" href="../assets/img/la-milagrosa-logo.png" />
+    <link rel="stylesheet" href="usuarios.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+    />
+  </head>
+  <body onload="buscarUsuarios(), displayName()">
+    <div id="particle-container">
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+    </div>
+    <!-- NavBar -->
+    <nav class="navbar navbar-expand-lg bg-body-tertiary" id="navPrincipal">
+      <div class="container-fluid">
+        <a class="navbar-brand" href="#"
+          ><img
+            src="../assets/img/la-milagrosa-logo.png"
+            width="80"
+            alt=""
+            srcset=""
+        /></a>
+        <h1 class="display-6" id="h1User"></h1>
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarSupportedContent"
+          aria-controls="navbarSupportedContent"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+      </div>
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0" id="navUl">
+          <li class="nav-item">
+            <a class="nav-link active" aria-current="page" href="/inicio"
+              >Inicio</a
+            >
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">Reportes</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/pacientes">Pacientes</a>
+          </li>
+
+          <li class="nav-item">
+            <a class="nav-link" href="/usuarios">Usuarios</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/login">Cerrar Sesion</a>
+          </li>
+        </ul>
+      </div>
+    </nav>
+    <nav class="navbar navbar-expand-lg bg-body-tertiary" id="navSecundario">
+      <div class="container-fluid p-0 ms-4 rowNav">
+        <div class="row w-100 gap-0">
+          <div class="col colNav p-0">
+            <button onclick="redireccion('inicio')" class="buttonNav">
+              <div class="d-flex justify-content-around w-100">
+                <span>INICIO</span>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="30"
+                  height="30"
+                  fill="currentColor"
+                  class="bi bi-house-fill"
+                  viewBox="0 0 16 16"
+                >
+                  <path
+                    d="M8.707 1.5a1 1 0 0 0-1.414 0L.646 8.146a.5.5 0 0 0 .708.708L8 2.207l6.646 6.647a.5.5 0 0 0 .708-.708L13 5.793V2.5a.5.5 0 0 0-.5-.5h-1a.5.5 0 0 0-.5.5v1.293z"
+                  />
+                  <path
+                    d="m8 3.293 6 6V13.5a1.5 1.5 0 0 1-1.5 1.5h-9A1.5 1.5 0 0 1 2 13.5V9.293z"
+                  />
+                </svg>
+              </div>
+            </button>
+          </div>
+          <div class="col colNav p-0">
+            <button class="buttonNav">
+              <div class="d-flex justify-content-around w-100">
+                <span>REPORTES</span>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="30"
+                  height="30"
+                  fill="currentColor"
+                  class="bi bi-file-bar-graph-fill"
+                  viewBox="0 0 16 16"
+                >
+                  <path
+                    d="M12 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2m-2 11.5v-6a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5m-2.5.5a.5.5 0 0 1-.5-.5v-4a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v4a.5.5 0 0 1-.5.5zm-3 0a.5.5 0 0 1-.5-.5v-2a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-.5.5z"
+                  />
+                </svg>
+              </div>
+            </button>
+          </div>
+          <div class="col colNav p-0" id="usuario">
+            <button onclick="redireccion('usuarios')" class="buttonNav" id="usuarioButton">
+              <div class="d-flex justify-content-around w-100">
+                <span>USUARIOS</span>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="30"
+                  height="30"
+                  fill="currentColor"
+                  class="bi bi-person-badge-fill"
+                  viewBox="0 0 16 16"
+                >
+                  <path
+                    d="M2 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2zm4.5 0a.5.5 0 0 0 0 1h3a.5.5 0 0 0 0-1zM8 11a3 3 0 1 0 0-6 3 3 0 0 0 0 6m5 2.755C12.146 12.825 10.623 12 8 12s-4.146.826-5 1.755V14a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1z"
+                  />
+                </svg>
+              </div>
+            </button>
+          </div>
+          <div class="col colNav p-0">
+            <button
+              onclick="redireccion('pacientes')"
+              class="buttonNav"
+            
+            >
+              <div class="d-flex justify-content-around w-100">
+                <span>PACIENTES</span>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="30"
+                  height="30"
+                  fill="currentColor"
+                  class="bi bi-clipboard2-pulse-fill"
+                  viewBox="0 0 16 16"
+                >
+                  <path
+                    d="M10 .5a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 0-.5.5.5.5 0 0 1-.5.5.5.5 0 0 0-.5.5V2a.5.5 0 0 0 .5.5h5A.5.5 0 0 0 11 2v-.5a.5.5 0 0 0-.5-.5.5.5 0 0 1-.5-.5"
+                  />
+                  <path
+                    d="M4.085 1H3.5A1.5 1.5 0 0 0 2 2.5v12A1.5 1.5 0 0 0 3.5 16h9a1.5 1.5 0 0 0 1.5-1.5v-12A1.5 1.5 0 0 0 12.5 1h-.585q.084.236.085.5V2a1.5 1.5 0 0 1-1.5 1.5h-5A1.5 1.5 0 0 1 4 2v-.5q.001-.264.085-.5M9.98 5.356 11.372 10h.128a.5.5 0 0 1 0 1H11a.5.5 0 0 1-.479-.356l-.94-3.135-1.092 5.096a.5.5 0 0 1-.968.039L6.383 8.85l-.936 1.873A.5.5 0 0 1 5 11h-.5a.5.5 0 0 1 0-1h.191l1.362-2.724a.5.5 0 0 1 .926.08l.94 3.135 1.092-5.096a.5.5 0 0 1 .968-.039Z"
+                  />
+                </svg>
+              </div>
+            </button>
+          </div>
+        </div>
+      </div>
+    </nav>
+    <!-- NavBar -->
+
+    <main>
+      <div class="container-fluid">
+        <div class="row">
+          <div class="col-12 col-md-7">
+            <br class="brsm" />
+            <div class="">
+              <div class="row">
+                <h6 class="text-center">Filtros</h6>
+                <br class="brsm" style="display: none" />
+
+                <div class="col d-flex justify-content-center">
+                  <select name="" id="" class="form-select w-25">
+                    <option value="">1111</option>
+                  </select>
+                  <input
+                    class="form-control form-control-sm w-50"
+                    type="text"
+                    placeholder="Escriba la cadena a buscar"
+                    aria-label=".form-control-sm example"
+                    oninput="buscarPaciente(value)"
+                    id="inputFiltro"
+                  />
+                </div>
+              </div>
+              <br class="brsm" />
+
+              <div class="table-responsive my-3">
+                <table
+                  class="table text-center table-hover table-sm"
+                  id="tablePacientes"
+                >
+                  <thead class="">
+                    <tr>
+                      <th colspan="10">USUARIOS</th>
+                    </tr>
+                    <br class="brsm" style="display: none" />
+
+                    <tr>
+                      <th class="headTable" scope="col">C.I</th>
+                      <th scope="col" class="headTable">NOMBRE</th>
+                      <th scope="col" class="headTable">DIRECCION</th>
+                      <th scope="col" class="headTable">CORREO</th>
+                      <th scope="col" class="headTable">TELEFONO</th>
+                      <th scope="col" class="headTable">TIPO</th>
+                      <th scope="col" colspan="2" class="headTable">ACCION</th>
+                    </tr>
+                  </thead>
+                  <tbody id="tBodyPacientesDia">
+                    <tr>
+                      <td scope="col">28582670</td>
+                      <td scope="col">Antony Benitez</td>
+                      <td scope="col">El soler</td>
+                      <td scope="col">antony@gmail.com</td>
+                      <td scope="col">04146680987</td>
+                      <td scope="col">Bioanalista</td>
+                      <td scope="col">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="orange" class="bi bi-pencil-square" viewBox="0 0 16 16">
+                          <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
+                          <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z"/>
+                        </svg>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+          <br class="brsm" />
+
+          <div class="col-12 col-md-5">
+            <h1
+              class="display-6 text-center fw-medium"
+              id="nombrePaciente"
+              style="margin-top: 26px"
+            >
+              ANTONY BENITEZ
+            </h1>
+            
+            <br class="brsm" />
+            <h5 class="text-center">INFORMACION DEL USUARIO</h5>
+            <br class="brsm" />
+
+            <div class="d-flex justify-content-center p-4" style="border: solid 2px  rgba(28,132,132,1) ">
+              <div class="w-75">
+                <div class="row mb-3">
+                  <div class="col-4"><label for="exampleFormControlInput1" class="form-label">Nombre: </label></div>
+                  <div class="col-8"><input type="text" class="form-control" id="exampleFormControlInput1" placeholder="name@example.com"></div>
+                  
+                </div>
+                <div class="row mb-3">
+                  <div class="col-4"><label for="exampleFormControlInput1" class="form-label">Contraseña: </label></div>
+                  <div class="col-8"><input type="text" class="form-control" id="exampleFormControlInput1" placeholder="name@example.com"></div>
+                  
+                </div>
+                <div class="row mb-3">
+                  <div class="col-4"><label for="exampleFormControlInput1" class="form-label">Direccion: </label></div>
+                  <div class="col-8"><input type="text" class="form-control" id="exampleFormControlInput1" placeholder="name@example.com"></div>
+                  
+                </div>
+                <div class="row mb-3">
+                  <div class="col-4"><label for="exampleFormControlInput1" class="form-label">Correo: </label></div>
+                  <div class="col-8"><input type="text" class="form-control" id="exampleFormControlInput1" placeholder="name@example.com"></div>
+                  
+                </div>
+                <div class="row mb-3">
+                  <div class="col-4"><label for="exampleFormControlInput1" class="form-label">Firma: </label></div>
+                  <div class="col-8"><input type="text" class="form-control" id="exampleFormControlInput1" placeholder="name@example.com"></div>
+                  
+                </div>
+                <div class="row mb-3">
+                  <div class="col-4"><label for="exampleFormControlInput1" class="form-label">Colegio: </label></div>
+                  <div class="col-8"><input type="text" class="form-control" id="exampleFormControlInput1" placeholder="name@example.com"></div>
+                  
+                </div>
+                <div class="row mb-3">
+                  <div class="col-4"><label for="exampleFormControlInput1" class="form-label">Ministerio: </label></div>
+                  <div class="col-8"><input type="text" class="form-control" id="exampleFormControlInput1" placeholder="name@example.com"></div>
+                  
+                </div>
+                <div class="row mb-3">
+                  <div class="col-4"><label for="exampleFormControlInput1" class="form-label">Tipo de Usuario:  </label></div>
+                  <div class="col-8"><select class="form-select" aria-label="Default select example">
+                    <option selected>Open this select menu</option>
+                    <option value="1">One</option>
+                    <option value="2">Two</option>
+                    <option value="3">Three</option>
+                  </select></div>
+                  
+                </div>
+                
+  
+              </div>
+            </div>
+            
+
+          </div>
+
+        </div>
+      </div>
+    </main>
+  </body>
+  <script src="usuarios.js"></script>
+  <script src="../assets/img/redireccion.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="modules/axios.min.js"></script>
+  <script src="modules/moment.min.js"></script>
+</html>

@@ -62,7 +62,73 @@ export const buscarUsuario = async (req, res) => {
     return await res.status(500).json({ mensaje: "ERROR DE SERVIDOR" });
   }
 };
-
+export const editarBioanalistaStatus = async (req, res) => {
+  const { id, status } = req.body;
+  if (id < 0 || id == "" || !id) {
+    return await res
+      .status(400)
+      .json({ mensaje: "El id ingresado no es correcto" });
+  }
+  if (status != "activo" && status != "inactivo") {
+    return await res
+      .status(400)
+      .json({ mensaje: "El status ingresado no es correcto" });
+  }
+  try {
+    const [user] = await pool.execute(
+      "SELECT * FROM bioanalistas WHERE id = ?",
+      [id]
+    );
+    if (user.length == 0) {
+      return await res
+        .status(404)
+        .json({ mensaje: "El bioanalista que intenta editar no existe" });
+    } else {
+      const [bioUpdate] = await pool.execute(
+        "UPDATE bioanalistas SET status = ? WHERE id = ?",
+        [status, id]
+      );
+      return await res
+        .status(200)
+        .json({ mensaje: "Status de Bioanalista modificado correctamente" });
+    }
+  } catch (error) {
+    console.log(error);
+    return await res.status(500).json({ mensaje: "ERROR DE SERVIDOR" });
+  }
+};
+export const editarUsuarioStatus = async (req, res) => {
+  const { id, status } = req.body;
+  if (id < 0 || id == "" || !id) {
+    return await res
+      .status(400)
+      .json({ mensaje: "El id ingresado no es correcto" });
+  }
+  if (status != "activo" && status != "inactivo") {
+    return await res
+      .status(400)
+      .json({ mensaje: "El status ingresado no es correcto" });
+  }
+  try {
+    const [user] = await pool.execute("SELECT * FROM users WHERE id = ?", [id]);
+    if (user.length == 0) {
+      return await res
+        .status(404)
+        .json({ mensaje: "El usuario que intenta modificar no existe" });
+    } else {
+      const [bioUpdate] = await pool.execute(
+        "UPDATE users SET status = ? WHERE id = ?",
+        [status, id]
+      );
+      return await res
+        .status(200)
+        .json({ mensaje: "Status de Bioanalista modificado correctamente" });
+    }
+  } catch (error) {
+    console.log(error);
+    return await res.status(500).json({ mensaje: "ERROR DE SERVIDOR" });
+  }
+};
 export const editarBioanalista = async (req, res) => {
   const {
     id,

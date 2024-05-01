@@ -14,6 +14,7 @@ function buscarPaciente(value){
     }
     resultado.forEach(element=>{
         let edad=calcularEdadNormal(element.fecha_nacimiento.split('T')[0])
+
         tBody.innerHTML+=`
         <tr>
                             <td scope="col">${element.cedula}</td>
@@ -21,15 +22,31 @@ function buscarPaciente(value){
                             <td scope="col">${edad}</td>
                             <td scope="col">${element.direccion}</td>
                             <td scope="col">${element.genero}</td>
-                            <td scope="col">${element.telefono}</td>
-                            <td scope="col">${element.correo}</td>
                             <td scope="col">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="orange" style="cursor:pointer" onclick="detalleExamenesPaciente('${element.id}','${element.nombre}')" class="bi bi-file-text" viewBox="0 0 16 16">
+                              <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                width="25"
+                                height="25"
+                                fill="green"
+                                class="bi bi-eye"
+                                viewBox="0 0 16 16"
+                              >
+                                <path
+                                  d="M16 8s-3-5.5-8-5.5S0 8 0 8s3 5.5 8 5.5S16 8 16 8M1.173 8a13 13 0 0 1 1.66-2.043C4.12 4.668 5.88 3.5 8 3.5s3.879 1.168 5.168 2.457A13 13 0 0 1 14.828 8q-.086.13-.195.288c-.335.48-.83 1.12-1.465 1.755C11.879 11.332 10.119 12.5 8 12.5s-3.879-1.168-5.168-2.457A13 13 0 0 1 1.172 8z"
+                                />
+                                <path
+                                  d="M8 5.5a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5M4.5 8a3.5 3.5 0 1 1 7 0 3.5 3.5 0 0 1-7 0"
+                                />
+                              </svg>
+                            </td>
+                            <td scope="col">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="orange" style="cursor:pointer" onclick="detalleExamenesPaciente('${element.id}','${element.nombre}')" class="bi bi-file-text" viewBox="0 0 16 16">
                                     <path d="M5 4a.5.5 0 0 0 0 1h6a.5.5 0 0 0 0-1zm-.5 2.5A.5.5 0 0 1 5 6h6a.5.5 0 0 1 0 1H5a.5.5 0 0 1-.5-.5M5 8a.5.5 0 0 0 0 1h6a.5.5 0 0 0 0-1zm0 2a.5.5 0 0 0 0 1h3a.5.5 0 0 0 0-1z"/>
                                     <path d="M2 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2zm10-1H4a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1"/>
                                   </svg>
                             </td>
       
+                            
                           </tr>
         `
     })
@@ -157,8 +174,23 @@ async function traerPacientesDia(){
                             <td scope="col">${edad}</td>
                             <td scope="col">${element.direccion}</td>
                             <td scope="col">${element.genero}</td>
-                            <td scope="col">${element.telefono}</td>
-                            <td scope="col">${element.correo}</td>
+                            <td scope="col">
+                              <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                width="25"
+                                height="25"
+                                fill="green"
+                                class="bi bi-eye"
+                                viewBox="0 0 16 16"
+                              >
+                                <path
+                                  d="M16 8s-3-5.5-8-5.5S0 8 0 8s3 5.5 8 5.5S16 8 16 8M1.173 8a13 13 0 0 1 1.66-2.043C4.12 4.668 5.88 3.5 8 3.5s3.879 1.168 5.168 2.457A13 13 0 0 1 14.828 8q-.086.13-.195.288c-.335.48-.83 1.12-1.465 1.755C11.879 11.332 10.119 12.5 8 12.5s-3.879-1.168-5.168-2.457A13 13 0 0 1 1.172 8z"
+                                />
+                                <path
+                                  d="M8 5.5a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5M4.5 8a3.5 3.5 0 1 1 7 0 3.5 3.5 0 0 1-7 0"
+                                />
+                              </svg>
+                            </td>
                             <td scope="col">
                             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="orange" style="cursor:pointer" onclick="detalleExamenesPaciente('${element.id}','${element.nombre}')" class="bi bi-file-text" viewBox="0 0 16 16">
                                     <path d="M5 4a.5.5 0 0 0 0 1h6a.5.5 0 0 0 0-1zm-.5 2.5A.5.5 0 0 1 5 6h6a.5.5 0 0 1 0 1H5a.5.5 0 0 1-.5-.5M5 8a.5.5 0 0 0 0 1h6a.5.5 0 0 0 0-1zm0 2a.5.5 0 0 0 0 1h3a.5.5 0 0 0 0-1z"/>
@@ -166,8 +198,14 @@ async function traerPacientesDia(){
                                   </svg>
                             </td>
       
+                            
                           </tr>
         `
     });
 }
 
+
+const buscarUsuarios = async ()=>{
+  const {data}=await axios.get('/api/espejo/get-usuarios');
+  console.log("🚀 ~ buscarUsuarios ~ data:", data)
+}

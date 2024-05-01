@@ -11,7 +11,7 @@
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
     />
   </head>
-  <body onload="traerPacientesDia()">
+  <body  onload="traerPacientesDia(), displayName()">
     <div id="particle-container">
       <div class="particle"></div>
       <div class="particle"></div>
@@ -49,7 +49,7 @@
         <a class="navbar-brand" href="#"
           ><img src="../assets/img/la-milagrosa-logo.png" width="80" alt="" srcset=""
         /></a>
-        <h1 class="display-6" id="h1User">Hola Romina Arambulo</h1>
+        <h1 class="display-6" id="h1User"></h1>
         <button
           class="navbar-toggler"
           type="button"
@@ -66,20 +66,20 @@
       <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav me-auto mb-2 mb-lg-0" id="navUl">
           <li class="nav-item">
-            <a class="nav-link active" aria-current="page" href="#">Inicio</a>
+            <a class="nav-link active" aria-current="page" href="/inicio">Inicio</a>
           </li>
           <li class="nav-item">
             <a class="nav-link" href="#">Reportes</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="#">Pacientes</a>
+            <a class="nav-link" href="/pacientes">Pacientes</a>
           </li>
 
           <li class="nav-item">
-            <a class="nav-link" href="#">Usuarios</a>
+            <a class="nav-link" href="/usuarios">Usuarios</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="#">Cerrar Sesion</a>
+            <a class="nav-link" href="/login">Cerrar Sesion</a>
           </li>
         </ul>
       </div>
@@ -88,7 +88,7 @@
       <div class="container-fluid p-0 ms-4 rowNav">
         <div class="row w-100 gap-0">
           <div class="col colNav p-0">
-            <button class="buttonNav">
+            <button onclick="redireccion('inicio')"  class="buttonNav">
               <div class="d-flex justify-content-around w-100">
                 <span>INICIO</span>
                 <svg
@@ -129,7 +129,7 @@
             </button>
           </div>
           <div class="col colNav p-0">
-            <button class="buttonNav">
+            <button onclick="redireccion('usuarios')"  class="buttonNav">
               <div class="d-flex justify-content-around w-100">
                 <span>USUARIOS </span>
                 <svg
@@ -148,7 +148,7 @@
             </button>
           </div>
           <div class="col colNav p-0" id="paciente">
-            <button class="buttonNav" id="pacienteButton">
+            <button onclick="redireccion('pacientes')"  class="buttonNav" id="pacienteButton">
               <div class="d-flex justify-content-around w-100">
                 <span>PACIENTES</span>
                 <svg
@@ -202,7 +202,7 @@
     
                   <div class="table-responsive">
                     <table
-                      class="table text-center table-hover table-sm"
+                      class="table text-center table-hover table-sm table-responsive"
                       id="tablePacientes"
                     >
                       <thead class="">
@@ -217,7 +217,9 @@
                           <th scope="col" class="headTable">EDAD</th>
                           <th scope="col" class="headTable">DIRECCION</th>
                           <th scope="col" class="headTable">GENERO</th>
-                          <th scope="col" colspan="2" class="headTable">ACCION</th>
+                          <th scope="col" class="headTable">TELEFONO</th>
+                          <th scope="col" class="headTable">CORREO</th>
+                          <th scope="col" class="headTable">EXAMENES</th>
                         </tr>
                       </thead>
                       <tbody id="tBodyPacientesDia">
@@ -261,7 +263,7 @@
               <br class="brsm" />
     
               <div class="col-12 col-md-5">
-                <h1 class="display-6 text-center fw-medium" id="nombrePaciente" style="margin-top: 26px;">ANTONY BENITEZ</h1>
+                <h1 class="display-6 text-center fw-medium" id="nombrePaciente" style="margin-top: 26px;">PACIENTE</h1>
                 <div class="table-responsive">
                   <table
                     class="table text-center table-hover table-sm"
@@ -278,7 +280,7 @@
                         <th scope="col" class="headTable">EXAMEN</th>
                         <th scope="col" class="headTable">BIOANALISTA</th>
                         <th scope="col" class="headTable">FECHA</th>
-                        <th class="headTable" scope="col">ACCION</th>
+                        <th class="headTable" scope="col">DETALLE</th>
 
                       </tr>
                     </thead>
@@ -333,6 +335,7 @@
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
   <script src="modules/axios.min.js"></script>
   <script src="modules/moment.min.js"></script>
+  <script src="../assets/img/redireccion.js"></script>
 
 
 </html>
