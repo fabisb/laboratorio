@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>La Milagrosa</title>
+    <link rel="shortcut icon" href="../assets/img/la-milagrosa-logo.png" />
+    <link rel="stylesheet" href="pacientes.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+    />
+  </head>
+  <body onload="traerPacientesDia()">
+    <div id="particle-container">
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+    </div>
+    <nav class="navbar navbar-expand-lg bg-body-tertiary" id="navPrincipal">
+      <div class="container-fluid">
+        <a class="navbar-brand" href="#"
+          ><img src="../assets/img/la-milagrosa-logo.png" width="80" alt="" srcset=""
+        /></a>
+        <h1 class="display-6" id="h1User">Hola Romina Arambulo</h1>
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarSupportedContent"
+          aria-controls="navbarSupportedContent"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+      </div>
+
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0" id="navUl">
+          <li class="nav-item">
+            <a class="nav-link active" aria-current="page" href="#">Inicio</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">Reportes</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">Pacientes</a>
+          </li>
+
+          <li class="nav-item">
+            <a class="nav-link" href="#">Usuarios</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">Cerrar Sesion</a>
+          </li>
+        </ul>
+      </div>
+    </nav>
+    <nav class="navbar navbar-expand-lg bg-body-tertiary" id="navSecundario">
+      <div class="container-fluid p-0 ms-4 rowNav">
+        <div class="row w-100 gap-0">
+          <div class="col colNav p-0">
+            <button class="buttonNav">
+              <div class="d-flex justify-content-around w-100">
+                <span>INICIO</span>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="30"
+                  height="30"
+                  fill="currentColor"
+                  class="bi bi-house-fill"
+                  viewBox="0 0 16 16"
+                >
+                  <path
+                    d="M8.707 1.5a1 1 0 0 0-1.414 0L.646 8.146a.5.5 0 0 0 .708.708L8 2.207l6.646 6.647a.5.5 0 0 0 .708-.708L13 5.793V2.5a.5.5 0 0 0-.5-.5h-1a.5.5 0 0 0-.5.5v1.293z"
+                  />
+                  <path
+                    d="m8 3.293 6 6V13.5a1.5 1.5 0 0 1-1.5 1.5h-9A1.5 1.5 0 0 1 2 13.5V9.293z"
+                  />
+                </svg>
+              </div>
+            </button>
+          </div>
+          <div class="col colNav p-0">
+            <button class="buttonNav">
+              <div class="d-flex justify-content-around w-100">
+                <span>REPORTES</span>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="30"
+                  height="30"
+                  fill="currentColor"
+                  class="bi bi-file-bar-graph-fill"
+                  viewBox="0 0 16 16"
+                >
+                  <path
+                    d="M12 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2m-2 11.5v-6a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5m-2.5.5a.5.5 0 0 1-.5-.5v-4a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v4a.5.5 0 0 1-.5.5zm-3 0a.5.5 0 0 1-.5-.5v-2a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-.5.5z"
+                  />
+                </svg>
+              </div>
+            </button>
+          </div>
+          <div class="col colNav p-0">
+            <button class="buttonNav">
+              <div class="d-flex justify-content-around w-100">
+                <span>USUARIOS </span>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="30"
+                  height="30"
+                  fill="currentColor"
+                  class="bi bi-person-badge-fill"
+                  viewBox="0 0 16 16"
+                >
+                  <path
+                    d="M2 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2zm4.5 0a.5.5 0 0 0 0 1h3a.5.5 0 0 0 0-1zM8 11a3 3 0 1 0 0-6 3 3 0 0 0 0 6m5 2.755C12.146 12.825 10.623 12 8 12s-4.146.826-5 1.755V14a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1z"
+                  />
+                </svg>
+              </div>
+            </button>
+          </div>
+          <div class="col colNav p-0" id="paciente">
+            <button class="buttonNav" id="pacienteButton">
+              <div class="d-flex justify-content-around w-100">
+                <span>PACIENTES</span>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="30"
+                  height="30"
+                  fill="currentColor"
+                  class="bi bi-clipboard2-pulse-fill"
+                  viewBox="0 0 16 16"
+                >
+                  <path
+                    d="M10 .5a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 0-.5.5.5.5 0 0 1-.5.5.5.5 0 0 0-.5.5V2a.5.5 0 0 0 .5.5h5A.5.5 0 0 0 11 2v-.5a.5.5 0 0 0-.5-.5.5.5 0 0 1-.5-.5"
+                  />
+                  <path
+                    d="M4.085 1H3.5A1.5 1.5 0 0 0 2 2.5v12A1.5 1.5 0 0 0 3.5 16h9a1.5 1.5 0 0 0 1.5-1.5v-12A1.5 1.5 0 0 0 12.5 1h-.585q.084.236.085.5V2a1.5 1.5 0 0 1-1.5 1.5h-5A1.5 1.5 0 0 1 4 2v-.5q.001-.264.085-.5M9.98 5.356 11.372 10h.128a.5.5 0 0 1 0 1H11a.5.5 0 0 1-.479-.356l-.94-3.135-1.092 5.096a.5.5 0 0 1-.968.039L6.383 8.85l-.936 1.873A.5.5 0 0 1 5 11h-.5a.5.5 0 0 1 0-1h.191l1.362-2.724a.5.5 0 0 1 .926.08l.94 3.135 1.092-5.096a.5.5 0 0 1 .968-.039Z"
+                  />
+                </svg>
+              </div>
+            </button>
+          </div>
+        </div>
+      </div>
+    </nav>
+    <main>
+
+        <div class="container-fluid">
+            <div class="row">
+              <div class="col-12 col-md-7">
+                <br class="brsm" />
+                <div class="">
+                  <div class="row">
+                    
+                    <h6 class="text-center">Filtros</h6>
+                    <br class="brsm" style="display: none" />
+    
+                    <div class="col d-flex justify-content-center">
+                        
+                      
+                      <input
+                        class="form-control form-control-sm w-50"
+                        type="text"
+                        placeholder="Escriba la cadena a buscar"
+                        aria-label=".form-control-sm example"
+                        oninput="buscarPaciente(value)"
+                        id="inputFiltro"
+                      />
+                    </div>
+                    
+                  </div>
+                  <br class="brsm" />
+    
+                  <div class="table-responsive">
+                    <table
+                      class="table text-center table-hover table-sm"
+                      id="tablePacientes"
+                    >
+                      <thead class="">
+                        <tr>
+                          <th colspan="10">PACIENTES DEL DIA</th>
+                        </tr>
+                        <br class="brsm" style="display: none" />
+    
+                        <tr>
+                          <th class="headTable" scope="col">C.I</th>
+                          <th scope="col" class="headTable">NOMBRE</th>
+                          <th scope="col" class="headTable">EDAD</th>
+                          <th scope="col" class="headTable">DIRECCION</th>
+                          <th scope="col" class="headTable">GENERO</th>
+                          <th scope="col" colspan="2" class="headTable">ACCION</th>
+                        </tr>
+                      </thead>
+                      <tbody id="tBodyPacientesDia">
+                        <tr>
+                            <td scope="col">28582670</td>
+                            <td scope="col">Antony Benitez</td>
+                            <td scope="col">22 años, 3 meses</td>
+                            <td scope="col">El soler</td>
+                            <td scope="col">Masculino</td>
+                            <td scope="col">
+                              <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                width="25"
+                                height="25"
+                                fill="green"
+                                class="bi bi-eye"
+                                viewBox="0 0 16 16"
+                              >
+                                <path
+                                  d="M16 8s-3-5.5-8-5.5S0 8 0 8s3 5.5 8 5.5S16 8 16 8M1.173 8a13 13 0 0 1 1.66-2.043C4.12 4.668 5.88 3.5 8 3.5s3.879 1.168 5.168 2.457A13 13 0 0 1 14.828 8q-.086.13-.195.288c-.335.48-.83 1.12-1.465 1.755C11.879 11.332 10.119 12.5 8 12.5s-3.879-1.168-5.168-2.457A13 13 0 0 1 1.172 8z"
+                                />
+                                <path
+                                  d="M8 5.5a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5M4.5 8a3.5 3.5 0 1 1 7 0 3.5 3.5 0 0 1-7 0"
+                                />
+                              </svg>
+                            </td>
+                            <td scope="col">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="orange" class="bi bi-file-text" viewBox="0 0 16 16">
+                                    <path d="M5 4a.5.5 0 0 0 0 1h6a.5.5 0 0 0 0-1zm-.5 2.5A.5.5 0 0 1 5 6h6a.5.5 0 0 1 0 1H5a.5.5 0 0 1-.5-.5M5 8a.5.5 0 0 0 0 1h6a.5.5 0 0 0 0-1zm0 2a.5.5 0 0 0 0 1h3a.5.5 0 0 0 0-1z"/>
+                                    <path d="M2 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2zm10-1H4a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1"/>
+                                  </svg>
+                            </td>
+      
+                            
+                          </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+              <br class="brsm" />
+    
+              <div class="col-12 col-md-5">
+                <h1 class="display-6 text-center fw-medium" id="nombrePaciente" style="margin-top: 26px;">ANTONY BENITEZ</h1>
+                <div class="table-responsive">
+                  <table
+                    class="table text-center table-hover table-sm"
+                    id="tablePreliminar"
+                  >
+                    <thead>
+                       
+                      <tr>
+                        <th colspan="4">EXAMENES</th>
+                      </tr>
+                      <br class="brsm" />
+    
+                      <tr>
+                        <th scope="col" class="headTable">EXAMEN</th>
+                        <th scope="col" class="headTable">BIOANALISTA</th>
+                        <th scope="col" class="headTable">FECHA</th>
+                        <th class="headTable" scope="col">ACCION</th>
+
+                      </tr>
+                    </thead>
+                    <tbody id="tBodyDetalle">
+                      <tr>
+                        <td scope="col">Hemoglobina</td>
+                        <td scope="col">10</td>
+                        <td scope="col">roja</td>
+                        <td scope="col">9-15</td>
+                      </tr>
+                      <tr>
+                        <td scope="col">Hemoglobina</td>
+                        <td scope="col">10</td>
+                        <td scope="col">roja</td>
+                        <td scope="col">9-15</td>
+                      </tr>
+                      <tr>
+                        <td scope="col">Hemoglobina</td>
+                        <td scope="col">10</td>
+                        <td scope="col">roja</td>
+                        <td scope="col">9-15</td>
+                      </tr>
+                      <tr>
+                        <td scope="col">Hemoglobina</td>
+                        <td scope="col">10</td>
+                        <td scope="col">roja</td>
+                        <td scope="col">9-15</td>
+                      </tr>
+                      <tr>
+                        <td scope="col">Hemoglobina</td>
+                        <td scope="col">10</td>
+                        <td scope="col">roja</td>
+                        <td scope="col">9-15</td>
+                      </tr>
+                      <tr>
+                        <td scope="col">Hemoglobina</td>
+                        <td scope="col">10</td>
+                        <td scope="col">roja</td>
+                        <td scope="col">9-15</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+                <br class="brsm" />
+              </div>
+            </div>
+          </div>
+    
+    </main>
+  </body>
+  <script src="pacientes.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="modules/axios.min.js"></script>
+  <script src="modules/moment.min.js"></script>
+
+
+</html>

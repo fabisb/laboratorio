@@ -8,6 +8,10 @@ function validarSelect(value){
   
 }
 
+function pacientes(){
+  window.location.href = "http://localhost:3000/pacientes"
+}
+
 function buscarCedula(value){
   const tBodyExamenesDia = document.getElementById('tBodyExamenesDia')
   tBodyExamenesDia.innerHTML =""

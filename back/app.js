@@ -33,7 +33,11 @@ app.use(
   clearCookie,
   express.static(path.join(__dirname, "public/login"))
 );
-
+app.use(
+  "/pacientes",
+  clearCookie,
+  express.static(path.join(__dirname, "public/pacientes"))
+);
 app.use("/api/", indexRouter);
 app.use("/api/creacion", creacionRouter);
 app.use("/api/examenes", examenesRouter);
