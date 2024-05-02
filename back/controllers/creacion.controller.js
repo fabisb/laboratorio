@@ -2,6 +2,40 @@ import { pool } from "../database/db.js";
 import moment from "moment";
 import bcrypt from "bcrypt";
 
+export const cambiarStatus = async (req, res) => {
+  const { status, tipo, id } = req.body;
+  if (id < 0 || id == "" || !id)
+    return await res
+      .status(400)
+      .json({ mensaje: "El id enviado no es correcto" });
+
+  if (status != "activo" && status != "inactivo")
+    return await res.status(400).json({ mensaje: "Error en status" });
+
+  if (tipo != "usuario" && tipo != "bioanalista")
+    return await res.status(400).json({ mensaje: "Error en tipo" });
+
+  try {
+    if (tipo == "bioanalista") {
+      const [bioStatus] = await pool.execute(
+        "UPDATE bioanalistas SET status = ? WHERE id = ?",
+        [status, id]
+      );
+    } else {
+      const [userStatus] = await pool.execute(
+        "UPDATE users SET status = ? WHERE id = ?",
+        [status, id]
+      );
+    }
+    return await res
+      .status(200)
+      .json({ mensaje: "Status modificado con exito" });
+  } catch (error) {
+    console.log("🚀 ~ cambiarStatus ~ error:", error);
+    return await res.status(500).json({ mensaje: "ERROR DE SERVIDOR" });
+  }
+};
+
 export const buscarBioanalista = async (req, res) => {
   const { cedula, pre_cedula } = req.query;
   try {
@@ -51,9 +85,17 @@ export const buscarUsuario = async (req, res) => {
       [cedula, pre_cedula]
     );
     if (user.length == 0) {
-      return await res
-        .status(404)
-        .json({ mensaje: "No se encontró a usuario con esa cedula" });
+      const [bio] = await pool.execute(
+        "SELECT id, cedula, nombre, ingreso, telefono, direccion, colegio, ministerio, pre_cedula, status FROM bioanalistas WHERE cedula = ? AND pre_cedula = ?",
+        [cedula, pre_cedula]
+      );
+      if (bio.length == 0) {
+        return await res
+          .status(404)
+          .json({ mensaje: "No se encontró a usuario con esa cedula" });
+      } else {
+        return await res.status(200).json(bio[0]);
+      }
     } else {
       return await res.status(200).json(user[0]);
     }

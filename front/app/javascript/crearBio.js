@@ -377,7 +377,13 @@ const cambiarCrearUsuario = (nivel) => {
                 <img src="../imgs/la-milagrosa-logo.png" width="120" alt="" />
               </div>
               <hr>
-          <h3>Registro de ${nivel == 3 ? 'Administrador' : 'Auxiliar' }</h3>
+          <h3 id='h3Registro'>Registro de ${
+            nivel == 3
+              ? "Administrador"
+              : nivel == 1
+              ? "Usuario Bioanalista"
+              : "Auxiliar"
+          }</h3>
           <p>Ingrese los siguientes datos.</p>
           <form onsubmit="agregarUsuario(event), event.preventDefault()" class="requires-validation" novalidate>
             <div class="col-md-12">
@@ -528,6 +534,11 @@ const buscarBio = async () => {
         headers: { token },
       }
     );
+    document
+      .getElementsByName("pre_cedula")[0]
+      .setAttribute("disabled", "true");
+    document.getElementsByName("cedula")[0].setAttribute("disabled", "true");
+
     document.getElementsByName("nombre")[0].value = bio.nombre;
     document.getElementsByName("telefono")[0].value = bio.telefono;
     document.getElementsByName("colegio")[0].value = bio.colegio;
@@ -580,7 +591,7 @@ const modificarBio = async (id) => {
     console.log("ERROR EN DATO");
     return;
   }
-  
+
   try {
     const firma = await subirImagen();
     const { token } = await login.getToken();
@@ -623,21 +634,28 @@ const buscarUsuario = async () => {
         headers: { token },
       }
     );
-    console.log("🚀 ~ buscarUsuario ~ user:", user);
+    document
+      .getElementsByName("pre_cedula")[0]
+      .setAttribute("disabled", "true");
+    document.getElementsByName("cedula")[0].setAttribute("disabled", "true");
+
     document.getElementsByName("nombre")[0].value = user.nombre;
     document.getElementsByName("telefono")[0].value = user.telefono;
     document.getElementsByName("correo")[0].value = user.correo;
     document.getElementsByName("direccion")[0].value = user.direccion;
     document.getElementById("btnHolder").innerHTML = `
-    <button
-    type="button"
-    class="btn-lg btn btn-warning"
-    onclick="modificarUsuario('${user.id}')"
-  >
-    Modificar
-  </button>
-  
-    `;
+    <div class="btn-group" role="group" aria-label="Basic mixed styles example">
+  <button type="button" onclick="cambiarStatus('activo','usuario')" class="btn btn-success">Activar</button>
+  <button
+      type="button"
+      class="btn-lg btn btn-warning"
+      onclick="modificarUsuario('${user.id}')"
+    >
+      Modificar
+    </button>
+  <button type="button" onclick="cambiarStatus('inactivo','usuario')" class="btn btn-danger">Desactivar</button>
+</div>   
+      `;
   } catch (error) {
     console.log("🚀 ~ buscarUsuario ~ error:", error);
     if (error.response.data.mensaje) {
@@ -647,6 +665,11 @@ const buscarUsuario = async () => {
     }
   }
 };
+
+const cambiarStatus = async (status, tipo, id) => {
+
+};
+
 const modificarUsuario = async (id) => {
   const direccion = document.getElementsByName("direccion")[0].value;
   const nombre = document.getElementsByName("nombre")[0].value;
