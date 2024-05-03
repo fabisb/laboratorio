@@ -251,6 +251,7 @@
 
       <img id="imgPrueba" />
     </main>
+    <!-- ALERTAS PARA AGREGAR  -->
     <div id="confirmacion-modalPaci" class="modal fade">
       <div class="modal-dialog modal-confirm">
         <div class="modal-content">
@@ -261,9 +262,9 @@
                 height="58"
                 viewBox="0 -960 960 960"
                 width="58"
-              >
+                >
                 <path
-                  d="M382-240 154-468l57-57 171 171 367-367 57 57-424 424Z"
+                d="M382-240 154-468l57-57 171 171 367-367 57 57-424 424Z"
                 />
               </svg>
             </div>
@@ -293,28 +294,94 @@
                 viewBox="0 -960 960 960"
                 width="58"
               >
-                <path
-                  d="M382-240 154-468l57-57 171 171 367-367 57 57-424 424Z"
-                />
-              </svg>
-            </div>
-            <h4 class="modal-title">Agregado!</h4>
+              <path
+              d="M382-240 154-468l57-57 171 171 367-367 57 57-424 424Z"
+              />
+            </svg>
           </div>
-          <div class="modal-body">
-            <p class="text-center">
-              El bioanalista ha sido agregado correctamente.
-            </p>
-          </div>
-          <div class="modal-footer">
-            <button class="btn btn-success btn-block" data-bs-dismiss="modal">
-              OK
-            </button>
-          </div>
+          <h4 class="modal-title">Agregado!</h4>
+        </div>
+        <div class="modal-body">
+          <p class="text-center">
+            El bioanalista ha sido agregado correctamente.
+          </p>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-success btn-block" data-bs-dismiss="modal">
+            OK
+          </button>
         </div>
       </div>
     </div>
+  </div>
+  <!-- ALERTAS PARA AGREGAR  -->
 
-    <script src="../javascript/crearBio.js"></script>
+  <!-- ALERTAS PARA MODIFICAR -->
+  <div id="confirmacion-modificar-modalPaci" class="modal fade">
+    <div class="modal-dialog modal-confirm">
+      <div class="modal-content">
+        <div class="modal-header">
+          <div class="icon-box">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              height="58"
+              viewBox="0 -960 960 960"
+              width="58"
+            >
+              <path
+                d="M382-240 154-468l57-57 171 171 367-367 57 57-424 424Z"
+              />
+            </svg>
+          </div>
+          <h4 class="modal-title">Modificado!</h4>
+        </div>
+        <div class="modal-body">
+          <p class="text-center">
+            El usuario ha sido modificado correctamente.
+          </p>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-success btn-block" data-bs-dismiss="modal">
+            OK
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div id="confirmacion-modificar-modalBio" class="modal fade">
+    <div class="modal-dialog modal-confirm">
+      <div class="modal-content">
+        <div class="modal-header">
+          <div class="icon-box">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              height="58"
+              viewBox="0 -960 960 960"
+              width="58"
+            >
+              <path
+                d="M382-240 154-468l57-57 171 171 367-367 57 57-424 424Z"
+              />
+            </svg>
+          </div>
+          <h4 class="modal-title">Modificado!</h4>
+        </div>
+        <div class="modal-body">
+          <p class="text-center">
+            El bioanalista ha sido modificado correctamente.
+          </p>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-success btn-block" data-bs-dismiss="modal">
+            OK
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- ALERTAS PARA MODIFICAR -->
+  
+  <script src="../javascript/crearBio.js"></script>
     <script src="../modules/axios.min.js"></script>
     <script src="../../bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
     <script src="../../bower_components/moment/moment.js"></script>

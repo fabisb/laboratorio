@@ -548,13 +548,17 @@ const buscarBio = async () => {
       "YYYY-MM-DD"
     );
     document.getElementById("btnHolder").innerHTML = `
-    <button
-    type="button"
-    class="btn-lg btn btn-warning"
-    onclick="modificarBio('${bio.id}')"
-  >
-    Modificar
-  </button>
+  <div class="btn-group" role="group" aria-label="Basic mixed styles example">
+  <button type="button" onclick="cambiarStatus('activo','bioanalista','${bio.id}')" class="btn btn-success">Activar</button>
+  <button
+      type="button"
+      class="btn-lg btn btn-warning"
+      onclick="modificarBio('${bio.id}')"
+    >
+      Modificar
+    </button>
+  <button type="button" onclick="cambiarStatus('inactivo','bioanalista','${bio.id}')" class="btn btn-danger">Desactivar</button>
+</div>  
     `;
   } catch (error) {
     console.log("🚀 ~ buscarBio ~ error:", error);
@@ -600,7 +604,7 @@ const modificarBio = async (id) => {
       { id, nombre, telefono, colegio, ministerio, direccion, ingreso, firma },
       { headers: { token } }
     );
-    const modal = new bootstrap.Modal("#confirmacion-modalBio");
+    const modal = new bootstrap.Modal("#confirmacion-modificar-modalBio");
     modal.show();
     cambiarCrearBio();
   } catch (error) {
@@ -634,6 +638,7 @@ const buscarUsuario = async () => {
         headers: { token },
       }
     );
+    console.log("🚀 ~ buscarUsuario ~ user:", user);
     document
       .getElementsByName("pre_cedula")[0]
       .setAttribute("disabled", "true");
@@ -645,7 +650,7 @@ const buscarUsuario = async () => {
     document.getElementsByName("direccion")[0].value = user.direccion;
     document.getElementById("btnHolder").innerHTML = `
     <div class="btn-group" role="group" aria-label="Basic mixed styles example">
-  <button type="button" onclick="cambiarStatus('activo','usuario')" class="btn btn-success">Activar</button>
+  <button type="button" onclick="cambiarStatus('activo','usuario','${user.id}')" class="btn btn-success">Activar</button>
   <button
       type="button"
       class="btn-lg btn btn-warning"
@@ -653,7 +658,7 @@ const buscarUsuario = async () => {
     >
       Modificar
     </button>
-  <button type="button" onclick="cambiarStatus('inactivo','usuario')" class="btn btn-danger">Desactivar</button>
+  <button type="button" onclick="cambiarStatus('inactivo','usuario','${user.id}')" class="btn btn-danger">Desactivar</button>
 </div>   
       `;
   } catch (error) {
@@ -667,7 +672,36 @@ const buscarUsuario = async () => {
 };
 
 const cambiarStatus = async (status, tipo, id) => {
+  if (id < 0 || id == "" || !id) return; //ALERTA PARA VALIDACION
 
+  if (status != "activo" && status != "inactivo") return; //ALERTA PARA VALIDACION
+
+  if (tipo != "usuario" && tipo != "bioanalista") return; //ALERTA PARA VALIDACION
+  try {
+    const { token } = await login.getToken();
+
+    const { data } = await axios.put(
+      urlsv + "/api/creacion/editar-status",
+      { id, status, tipo },
+      { headers: { token } }
+    );
+    if (tipo == "usuario") {
+      const modal = new bootstrap.Modal("#confirmacion-modificar-modalPaci");
+      modal.show();
+      cambiarCrearUsuario();
+    } else {
+      const modal = new bootstrap.Modal("#confirmacion-modificar-modalBio");
+      modal.show();
+      cambiarCrearBio();
+    }
+  } catch (error) {
+    console.log("🚀 ~ cambiarStatus ~ error:", error);
+    if (error.response.data.mensaje) {
+      return await alerta.alert("Error:", error.response.data.mensaje);
+    } else {
+      return await alerta.error();
+    }
+  }
 };
 
 const modificarUsuario = async (id) => {
@@ -702,7 +736,7 @@ const modificarUsuario = async (id) => {
       { id, direccion, nombre, telefono, correo, password, nivel },
       { headers: { token } }
     );
-    const modal = new bootstrap.Modal("#confirmacion-modalPaci");
+    const modal = new bootstrap.Modal("#confirmacion-modificar-modalPaci");
     modal.show();
     cambiarCrearUsuario();
   } catch (error) {

@@ -8,8 +8,7 @@ import {
   editarUsuario,
   buscarBioanalista,
   editarBioanalista,
-  editarUsuarioStatus,
-  editarBioanalistaStatus,
+  cambiarStatus,
 } from "../controllers/creacion.controller.js";
 var router = express.Router();
 
@@ -25,7 +24,6 @@ router.post("/agregar-bioanalista", verifyToken, agregarBioanalistaController);
 //PUT
 router.put("/editar-usuario", verifyToken, editarUsuario);
 router.put("/editar-bioanalista", verifyToken, editarBioanalista);
-router.put("/editar-usuario-status", verifyToken, editarUsuarioStatus);
-router.put("/editar-bioanalista-status", verifyToken, editarBioanalistaStatus);
+router.put("/editar-status", verifyToken, cambiarStatus);
 
 export default router;

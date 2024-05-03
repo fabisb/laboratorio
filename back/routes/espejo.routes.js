@@ -10,10 +10,9 @@ import { getExamenResultados } from "../controllers/examenes.controller.js";
 import { getAllUsers } from "../controllers/usuariosEspejo.controller.js";
 import { verifyCookie } from "../controllers/login.controller.js";
 import {
+  cambiarStatus,
   editarBioanalista,
-  editarBioanalistaStatus,
   editarUsuario,
-  editarUsuarioStatus,
 } from "../controllers/creacion.controller.js";
 var router = express.Router();
 
@@ -35,7 +34,6 @@ router.get("/get-usuarios", verifyCookie, getAllUsers);
 //PUT USUARIOS
 router.put("/editar-usuario", verifyCookie, editarUsuario);
 router.put("/editar-bioanalista", verifyCookie, editarBioanalista);
-router.put("/editar-usuario-status", verifyCookie, editarUsuarioStatus);
-router.put("/editar-bioanalista-status", verifyCookie, editarBioanalistaStatus);
+router.put("/editar-status", verifyCookie, cambiarStatus);
 
 export default router;
