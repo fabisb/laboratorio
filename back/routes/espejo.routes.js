@@ -7,7 +7,7 @@ import {
   getExamenesPacientes,
 } from "../controllers/espejo.controller.js";
 import { getExamenResultados } from "../controllers/examenes.controller.js";
-import { getAllUsers } from "../controllers/usuariosEspejo.controller.js";
+import { crearBioanalsita, crearUsuario, getAllUsers } from "../controllers/usuariosEspejo.controller.js";
 import { verifyCookie } from "../controllers/login.controller.js";
 import {
   cambiarStatus,
@@ -28,6 +28,8 @@ router.get("/get-examen-resultado", getExamenResultados);
 router.get("/get-usuarios", verifyCookie, getAllUsers);
 
 //POST
+router.post("/guardar-usuario", verifyCookie, crearUsuario);
+router.post("/guardar-bioanalista", verifyCookie, crearBioanalsita);
 
 //PUT
 
