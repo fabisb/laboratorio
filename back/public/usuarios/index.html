@@ -203,7 +203,7 @@
                     type="text"
                     placeholder="Escriba la cadena a buscar"
                     aria-label=".form-control-sm example"
-                    oninput="buscarPaciente(value)"
+                    oninput="buscarUsuarioTable(value)"
                     id="inputFiltro"
                   />
                 </div>
@@ -213,7 +213,7 @@
               <div class="table-responsive my-3">
                 <table
                   class="table text-center table-hover table-sm"
-                  id="tablePacientes"
+                  id="tableUsuarios"
                 >
                   <thead class="">
                     <tr>
@@ -231,21 +231,8 @@
                       <th scope="col" colspan="2" class="headTable">ACCION</th>
                     </tr>
                   </thead>
-                  <tbody id="tBodyPacientesDia">
-                    <tr>
-                      <td scope="col">28582670</td>
-                      <td scope="col">Antony Benitez</td>
-                      <td scope="col">El soler</td>
-                      <td scope="col">antony@gmail.com</td>
-                      <td scope="col">04146680987</td>
-                      <td scope="col">Bioanalista</td>
-                      <td scope="col">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="orange" class="bi bi-pencil-square" viewBox="0 0 16 16">
-                          <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
-                          <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z"/>
-                        </svg>
-                      </td>
-                    </tr>
+                  <tbody id="tBodyUsuarios">
+                    
                   </tbody>
                 </table>
               </div>
@@ -254,13 +241,18 @@
           <br class="brsm" />
 
           <div class="col-12 col-md-5">
+            
             <h1
               class="display-6 text-center fw-medium"
               id="nombrePaciente"
               style="margin-top: 26px"
             >
-              ANTONY BENITEZ
+              <span id="spanUser">USUARIO</span> <svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" fill="#1C8484" class="bi bi-file-plus ms-5" style="cursor: pointer;" onclick="crearUsuario()" viewBox="0 0 16 16">
+                <path d="M8.5 6a.5.5 0 0 0-1 0v1.5H6a.5.5 0 0 0 0 1h1.5V10a.5.5 0 0 0 1 0V8.5H10a.5.5 0 0 0 0-1H8.5z"/>
+                <path d="M2 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2zm10-1H4a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1"/>
+              </svg>
             </h1>
+            
             
             <br class="brsm" />
             <h5 class="text-center">INFORMACION DEL USUARIO</h5>
@@ -269,50 +261,70 @@
             <div class="d-flex justify-content-center p-4" style="border: solid 2px  rgba(28,132,132,1) ">
               <div class="w-75">
                 <div class="row mb-3">
-                  <div class="col-4"><label for="exampleFormControlInput1" class="form-label">Nombre: </label></div>
-                  <div class="col-8"><input type="text" class="form-control" id="exampleFormControlInput1" placeholder="name@example.com"></div>
+                  <div class="col-4"><label for="nombre" class="form-label">Nombre: </label></div>
+                  <div class="col-8"><input type="text" disabled class="form-control formulario" id="nombre" placeholder="Ingrese el Nombre del Usuario"></div>
                   
                 </div>
                 <div class="row mb-3">
-                  <div class="col-4"><label for="exampleFormControlInput1" class="form-label">Contraseña: </label></div>
-                  <div class="col-8"><input type="text" class="form-control" id="exampleFormControlInput1" placeholder="name@example.com"></div>
+                  <div class="col-4"><label for="clave" class="form-label">Contraseña: </label></div>
+                  <div class="col-8"><input type="password" disabled class="form-control formulario" id="clave" placeholder="Ingrese la Contraseña"></div>
                   
                 </div>
                 <div class="row mb-3">
-                  <div class="col-4"><label for="exampleFormControlInput1" class="form-label">Direccion: </label></div>
-                  <div class="col-8"><input type="text" class="form-control" id="exampleFormControlInput1" placeholder="name@example.com"></div>
+                  <div class="col-4"><label for="direccion" class="form-label">Direccion: </label></div>
+                  <div class="col-8"><input type="text"  disabled class="form-control formulario" id="direccion" placeholder="Ingrese la Direccion"></div>
+                   
+                </div>
+                <div class="row mb-3">
+                  <div class="col-4"><label for="correo" class="form-label">Correo: </label></div>
+                  <div class="col-8"><input type="mail" disabled class="form-control formulario" id="correo" placeholder="name@example.com"></div>
                   
                 </div>
                 <div class="row mb-3">
-                  <div class="col-4"><label for="exampleFormControlInput1" class="form-label">Correo: </label></div>
-                  <div class="col-8"><input type="text" class="form-control" id="exampleFormControlInput1" placeholder="name@example.com"></div>
-                  
-                </div>
-                <div class="row mb-3">
-                  <div class="col-4"><label for="exampleFormControlInput1" class="form-label">Firma: </label></div>
-                  <div class="col-8"><input type="text" class="form-control" id="exampleFormControlInput1" placeholder="name@example.com"></div>
-                  
-                </div>
-                <div class="row mb-3">
-                  <div class="col-4"><label for="exampleFormControlInput1" class="form-label">Colegio: </label></div>
-                  <div class="col-8"><input type="text" class="form-control" id="exampleFormControlInput1" placeholder="name@example.com"></div>
-                  
-                </div>
-                <div class="row mb-3">
-                  <div class="col-4"><label for="exampleFormControlInput1" class="form-label">Ministerio: </label></div>
-                  <div class="col-8"><input type="text" class="form-control" id="exampleFormControlInput1" placeholder="name@example.com"></div>
-                  
-                </div>
-                <div class="row mb-3">
-                  <div class="col-4"><label for="exampleFormControlInput1" class="form-label">Tipo de Usuario:  </label></div>
-                  <div class="col-8"><select class="form-select" aria-label="Default select example">
-                    <option selected>Open this select menu</option>
-                    <option value="1">One</option>
-                    <option value="2">Two</option>
-                    <option value="3">Three</option>
+                  <div class="col-4"><label for="exampleFormControlInput1" id="tipo" class="form-label">Tipo de Usuario:  </label></div>
+                  <div class="col-8"><select onchange="validarSelectTipo(value)" disabled class="form-select formulario" aria-label="Default select example">
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
                   </select></div>
                   
                 </div>
+                
+                <div class="row mb-3 bioanalistaDiv" hidden>
+                  <div class="col-4"><label for="colegio" class="form-label">Colegio: </label></div>
+                  <div class="col-8"><input type="text" disabled class="form-control formulario" id="colegio" placeholder="Ingrese su numero de Colegio"></div>
+                  
+                </div>
+                <div class="row mb-3 bioanalistaDiv" hidden>
+                  <div class="col-4"><label for="ministerio" class="form-label">Ministerio: </label></div>
+                  <div class="col-8"><input type="text" disabled class="form-control formulario" id="ministerio" placeholder="Ingrese su numero de ministerio"></div>
+                  
+                </div>
+                <div class="row mb-3 bioanalistaDiv" hidden>
+                  <div class="col-4"><label for="firma" class="form-label">Firma: </label></div>
+                  <div class="col-8"><input type="text" disabled class="form-control formulario" id="firma" placeholder="name@example.com"></div>
+                  
+                </div>
+
+                <div class="row mt-5 d-flex justify-content-center" >
+                  <div class="col-12 colNav" style="width: 40%;"><button
+                    
+                    class="buttonNav"
+                    style="border-radius:20px ; font-size: small"
+                  
+                  >
+                    <div class="d-flex justify-content-around w-100">
+                      <span>GUARDAR</span>
+                      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-save-fill" viewBox="0 0 16 16">
+                        <path d="M8.5 1.5A1.5 1.5 0 0 1 10 0h4a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2h6c-.314.418-.5.937-.5 1.5v7.793L4.854 6.646a.5.5 0 1 0-.708.708l3.5 3.5a.5.5 0 0 0 .708 0l3.5-3.5a.5.5 0 0 0-.708-.708L8.5 9.293z"/>
+                      </svg>
+                    </div>
+                    </button>
+                  </div>
+                  
+                  
+                </div>
+                
                 
   
               </div>
