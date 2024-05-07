@@ -50,7 +50,7 @@ export const loginController = async (req, res, next) => {
   }
   try {
     const [id] = await pool.execute(
-      "SELECT id, nivel, password FROM users WHERE cedula = ?",
+      "SELECT id, nivel, password, nombre FROM users WHERE cedula = ?",
       [user]
     );
 
@@ -59,14 +59,14 @@ export const loginController = async (req, res, next) => {
 
       if (comparacionClave) {
         var token = await jwt.sign(
-          { id: id[0].id, user, nivel: id[0].nivel },
+          { id: id[0].id, user, nivel: id[0].nivel, nombre: id[0].nombre},
           "secret",
           {
             expiresIn: "1 days",
           }
         );
 
-        return await res.status(200).json({ token, user });
+        return await res.status(200).json({ token, user, nivel: id[0].nivel,nombre: id[0].nombre });
       } else {
         return await res.status(404).json({
           mensaje: "Contraseña no valida",

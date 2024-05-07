@@ -32,7 +32,6 @@ ipcMain.on("examen", async (event, examen) => {
 });
 ipcMain.handle("getExamen", (event, arg) => {
   const examen = store.get("examen");
-  console.log("🚀 ~ ipcMain.handle ~ examen:", examen);
   return examen;
 });
 
@@ -235,7 +234,6 @@ ipcMain.handle("alertWindow", async (event, { titulo, body }) => {
     title: "Alerta",
     cancelId: 1,
   });
-  console.log("🚀 ~ file: main.js:102 ~ ipcMmenule ~ result:", result);
   return result;
 });
 
@@ -245,7 +243,6 @@ ipcMain.handle("errorWindow", async (event, arg) => {
     "ERROR",
     "Ha ocurrido un error en el servidor"
   );
-  console.log("🚀 ~ file: main.js:102 ~ ipcMain.handle ~ result:", result);
   return result;
 });
 
@@ -274,8 +271,84 @@ ipcMain.on("print", (e, arg) => {
   if (!examenPDFVar) {
     return;
   } else {
+  const examen = store.get("examen");
+
     examenPDFVar.webContents
-      .printToPDF({ printBackground: true })
+      .printToPDF({         displayHeaderFooter: true,
+        printBackground: true,headerTemplate:`<div class="row">
+      <div class="col my-1">
+        <div class="card">
+          <div class="row m-0">
+            <div class=" col-2 mx-auto my-auto">
+              <img
+                width="120px"
+                src="../imgs/la-milagrosa-logo.png"
+                class="img-fluid"
+                alt="La milagrosa logo"
+              />
+            </div>
+            <div class="col-10 p-0">
+              <div class="card-body text-start">
+                <h5 class="card-title">
+                  LA MILAGROSA INSTITUTO PRESTADOR DE SERVICIOS DE SALUD
+                </h5>
+                <p class="card-text m-0">R.I.F.: J-501761426 / N.I.T.:</p>
+                <p class="card-text">
+                  <small name="direccion" class="text-body-secondary"
+                    >Calle 79 Casa Nro 78 - 179 Sector Macandona, Maracaibo,
+                    Edo. Zulia. Zona Postal 4005</small
+                  >
+                  <br />
+                  <small name="correo" class="text-body-secondary">E-mail:</small>
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col my-1">
+        <div class="card">
+          <div class="row">
+            <div class="col-9 my-auto mx-auto">
+              <div class="card">
+                <div class="container text-center">
+                  <div name="cabecera" class="row align-items-center">
+                    <div class="col">
+                      <div class="card-body">
+                        <ul class="list-group list-group-flush">
+                          <li class="list-group-item"><span class="fw-bold">Paciente:</span> <br> Antony Benitez</li>
+                          <li class="list-group-item"><span class="fw-bold">Cedula:</span><br> 28146771</li>
+                          <li class="list-group-item"><span class="fw-bold">Factura: </span><br> C-4444</li>
+                        </ul>
+                      </div>
+                    </div>
+                    <div class="col">
+                      <div class="card-body">
+                        <ul class="list-group list-group-flush">
+                          <li class="list-group-item"><span class="fw-bold">Fecha Nacimiento:</span><br> 17-12-2002</li>
+                          <li class="list-group-item"><span class="fw-bold">Edad:</span><br> 23 año(s), 1 mes(es)</li>
+                          <li class="list-group-item"><span class="fw-bold">Emision:</span><br> 17-04-2024</li>
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-3 my-auto mx-auto">
+              <div class="card-body">
+                <h6 class="card-title">
+                  RESULTADOS DE EXAMENES DE LABORATORIO
+                </h6>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>` })
       .then((data) => {
         console.log("printToPDF");
         // Save the PDF data to a file (you can modify the path)
