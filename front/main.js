@@ -2,7 +2,9 @@
 const { app, BrowserWindow, ipcMain, dialog, shell } = require("electron");
 const Store = require("electron-store");
 const path = require("path");
+const fs = require("fs").promises;
 //RECARGA AUTOMATICA
+
 /* const electronReload = require("electron-reload");
 const env = process.env.NODE_ENV || "development";
 if (env === "development") {
@@ -117,7 +119,7 @@ function creacionBioWindow() {
   if (!creacionBioWindowVar) {
     creacionBioWindowVar = new BrowserWindow({
       width: 1024,
-      minWidth:860,
+      minWidth: 860,
       height: 2000,
       title: "Creacion - Bioanalista",
       icon: path.join(__dirname, "app/imgs/icons/app-logo.ico"),
@@ -267,35 +269,48 @@ function examenPDFWindow() {
 }
 ipcMain.handle("examenPDFWindow", () => examenPDFWindow());
 
-ipcMain.on("print", (e, arg) => {
+ipcMain.on("print", async (e, arg) => {
   if (!examenPDFVar) {
     return;
   } else {
-  const examen = store.get("examen");
+    const examen = store.get("examen");
+    const ccsData = await fs.readFile("app/modules/bootstrap.min.css", "utf8");
+    const imgData =
+    `data:image/png;base64,` +
+    (await fs.readFile("app/imgs/la-milagrosa-logo.png", "base64"));
 
     examenPDFVar.webContents
-      .printToPDF({         displayHeaderFooter: true,
-        printBackground: true,headerTemplate:`<div class="row">
+      .printToPDF({
+        pageSize: "A4",
+        displayHeaderFooter: true,
+        printBackground: true,
+        headerTemplate: `
+        <style>
+        ${ccsData}
+        </style>
+        <main class="container-fluid m-6 fs-2">
+        <div class="container text-center">
+        <div class="row">
       <div class="col my-1">
         <div class="card">
           <div class="row m-0">
             <div class=" col-2 mx-auto my-auto">
               <img
-                width="120px"
-                src="../imgs/la-milagrosa-logo.png"
+                width="60px"
+                src=${imgData}
                 class="img-fluid"
                 alt="La milagrosa logo"
               />
             </div>
             <div class="col-10 p-0">
               <div class="card-body text-start">
-                <h5 class="card-title">
+                <h5 class="card-title fs-1">
                   LA MILAGROSA INSTITUTO PRESTADOR DE SERVICIOS DE SALUD
                 </h5>
                 <p class="card-text m-0">R.I.F.: J-501761426 / N.I.T.:</p>
                 <p class="card-text">
                   <small name="direccion" class="text-body-secondary"
-                    >Calle 79 Casa Nro 78 - 179 Sector Macandona, Maracaibo,
+                    >Calle 79 Casa Nro 78 - 179 Sector La Macandona, Maracaibo,
                     Edo. Zulia. Zona Postal 4005</small
                   >
                   <br />
@@ -313,7 +328,7 @@ ipcMain.on("print", (e, arg) => {
         <div class="card">
           <div class="row">
             <div class="col-9 my-auto mx-auto">
-              <div class="card">
+              <div class="card border border-0">
                 <div class="container text-center">
                   <div name="cabecera" class="row align-items-center">
                     <div class="col">
@@ -340,7 +355,7 @@ ipcMain.on("print", (e, arg) => {
             </div>
             <div class="col-3 my-auto mx-auto">
               <div class="card-body">
-                <h6 class="card-title">
+                <h6 class="fs-1 card-title">
                   RESULTADOS DE EXAMENES DE LABORATORIO
                 </h6>
               </div>
@@ -348,9 +363,15 @@ ipcMain.on("print", (e, arg) => {
           </div>
         </div>
       </div>
-    </div>` })
+    </div>
+    </div>
+    </main>
+
+    `,
+
+
+      })
       .then((data) => {
-        console.log("printToPDF");
         // Save the PDF data to a file (you can modify the path)
         const fs = require("fs");
         fs.writeFileSync("app/assets/my_generated_pdf.pdf", data);

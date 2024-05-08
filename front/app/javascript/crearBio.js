@@ -44,7 +44,7 @@ const agregarBioanalista = async (event) => {
       if (el.name == "firma") {
       } else {
         if (el.value == "") {
-          if (el.name == "firma") {
+          if (el.name == "firma" || el.name == "direccion") {
             console.log(`Campo ${el.name} vacio`);
           } else {
             console.log(`Campo ${el.name} vacio`);
@@ -99,7 +99,7 @@ const agregarBioanalista = async (event) => {
     }
   });
   if (validacion) {
-    return console.log("SE HA ENCONTRADO ALGUN ERROR");
+    return usuariosAlerta("Error al ingresar alguno de los datos", "danger");
   }
 
   try {
@@ -127,8 +127,11 @@ const agregarUsuario = async (event) => {
   const validacion = [...event.target].some((el) => {
     if (el.tagName == "SELECT" || el.tagName == "INPUT") {
       if (el.value == "") {
-        console.log(`Campo ${el.name} vacio`);
-        return true;
+        if (el.name == "correo" || el.name == "direccion") {
+        } else {
+          console.log(`Campo ${el.name} vacio`);
+          return true;
+        }
       }
       if (el.name == "telefono") {
         let validarletra = false;
@@ -164,16 +167,6 @@ const agregarUsuario = async (event) => {
           return true;
         }
       }
-      if (el.name == "correo") {
-        if (el.value.split("@")[0] == "" || el.value.split("@")[1] == "") {
-          console.log("Ingrese un correo valido");
-          return true;
-        }
-        if (!el.value.split("@")[1].split(".")[1].includes("com")) {
-          console.log("Ingrese un correo valido");
-          return true;
-        }
-      }
 
       if (el.name != "password") {
         const elemento = { value: el.value, name: el.name };
@@ -182,11 +175,8 @@ const agregarUsuario = async (event) => {
     }
   });
   if (validacion) {
-    console.log("SE HA ENCONTRADO ALGUN ERROR");
-    return await alerta.alert(
-      "Error:",
-      "Se ha encontrado algun error al ingresar alguno de los datos"
-    );
+    return usuariosAlerta("Error al ingresar alguno de los datos", "danger");
+
   }
   console.log("🚀 ~ agregarPaciente ~ usuario:", usuario);
   const clave = document.getElementsByName("password")[0].value;
@@ -224,6 +214,8 @@ const cambiarCrearBio = () => {
                 <img src="../imgs/la-milagrosa-logo.png" width="120" alt="" />
               </div>
               <hr>
+              <div id="creacionUsuarioAlerta"></div>
+
               <h3>Registro de Bioanalista</h3>
               <p>Ingrese los siguientes datos.</p>
               <form onsubmit="agregarBioanalista(event), event.preventDefault()" class="requires-validation" novalidate>
@@ -377,6 +369,8 @@ const cambiarCrearUsuario = (nivel) => {
                 <img src="../imgs/la-milagrosa-logo.png" width="120" alt="" />
               </div>
               <hr>
+              <div id="creacionUsuarioAlerta"></div>
+
           <h3 id='h3Registro'>Registro de ${
             nivel == 3
               ? "Administrador"
@@ -519,7 +513,7 @@ const buscarBio = async () => {
   const cedula = document.getElementsByName("cedula")[0].value;
   if (pre_cedula == "" || cedula == "") {
     //CREAR ALERTA PARA VALIDACION
-    return;
+    return usuariosAlerta("La cedula no es valida", "danger");
   }
   try {
     const { token } = await login.getToken();
@@ -573,8 +567,7 @@ const buscarBio = async () => {
 const modificarBio = async (id) => {
   if (id < 0 || id == "" || !id) {
     //ALERTAS PARA VALIDACION
-    console.log("ERROR EN ID");
-    return;
+    return usuariosAlerta("El ID no es valido", "danger");
   }
 
   const nombre = document.getElementsByName("nombre")[0].value;
@@ -588,12 +581,10 @@ const modificarBio = async (id) => {
     telefono == "" ||
     colegio == "" ||
     ministerio == "" ||
-    direccion == "" ||
     ingreso == ""
   ) {
     //ALERTAS PARA VALIDACION
-    console.log("ERROR EN DATO");
-    return;
+    return usuariosAlerta("Algun dato no es valido", "danger");
   }
 
   try {
@@ -623,7 +614,7 @@ const buscarUsuario = async () => {
   console.log("🚀 ~ buscarUsuario ~ cedula:", cedula);
   if (pre_cedula == "" || cedula == "") {
     //CREAR ALERTA PARA VALIDACION
-    return;
+    return usuariosAlerta("La cedula no es valida", "danger");
   }
   try {
     const { token } = await login.getToken();
@@ -674,9 +665,11 @@ const buscarUsuario = async () => {
 const cambiarStatus = async (status, tipo, id) => {
   if (id < 0 || id == "" || !id) return; //ALERTA PARA VALIDACION
 
-  if (status != "activo" && status != "inactivo") return; //ALERTA PARA VALIDACION
+  if (status != "activo" && status != "inactivo")
+    return usuariosAlerta("El status no es valido", "danger"); //ALERTA PARA VALIDACION
 
-  if (tipo != "usuario" && tipo != "bioanalista") return; //ALERTA PARA VALIDACION
+  if (tipo != "usuario" && tipo != "bioanalista")
+    return usuariosAlerta("El tipo no es valido", "danger"); //ALERTA PARA VALIDACION
   try {
     const { token } = await login.getToken();
 
@@ -714,20 +707,11 @@ const modificarUsuario = async (id) => {
 
   if (id < 0 || id == "" || !id) {
     //ALERTAS PARA VALIDACION
-    console.log("ERROR EN ID");
-    return;
+    return usuariosAlerta("El ID del usuario no es valido", "danger");
   }
-  if (
-    nombre == "" ||
-    correo == "" ||
-    telefono == "" ||
-    direccion == "" ||
-    nivel == "" ||
-    password == ""
-  ) {
+  if (nombre == "" || telefono == "" || nivel == "" || password == "") {
+    return usuariosAlerta("Algun dato no es valido", "danger");
     //ALERTAS PARA VALIDACION
-    console.log("ERROR EN DATO");
-    return;
   }
   try {
     const { token } = await login.getToken();

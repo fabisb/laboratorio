@@ -44,8 +44,7 @@ const pintarExamen = async () => {
     });
   });
 
-  
-
+  /* 
   document.getElementsByName("direccion")[0].innerText =
     examen.paciente.direccion;
   document.getElementsByName("correo")[0].innerText =
@@ -54,7 +53,6 @@ const pintarExamen = async () => {
   <div class="col" style="font-size: small;">
   <div class="card-body">
     <ul class="list-group list-group-flush">
-      <li class="list-group-item"><span class="fw-bold">Empresa:</span></li>
       <li class="list-group-item"><span class="fw-bold">Paciente:</span> <br> ${examen.paciente.nombre}</li>
       <li class="list-group-item"><span class="fw-bold">Cedula:</span><br> ${examen.paciente.pre_cedula}-${examen.paciente.cedula}</li>
       <li class="list-group-item"><span class="fw-bold">Factura: </span><br> ${examen.orden}</li>
@@ -71,7 +69,7 @@ const pintarExamen = async () => {
   </div>
 </div>
   `;
-
+ */
   const seccionesSet = new Set(examen.examenes.map((e) => e.nombreSeccion));
   console.log("🚀 ~ pintarExamen ~ seccionesSet:", seccionesSet)
   document.getElementsByName("firmaBioanalista")[0].innerHTML = `

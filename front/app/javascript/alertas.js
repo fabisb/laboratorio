@@ -34,6 +34,7 @@ const cedulaAlerta2 = (message, type) => {
     }, 6000);
   }
 };
+
 const alertaExamenesCreacion = document.getElementById(
   "alertaExamenesCreacion"
 );
@@ -50,6 +51,27 @@ const examenesAlerta = (message, type) => {
     setTimeout(() => {
       new bootstrap.Alert("#alertaExamenesCreacionDiv").close();
       alertaExamenesCreacion.removeChild(alertaExamenesCreacion.firstChild);
+      return;
+    }, 6000);
+  }
+};
+
+const creacionUsuarioAlerta = document.getElementById(
+  "creacionUsuarioAlerta"
+);
+const usuariosAlerta = (message, type) => {
+  const wrapper = document.createElement("div");
+  wrapper.innerHTML = [
+    `<div id="creacionUsuarioAlertaDiv" class="alert alert-${type} alert-dismissible fade show" role="alert">`,
+    `   <div>${message.toUpperCase()}</div>`,
+    '   <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>',
+    "</div>",
+  ].join("");
+  if (creacionUsuarioAlerta.children.length == 0) {
+    creacionUsuarioAlerta.append(wrapper);
+    setTimeout(() => {
+      new bootstrap.Alert("#creacionUsuarioAlertaDiv").close();
+      creacionUsuarioAlerta.removeChild(creacionUsuarioAlerta.firstChild);
       return;
     }, 6000);
   }
