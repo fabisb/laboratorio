@@ -68,7 +68,6 @@ export const buscarBioanalista = async (req, res) => {
 
 export const buscarUsuario = async (req, res) => {
   const { cedula, pre_cedula } = req.query;
-  console.log("🚀 ~ buscarUsuario ~ req.query:", req.query);
   try {
     if (cedula < 0 || cedula == "" || !cedula) {
       return await res
@@ -126,7 +125,6 @@ export const editarBioanalista = async (req, res) => {
     telefono == "" ||
     colegio == "" ||
     ministerio == "" ||
-    direccion == "" ||
     ingreso == ""
   ) {
     return await res.status(400).json({ mensaje: "Algun dato no es valido" });
@@ -173,14 +171,7 @@ export const editarUsuario = async (req, res) => {
         .status(400)
         .json({ mensaje: "El id ingresado no es correcto" });
     }
-    if (
-      nombre == "" ||
-      correo == "" ||
-      telefono == "" ||
-      direccion == "" ||
-      nivel == "" ||
-      password == ""
-    ) {
+    if (nombre == "" || telefono == "" || nivel == "" || password == "") {
       return await res.status(400).json({ mensaje: "Algun dato no es valido" });
     }
 
@@ -208,8 +199,6 @@ export const editarUsuario = async (req, res) => {
 
 export const agregarPacienteController = async (req, res) => {
   const { paciente, idPaciente } = req.body;
-  console.log("🚀 ~ agregarPacienteController ~ idPaciente:", idPaciente);
-  console.log("🚀 ~ agregarPacienteController ~ paciente:", paciente);
   let cedulaValidacion;
   let preCedulaVal = "",
     nombreVal = "";
@@ -308,7 +297,6 @@ export const agregarPacienteController = async (req, res) => {
       const valores = paciente.map((dato) => "?").join(", ");
       const consulta = `INSERT INTO pacientes (${columnas}) VALUES (${valores})`;
 
-      console.log("🚀 ~ agregarPacienteController ~ consulta:", consulta);
       // Ejecutar la consulta
       const resultados = await pool.execute(
         consulta,
@@ -323,10 +311,7 @@ export const agregarPacienteController = async (req, res) => {
         "SELECT cedula FROM pacientes WHERE cedula = ? AND pre_cedula = ? AND id = ?",
         [cedulaValidacion, preCedulaVal, idPaciente]
       );
-      console.log(
-        "🚀 ~ agregarPacienteController ~ cedulaExistente:",
-        cedulaExistente
-      );
+
       if (cedulaExistente.length == 0) {
         return await res.status(401).json({
           mensaje:
@@ -336,12 +321,9 @@ export const agregarPacienteController = async (req, res) => {
       const valores = paciente
         .map((dato) => `${dato.name} = '${dato.value}'`)
         .join(", ");
-      console.log("modificando");
-      console.log("🚀 ~ agregarPacienteController ~ valores:", valores);
 
       const consulta = `UPDATE pacientes SET ${valores} WHERE cedula = ? AND pre_cedula = ? AND id = ?`;
 
-      console.log("🚀 ~ agregarPacienteController ~ consulta:", consulta);
       // Ejecutar la consulta
       const resultados = await pool.execute(consulta, [
         cedulaValidacion,
@@ -369,8 +351,12 @@ export const agregarBioanalistaController = async (req, res) => {
 
   const validacion = paciente.some((el) => {
     if (el.value == "") {
-      console.log(`Campo ${el.name} vacio`);
-      return true;
+      if (el.name == "firma" || el.name == "direccion") {
+        console.log(`Campo ${el.name} vacio`);
+      } else {
+        console.log(`Campo ${el.name} vacio`);
+        return true;
+      }
     }
     if (el.name == "telefono") {
       let validarletra = false;
@@ -462,8 +448,12 @@ export const agregarUsuarioController = async (req, res) => {
   let cedulaValidacion;
   const validacion = usuario.some((el) => {
     if (el.value == "") {
-      console.log(`Campo ${el.name} vacio`);
-      return true;
+      if (el.name == "firma" || el.name == "direccion") {
+        console.log(`Campo ${el.name} vacio`);
+      } else {
+        console.log(`Campo ${el.name} vacio`);
+        return true;
+      }
     }
     if (el.name == "telefono") {
       let validarletra = false;
@@ -610,7 +600,6 @@ export const agregarUsuarioController = async (req, res) => {
 export const getHijosController = async (req, res) => {
   console.log("getHijosControllerExamnes");
   const { cedula } = req.query;
-  console.log("🚀 ~ getHijosController ~ cedula:", cedula);
   try {
     if (!cedula || isNaN(cedula) || cedula == "") {
       return await res.status(400).json({ mensaje: "La cedula no es valida" });
