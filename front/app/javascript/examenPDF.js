@@ -90,7 +90,7 @@ const pintarExamen = async () => {
     .map((s) => {
       return `
     <div class="card">
-    <div class="card-header text-start fw-bolder fs-4">${s}</div>
+    <div class="card-header text-start fw-bolder fs-6">${s}</div>
     ${examen.examenes
       .map((e) => {
         if (e.nombreSeccion == s) {
@@ -98,7 +98,7 @@ const pintarExamen = async () => {
         <div class="card">
         <div class="card-header">${e.examen}</div>
         <div class="card-body">
-          <table class="table table-sm" style="font-size: small;">
+          <table class="table table-sm" style="font-size: 10px;">
             <thead>
               <tr>
                 <th scope="col">Caracteristica</th>

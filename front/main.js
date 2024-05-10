@@ -3,6 +3,8 @@ const { app, BrowserWindow, ipcMain, dialog, shell } = require("electron");
 const Store = require("electron-store");
 const path = require("path");
 const fs = require("fs").promises;
+var moment = require('moment'); // require
+
 //RECARGA AUTOMATICA
 
 /* const electronReload = require("electron-reload");
@@ -302,7 +304,7 @@ ipcMain.on("print", async (e, arg) => {
                 alt="La milagrosa logo"
               />
             </div>
-            <div class="col-10 p-0">
+            <div class="col-9 p-0">
               <div class="card-body text-start">
                 <h5 class="card-title fs-1">
                   LA MILAGROSA INSTITUTO PRESTADOR DE SERVICIOS DE SALUD
@@ -314,8 +316,12 @@ ipcMain.on("print", async (e, arg) => {
                     Edo. Zulia. Zona Postal 4005</small
                   >
                   <br />
-                  <small name="correo" class="text-body-secondary">E-mail:</small>
                 </p>
+              </div>
+            </div>
+            <div class="col-1 p-0">
+              <div class="card-body text-start">
+                <p class="card-text m-0"><span class=pageNumber></span>/<span class=totalPages></span></p>
               </div>
             </div>
           </div>
@@ -334,18 +340,18 @@ ipcMain.on("print", async (e, arg) => {
                     <div class="col">
                       <div class="card-body">
                         <ul class="list-group list-group-flush">
-                          <li class="list-group-item"><span class="fw-bold">Paciente:</span> <br> Antony Benitez</li>
-                          <li class="list-group-item"><span class="fw-bold">Cedula:</span><br> 28146771</li>
-                          <li class="list-group-item"><span class="fw-bold">Factura: </span><br> C-4444</li>
+                        <li class="list-group-item"><span class="fw-bold">Paciente:</span> <br> ${examen.paciente.nombre}</li>
+                        <li class="list-group-item"><span class="fw-bold">Cedula:</span><br> ${examen.paciente.pre_cedula}-${examen.paciente.cedula}</li>
+                        <li class="list-group-item"><span class="fw-bold">Factura: </span><br> ${examen.orden}</li>
                         </ul>
                       </div>
                     </div>
                     <div class="col">
                       <div class="card-body">
                         <ul class="list-group list-group-flush">
-                          <li class="list-group-item"><span class="fw-bold">Fecha Nacimiento:</span><br> 17-12-2002</li>
-                          <li class="list-group-item"><span class="fw-bold">Edad:</span><br> 23 año(s), 1 mes(es)</li>
-                          <li class="list-group-item"><span class="fw-bold">Emision:</span><br> 17-04-2024</li>
+                        <li class="list-group-item"><span class="fw-bold">Fecha Nacimiento:</span><br> ${examen.paciente.fecha_nacimiento}</li>
+                        <li class="list-group-item"><span class="fw-bold">Edad:</span><br> ${examen.paciente.edad}</li>
+                        <li class="list-group-item"><span class="fw-bold">Emision:</span><br> ${moment().format('DD-MM-YYYY')}</li>
                         </ul>
                       </div>
                     </div>
