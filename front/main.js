@@ -351,7 +351,7 @@ ipcMain.on("print", async (e, arg) => {
                         <ul class="list-group list-group-flush">
                         <li class="list-group-item"><span class="fw-bold">Fecha Nacimiento:</span><br> ${examen.paciente.fecha_nacimiento}</li>
                         <li class="list-group-item"><span class="fw-bold">Edad:</span><br> ${examen.paciente.edad}</li>
-                        <li class="list-group-item"><span class="fw-bold">Emision:</span><br> ${moment().format('DD-MM-YYYY')}</li>
+                        <li class="list-group-item"><span class="fw-bold">Emision:</span><br> ${moment().format('DD-MM-YYYY h:mm:ss a')}</li>
                         </ul>
                       </div>
                     </div>
@@ -372,8 +372,8 @@ ipcMain.on("print", async (e, arg) => {
     </div>
     </div>
     </main>
-
     `,
+    marginType:0
 
 
       })

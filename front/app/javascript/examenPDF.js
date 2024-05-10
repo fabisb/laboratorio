@@ -98,7 +98,7 @@ const pintarExamen = async () => {
         <div class="card">
         <div class="card-header">${e.examen}</div>
         <div class="card-body">
-          <table class="table table-sm" style="font-size: 10px;">
+          <table class="table table-sm" style="font-size: 11px;">
             <thead>
               <tr>
                 <th scope="col">Caracteristica</th>
