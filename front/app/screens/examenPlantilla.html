@@ -9,11 +9,22 @@
       href="../../bower_components/bootstrap/dist/css/bootstrap.min.css"
     />
   </head>
-  <body onload="pintarExamen()">
-    <main class="container">
-      <div class="container m-1 text-center">
+  
+  <body  onload="pintarExamen()">
+  <style>
+     @page {
+          margin-top: 6cm;
+          margin-right: 0.5cm;
+          margin-left: 0.5cm;
+      }
+      th, td {
+        padding: 1px !important;
+      }
+  </style>
+    <main class="container-fluid">
+      <div class="container text-center">
         
-        <div class="row">
+       <!--  <div class="row">
           <div class="col my-1">
             <div class="card">
               <div class="row m-0">
@@ -86,16 +97,16 @@
               </div>
             </div>
           </div>
-        </div>
+        </div> -->
 
         <div class="row my-1">
           <div name="examenContainer" class="col">
             
-            <div class="card">
+            <div class="card ">
               <div class="card-header text-start fw-bolder fs-4">SECCION</div>
             <div class="card">
               <div class="card-header">HEMATOLOGIA COMPLETA</div>
-              <div class="card-body">
+              <div class="card-body" >
                 <table class="table table-sm" style="font-size: small;">
                   <thead>
                     <tr>

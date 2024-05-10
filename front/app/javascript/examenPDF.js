@@ -44,8 +44,7 @@ const pintarExamen = async () => {
     });
   });
 
-  
-
+  /* 
   document.getElementsByName("direccion")[0].innerText =
     examen.paciente.direccion;
   document.getElementsByName("correo")[0].innerText =
@@ -54,7 +53,6 @@ const pintarExamen = async () => {
   <div class="col" style="font-size: small;">
   <div class="card-body">
     <ul class="list-group list-group-flush">
-      <li class="list-group-item"><span class="fw-bold">Empresa:</span></li>
       <li class="list-group-item"><span class="fw-bold">Paciente:</span> <br> ${examen.paciente.nombre}</li>
       <li class="list-group-item"><span class="fw-bold">Cedula:</span><br> ${examen.paciente.pre_cedula}-${examen.paciente.cedula}</li>
       <li class="list-group-item"><span class="fw-bold">Factura: </span><br> ${examen.orden}</li>
@@ -71,7 +69,7 @@ const pintarExamen = async () => {
   </div>
 </div>
   `;
-
+ */
   const seccionesSet = new Set(examen.examenes.map((e) => e.nombreSeccion));
   console.log("🚀 ~ pintarExamen ~ seccionesSet:", seccionesSet)
   document.getElementsByName("firmaBioanalista")[0].innerHTML = `
@@ -92,7 +90,7 @@ const pintarExamen = async () => {
     .map((s) => {
       return `
     <div class="card">
-    <div class="card-header text-start fw-bolder fs-4">${s}</div>
+    <div class="card-header text-start fw-bolder fs-6">${s}</div>
     ${examen.examenes
       .map((e) => {
         if (e.nombreSeccion == s) {
@@ -100,7 +98,7 @@ const pintarExamen = async () => {
         <div class="card">
         <div class="card-header">${e.examen}</div>
         <div class="card-body">
-          <table class="table table-sm" style="font-size: small;">
+          <table class="table table-sm" style="font-size: 11px;">
             <thead>
               <tr>
                 <th scope="col">Caracteristica</th>
