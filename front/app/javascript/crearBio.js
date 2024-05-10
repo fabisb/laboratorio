@@ -213,6 +213,7 @@ const render = () => {
   const fechaActual = moment().format("YYYY-MM-DD");
   console.log(fechaActual);
   document.getElementsByName("ingreso")[0].setAttribute("max", fechaActual);
+  window.scroll(0,120)
 };
 
 const cambiarCrearBio = () => {
@@ -367,6 +368,7 @@ const cambiarCrearBio = () => {
             </div>
           </div>
 `;
+  window.scroll(0,120)
 };
 const cambiarCrearUsuario = (nivel) => {
   const form = document.getElementById("formBody");
@@ -512,6 +514,8 @@ const cambiarCrearUsuario = (nivel) => {
         </div>
       </div>
     `;
+  window.scroll(0,120)
+
 };
 
 const buscarBio = async () => {

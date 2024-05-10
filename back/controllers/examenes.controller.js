@@ -63,7 +63,7 @@ export const getExamenReimpresion = async(req,res)=>{
 export const crearExamenPendiente = async (req,res)=>{
   const {examenPac,idPac}=req.body;
   try {
-    const [examen] = await pool.execute(`INSERT INTO examenes_pendientes (id_ex,id_pac) VALUES (?, ?)`,[examenPac.examenId,idPac])
+    const [examen] = await pool.execute(`INSERT INTO examenes_pendientes (id_ex,id_pac,id_lab) VALUES (?, ?, ?)`,[examenPac.examenId,idPac,examenPac.idLab])
 
     for await (const dt of examenPac.detallesExamenPd){
       const [detalle] = await pool.execute(`INSERT INTO detalles_ex_pendientes(id_dt,id_ex,id_ex_pd,id_rango,resultado,nota,inferior,superior) VALUES (?,?,?,?,?,?,?,?)`,[dt.id_dt,dt.id_ex,examen.insertId,dt.id_rango,dt.resultado,dt.nota,dt.inferior,dt.superior])
@@ -136,7 +136,7 @@ export const getPendienteExamen = async (req, res) => {
       })
     }
 
-    
+    console.log(pendiente)
    
     return await res
       .status(200)
@@ -145,7 +145,8 @@ export const getPendienteExamen = async (req, res) => {
         examenNombre:examen[0].nombre,
         detallesExamenPc,
         subCaracteristicasExPc,
-        seccionNombre: seccion[0].nombre
+        seccionNombre: seccion[0].nombre,
+        idLab: pendiente[0].id_lab
       }});
   } catch (error) {
     console.log(error)
@@ -290,6 +291,21 @@ export const modificarResultadoExamen = async (req,res)=>{
   try {
     const [r]= await pool.execute(`UPDATE detalles_examenes_paciente set resultado = ?, nota = ? WHERE id = ?`,[resultado,nota,idRes] )
     return await res.status(200).json({mensaje: `Resultado modificado exitosamente`})
+  } catch (error) {
+    console.log(error);
+    return await res
+      .status(500)
+      .json({ mensaje: "Ha ocurrido un error en el servidor" });
+  }
+  
+  
+}
+export const modificarLaboratorio = async (req,res)=>{
+  const {id,idLab} = req.body;
+  
+  try {
+    const [r]= await pool.execute(`UPDATE examenes_paciente set id_lab = ? WHERE id = ?`,[idLab,id] )
+    return await res.status(200).json({mensaje: `Laboratorio modificado exitosamente`})
   } catch (error) {
     console.log(error);
     return await res
@@ -531,14 +547,23 @@ export const crearOrden = async (req, res) => {
   console.log("🚀 ~ crearOrden ~ Orden:", orden);
   try {
     const [validarOrden] = await pool.execute(`SELECT id FROM ordenes WHERE orden='${orden.orden}' AND clave = '${orden.clave}'`)
+    
     if(validarOrden.length > 0) {
       return await res
       .status(400)
       .json({ mensaje: "Ya existe una orden con ese numero y clave"});
     }
+    const [fecha] = await pool.execute(`SELECT CURRENT_DATE`);
+      let fechaActual=fecha[0].CURRENT_DATE.toJSON().split('T')[0]
+      const [validarExpediente] = await pool.execute(`SELECT (id) FROM ordenes where expediente = '${orden.expediente}' AND fecha BETWEEN '${fechaActual} 00:00:00' AND '${fechaActual} 23:59:00'`)
+      if(validarExpediente.length>0){
+        return await res
+      .status(400)
+      .json({ mensaje: `Ya existe una orden con el expediente numero ${orden.expediente} en el dia de Hoy (${fechaActual})`});
+      }
     if(orden.clave == 'no'){
       const [ordenBdd] = await pool.execute(
-        `INSERT INTO ordenes(clave, id_paciente, id_bio) VALUES ('${orden.clave}','${orden.idPac}','${orden.id_bio}')`
+        `INSERT INTO ordenes(clave, id_paciente, id_bio, expediente) VALUES ('${orden.clave}','${orden.idPac}','${orden.id_bio}','${orden.expediente}')`
       )
       ordenId=ordenBdd.insertId
   
@@ -549,7 +574,7 @@ export const crearOrden = async (req, res) => {
       
     }else{
       const [ordenBdd] = await pool.execute(
-        `INSERT INTO ordenes(clave, id_paciente,orden, id_bio) VALUES ('${orden.clave}','${orden.idPac}','${orden.orden}','${orden.id_bio}')`
+        `INSERT INTO ordenes(clave, id_paciente,orden, id_bio, expediente) VALUES ('${orden.clave}','${orden.idPac}','${orden.orden}','${orden.id_bio}','${orden.expediente}')`
       )
       ordenId=ordenBdd.insertId
   
@@ -557,8 +582,9 @@ export const crearOrden = async (req, res) => {
       
     }
     for await (const ex of orden.examenes) {
+      console.log(ex)
       const [examenBdd] = await pool.execute(`
-      INSERT INTO examenes_paciente(id_orden, id_ex, id_pac, id_bio) VALUES ('${ordenId}','${ex.id_ex}','${ex.idPac}','${orden.id_bio}')
+      INSERT INTO examenes_paciente(id_orden, id_ex, id_pac, id_bio, id_lab) VALUES ('${ordenId}','${ex.id_ex}','${ex.idPac}','${orden.id_bio}','${ex.idLab}')
       `)
       for await (const dt of ex.detallesExamen){
         const [detalleBdd] = await pool.execute(`

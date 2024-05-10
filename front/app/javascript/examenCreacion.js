@@ -21,12 +21,67 @@ const {data: examen} = await axios.get(
   { headers: { token }, params: { idSeccion } }
 ); 
 */
+function formularioSeccion(){
+  const labDiv = document.getElementById(`formLaboratorio`)
+  const input= document.getElementById("inputSeccion")
+  document.getElementById('añadirSeccionModalLabel').innerText=`Seccion/Categoria`
+  input.removeAttribute('hidden')
+  labDiv.setAttribute('hidden','true')
+  document.getElementById("botonGuardarSeccion").setAttribute("onclick","crearSeccion()")
+
+}
+
+function formularioLaboratorio(){
+  const labDiv = document.getElementById(`formLaboratorio`)
+  const input= document.getElementById("inputSeccion")
+  document.getElementById('añadirSeccionModalLabel').innerText=`Laboratorio Externo`
+  labDiv.removeAttribute('hidden')
+  input.setAttribute('hidden','true')
+  document.getElementById("botonGuardarSeccion").setAttribute("onclick","crearLaboratorio()")
+
+
+}
+
+
+async function crearLaboratorio(){
+  const rif = document.getElementById("rifLab")
+  const razon = document.getElementById("razonLab")
+  const telefono = document.getElementById("telefonoLab")
+  const direccion = document.getElementById("direccionLab")
+  console.log(rif.value,razon.value,telefono.value,direccion.value)
+  if(rif.value=="" || rif.value<0){
+    return alerta.alert("Error:", "Rif Invalido")
+  }
+  if(razon.value==""){
+    return alerta.alert("Error:", "Razon social Invalida")
+  }
+  try {
+    const { token } = await login.getToken();
+    
+    const res = await axios.post(urlsv + "/api/modulo-examenes/crear-laboratorio",{rif:rif.value,razon:razon.value,telefono:telefono.value,direccion:direccion.value},{ headers: { token } })
+    console.log(res)
+    render();
+  } catch (error) {
+    console.log(error);
+    if (error.response.data.mensaje) {
+      return await alerta.alert("Error:", error.response.data.mensaje);
+    } else {
+      return await alerta.error();
+    }
+  }
+
+}
 
 var examenes = [];
 var seccionesData = [];
+var laboratoriosData = [];
 const render = async () => {
   try {
     const { token } = await login.getToken();
+    const laboratorios = await axios.get(
+      urlsv + "/api/modulo-examenes/laboratorios",
+      { headers: { token } }
+    );
     const secciones = await axios.get(
       urlsv + "/api/modulo-examenes/secciones",
       { headers: { token } }
@@ -42,6 +97,7 @@ const render = async () => {
     examenes = examenesGet;
     seccionesData = secciones.data;
     categoriasData = categorias.data;
+    laboratoriosData = laboratorios.data;
     
 
     const selectSeccion = document.getElementById("seccionExamenSelect");
@@ -662,6 +718,63 @@ function modificarSeccionModal(id,nombre){
   buttonModify.setAttribute('onclick',`modificarSeccion(${id})`)
 
 }
+
+function modificarLaboratorioModal(id,nombre,telefono,rif,direccion){
+
+  document.getElementById('inputRazonLabModificar').value=nombre
+  document.getElementById('inputTelefonoLabModificar').value=telefono
+  document.getElementById('inputRifLabModificar').value=rif
+  document.getElementById('inputDireccionLabModificar').value=direccion
+
+
+  const modalModSec= new bootstrap.Modal('#modificarLaboratorioModal')
+  modalModSec.toggle()
+
+  const buttonModify = document.getElementById('buttonModificarLaboratorio')
+  buttonModify.removeAttribute('onclick')
+  buttonModify.setAttribute('onclick',`modificarLaboratorio(${id})`)
+
+
+}
+
+async function modificarLaboratorio(id){
+  const razon=document.getElementById('inputRazonLabModificar').value
+  const telefono=document.getElementById('inputTelefonoLabModificar').value
+  const rif=document.getElementById('inputRifLabModificar').value
+  const direccion=document.getElementById('inputDireccionLabModificar').value
+
+
+  try {
+    const { token } = await login.getToken();
+  const { data } = await axios.put(
+    urlsv + "/api/modulo-examenes/update-laboratorio",
+    {
+      id_laboratorio:id,
+      razon,telefono,direccion,rif
+    },
+    {
+      headers: { token },
+    }
+  );
+  
+ 
+
+
+  examenesAlerta(
+    "El Laboratorio ha sido modificado correctamente",
+    "success"
+  );
+  render()
+
+
+  } catch (error) {
+    return await alerta.alert("Error:", error.response.data.mensaje);
+    
+  }
+  
+}
+
+
 
 async function modificarSeccion(id){
   const input = document.getElementById('inputSeccionModificar')
@@ -2365,6 +2478,10 @@ function validarSelectTipoBusqueda(value) {
     buscarCategoria();
     input.setAttribute("oninput", "buscarCategoria()");  
     break;
+    case "laboratorio": 
+    buscarLaboratorio();
+    input.setAttribute("oninput", "buscarLaboratorio()");  
+    break;
   }
 
 }
@@ -2588,6 +2705,62 @@ function buscarCategoria() {
           </li> 
           <div class="collapse" id="collapseMenu${sc.id}">
           <div class="card card-body">
+\          </div>
+          </div> 
+
+
+    `;
+  });
+}
+function buscarLaboratorio() {
+  input = document.getElementById("inputDescripcionBusqueda");
+  filtro = laboratoriosData.filter((sc) =>
+    sc.razon_social.toLowerCase().includes(input.value.toLowerCase())
+  );
+
+  const menuCreacionUl = document.getElementById("menuCreacionUl");
+
+  menuCreacionUl.innerHTML = "";
+  filtro.map((sc) => {
+    menuCreacionUl.innerHTML += `
+    <li class="list-group-item list-group-item-light list-group-item-action" >
+            <div class="row">
+              <div class="col-10">
+                <span class="">${sc.razon_social}</span>
+
+              </div>
+              <div class="col-2 d-flex justify-content-end align-content-center">
+                <svg
+              xmlns="http://www.w3.org/2000/svg"
+              style="cursor: pointer"
+              width="30"
+              height="30"
+              fill="#FACD0B"
+              class="bi bi-pencil-square mx-3"
+              viewBox="0 0 20 20"
+              id="botonModificar"
+              data-bs-dismiss="modal"
+              onclick=modificarLaboratorioModal(${sc.id},'${sc.razon_social}','${sc.telefono}','${sc.rif}','${sc.direccion}')
+            >
+              <path
+                d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"
+              />
+              <path
+                fill-rule="evenodd"
+                d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z"
+              /></svg>
+
+              
+              
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="red" class="bi bi-x-circle " viewBox="0 0 16 16">
+                <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
+                <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708"/>
+              </svg>
+              </div>
+
+            </div>
+          </li> 
+          
 \          </div>
           </div> 
 

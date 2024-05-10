@@ -6,16 +6,6 @@ main {
     -moz-osx-font-smoothing: grayscale;
   }
   
-  ::placeholder{
-    font-size: large;
-  }
-  input{
-    font-size: large !important;
-
-  }
-  .selectNivelUsuario{
-    font-size: large !important;
-  }
   
   .form-holder {
     display: flex;
@@ -23,7 +13,6 @@ main {
     justify-content: center;
     align-items: center;
     text-align: center;
-    min-height: 100vh;
   }
   
   .form-holder .form-content {
@@ -63,9 +52,9 @@ main {
     margin-bottom: 5px;
   }
   
-  .form-content h3.form-title {
-    margin-bottom: 30px;
-  }
+    .form-content h3.form-title {
+      margin-bottom: 30px;
+    }
   
   .form-content p {
     color: #3d3939;

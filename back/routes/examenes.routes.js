@@ -1,6 +1,6 @@
 import express from "express";
 import { verifyToken } from "../controllers/login.controller.js";
-import { modificarResultadoExamen,deletePendientesPaciente,getPendientesPaciente,getPendienteExamen,getExamenReimpresion, getBioanalistas,crearExamenPendiente, getPaciente,getExamenes,getExamenesPaciente,crearExamen,modificarExamen,getExamen, getCaracteristicasExamenPaciente, getPacienteHijo,crearOrden,getExamenResultados,updateSubCaracteristicaCar } from "../controllers/examenes.controller.js";
+import { modificarResultadoExamen,modificarLaboratorio,deletePendientesPaciente,getPendientesPaciente,getPendienteExamen,getExamenReimpresion, getBioanalistas,crearExamenPendiente, getPaciente,getExamenes,getExamenesPaciente,crearExamen,modificarExamen,getExamen, getCaracteristicasExamenPaciente, getPacienteHijo,crearOrden,getExamenResultados,updateSubCaracteristicaCar } from "../controllers/examenes.controller.js";
 var router = express.Router();
 
 //GET
@@ -33,6 +33,7 @@ router.post("/reimpresion-examen", verifyToken, getExamenReimpresion);
 //PUT
 
 router.put("/modificar-examen", verifyToken,modificarExamen);
+router.put("/modificar-laboratorio", verifyToken,modificarLaboratorio);
 router.put("/modificar-resultado-examen", verifyToken,modificarResultadoExamen);
 router.put("/update-subCaracteristicasCar", verifyToken, updateSubCaracteristicaCar);
 

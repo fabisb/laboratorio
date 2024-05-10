@@ -25,6 +25,8 @@
         rgba(214, 255, 242, 1) 95%
       );
       overflow-x: hidden;
+      height: 100vh;
+      
     "
   >
     <main>
@@ -41,19 +43,21 @@
           );
         "
       >
-        <div class="row">
-          <div class="col-4">
+        <div class="row" id="rowMain">
+
+          
             <section class="radio-section">
-              <div class="radio-list">
-                <div class="radio-item">
+              <div class="radio-list row row-cols-4">
+                <div class="radio-item col" style=" margin-top: 15px;">
                   <input
                     onclick="cambiarCrearBio()"
                     name="radio"
                     id="radio2"
                     type="radio"
+                    
                   /><label for="radio2">BIOANALISTA</label>
                 </div>
-                <div class="radio-item">
+                <div class="radio-item col">
                   <input
                     onclick="cambiarCrearUsuario('3')"
                     name="radio"
@@ -61,7 +65,7 @@
                     type="radio"
                   /><label for="radio1">ADMINISTRADOR</label>
                 </div>
-                <div class="radio-item">
+                <div class="radio-item col">
                   <input
                     onclick="cambiarCrearUsuario('1')"
                     name="radio"
@@ -69,7 +73,7 @@
                     type="radio"
                   /><label for="radio4">USUARIO BIOANALISTA</label>
                 </div>
-                <div class="radio-item">
+                <div class="radio-item col">
                   <input
                     onclick="cambiarCrearUsuario('2')"
                     name="radio"
@@ -79,57 +83,54 @@
                 </div>
               </div>
             </section>
-          </div>
-          <div id="formBody" class="form-holder col-8">
+      </div>
+        <div class="row ">
+          <div id="formBody" class="form-holder">
             <div class="form-content">
               <div class="form-items">
                 <div class="d-flex justify-content-center">
                   <img src="../imgs/la-milagrosa-logo.png" width="120" alt="" />
                 </div>
-                <hr />
+                <hr>
                 <h3>Registro de Bioanalista</h3>
                 <p>Ingrese los siguientes datos.</p>
-                <form
-                  onsubmit="agregarBioanalista(event), event.preventDefault()"
-                  class="requires-validation"
-                  novalidate
-                >
+                <form onsubmit="agregarBioanalista(event), event.preventDefault()" class="requires-validation" novalidate>
                   <div class="col-md-12">
                     <div class="d-flex">
-                      <select
-                        class="w-25 form-select mt-3 rounded-end-0"
-                        name="pre_cedula"
-                        required
-                      >
-                        <option selected value="V">V</option>
-                        <option value="E">E</option>
-                      </select>
-                      <input
-                        class="form-control rounded-0"
-                        type="number"
-                        min="0"
-                        name="cedula"
-                        placeholder="Cedula"
-                        required
+                    <select
+                    class="w-25 form-select mt-3 rounded-end-0"
+                    name="pre_cedula"
+                    required
+                  >
+                    <option selected value="V">V</option>
+                    <option value="E">E</option>
+                  </select>
+                  <input
+                    class="form-control rounded-0"
+                    type="number"
+                    min="0"
+                    name="cedula"
+                    placeholder="Cedula"
+                    required
+                  />
+                  <button
+                    type="button"
+                    class="btn btn-warning rounded-start-0 mt-3"
+                    onclick="buscarBio()"
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="16"
+                      height="16"
+                      fill="currentColor"
+                      class="bi bi-search"
+                      viewBox="0 0 16 16"
+                    >
+                      <path
+                        d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"
                       />
-                      <button
-                        type="button"
-                        class="btn btn-warning rounded-start-0 mt-3"
-                        onclick="buscarBio()"
-                      >
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          width="16"
-                          height="16"
-                          fill="currentColor"
-                          class="bi bi-search"
-                          viewBox="0 0 16 16"
-                        >
-                          <path
-                            d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"
-                          />
-                        </svg>
-                      </button>
+                    </svg>
+                  </button>
                     </div>
                   </div>
                   <div class="col-md-12">
@@ -145,7 +146,7 @@
                       El nombre no puede ser vacio!
                     </div>
                   </div>
-
+  
                   <div class="col-md-12">
                     <input
                       class="form-control"
@@ -172,7 +173,7 @@
                       El Ministerio no puede estar vacio!
                     </div>
                   </div>
-
+  
                   <div class="col-md-12">
                     <input
                       class="form-control mt-3"
@@ -186,7 +187,7 @@
                       El numero de telefono no puede estar vacio!
                     </div>
                   </div>
-
+  
                   <div class="col-md-12">
                     <input
                       class="form-control"
@@ -214,31 +215,21 @@
                       La fecha de Ingreso no puede estar vacia!
                     </div>
                   </div>
-
+  
                   <div class="col-md-12 mt-3">
-                    <div>
-                      <input
-                        type="file"
-                        name="firma"
-                        class="form-control"
-                        id="file"
-                      />
-                    </div>
+                  
+                      <div>
+  
+                        <input  type="file" name="firma" class="form-control" id="file">
+                      </div>
                   </div>
-
-                  <div class="form-button mt-3 row">
-                    <div
-                      id="btnHolder"
-                      class="col d-flex justify-content-center"
-                    >
-                      <button
-                        id="submit"
-                        type="submit"
-                        class="btn-lg btn btn-success"
-                      >
+  
+                  <div class="form-button mt-3 row ">
+                    <div  id="btnHolder" class="col d-flex justify-content-center">
+                      <button id="submit" type="submit" class="btn-lg btn btn-success">
                         Registrar
                       </button>
-                    </div>
+                    </div>                          
                   </div>
                 </form>
               </div>

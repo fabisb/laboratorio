@@ -5,6 +5,19 @@ let examenesDelPaciente = [];
 let examenesPendientes=[];
 var examenDataPc;
 let reimpresionArray = [];
+var nivelUser
+
+async function tok(){
+  let token = await login.getToken()
+  nivelUser = token.nivel
+
+  const elementsNivel= document.getElementsByClassName('user'+nivelUser)
+  console.log(elementsNivel)
+  for (const e of elementsNivel) {
+    e.removeAttribute('hidden','true')
+    
+  }
+}
 
 function retornarSumaString(o) {
   while (o.includes("*")) {
@@ -83,6 +96,11 @@ const render = async () => {
       urlsv + "/api/examenes/get-examenes",
       { headers: { token } }
     );
+    const { data: laboratorios } = await axios.get(
+      urlsv + "/api/modulo-examenes/laboratorios",
+      { headers: { token } }
+    );
+    console.log(laboratorios)
     examenes = examenesGet;
     console.log("🚀 ~ render ~ examenes:", examenes);
     const { data: bioanalistas } = await axios.get(
@@ -96,6 +114,15 @@ const render = async () => {
       `;
     });
 
+    const selectLab = document.getElementById("selectLaboratorio")
+    selectLab.innerHTML="<option value='0'>SEDE</option>"
+
+    laboratorios.forEach(l=>{
+      selectLab.innerHTML+=`
+      <option value='${l.id}'>${l.razon_social}</option>
+
+      `
+    })
     const menuDiagnosticoUl = document.getElementById("menuDiagnosticoUl");
     examenes.forEach((ex) => {
       menuDiagnosticoUl.innerHTML += `
@@ -207,6 +234,8 @@ async function guardarPendienteOrden(id){
               </a>
       `
     }
+    console.log(examen.examenPac)
+    console.log(examenesDelPaciente)
     examenesDelPaciente.push(examen.examenPac);
     document.getElementById("tHeadLgEx").innerHTML = `
     <div class="row text-center">
@@ -361,10 +390,13 @@ async function detalleExamen(id) {
     `;
   });
 }
+function vaciarExamenes(){
+  examenesDelPaciente=[]
+}
 
 const cedulaPaciente = async () => {
   console.log("cedulaPaciente");
-  examenesDelPaciente=[];
+ 
 
   document.getElementById('buscarPacienteButton').setAttribute('disabled', 'disabled')
 
@@ -529,7 +561,8 @@ const desactivarInputs = () => {
       inp.name != "fecha_nacimiento" &&
       inp.name != "fechaRegistro" &&
       !inp.className.includes("inputExamen") &&
-      inp.id != 'inputOrden'
+      inp.id != 'inputOrden' &&
+      inp.id != 'inputPacienteExpediente'
     ) {
       inp.setAttribute("readonly", "true");
     }
@@ -879,10 +912,10 @@ const reloadPage = async () => {
   else location.reload();
 };
 
-function validarSelectOrden() {
-  const selectOrden =document.getElementById('selectOrden')
+function validarSelectOrden(value) {
+  
   const inputOrden = document.getElementById('inputOrden')
-  if(selectOrden.value == 'no'){
+  if(value == 'no'){
     inputOrden.setAttribute('disabled','true')
 
   }else{
@@ -892,6 +925,8 @@ function validarSelectOrden() {
       
     }
   }
+
+  document.getElementById('guardarOrdenButton').setAttribute('onclick',`guardarOrden('${value}')`)
 }
 
 async function reimprimirExamenes(){
@@ -1106,7 +1141,56 @@ async function guardarModSubBdd(id){
   console.log(subCa)
   
 }
+
+function activarSelectLab(){
+  const selectLaboratorio = document.getElementById('selectLaboratorio')
+  selectLaboratorio.removeAttribute('disabled')
+  const guardarSelect= document.getElementById("guardarSelect")
+  guardarSelect.removeAttribute('hidden')
+  const modSelect= document.getElementById('modificarSelect')
+  modSelect.setAttribute('hidden','true')
+}
+
+async function guardarCambioLab(id){
+  const selectLaboratorio = document.getElementById('selectLaboratorio')
+  let idLab = selectLaboratorio.value 
+  const alerta=document.getElementById('alertaModificacionExamenBdd')
+
+  try {
+    const { token } = await login.getToken();
+    
+    const { data} = await axios.put(
+      urlsv + "/api/examenes/modificar-laboratorio",{
+        id,
+        idLab
+      },
+      {
+      
+        headers: { token },
+      }
+    );
+    selectLaboratorio.setAttribute('disabled','true')
+    const guardarSelect= document.getElementById("guardarSelect")
+    guardarSelect.setAttribute('hidden','true')
+    const modSelect= document.getElementById('modificarSelect')
+    modSelect.removeAttribute('hidden')
+    alerta.removeAttribute('hidden')
+    alerta.innerText=`El resultado ha sido modificado exitosamente`;
+    alerta.className=`alert alert-success`
+   
+    
+    setTimeout(() => {
+      alerta.setAttribute('hidden','true')
+      alerta.innerText='';
+      
+    }, 3000);
+  } catch (error) {
+    
+  }
+}
 const modificarExamenPacienteBDD = async (examen,idEx,idExPc) => {
+  const selectLaboratorio = document.getElementById('selectLaboratorio')
+  
   new bootstrap.Modal("#resultadosModal").toggle();
   const h1Ex = document.getElementById("h1NombreEx");
   const tBodyDiagnosticos = document.getElementById("tBodyDiagnosticos");
@@ -1115,6 +1199,10 @@ const modificarExamenPacienteBDD = async (examen,idEx,idExPc) => {
   console.log(examen,idEx,idExPc)
   const guardarButton=document.getElementById(`guardarResultadoExPc`)
   guardarButton.setAttribute('hidden','true')
+  const guardarSelect= document.getElementById("guardarSelect")
+  guardarSelect.setAttribute("onclick",`guardarCambioLab('${idExPc}')`)
+  guardarSelect.setAttribute('hidden','true');
+  
 
   try {
     const { token } = await login.getToken();
@@ -1129,7 +1217,9 @@ const modificarExamenPacienteBDD = async (examen,idEx,idExPc) => {
       }
     );
     console.log(resultados)
-
+    selectLaboratorio.setAttribute('disabled','true')
+    const modSelect= document.getElementById('modificarSelect')
+    modSelect.removeAttribute('hidden')
     resultados.forEach((ct) => {
       
   
@@ -1346,7 +1436,7 @@ const modificarExamenPacienteBDD = async (examen,idEx,idExPc) => {
 
 
   } catch (error) {
-    
+    console.log(error)
   }
 
 
@@ -1466,9 +1556,12 @@ const abrirResultadosModal = async (examen, idEx, n) => {
   h1Ex.innerText = `${examen} - ${pacienteObj.nombre} - ${pacienteObj.edad}`;
   const alertaExamen = document.getElementById('alertaExamen')
   const examenF=examenesDelPaciente.filter(ex=>ex.examenId == idEx)
-  
+
   const guardarButton=document.getElementById(`guardarResultadoExPc`)
-  guardarButton.removeAttribute('hidden')
+  if(nivelUser!=2){
+    guardarButton.removeAttribute('hidden')
+
+  }
   if(n=='true'){
     
     if(examenF.length>0){
@@ -1712,14 +1805,13 @@ const abrirResultadosModal = async (examen, idEx, n) => {
 };
 
 
-async function previewPdf(){
+async function previewPdf(tipo){
 
   const checksH=document.getElementsByName(`checksOrden`)
   const checks = [...checksH]
   let checked = checks.filter(e=> e.checked == true)
   console.log(checked)
 
-  const selectOrden=document.getElementById("selectOrden");
   const inputOrden=document.getElementById("inputOrden");
   const selectBioAnalista=document.getElementById("selectBioAnalista");
 
@@ -1790,7 +1882,7 @@ async function previewPdf(){
   })
   console.log(examenesPreview)
   const examen = {
-    orden: selectOrden.value == 'no' ? `Cortesia` : `${selectOrden.value}-${inputOrden.value}`,
+    orden: tipo == 'no' ? `Cortesia` : `${tipo}-${inputOrden.value}`,
 
     bioanalista: selectBioAnalista.value,
     paciente: pacienteObj,
@@ -1802,12 +1894,12 @@ async function previewPdf(){
   
 }
 
-async function guardarOrden(){
+async function guardarOrden(tipo){
 
 
-  const selectOrden=document.getElementById("selectOrden");
   const inputOrden=document.getElementById("inputOrden");
   const selectBioAnalista=document.getElementById("selectBioAnalista");
+  const inputExpediente = document.getElementById('inputPacienteExpediente');
 
   
   let examenes = [
@@ -1846,14 +1938,16 @@ async function guardarOrden(){
       idPac: pacienteObj.id,
       id_bio: selectBioAnalista.value,
       detallesExamen,
-    })
+      idLab:ex.idLab
+        })
   
   })
   let orden={
     idPac: pacienteObj.id,
     orden: inputOrden.value,
-    clave: selectOrden.value,
+    clave: tipo,
     id_bio: selectBioAnalista.value,
+    expediente: inputExpediente.value,
     examenes
   }
   try {
@@ -1901,7 +1995,7 @@ async function guardarOrden(){
                 </a>
       `
       
-      previewPdf()
+      previewPdf(tipo)
       examenesDelPaciente = []
     }
    
@@ -2009,6 +2103,7 @@ async function buscarExamenesPaciente(){
                 <path d="M16 8s-3-5.5-8-5.5S0 8 0 8s3 5.5 8 5.5S16 8 16 8M1.173 8a13 13 0 0 1 1.66-2.043C4.12 4.668 5.88 3.5 8 3.5s3.879 1.168 5.168 2.457A13 13 0 0 1 14.828 8q-.086.13-.195.288c-.335.48-.83 1.12-1.465 1.755C11.879 11.332 10.119 12.5 8 12.5s-3.879-1.168-5.168-2.457A13 13 0 0 1 1.172 8z"/>
                 <path d="M8 5.5a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5M4.5 8a3.5 3.5 0 1 1 7 0 3.5 3.5 0 0 1-7 0"/>
                 </svg>
+                ${nivelUser == 2 ? '' :`
                 <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="25"
@@ -2026,19 +2121,22 @@ async function buscarExamenesPaciente(){
                   d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z"
                 />
               </svg>
-              <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="25"
-              height="25"
-              fill="red"
-              class="bi bi-x-lg my-1 svgButton"
-              viewBox="0 0 20 20"
-              onclick=""
-            >
-              <path
-                d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8z"
-              />
-            </svg>
+                ` }
+                
+              ${nivelUser == 1 ? `<svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="25"
+                height="25"
+                fill="red"
+                class="bi bi-x-lg my-1 svgButton"
+                viewBox="0 0 20 20"
+                onclick=""
+              >
+                <path
+                  d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8z"
+                />
+              </svg>` :`` }
+              
                 
                
               </div>
@@ -2072,6 +2170,7 @@ async function buscarExamenesPaciente(){
       `;
     
     })
+    
     const totalizarButton= document.getElementById('totalizarButton')
 
     totalizarButton.setAttribute('hidden','true')
@@ -2090,9 +2189,12 @@ async function buscarExamenesPaciente(){
 
 
 function guardarResultadosExamen() {
+  const selectLab = document.getElementById("selectLaboratorio")
+
   const detallesExamenPc = examenDataPc.detalles.map((e) => {
     const res = document.getElementById("inputRs" + e.id);
     const nota = document.getElementById("inputNt" + e.id);
+    
    
     const reimpresionButton= document.getElementById('reimpresionButton')
 
@@ -2162,6 +2264,7 @@ function guardarResultadosExamen() {
     detallesExamenPc,
     seccionNombre: examenDataPc.seccion[0].nombre,
     subCaracteristicasExPc: subCaracteristicas,
+    idLab:selectLab.value
   };
 
   examenesDelPaciente.push(examenPac);
@@ -2184,6 +2287,8 @@ function guardarResultadosExamen() {
 }
 
 async function guardarResultadosExamenPd() {
+  const selectLab = document.getElementById("selectLaboratorio")
+
   const detallesExamenPc = examenDataPc.detalles.map((e) => {
     const res = document.getElementById("inputRs" + e.id);
     const nota = document.getElementById("inputNt" + e.id);
@@ -2260,6 +2365,7 @@ async function guardarResultadosExamenPd() {
     examenNombre: examenDataPc.examen.nombre,
     detallesExamenPd,
     seccionNombre: examenDataPc.seccion[0].nombre,
+    idLab: selectLab.value
   };
 
   console.log(examenPac)

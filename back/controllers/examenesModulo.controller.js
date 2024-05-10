@@ -34,6 +34,24 @@ export const getCategorias = async (req, res) => {
   }
 };
 
+export const getLaboratorios = async (req, res) => {
+  try {
+    const [laboratorios] = await pool.execute("SELECT * FROM laboratorios_externos");
+    if (laboratorios.length == 0) {
+      return await res
+        .status(404)
+        .json({ mensaje: "No se encuentran laboratorios" });
+    } else {
+      return await res.status(200).json(laboratorios);
+    }
+  } catch (error) {
+    console.log(error);
+    return await res
+      .status(500)
+      .json({ mensaje: "Ha ocurrido un error en el servidor" });
+  }
+};
+
 
 
 
@@ -624,6 +642,51 @@ export const crearSeccion = async (req, res) => {
 };
 
 
+export const crearLaboratorio = async (req, res) => {
+  const { rif,razon,direccion,telefono } = req.body;
+  try {
+    if (!rif || rif == "" || rif<0) {
+      return await res
+        .status(400)
+        .json({ mensaje: "Ingrese un rif valido" });
+    }
+    if (!razon|| razon == "") {
+      return await res
+        .status(400)
+        .json({ mensaje: "Ingrese un nommbre valido" });
+    }
+    
+    const [nombreExistente] = await pool.execute(
+      "SELECT razon_social FROM laboratorios_externos WHERE razon_social = ?",
+      [razon]
+    );
+    const [rifExistente] = await pool.execute(
+      "SELECT rif FROM laboratorios_externos WHERE rif = ?",
+      [rif]
+    );
+
+    if (nombreExistente.length > 0 || rifExistente.length>0) {
+      return await res.status(400).json({
+        mensaje: "El nombre/rif que intenta agregar para este laboratorio ya existe",
+      });
+    } else {
+      const [categoria] = await pool.execute(
+        "INSERT INTO laboratorios_externos (rif,razon_social,direccion,telefono) VALUES (?,?,?,?)",
+        [rif,razon,direccion,telefono]
+      );
+      return await res.status(200).json({
+        mensaje: "Laboratorio insertado correctamente",
+        laboratorioId: categoria.insertId,
+      });
+    }
+  } catch (error) {
+    console.log(error);
+    return await res
+      .status(500)
+      .json({ mensaje: "Ha ocurrido un error en el servidor" });
+  }
+};
+
 export const crearCategoria = async (req, res) => {
   const { nombre } = req.body;
   try {
@@ -740,6 +803,51 @@ export const updateSeccion = async (req, res) => {
       return await res
         .status(400)
         .json({ mensaje: "El id de la seccion no existe" });
+    }
+  } catch (error) {
+    console.log("🚀 ~ updateSeccion ~ error:", error);
+    return await res
+      .status(500)
+      .json({ mensaje: "Ha ocurrido un error en el servidor" });
+  }
+};
+
+export const updateLaboratorio = async (req, res) => {
+  const { id_laboratorio, razon,direccion,telefono,rif } = req.body;
+
+  if (!id_laboratorio || id_laboratorio < 0 || isNaN(id_laboratorio)) {
+    return await res
+      .status(400)
+      .json({ mensaje: "El id del laboratorio enviado no es valido" });
+  }
+  if (!razon || razon == "") {
+    return await res
+      .status(400)
+      .json({ mensaje: "El nombre a ingresar no es valido" });
+  }
+  try {
+    const [nombreExistente] = await pool.execute(
+      "SELECT razon_social FROM laboratorios_externos WHERE razon_social = ? AND id != ? ",
+      [razon, id_laboratorio]
+    );
+    const [rifExistente] = await pool.execute(
+      "SELECT rif FROM laboratorios_externos WHERE rif = ? AND id != ?",
+      [rif,id_laboratorio]
+    );
+
+    if (nombreExistente.length > 0 || rifExistente.length>0) {
+      return await res.status(400).json({
+        mensaje: "El nombre/rif que intenta agregar para este laboratorio ya existe",
+      });
+    } else {
+      const [categoria] = await pool.execute(
+        "UPDATE laboratorios_externos set razon_social = ?, direccion = ?, rif = ?, telefono =? where id = ?",
+        [razon,direccion,rif,telefono,id_laboratorio]
+      );
+      return await res.status(200).json({
+        mensaje: "Laboratorio insertado correctamente",
+        laboratorioId: categoria.insertId,
+      });
     }
   } catch (error) {
     console.log("🚀 ~ updateSeccion ~ error:", error);
