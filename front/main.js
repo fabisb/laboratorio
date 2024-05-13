@@ -120,8 +120,8 @@ let creacionBioWindowVar;
 function creacionBioWindow() {
   if (!creacionBioWindowVar) {
     creacionBioWindowVar = new BrowserWindow({
-      width: 1024,
-      minWidth: 860,
+      width: 1268,
+      minWidth: 1024,
       height: 2000,
       title: "Creacion - Bioanalista",
       icon: path.join(__dirname, "app/imgs/icons/app-logo.ico"),
