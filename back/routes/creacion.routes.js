@@ -9,10 +9,13 @@ import {
   buscarBioanalista,
   editarBioanalista,
   cambiarStatus,
+  buscarUsuarios,
+  crearBioanalsita,crearUsuario
 } from "../controllers/creacion.controller.js";
 var router = express.Router();
 
 //GET
+router.get("/buscar-usuarios", verifyToken, buscarUsuarios);
 router.get("/buscar-usuario", verifyToken, buscarUsuario);
 router.get("/buscar-bioanalista", verifyToken, buscarBioanalista);
 
@@ -20,6 +23,8 @@ router.get("/buscar-bioanalista", verifyToken, buscarBioanalista);
 router.post("/agregar-paciente", verifyToken, agregarPacienteController);
 router.post("/agregar-usuario", verifyToken, agregarUsuarioController);
 router.post("/agregar-bioanalista", verifyToken, agregarBioanalistaController);
+router.post("/guardar-usuario", crearUsuario);
+router.post("/guardar-bioanalista", crearBioanalsita);
 
 //PUT
 router.put("/editar-usuario", verifyToken, editarUsuario);

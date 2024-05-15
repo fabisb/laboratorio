@@ -189,6 +189,7 @@ const buscarUsuarios = async () => {
 };
 
 const guardarUsuario = async () => {
+  
   const pre_cedula = document.getElementById("precedula").value;
   const cedula = document.getElementById("cedula").value;
   const nombre = document.getElementById("nombre").value;
