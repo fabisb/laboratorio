@@ -300,6 +300,57 @@ export const modificarResultadoExamen = async (req,res)=>{
   
   
 }
+
+export const crearExamenExterno = async (req,res)=>{
+  const {idEx,idLab,nota,bioanalista,idPac} = req.body;
+  if(bioanalista==''){
+    return  await res
+    .status(400)
+    .json({ mensaje: "El bioanalista no puede estar vacio" });
+  }
+  if(idLab==0 || idEx==0 || idPac == 0){
+    return  await res
+    .status(400)
+    .json({ mensaje: "Hay un error en la consulta" });
+  }
+  
+  try {
+    const [r]= await pool.execute(`INSERT INTO examenes_externos(id_ex,bioanalista,nota,id_lab ,id_pac) VALUES (?,?,?,?,?)`,[idEx,bioanalista,nota,idLab,idPac] )
+    return await res.status(200).json({mensaje: `Examen Agregado Exitosamente`})
+  } catch (error) {
+    console.log(error);
+    return await res
+      .status(500)
+      .json({ mensaje: "Ha ocurrido un error en el servidor" });
+  }
+  
+  
+}
+export const modificarExamenExterno = async (req,res)=>{
+  const {idLab,nota,idExt,bioanalista} = req.body;
+  if(bioanalista==''){
+    return  await res
+    .status(400)
+    .json({ mensaje: "El bioanalista no puede estar vacio" });
+  }
+  if(idLab==0 || idExt==0 ){
+    return  await res
+    .status(400)
+    .json({ mensaje: "Hay un error en la consulta" });
+  }
+  
+  try {
+    const [r]= await pool.execute(`UPDATE examenes_externos set bioanalista= ?, nota= ?, id_lab = ? where id = ?`,[bioanalista,nota,idLab,idExt] )
+    return await res.status(200).json({mensaje: `Examen Modificado Exitosamente`})
+  } catch (error) {
+    console.log(error);
+    return await res
+      .status(500)
+      .json({ mensaje: "Ha ocurrido un error en el servidor" });
+  }
+  
+  
+}
 export const modificarLaboratorio = async (req,res)=>{
   const {id,idLab} = req.body;
   
@@ -699,6 +750,53 @@ export const getExamenesPaciente = async (req, res) => {
           nombreEx:examen[0].nombre,
           id_ex:ex.id_ex,
           fecha:ex.fecha
+        })
+      }
+      return await res
+      .status(200)
+      .json({ examenesData });
+    } else {
+      return await res
+        .status(400)
+        .json({ mensaje: "No se ha encontrado el paciente", paciente: 404 });
+    }
+  } catch (error) {
+    console.log(error);
+    return await res
+      .status(500)
+      .json({ mensaje: "Ha ocurrido un error en el servidor" });
+  }
+};
+
+export const getExamenesExternos = async (req, res) => {
+  const { cedula, preCedula,fecha } = req.query;
+
+  if (cedula == '' || !cedula ) {
+    return await res.status(400).json({mensaje:'Los datos enviados no son validos'});
+    
+  }
+  try {
+    const [paciente] = await pool.execute(
+      "SELECT * FROM pacientes WHERE cedula = ? AND pre_cedula = ?",
+      [cedula, preCedula]
+    );
+    if (paciente.length > 0) {
+      const [examenes] = fecha=='no' ? await pool.execute(`SELECT * FROM examenes_externos where id_pac ='${paciente[0].id}'`) : await pool.execute(`SELECT * FROM examenes_externos where id_pac ='${paciente[0].id}' AND fecha between "${fecha} 00:00:00" AND "${fecha} 23:59:00"`)  
+      let examenesData =[]
+
+      for await (const ex of examenes) {
+        const [examen] = await pool.execute(`SELECT * FROM examenes where id=${ex.id_ex}`)
+      const [lab] =  await pool.execute(`SELECT * FROM laboratorios_externos where id ='${ex.id_lab}' `)  
+
+        examenesData.push({
+          id:ex.id,
+          nombreEx:examen[0].nombre,
+          id_ex:ex.id_ex,
+          fecha:ex.fecha,
+          bioanalista:ex.bioanalista,
+          nota:ex.nota,
+          laboratorio:lab[0].razon_social,
+          idLab:ex.id_lab
         })
       }
       return await res
