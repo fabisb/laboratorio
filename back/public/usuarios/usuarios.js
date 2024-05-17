@@ -30,9 +30,8 @@ function activarFormulario() {
   const formArr = [...formulario];
   formArr.forEach((e) => {
     e.removeAttribute("disabled");
-    if(!e.tagName.toLowerCase() =="select"){
+    if (!e.tagName.toLowerCase() == "select") {
       e.value = "";
-
     }
   });
 }
@@ -178,18 +177,74 @@ const buscarUsuarios = async () => {
                       <td scope="col">${user.telefono}</td>
                       <td scope="col">${user.nivel}</td>
                       <td scope="col">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="orange" class="bi bi-pencil-square" onclick="modificarFormulario(${user.id},'${user.nombre}')"  style="cursor:pointer" viewBox="0 0 16 16">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="orange" class="bi bi-pencil-square" onclick="modificarFormulario(${
+                          user.id
+                        },'${
+      user.nombre
+    }')"  style="cursor:pointer" viewBox="0 0 16 16">
                           <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
                           <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z"/>
                         </svg>
                       </td>
+                      <td style="cursor:pointer">${
+                        user.status == "activo"
+                          ? `<svg xmlns="http://www.w3.org/2000/svg"  onclick="cambiarStatus('inactivo','${
+                              user.nivel == 1
+                                ? "administrador"
+                                : user.nivel == 2
+                                ? "auxiliar"
+                                : "bioanalista"
+                            }','${
+                              user.id
+                            }')" width="20" height="20" fill="green" class="bi bi-check-square mx-1" viewBox="0 0 16 16">
+                        <path d="M14 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2z"/>
+                        <path d="M10.97 4.97a.75.75 0 0 1 1.071 1.05l-3.992 4.99a.75.75 0 0 1-1.08.02L4.324 8.384a.75.75 0 1 1 1.06-1.06l2.094 2.093 3.473-4.425z"/>
+                      </svg>`
+                          : `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="red" class="bi bi-x-octagon"  onclick="cambiarStatus('activo','${
+                              user.nivel == 1
+                                ? "administrador"
+                                : user.nivel == 2
+                                ? "auxiliar"
+                                : "bioanalista"
+                            }','${user.id}')" viewBox="0 0 16 16">
+                        <path d="M4.54.146A.5.5 0 0 1 4.893 0h6.214a.5.5 0 0 1 .353.146l4.394 4.394a.5.5 0 0 1 .146.353v6.214a.5.5 0 0 1-.146.353l-4.394 4.394a.5.5 0 0 1-.353.146H4.893a.5.5 0 0 1-.353-.146L.146 11.46A.5.5 0 0 1 0 11.107V4.893a.5.5 0 0 1 .146-.353zM5.1 1 1 5.1v5.8L5.1 15h5.8l4.1-4.1V5.1L10.9 1z"/>
+                        <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708"/>
+                      </svg>`
+                      }</td>                
                     </tr>
     `;
   });
 };
 
+const cambiarStatus = async (status, tipo, id) => {
+  if (id < 0 || id == "" || !id)
+    return usuariosAlerta("Envie un id valido", "danger");
+
+  if (status != "activo" && status != "inactivo")
+    return usuariosAlerta("Envie un estatus valido", "danger");
+
+  if (tipo != "administrador" && tipo != "bioanalista" && tipo != "auxiliar")
+    return usuariosAlerta("Envie un tipo de usuario valido", "danger");
+
+  try {
+    const { data } = await axios.put("/api/espejo/editar-status", {
+      id,
+      status,
+      tipo,
+    });
+    buscarUsuarios();
+    return usuariosAlerta("Status modificado con exito", "success");
+  } catch (error) {
+    console.log("🚀 ~ cambiarStatus ~ error:", error);
+    if (error.response.data.mensaje) {
+      return await alerta.alert("Error:", error.response.data.mensaje);
+    } else {
+      return;
+    }
+  }
+};
+
 const guardarUsuario = async () => {
-  
   const pre_cedula = document.getElementById("precedula").value;
   const cedula = document.getElementById("cedula").value;
   const nombre = document.getElementById("nombre").value;
@@ -200,36 +255,31 @@ const guardarUsuario = async () => {
   const telefono = document.getElementById("telefono").value;
 
   if (!isNaN(nombre) || nombre == "") {
-    return alert("Ingrese un nombre valido");
+    return usuariosAlerta("Ingrese un nombre valido", "warning");
   }
-  if (pre_cedula!='V' && pre_cedula != "E" ) {
-    return alert("Ingrese una pre cedula valido");
+  if (pre_cedula != "V" && pre_cedula != "E") {
+    return usuariosAlerta("Ingrese una pre cedula valida", "warning");
   }
   if (cedula < 0) {
-    return alert("Ingrese una cedula valida");
+    return usuariosAlerta("Ingrese una cedula valida", "warning");
   }
   if (telefono < 0 || telefono == "") {
-    return alert("Ingrese un telefono valido");
+    return usuariosAlerta("Ingrese un telefono valido", "warning");
   }
   if (correo.split("@")[0] == "" || correo.split("@")[1] == "") {
-    alert("Ingrese un correo valido");
-    return;
+    return usuariosAlerta("Ingrese un correo valido", "warning");
   }
   if (!correo.split("@")[1].split(".")[1].includes("com")) {
-    alert("Ingrese un correo valido");
-    return;
+    return usuariosAlerta("Ingrese un correo valido", "warning");
   }
   if (clave == "") {
-    alert("Ingrese una clave valida");
-    return;
+    return usuariosAlerta("Ingrese una clave valida", "warning");
   }
   if (direccion == "") {
-    alert("Ingrese una direccion valida");
-    return;
+    return usuariosAlerta("Ingrese una direccion valida ", "warning");
   }
   if (tipo != "1" && tipo != "2" && tipo != "3") {
-    alert("Nivel de usuario no valido");
-    return;
+    return usuariosAlerta("Nivel de usuario no valido", "warning");
   }
 
   try {
@@ -237,7 +287,7 @@ const guardarUsuario = async () => {
       const ministerio = document.getElementById("ministerio").value;
       const colegio = document.getElementById("colegio").value;
       const firma = await subirImagen();
-      console.log("🚀 ~ guardarUsuario ~ firma:", firma)
+      console.log("🚀 ~ guardarUsuario ~ firma:", firma);
       const res = await axios.post("/api/espejo/guardar-bioanalista", {
         pre_cedula,
         cedula,
@@ -246,28 +296,28 @@ const guardarUsuario = async () => {
         direccion,
         ministerio,
         colegio,
-        foto_firma:firma ?firma  : null,
+        foto_firma: firma ? firma : null,
       });
       const res2 = await axios.post("/api/espejo/guardar-usuario", {
         pre_cedula,
         cedula,
         nombre,
-        password:clave,
+        password: clave,
         telefono,
         direccion,
         correo,
-        nivel:tipo,
+        nivel: tipo,
       });
     } else {
       const res2 = await axios.post("/api/espejo/guardar-usuario", {
         pre_cedula,
         cedula,
         nombre,
-        password:clave,
+        password: clave,
         telefono,
         direccion,
         correo,
-        nivel:tipo,
+        nivel: tipo,
       });
     }
   } catch (error) {
@@ -302,5 +352,24 @@ const subirImagen = async () => {
     }
   } catch (error) {
     console.log(error);
+  }
+};
+
+const creacionUsuarioAlerta = document.getElementById("creacionUsuarioAlerta");
+const usuariosAlerta = (message, type) => {
+  const wrapper = document.createElement("div");
+  wrapper.innerHTML = [
+    `<div id="creacionUsuarioAlertaDiv" class="alert alert-${type} alert-dismissible fade show" role="alert">`,
+    `   <div>${message.toUpperCase()}</div>`,
+    '   <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>',
+    "</div>",
+  ].join("");
+  if (creacionUsuarioAlerta.children.length == 0) {
+    creacionUsuarioAlerta.append(wrapper);
+    setTimeout(() => {
+      new bootstrap.Alert("#creacionUsuarioAlertaDiv").close();
+      creacionUsuarioAlerta.removeChild(creacionUsuarioAlerta.firstChild);
+      return;
+    }, 6000);
   }
 };
