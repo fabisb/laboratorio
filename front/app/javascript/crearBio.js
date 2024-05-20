@@ -240,22 +240,12 @@ const guardarUsuario = async (tipo) => {
   if (telefono < 0 || telefono == "") {
     return console.log("Ingrese un telefono valido");
   }
-  if (correo.split("@")[0] == "" || correo.split("@")[1] == "") {
-    console.log("Ingrese un correo valido");
-    return;
-  }
-  if (!correo.split("@")[1].split(".")[1].includes("com")) {
-    console.log("Ingrese un correo valido");
-    return;
-  }
+
   if (clave == "") {
     console.log("Ingrese una clave valida");
     return;
   }
-  if (direccion == "") {
-    console.log("Ingrese una direccion valida");
-    return;
-  }
+
   if (tipo != "1" && tipo != "2" && tipo != "3") {
     console.log("Nivel de usuario no valido");
     return;
@@ -266,7 +256,6 @@ const guardarUsuario = async (tipo) => {
       const ministerio = document.getElementById("ministerio").value;
       const colegio = document.getElementById("colegio").value;
       const firma = await subirImagen();
-      console.log("🚀 ~ guardarUsuario ~ firma:", firma);
       const res = await axios.post(
         urlsv + "/api/creacion/guardar-bioanalista",
         {
@@ -303,6 +292,11 @@ const guardarUsuario = async (tipo) => {
       });
     }
   } catch (error) {
+    if (error.response.data.mensaje) {
+      return await alerta.alert("Error:", error.response.data.mensaje);
+    } else {
+      return await alerta.error();
+    }
     //CREAR MEJORES ALERTAS
     console.log("🚀 ~ guardarUsuario ~ error:", error);
   }
@@ -322,7 +316,6 @@ function formularioCreacion(nivel) {
 
   switch (nivel) {
     case "3":
-      console.log("eee");
       for (let index = 0; index < bioDiv.length; index++) {
         const element = bioDiv[index];
         element.removeAttribute("hidden");
@@ -348,22 +341,24 @@ function formularioCreacion(nivel) {
 }
 
 const buscarUsuarios = async () => {
-  const { token } = await login.getToken();
+  try {
+    const { token } = await login.getToken();
 
-  const { data } = await axios.get(urlsv + "/api/creacion/buscar-usuarios", {
-    headers: { token },
-  });
-  console.log("🚀 ~ buscarUsuarios ~ data:", data);
-  usuariosArray = data;
-  users = data.usuarios;
-  const tBody = document.getElementById(`tBodyUsuarios`);
-  tBody.innerHTML = "";
-  data.usuarios.forEach((user) => {
-    try {
-      let bioanalista = data.bioanalistas.find((e) => e.id == user.bioanalista);
-    } catch (error) {}
+    const { data } = await axios.get(urlsv + "/api/creacion/buscar-usuarios", {
+      headers: { token },
+    });
+    usuariosArray = data;
+    users = data.usuarios;
+    const tBody = document.getElementById(`tBodyUsuarios`);
+    tBody.innerHTML = "";
+    data.usuarios.forEach((user) => {
+      try {
+        let bioanalista = data.bioanalistas.find(
+          (e) => e.id == user.bioanalista
+        );
+      } catch (error) {}
 
-    tBody.innerHTML += `
+      tBody.innerHTML += `
                     <tr>
                   <th scope="row">${user.cedula}</th>
                   <td>${user.nombre}</td>
@@ -422,7 +417,15 @@ const buscarUsuarios = async () => {
                   </svg></td>
                 </tr>
     `;
-  });
+    });
+  } catch (error) {
+    console.log("🚀 ~ buscarUsuarios ~ error:", error);
+    if (error.response.data.mensaje) {
+      return await alerta.alert("Error:", error.response.data.mensaje);
+    } else {
+      return await alerta.error();
+    }
+  }
 };
 
 const agregarBioanalista = async (event) => {

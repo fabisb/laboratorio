@@ -47,7 +47,7 @@ function desactivarFormulario() {
 function validarSelectTipo(value) {
   const biodiv = document.getElementsByClassName("bioanalistaDiv");
 
-  if (value == 1) {
+  if (value == 3) {
     for (let index = 0; index < biodiv.length; index++) {
       const element = biodiv[index];
       element.value = "";
@@ -67,9 +67,6 @@ async function modificarFormulario(id, nombre) {
   const usuario = document.getElementById("spanUser");
   usuario.innerText = `${nombre}`;
   const biodiv = document.getElementsByClassName("bioanalistaDiv");
-  document
-    .getElementById(`guardarButton`)
-    .setAttribute("onclick", "modificarUsuario()");
 
   for (let index = 0; index < biodiv.length; index++) {
     const element = biodiv[index];
@@ -85,8 +82,9 @@ async function modificarFormulario(id, nombre) {
   const precedula = document.getElementById("precedula");
   const telefono = document.getElementById("telefono");
 
-  if (usuarioInfo.nivel == 1) {
-    let bioanalista = usuariosArray.bioanalistas.filter((e) => e.id == 44);
+  if (usuarioInfo.nivel == 3) {
+    let bioanalista = usuariosArray.bioanalistas.filter((e) => e.cedula == usuarioInfo.cedula);
+    const ingreso = document.getElementById("ingreso");
     const colegioInp = document.getElementById("colegio");
     const ministerioInp = document.getElementById("ministerio");
     const firmaInp = document.getElementById("firma");
@@ -95,10 +93,19 @@ async function modificarFormulario(id, nombre) {
       const element = biodiv[index];
       element.removeAttribute("hidden");
     }
+    console.log(bioanalista[0]);
     colegioInp.value = bioanalista[0].colegio;
     ministerioInp.value = bioanalista[0].ministerio;
+    ingreso.value = moment(bioanalista[0].ingreso).format("YYYY-MM-DD");
+    document
+      .getElementById(`guardarButton`)
+      .setAttribute("onclick", `modificarBio('${id}','${bioanalista[0].id}')`);
+  } else {
+    document
+      .getElementById(`guardarButton`)
+      .setAttribute("onclick", `modificarUsuario('${id}')`);
   }
-  precedula.value = usuario.precedula;
+  precedula.value = usuario.pre_cedula;
   nombreInp.value = usuarioInfo.nombre;
   cedulaInp.value = usuarioInfo.cedula;
   direccionInp.value = usuarioInfo.direccion;
@@ -175,7 +182,11 @@ const buscarUsuarios = async () => {
                       <td scope="col">${user.direccion}</td>
                       <td scope="col">${user.correo}</td>
                       <td scope="col">${user.telefono}</td>
-                      <td scope="col">${user.nivel}</td>
+                      <td scope="col">${user.nivel == 1
+                        ? "Administrador"
+                        : user.nivel == 2
+                        ? "Auxiliar"
+                        : "Bioanalista"}</td>
                       <td scope="col">
                         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="orange" class="bi bi-pencil-square" onclick="modificarFormulario(${
                           user.id
@@ -243,7 +254,111 @@ const cambiarStatus = async (status, tipo, id) => {
     }
   }
 };
+const modificarBio = async (id, idBio) => {
+  if (id < 0 || id == "" || !id) {
+    //ALERTAS PARA VALIDACION
+    return usuariosAlerta("El ID no es valido", "danger");
+  }
+  if (idBio < 0 || idBio == "" || !idBio) {
+    //ALERTAS PARA VALIDACION
+    return usuariosAlerta("El ID de Bioanalista no es valido", "danger");
+  }
 
+  const nombre = document.getElementById("nombre").value;
+  const telefono = document.getElementById("telefono").value;
+  const colegio = document.getElementById("colegio").value;
+  const ministerio = document.getElementById("ministerio").value;
+  const direccion = document.getElementById("direccion").value;
+  const ingreso = document.getElementById("ingreso").value;
+
+  const correo = document.getElementById("correo").value;
+  const password = document.getElementById("clave").value;
+  const nivel = document.getElementById("tipo").value;
+
+  if (
+    nombre == "" ||
+    telefono == "" ||
+    colegio == "" ||
+    ministerio == "" ||
+    ingreso == "" ||
+    password ==''||
+    nivel == ''
+  ) {
+    //ALERTAS PARA VALIDACION
+    return usuariosAlerta("Algun dato no es valido", "danger");
+  }
+
+  try {
+    const firma = await subirImagen();
+    await axios.put("/api/espejo/editar-usuario", {
+      id,
+      direccion,
+      nombre,
+      telefono,
+      correo,
+      password,
+      nivel,
+    });
+    await axios.put("/api/espejo/editar-bioanalista", {
+      id:idBio,
+      nombre,
+      telefono,
+      colegio,
+      ministerio,
+      direccion,
+      ingreso,
+      firma,
+    });
+    desactivarFormulario();
+    await buscarUsuarios()
+    return await usuariosAlerta("USUARIO MODIFICADO CON EXITO", "success");
+  } catch (error) {
+    console.log(error);
+    if (error.response.data.mensaje) {
+      return await usuariosAlerta("Error:", error.response.data.mensaje);
+    } else {
+      return await usuariosAlerta("ERROR DE SERVIDOR");
+    }
+  }
+};
+const modificarUsuario = async (id) => {
+  const direccion = document.getElementById("direccion").value;
+  const nombre = document.getElementById("nombre").value;
+  const telefono = document.getElementById("telefono").value;
+  const correo = document.getElementById("correo").value;
+  const password = document.getElementById("clave").value;
+  const nivel = document.getElementById("tipo").value;
+
+  if (id < 0 || id == "" || !id) {
+    //ALERTAS PARA VALIDACION
+    return usuariosAlerta("El ID del usuario no es valido", "danger");
+  }
+  if (nombre == "" || telefono == "" || nivel == "" || password == "") {
+    return usuariosAlerta("Algun dato no es valido", "danger");
+    //ALERTAS PARA VALIDACION
+  }
+  try {
+    await axios.put("/api/espejo/editar-usuario", {
+      id,
+      direccion,
+      nombre,
+      telefono,
+      correo,
+      password,
+      nivel,
+    });
+    desactivarFormulario();
+    await buscarUsuarios()
+    return await usuariosAlerta("USUARIO MODIFICADO CON EXITO", "success");
+  } catch (error) {
+    console.log(error);
+    if (error.response.data.mensaje) {
+      return await usuariosAlerta("Error:", error.response.data.mensaje);
+    } else {
+      return await usuariosAlerta("ERROR DE SERVIDOR");
+    }
+  }
+};
 const guardarUsuario = async () => {
   const pre_cedula = document.getElementById("precedula").value;
   const cedula = document.getElementById("cedula").value;
@@ -266,34 +381,39 @@ const guardarUsuario = async () => {
   if (telefono < 0 || telefono == "") {
     return usuariosAlerta("Ingrese un telefono valido", "warning");
   }
-  if (correo.split("@")[0] == "" || correo.split("@")[1] == "") {
-    return usuariosAlerta("Ingrese un correo valido", "warning");
-  }
-  if (!correo.split("@")[1].split(".")[1].includes("com")) {
-    return usuariosAlerta("Ingrese un correo valido", "warning");
-  }
+
   if (clave == "") {
     return usuariosAlerta("Ingrese una clave valida", "warning");
   }
-  if (direccion == "") {
-    return usuariosAlerta("Ingrese una direccion valida ", "warning");
-  }
+
   if (tipo != "1" && tipo != "2" && tipo != "3") {
     return usuariosAlerta("Nivel de usuario no valido", "warning");
   }
 
   try {
-    if (tipo == "1") {
+    if (tipo == "3") {
       const ministerio = document.getElementById("ministerio").value;
       const colegio = document.getElementById("colegio").value;
+      const ingreso = moment(document.getElementById("ingreso").value).format(
+        "YYYY-MM-DD"
+      );
+      if (ministerio == "") {
+        return usuariosAlerta("Ingrese un ministerio valido", "warning");
+      }
+      if (colegio == "") {
+        return usuariosAlerta("Ingrese un colegio valido", "warning");
+      }
+      if (ingreso == "") {
+        return usuariosAlerta("Ingrese un ingreso valido", "warning");
+      }
       const firma = await subirImagen();
-      console.log("🚀 ~ guardarUsuario ~ firma:", firma);
       const res = await axios.post("/api/espejo/guardar-bioanalista", {
         pre_cedula,
         cedula,
         nombre,
         telefono,
         direccion,
+        ingreso,
         ministerio,
         colegio,
         foto_firma: firma ? firma : null,
@@ -320,12 +440,21 @@ const guardarUsuario = async () => {
         nivel: tipo,
       });
     }
+    desactivarFormulario();
+    await buscarUsuarios()
+    return await usuariosAlerta("USUARIO CREADO CON EXITO", "success");
+
   } catch (error) {
     //CREAR MEJORES ALERTAS
     console.log("🚀 ~ guardarUsuario ~ error:", error);
     if (error.response.data.mensaje) {
+      return await usuariosAlerta(
+        `Error: ${error.response.data.mensaje}`,
+        "danger"
+      );
       return alert("Error:", error.response.data.mensaje);
     } else {
+      return await usuariosAlerta("ERROR DE SERVIDOR");
       return alert("ERROR DE SERVIDOR");
     }
   }
@@ -351,6 +480,7 @@ const subirImagen = async () => {
       return "";
     }
   } catch (error) {
+    alert(error);
     console.log(error);
   }
 };

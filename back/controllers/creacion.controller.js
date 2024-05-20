@@ -443,7 +443,7 @@ export const agregarBioanalistaController = async (req, res) => {
   }
 };
 
-export const crearBioanalsita = async (req, res) => {
+export const crearBioanalista = async (req, res) => {
   const bioanalista = [];
   for (const clave in req.body) {
     bioanalista.push({ value: req.body[clave], name: `${clave}` });
@@ -565,27 +565,14 @@ export const crearUsuario = async (req, res) => {
     });
   }
 
-  if (correo.split("@")[0] == "" || correo.split("@")[1] == "") {
-    return await res.status(401).json({
-      mensaje: "Ingrese un correo valido",
-    });
-  }
-  if (!correo.split("@")[1].split(".")[1].includes("com")) {
-    return await res.status(401).json({
-      mensaje: "Ingrese un correo valido",
-    });
-  }
+
   if (password == "") {
     return await res.status(401).json({
       mensaje: "Ingrese una clave valida",
     });
   }
 
-  if (direccion == "") {
-    return await res.status(401).json({
-      mensaje: "Ingrese una direccion valida",
-    });
-  }
+
   if (nivel != "1" && nivel != "2" && nivel != "3") {
     return await res.status(401).json({
       mensaje: "Nivel de usuario no valido",
@@ -625,7 +612,6 @@ export const crearUsuario = async (req, res) => {
       const valores = usuario.map((dato) => "?").join(", ");
       const consulta = `INSERT INTO users (${columnas}) VALUES (${valores})`;
 
-      console.log("🚀 ~ crearUsuario ~ consulta:", consulta);
       // Ejecutar la consulta
       const [resultados] = await pool.execute(
         consulta,
