@@ -63,7 +63,7 @@ export const getExamenReimpresion = async(req,res)=>{
 export const crearExamenPendiente = async (req,res)=>{
   const {examenPac,idPac}=req.body;
   try {
-    const [examen] = await pool.execute(`INSERT INTO examenes_pendientes (id_ex,id_pac,id_lab) VALUES (?, ?, ?)`,[examenPac.examenId,idPac,examenPac.idLab])
+    const [examen] = await pool.execute(`INSERT INTO examenes_pendientes (id_ex,id_pac) VALUES (?, ?, ?)`,[examenPac.examenId,idPac])
 
     for await (const dt of examenPac.detallesExamenPd){
       const [detalle] = await pool.execute(`INSERT INTO detalles_ex_pendientes(id_dt,id_ex,id_ex_pd,id_rango,resultado,nota,inferior,superior) VALUES (?,?,?,?,?,?,?,?)`,[dt.id_dt,dt.id_ex,examen.insertId,dt.id_rango,dt.resultado,dt.nota,dt.inferior,dt.superior])
@@ -635,7 +635,7 @@ export const crearOrden = async (req, res) => {
     for await (const ex of orden.examenes) {
       console.log(ex)
       const [examenBdd] = await pool.execute(`
-      INSERT INTO examenes_paciente(id_orden, id_ex, id_pac, id_bio, id_lab) VALUES ('${ordenId}','${ex.id_ex}','${ex.idPac}','${orden.id_bio}','${ex.idLab}')
+      INSERT INTO examenes_paciente(id_orden, id_ex, id_pac, id_bio) VALUES ('${ordenId}','${ex.id_ex}','${ex.idPac}','${orden.id_bio}')
       `)
       for await (const dt of ex.detallesExamen){
         const [detalleBdd] = await pool.execute(`

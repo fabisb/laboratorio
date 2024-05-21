@@ -403,6 +403,8 @@
                 <option value="seccion">Seccion</option>
                 <option value="categoria">Categoria</option>
                 <option value="laboratorio">Laboratorio</option>
+                <option value="sede">Sede</option>
+
               </select>
               <input
                 type="text"
@@ -455,7 +457,7 @@
         <div class="modal-content">
           <div class="modal-header">
             <h1 class="modal-title fs-5" id="añadirSeccionModalLabel">
-              Crear Seccion/Categoria
+              Creacion Seccion/Categoria/Sede
             </h1>
             
             <button
@@ -515,6 +517,21 @@
                     </label>
                   </div>
                 </div>
+                <div class="col">
+                  <div class="form-check fs-6">
+                    <input
+                      class="form-check-input"
+                      type="radio"
+                      name="inputTipoSeccion"
+                      value="sede"
+                      id="ratioSede"
+                      onclick="formularioSeccion()"
+                    />
+                    <label class="form-check-label" for="ratioSede">
+                      Sede
+                    </label>
+                  </div>
+                </div>
               </div>
 
               <hr />
@@ -522,7 +539,7 @@
                 type="text"
                 class="form-control"
                 id="inputSeccion"
-                placeholder="Seccion/Categoria"
+                placeholder="Seccion/Categoria/Sede"
               />
 
               <div id="formLaboratorio" hidden>
@@ -645,6 +662,56 @@
               class="btn btn-warning"
               data-bs-dismiss="modal"
               id="buttonModificarSeccion"
+            >
+              Modificar
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      class="modal fade"
+      id="modificarSedeModal"
+      tabindex="-1"
+      aria-labelledby="modificarSedeModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h1 class="modal-title fs-5" id="modificarSedeModalLabel">
+              Modificar Sede
+            </h1>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <div class="mb-3">
+              <input
+                type="text"
+                class="form-control"
+                id="inputSedeModificar"
+                placeholder="Sede"
+              />
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-bs-dismiss="modal"
+            >
+              Cerrar
+            </button>
+            <button
+              type="button"
+              class="btn btn-warning"
+              data-bs-dismiss="modal"
+              id="buttonModificarSede"
             >
               Modificar
             </button>

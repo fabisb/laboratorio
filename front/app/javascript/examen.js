@@ -2535,7 +2535,6 @@ function guardarResultadosExamen() {
     detallesExamenPc,
     seccionNombre: examenDataPc.seccion[0].nombre,
     subCaracteristicasExPc: subCaracteristicas,
-    idLab:selectLab.value
   };
 
   examenesDelPaciente.push(examenPac);
@@ -2636,7 +2635,7 @@ async function guardarResultadosExamenPd() {
     examenNombre: examenDataPc.examen.nombre,
     detallesExamenPd,
     seccionNombre: examenDataPc.seccion[0].nombre,
-    idLab: selectLab.value
+
   };
 
   console.log(examenPac)

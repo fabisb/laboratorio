@@ -17,6 +17,7 @@ import {
   getExamenes,
   getLaboratorios,
   getSecciones,
+  getSedes,
   getCategorias,
   insertCaracteristica,
   insertRango,
@@ -30,7 +31,9 @@ import {
   updateSeccion,
   updateCategoria,
   updateSubCaracteristica,
-  updateLaboratorio
+  updateLaboratorio,
+  updateSede,
+  crearSede
 } from "../controllers/examenesModulo.controller.js";
 var router = express.Router();
 
@@ -38,6 +41,7 @@ var router = express.Router();
 router.get("/laboratorios", verifyToken, getLaboratorios);
 router.get("/secciones", verifyToken, getSecciones);
 router.get("/categorias", verifyToken, getCategorias);
+router.get("/sedes", verifyToken, getSedes);
 router.get("/examenes", verifyToken, getExamenes);
 router.get("/examen-id", verifyToken, getExamenById);
 router.get("/examen-nombre", verifyToken, getExamenByNombre);
@@ -48,6 +52,7 @@ router.get("/caracteristicas-id_ex", verifyToken, getCaracteristicasById);
 
 //POST
 router.post("/crear-seccion", verifyToken, crearSeccion);
+router.post("/crear-sede", verifyToken, crearSede);
 router.post("/crear-categoria", verifyToken, crearCategoria);
 router.post("/crear-examen", verifyToken, crearExamen);
 router.post("/crear-laboratorio", verifyToken, crearLaboratorio);
@@ -56,6 +61,7 @@ router.post("/crear-laboratorio", verifyToken, crearLaboratorio);
 router.put("/update-laboratorio", verifyToken, updateLaboratorio);
 router.put("/update-categoria", verifyToken, updateCategoria);
 router.put("/update-seccion", verifyToken, updateSeccion);
+router.put("/update-sede", verifyToken, updateSede);
 router.put("/update-examen", verifyToken, updateExamen);
 router.put("/update-examen-tabla", verifyToken, updateExamenTabla);
 router.put("/update-caracteristica", verifyToken, updateCaracteristica);
