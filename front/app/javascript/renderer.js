@@ -7,15 +7,17 @@
  */
 
 async function renderer() {
-  const token = await login.getToken();
-  console.log("🚀 ~ file: renderer.js:12 ~ renderer ~ token:", token)
-  if (token) {
-   /*  document.getElementById("isLog").hidden = false;
-  document.getElementById("login").hidden = true; */
 
-  }
-  //document.getElementsByClassName('open-overlay')[0].click()
-
+  const {data:sedes} = await axios.get(
+    urlsv + "/api/users/sedes",
+  );
+  const select=document.getElementById('selectSede')
+  sedes.forEach(element => {
+    select.innerHTML+=`
+    <option value="${element.id}">${element.nombre}</option>
+    
+    `
+  });
 }
 
 async function loguear(e) {
@@ -35,7 +37,7 @@ async function loguear(e) {
   try {
     const { data } = await axios.post(urlsv + "/api/users/login", { user, pass });
     await login.storeToken(data);
- 
+    await sedeVar.store(document.getElementById('selectSede').value)
   } catch (error) {
     console.log(error);
     if (error.response.data.mensaje) {

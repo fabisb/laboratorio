@@ -5,12 +5,13 @@ let examenesDelPaciente = [];
 let examenesPendientes=[];
 var examenDataPc;
 let reimpresionArray = [];
-var nivelUser
+var nivelUser,cedulaUser
 var examenPendiente
 
 async function tok(){
   let token = await login.getToken()
   nivelUser = token.nivel
+  cedulaUser= token.cedula
 
   const elementsNivel= document.getElementsByClassName('user'+nivelUser)
   console.log(elementsNivel)
@@ -265,11 +266,16 @@ const render = async () => {
     console.log(laboratorios)
     examenes = examenesGet;
     console.log("🚀 ~ render ~ examenes:", examenes);
-    const { data: bioanalistas } = await axios.get(
+    let { data: bioanalistas } = await axios.get(
       urlsv + "/api/examenes/get-bioanalistas",
       { headers: { token } }
     );
     const selectBio = document.getElementById("selectBioAnalista");
+
+    if(nivelUser==3){
+      bioanalistas= bioanalistas.filter(e=>e.cedula==cedulaUser)
+      selectBio.setAttribute('disabled','true')
+    }
     bioanalistas.forEach((b) => {
       selectBio.innerHTML += `
       <option value='${b.id}'>${b.nombre}</option>
@@ -2074,11 +2080,19 @@ async function previewPdf(tipo){
 
 async function guardarOrden(tipo){
 
+  const sedeVar2 = await sedeVar.get()
 
   const inputOrden=document.getElementById("inputOrden");
   const selectBioAnalista=document.getElementById("selectBioAnalista");
   const inputExpediente = document.getElementById('inputPacienteExpediente');
-
+  if (inputExpediente.value == '') {
+       const alertaModal=new bootstrap.Modal("#error-orden-modal",{
+    }).toggle()
+    
+    
+    document.getElementById(`messageAlertaExamenErrorP`).innerText=`EL NUMERO DE EXPEDIENTE NO PUEDE SER VACIO`  
+    return
+  }
   
   let examenes = [
 
@@ -2130,11 +2144,12 @@ async function guardarOrden(tipo){
   }
   try {
     const { token } = await login.getToken();
+    const {id}  = await login.getToken();
     
   
     const res = await axios.post(
       urlsv + "/api/examenes/crear-orden",
-      { orden },
+      { orden,sedeVar:sedeVar2,user:id },
       { headers: { token } }
     );
     console.log(res)
