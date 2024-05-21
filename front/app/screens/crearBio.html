@@ -97,7 +97,7 @@
                 
                 <div class="radio-item col" style="margin-top: 15px;">
                   <input
-                    
+                    value="1"
                     name="radio"
                     id="radio1"
                     type="radio"
@@ -105,6 +105,7 @@
                 </div>
                 <div class="radio-item col">
                   <input
+                  value="3"
                     onclick="formularioCreacion('3')"
                     name="radio"
                     id="radio4"
@@ -113,6 +114,7 @@
                 </div>
                 <div class="radio-item col">
                   <input
+                  value="2"
                     onclick="formularioCreacion('2')"
                     name="radio"
                     id="radio3"
@@ -234,8 +236,22 @@
                     />
                   </div>
                 </div>
-            
-
+                    
+                <div class="row mb-3" id="nivelDiv" hidden >
+                  <div class="col-4">
+                    <label for="correo" class="form-label">Nivel: </label>
+                  </div>
+                  <div class="col-8">
+                    <select
+                    id="nivel"
+                    class="form-select formulario"
+                    aria-label="Default select example"
+                  >
+                    <option value="1">ADMINISTRADOR</option>
+                    <option value="2" selected>AUXILIAR</option>
+                  </select>
+                  </div>
+                </div>
                 <div class="row mb-3 bioanalistaDiv" hidden>
                   <div class="col-6">
                     <input
@@ -243,7 +259,7 @@
                       disabled
                       class="form-control formulario"
                       id="colegio"
-                      placeholder="Ingrese su numero de Colegio"
+                      placeholder="Colegio"
                     />
                   </div>
                   <div class="col-6">
@@ -252,7 +268,7 @@
                       disabled
                       class="form-control formulario"
                       id="ministerio"
-                      placeholder="Ingrese su numero de ministerio"
+                      placeholder="Ministerio"
                     />
                   </div>
                 </div>

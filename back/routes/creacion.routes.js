@@ -10,7 +10,7 @@ import {
   editarBioanalista,
   cambiarStatus,
   buscarUsuarios,
-  crearBioanalsita,crearUsuario
+  crearBioanalista,crearUsuario
 } from "../controllers/creacion.controller.js";
 var router = express.Router();
 
@@ -21,10 +21,12 @@ router.get("/buscar-bioanalista", verifyToken, buscarBioanalista);
 
 //POST
 router.post("/agregar-paciente", verifyToken, agregarPacienteController);
+
 router.post("/agregar-usuario", verifyToken, agregarUsuarioController);
 router.post("/agregar-bioanalista", verifyToken, agregarBioanalistaController);
+
 router.post("/guardar-usuario", crearUsuario);
-router.post("/guardar-bioanalista", crearBioanalsita);
+router.post("/guardar-bioanalista", crearBioanalista);
 
 //PUT
 router.put("/editar-usuario", verifyToken, editarUsuario);

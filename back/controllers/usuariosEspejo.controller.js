@@ -21,9 +21,14 @@ export const crearBioanalsita = async (req, res) => {
   let cedulaValidacion;
 
   const validacion = bioanalista.some((el) => {
-    if (el.value == "") {
-      console.log(`Campo ${el.name} vacio`);
-      return true;
+    if (el.name == "direccion" || el.name == "correo") {
+      
+     
+    }else{
+      if (el.value == "") {
+        console.log(`Campo ${el.name} vacio`);
+        return true;
+      }
     }
     if (el.name == "telefono") {
       let validarletra = false;
@@ -134,27 +139,13 @@ export const crearUsuario = async (req, res) => {
     });
   }
 
-  if (correo.split("@")[0] == "" || correo.split("@")[1] == "") {
-    return await res.status(401).json({
-      mensaje: "Ingrese un correo valido",
-    });
-  }
-  if (!correo.split("@")[1].split(".")[1].includes("com")) {
-    return await res.status(401).json({
-      mensaje: "Ingrese un correo valido",
-    });
-  }
   if (password == "") {
     return await res.status(401).json({
       mensaje: "Ingrese una clave valida",
     });
   }
 
-  if (direccion == "") {
-    return await res.status(401).json({
-      mensaje: "Ingrese una direccion valida",
-    });
-  }
+ 
   if (nivel != "1" && nivel != "2" && nivel != "3") {
     return await res.status(401).json({
       mensaje: "Nivel de usuario no valido",
