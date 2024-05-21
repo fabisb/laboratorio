@@ -88,12 +88,12 @@ async function modificarFormulario(id, nombre) {
     const colegioInp = document.getElementById("colegio");
     const ministerioInp = document.getElementById("ministerio");
     const firmaInp = document.getElementById("firma");
-
+    tipoInp.setAttribute('disabled','true');
+    //tipoInp.removeAttribute('disabled');
     for (let index = 0; index < biodiv.length; index++) {
       const element = biodiv[index];
       element.removeAttribute("hidden");
     }
-    console.log(bioanalista[0]);
     colegioInp.value = bioanalista[0].colegio;
     ministerioInp.value = bioanalista[0].ministerio;
     ingreso.value = moment(bioanalista[0].ingreso).format("YYYY-MM-DD");
@@ -101,6 +101,7 @@ async function modificarFormulario(id, nombre) {
       .getElementById(`guardarButton`)
       .setAttribute("onclick", `modificarBio('${id}','${bioanalista[0].id}')`);
   } else {
+    document.getElementById('bioOption').hidden = true;
     document
       .getElementById(`guardarButton`)
       .setAttribute("onclick", `modificarUsuario('${id}')`);
@@ -116,6 +117,9 @@ async function modificarFormulario(id, nombre) {
 
 function crearUsuario() {
   const biodiv = document.getElementsByClassName("bioanalistaDiv");
+
+    document.getElementById("tipo").removeAttribute('disabled');
+    document.getElementById('bioOption').hidden = false;
 
   for (let index = 0; index < biodiv.length; index++) {
     const element = biodiv[index];
