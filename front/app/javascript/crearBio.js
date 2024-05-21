@@ -307,7 +307,8 @@ const guardarUsuario = async (tipo) => {
 function formularioCreacion(nivel) {
   console.log(nivel);
   const buttonGuardar = document.getElementById("guardarButton");
-
+  const nivelDiv = document.getElementById("nivelDiv");
+  nivelDiv.hidden = true;
   const bioDiv = document.getElementsByClassName("bioanalistaDiv");
   const formulario = document.getElementsByClassName("formulario");
   for (let index = 0; index < formulario.length; index++) {
@@ -1072,6 +1073,10 @@ const modificarFormBio = async (id, idBio) => {
     const element = formulario[index];
     element.removeAttribute("disabled");
   }
+
+  const nivelDiv = document.getElementById("nivelDiv");
+  nivelDiv.hidden = true;
+
   const buttonGuardar = document.getElementById("guardarButton");
   buttonGuardar.setAttribute("onclick", `modificarBio('${id}','${idBio}')`);
 };
@@ -1083,12 +1088,10 @@ const modificarFormUser = async (id) => {
     element.removeAttribute("disabled");
   }
 
-  const usuarioInfo = usuariosArray.usuarios.find((e) => e.id == id);
-  usuarioInfo.nivel == 1
-    ? document.getElementById("radio1").click()
-    : document.getElementById("radio3").click();
- 
+
+
   const nivelDiv = document.getElementById("nivelDiv");
+  nivelDiv.hidden = false;
 
   const buttonGuardar = document.getElementById("guardarButton");
   buttonGuardar.setAttribute("onclick", `modificarUsuario('${id}')`);
@@ -1109,7 +1112,7 @@ const modificarBio = async (id, idBio) => {
   const ministerio = document.getElementById("ministerio").value;
   const direccion = document.getElementById("direccion").value;
   const correo = document.getElementById("correo").value;
-  const password = document.getElementById("password").value;
+  const password = document.getElementById("clave").value;
 
   if (nombre == "" || telefono == "" || colegio == "" || ministerio == "") {
     //ALERTAS PARA VALIDACION
@@ -1121,17 +1124,17 @@ const modificarBio = async (id, idBio) => {
     const { token } = await login.getToken();
     await axios.put(
       urlsv + "/api/creacion/editar-bioanalista",
-      { id, nombre, telefono, colegio, ministerio, direccion, firma },
+      { id:idBio, nombre, telefono, colegio, ministerio, direccion, firma },
       { headers: { token } }
     );
     await axios.put(
       urlsv + "/api/creacion/editar-usuario",
-      { id: idBio, direccion, nombre, telefono, correo, password },
+      { id , direccion, nombre, telefono, correo, password },
       { headers: { token } }
     );
     const modal = new bootstrap.Modal("#confirmacion-modificar-modalBio");
     modal.show();
-    cambiarCrearBio();
+    await buscarUsuarios()
   } catch (error) {
     console.log(error);
     if (error.response.data.mensaje) {
@@ -1146,7 +1149,7 @@ const modificarUsuario = async (id) => {
   const nombre = document.getElementById("nombre").value;
   const telefono = document.getElementById("telefono").value;
   const correo = document.getElementById("correo").value;
-  const password = document.getElementById("password").value;
+  const password = document.getElementById("clave").value;
   const nivel = document.getElementById("nivel").value;
 
 
@@ -1168,7 +1171,7 @@ const modificarUsuario = async (id) => {
 
     const modal = new bootstrap.Modal("#confirmacion-modificar-modalPaci");
     modal.show();
-    cambiarCrearUsuario();
+    await buscarUsuarios()
   } catch (error) {
 
     console.log(error);
