@@ -146,20 +146,27 @@ const reimprimirExamen = async () => {
     });
 
     document.getElementsByName("examenContainer")[0].innerHTML += `
+    <div  ${
+      index + 1 == [...bioSet].length
+        ? 'style="page-break-before:avoid"'
+        : 'style="page-break-after:always"'
+    } class="d-flex justify-content-center">
+    <div class="card-body my-auto text-start">
+      <h5>Lcd. ${bioanalistaInfo?.nombre}</h5>
+      <h6>BIOANALISTA</h6>
+      <h6>C.I.: ${bioanalistaInfo?.cedula} - COBIOZUL: ${
+        bioanalistaInfo?.colegio
+      } - MSDS: ${bioanalistaInfo?.ministerio} </h6>
+    </div>
   <img id='bioanalistaFirma${bio}' style="width: 150px;" class="card-img-top mx-auto my-auto" alt="firma Ej">
-  <div class="card-body text-center">
-    <h5>Lcd. ${bioanalistaInfo?.nombre}</h5>
-    <h6>BIOANALISTA</h6>
-    <h6>C.I.: ${bioanalistaInfo?.cedula} - COBIOZUL: ${
-      bioanalistaInfo?.colegio
-    } - MSDS: ${bioanalistaInfo?.ministerio} </h6>
   </div>
-  ${
+ 
+  `;
+ /*  ${
     index + 1 == [...bioSet].length
       ? ""
       : '<div style="page-break-before:always"></div> '
-  }
-    `;
+  } */
     document.getElementById(`bioanalistaFirma${bio}`).src =
       bioanalistaInfo.foto_firma;
   }
@@ -235,12 +242,16 @@ const pintarExamen = async () => {
   <h4>REIMPRESION</h4>
 </div>`
       : `
-<img id='bioanalistaFirma'  class="card-img-top w-50 mx-auto my-auto" alt="firma Ej">
-<div class="card-body text-center">
-  <h4>Lcd. ${bioanalista?.nombre}</h4>
-  <h5>BIOANALISTA</h5>
-  <h5>C.I.: ${bioanalista?.cedula} - COBIOZUL: ${bioanalista?.colegio} - MSDS: ${bioanalista?.ministerio} </h5>
-</div>`
+      <div class="card-body my-auto text-start">
+        <h5>Lcd. ${bioanalista?.nombre}</h5>
+        <h6>BIOANALISTA</h6>
+        <h6>C.I.: ${bioanalista?.cedula} - COBIOZUL: ${
+          bioanalista?.colegio
+        } - MSDS: ${bioanalista?.ministerio} </h6>
+      </div>
+      <img id='bioanalistaFirma' style="width: 150px;" class="card-img-top mx-auto my-auto" alt="firma Ej">
+    `
+
   }  
   `;
 

@@ -299,7 +299,7 @@ ipcMain.on("print", async (e, arg) => {
         <style>
         ${ccsData}
         </style>
-        <main class="container-fluid m-6 fs-2">
+        <main class="container my-6 mx-12 fs-2">
         <div class="container text-center">
         <div class="row">
       <div class="col my-1">
