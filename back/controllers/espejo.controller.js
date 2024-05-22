@@ -119,6 +119,217 @@ export const getExamenDia= async (req,res)=>{
     }
 
 }
+export const updateSede = async (req, res) => {
+    const { id_sede, nombre } = req.body;
+  
+    if (!id_sede|| id_sede < 0 || isNaN(id_sede)) {
+      return await res
+        .status(400)
+        .json({ mensaje: "El id de la sede enviado no es valido" });
+    }
+    if (!nombre || nombre == "") {
+      return await res
+        .status(400)
+        .json({ mensaje: "El nombre a ingresar no es valido" });
+    }
+    try {
+      const [existenteName] = await pool.execute(
+        "SELECT * FROM sede where nombre = ?",
+        [nombre]
+      );
+      if(existenteName.length>0){
+        return await res.status(200).json({
+          mensaje: `La seccion no se ha podido ingresar por duplicidad en el nombre`,
+        });
+      }
+      const [existente] = await pool.execute(
+        "SELECT * FROM sede where id = ?",
+        [id_sede]
+      );
+      if (existente.length > 0) {
+        await pool.execute("UPDATE sede SET nombre = ? WHERE id = ?", [
+          nombre,
+          id_sede,
+        ]);
+        return await res.status(200).json({
+          mensaje: `La sede #${id_sede} ha sido modificado correctamente`,
+        });
+      } else {
+        return await res
+          .status(400)
+          .json({ mensaje: "El id de la sede no existe" });
+      }
+    } catch (error) {
+      console.log("🚀 ~ updateSeccion ~ error:", error);
+      return await res
+        .status(500)
+        .json({ mensaje: "Ha ocurrido un error en el servidor" });
+    }
+  };
+  
+
+export const updateLaboratorio = async (req, res) => {
+    const { id_laboratorio, razon,direccion,telefono,rif } = req.body;
+  
+    if (!id_laboratorio || id_laboratorio < 0 || isNaN(id_laboratorio)) {
+      return await res
+        .status(400)
+        .json({ mensaje: "El id del laboratorio enviado no es valido" });
+    }
+    if (!razon || razon == "") {
+      return await res
+        .status(400)
+        .json({ mensaje: "El nombre a ingresar no es valido" });
+    }
+    try {
+      const [nombreExistente] = await pool.execute(
+        "SELECT razon_social FROM laboratorios_externos WHERE razon_social = ? AND id != ? ",
+        [razon, id_laboratorio]
+      );
+      const [rifExistente] = await pool.execute(
+        "SELECT rif FROM laboratorios_externos WHERE rif = ? AND id != ?",
+        [rif,id_laboratorio]
+      );
+  
+      if (nombreExistente.length > 0 || rifExistente.length>0) {
+        return await res.status(400).json({
+          mensaje: "El nombre/rif que intenta agregar para este laboratorio ya existe",
+        });
+      } else {
+        const [categoria] = await pool.execute(
+          "UPDATE laboratorios_externos set razon_social = ?, direccion = ?, rif = ?, telefono =? where id = ?",
+          [razon,direccion,rif,telefono,id_laboratorio]
+        );
+        return await res.status(200).json({
+          mensaje: "Laboratorio insertado correctamente",
+          laboratorioId: categoria.insertId,
+        });
+      }
+    } catch (error) {
+      console.log("🚀 ~ updateSeccion ~ error:", error);
+      return await res
+        .status(500)
+        .json({ mensaje: "Ha ocurrido un error en el servidor" });
+    }
+  };
+
+
+export const crearSede = async (req, res) => {
+    const { nombre } = req.body;
+    try {
+      if (!nombre || nombre == "") {
+        return await res
+          .status(400)
+          .json({ mensaje: "Ingrese un nombre valido" });
+      }
+      const [nombreExistente] = await pool.execute(
+        "SELECT nombre FROM sede WHERE nombre = ?",
+        [nombre]
+      );
+      if (nombreExistente.length > 0) {
+        return await res.status(400).json({
+          mensaje: "El nombre que intenta agregar para esta sede ya existe",
+        });
+      } else {
+        const [sede] = await pool.execute(
+          "INSERT INTO sede (nombre) VALUES (?)",
+          [nombre]
+        );
+        return await res.status(200).json({
+          mensaje: "Sede insertada correctamente",
+          seccionId: sede.insertId,
+        });
+      }
+    } catch (error) {
+      console.log(error);
+      return await res
+        .status(500)
+        .json({ mensaje: "Ha ocurrido un error en el servidor" });
+    }
+  };
+
+export const crearLaboratorio = async (req, res) => {
+    const { rif,razon,direccion,telefono } = req.body;
+    try {
+      if (!rif || rif == "" || rif<0) {
+        return await res
+          .status(400)
+          .json({ mensaje: "Ingrese un rif valido" });
+      }
+      if (!razon|| razon == "") {
+        return await res
+          .status(400)
+          .json({ mensaje: "Ingrese un nommbre valido" });
+      }
+      
+      const [nombreExistente] = await pool.execute(
+        "SELECT razon_social FROM laboratorios_externos WHERE razon_social = ?",
+        [razon]
+      );
+      const [rifExistente] = await pool.execute(
+        "SELECT rif FROM laboratorios_externos WHERE rif = ?",
+        [rif]
+      );
+  
+      if (nombreExistente.length > 0 || rifExistente.length>0) {
+        return await res.status(400).json({
+          mensaje: "El nombre/rif que intenta agregar para este laboratorio ya existe",
+        });
+      } else {
+        const [categoria] = await pool.execute(
+          "INSERT INTO laboratorios_externos (rif,razon_social,direccion,telefono) VALUES (?,?,?,?)",
+          [rif,razon,direccion,telefono]
+        );
+        return await res.status(200).json({
+          mensaje: "Laboratorio insertado correctamente",
+          laboratorioId: categoria.insertId,
+        });
+      }
+    } catch (error) {
+      console.log(error);
+      return await res
+        .status(500)
+        .json({ mensaje: "Ha ocurrido un error en el servidor" });
+    }
+  };
+
+
+export const getSedes = async (req, res) => {
+    try {
+      const [sedes] = await pool.execute("SELECT * FROM sede");
+      if (sedes.length == 0) {
+        return await res
+          .status(404)
+          .json({ mensaje: "No se encuentran sedes" });
+      } else {
+        return await res.status(200).json(sedes);
+      }
+    } catch (error) {
+      console.log(error);
+      return await res
+        .status(500)
+        .json({ mensaje: "Ha ocurrido un error en el servidor" });
+    }
+  };
+
+  export const getLaboratorios = async (req, res) => {
+    try {
+      const [laboratorios] = await pool.execute("SELECT * FROM laboratorios_externos");
+      if (laboratorios.length == 0) {
+        return await res
+          .status(404)
+          .json({ mensaje: "No se encuentran laboratorios" });
+      } else {
+        return await res.status(200).json(laboratorios);
+      }
+    } catch (error) {
+      console.log(error);
+      return await res
+        .status(500)
+        .json({ mensaje: "Ha ocurrido un error en el servidor" });
+    }
+  };
+
 
 export const getExamenByFecha= async (req,res)=>{
     try {

@@ -1,4 +1,143 @@
 let examenesDia  =[]
+let laboratoriosArray =[]
+let sedesArray=[]
+
+function modificarSede(id,nombre){
+  formularioSede()
+  const sede= document.getElementById('sede')
+
+  sede.value=nombre
+  document.getElementById('guardarCrudLab').setAttribute('onclick',`guardarModSede(${id})`)
+}
+
+function modificarLaboratorio(id,razon1,rif1,direccion1,telefono1){
+  formularioLaboratorio()
+  const rif=document.getElementById('rif')
+  const direccion= document.getElementById('direccion')
+  const razon=document.getElementById('razonSocial')
+  const telefono=document.getElementById('telefono')
+
+  rif.value=rif1
+  direccion.value=direccion1
+  razon.value=razon1
+  telefono.value=telefono1
+  document.getElementById('guardarCrudLab').setAttribute('onclick',`guardarModLaboratorio(${id})`)
+}
+
+async function guardarModLaboratorio(id){
+  const rif=document.getElementById('rif')
+  const direccion= document.getElementById('direccion')
+  const razon=document.getElementById('razonSocial')
+  const telefono=document.getElementById('telefono')
+  const alerta = document.getElementById('alertaInicio')
+  
+
+  if(rif.value=="" || rif.value<0){
+    alerta.className='alert alert-danger row'
+    
+    alerta.innerHTML=`<span class="text-center">/RIF no ingresado <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" fill="currentColor" class="bi bi-x" viewBox="0 0 16 16">
+    <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708"/>
+  </svg></span>`
+  }else if(razon.value==""){
+    alerta.className='alert alert-danger row'
+    return alerta.innerHTML=`<span class="text-center">Razon social Invalida <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" fill="currentColor" class="bi bi-x" viewBox="0 0 16 16">
+    <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708"/>
+  </svg></span>`
+  }else{
+  
+  try {
+  const { data } = await axios.put(
+    "http://localhost:3000/api/espejo/update-laboratorio",
+    {
+      id_laboratorio:id,
+      razon:razon.value,telefono:telefono.value,direccion:direccion.value,rif:rif.value
+    }
+  );
+  console.log(data)
+ 
+  
+
+
+  
+  render()
+
+
+  rif.value='';razon.value='';telefono.value='';direccion.value=''
+    
+  alerta.className='alert alert-success row'
+  alerta.innerHTML=`<span class="text-center">Laboratorio insertado correctamente <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-check2-all" viewBox="0 0 16 16">
+  <path d="M12.354 4.354a.5.5 0 0 0-.708-.708L5 10.293 1.854 7.146a.5.5 0 1 0-.708.708l3.5 3.5a.5.5 0 0 0 .708 0zm-4.208 7-.896-.897.707-.707.543.543 6.646-6.647a.5.5 0 0 1 .708.708l-7 7a.5.5 0 0 1-.708 0"/>
+  <path d="m5.354 7.146.896.897-.707.707-.897-.896a.5.5 0 1 1 .708-.708"/>`
+
+} catch (error) {
+  console.log(error);
+  if (error.response.data.mensaje) {
+    alerta.className='alert alert-danger row'
+    alerta.innerHTML=`<span class="text-center">${error.response.data.mensaje} <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" fill="currentColor" class="bi bi-x" viewBox="0 0 16 16">
+    <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708"/>
+  </svg></span>`
+  } else {
+    alerta.className='alert alert-danger row'
+    alerta.innerHTML=`<span class="text-center">ERROR <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" fill="currentColor" class="bi bi-x" viewBox="0 0 16 16">
+    <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708"/>
+  </svg></span>`
+  }
+}
+}
+alerta.removeAttribute('hidden')
+
+setTimeout(() => {
+  alerta.setAttribute('hidden','true')
+}, 3000);
+
+}
+
+async function guardarModSede(id){
+  const sede = document.getElementById('sede').value
+  const alerta = document.getElementById('alertaInicio')
+  
+  if(sede==''){
+    alerta.className='alert alert-danger row'
+    alerta.innerHTML=`<span class="text-center">${error.response.data.mensaje} <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" fill="currentColor" class="bi bi-x" viewBox="0 0 16 16">
+      <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708"/>
+    </svg></span>`
+    
+    
+  }else{
+  try {
+  const { data:res } = await axios.put(
+    "http://localhost:3000/api/espejo/update-sede",
+    {
+      id_sede:id,
+      nombre:sede
+    }
+  );
+  alerta.className='alert alert-success row'
+    alerta.innerHTML=`<span class="text-center">Sede insertada correctamente <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-check2-all" viewBox="0 0 16 16">
+    <path d="M12.354 4.354a.5.5 0 0 0-.708-.708L5 10.293 1.854 7.146a.5.5 0 1 0-.708.708l3.5 3.5a.5.5 0 0 0 .708 0zm-4.208 7-.896-.897.707-.707.543.543 6.646-6.647a.5.5 0 0 1 .708.708l-7 7a.5.5 0 0 1-.708 0"/>
+    <path d="m5.354 7.146.896.897-.707.707-.897-.896a.5.5 0 1 1 .708-.708"/>
+  </svg></span>`
+    render();
+  } catch (error) {
+    console.log(error);
+    if (error.response.data.mensaje) {
+      alerta.className='alert alert-danger row'
+      alerta.innerHTML=`<span class="text-center">${error.response.data.mensaje} <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" fill="currentColor" class="bi bi-x" viewBox="0 0 16 16">
+      <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708"/>
+    </svg></span>`
+    } else {
+      alerta.className='alert alert-danger row'
+      alerta.innerHTML=`<span class="text-center">ERROR <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" fill="currentColor" class="bi bi-x" viewBox="0 0 16 16">
+      <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708"/>
+    </svg></span>`
+    }
+  }
+  }
+  alerta.removeAttribute('hidden')
+  setTimeout(() => {
+    alerta.setAttribute('hidden','true')
+  }, 3000);
+}
 
 
 
@@ -10,6 +149,270 @@ function validarSelect(value){
  
   
 }
+
+async function crearLaboratorio(){
+  const alerta = document.getElementById('alertaInicio')
+  const rif=document.getElementById('rif')
+  const direccion= document.getElementById('direccion')
+  const razon=document.getElementById('razonSocial')
+  const telefono=document.getElementById('telefono')
+  console.log(rif.value,razon.value,telefono.value,direccion.value)
+  if(rif.value=="" || rif.value<0){
+    alerta.className='alert alert-danger row'
+    return alerta.innerHTML=`<span class="text-center">/RIF no ingresado <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" fill="currentColor" class="bi bi-x" viewBox="0 0 16 16">
+    <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708"/>
+  </svg></span>`
+  }else if(razon.value==""){
+    alerta.className='alert alert-danger row'
+    return alerta.innerHTML=`<span class="text-center">Razon social Invalida <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" fill="currentColor" class="bi bi-x" viewBox="0 0 16 16">
+    <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708"/>
+  </svg></span>`
+  }else{
+  
+  
+  try {
+    
+    
+    const res = await axios.post("http://localhost:3000/api/espejo/crear-laboratorio",{rif:rif.value,razon:razon.value,telefono:telefono.value,direccion:direccion.value})
+    console.log(res)
+    render();
+    rif.value='';razon.value='';telefono.value='';direccion.value=''
+    
+    alerta.className='alert alert-success row'
+    alerta.innerHTML=`<span class="text-center">Laboratorio insertado correctamente <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-check2-all" viewBox="0 0 16 16">
+    <path d="M12.354 4.354a.5.5 0 0 0-.708-.708L5 10.293 1.854 7.146a.5.5 0 1 0-.708.708l3.5 3.5a.5.5 0 0 0 .708 0zm-4.208 7-.896-.897.707-.707.543.543 6.646-6.647a.5.5 0 0 1 .708.708l-7 7a.5.5 0 0 1-.708 0"/>
+    <path d="m5.354 7.146.896.897-.707.707-.897-.896a.5.5 0 1 1 .708-.708"/>`
+
+  } catch (error) {
+    console.log(error);
+    if (error.response.data.mensaje) {
+      alerta.className='alert alert-danger row'
+      alerta.innerHTML=`<span class="text-center">${error.response.data.mensaje} <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" fill="currentColor" class="bi bi-x" viewBox="0 0 16 16">
+      <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708"/>
+    </svg></span>`
+    } else {
+      alerta.className='alert alert-danger row'
+      alerta.innerHTML=`<span class="text-center">ERROR <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" fill="currentColor" class="bi bi-x" viewBox="0 0 16 16">
+      <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708"/>
+    </svg></span>`
+    }
+  }
+  }
+  alerta.removeAttribute('hidden')
+
+  setTimeout(() => {
+    alerta.setAttribute('hidden','true')
+  }, 3000);
+
+}
+async function render(){
+  const tBody=document.getElementById(`tBodyTabLab`)
+  tBody.innerHTML=''
+  const {data:sedes} = await axios.get(
+    "http://localhost:3000/api/espejo/sedes"
+  );
+  const {data:laboratorios} = await axios.get(
+    "http://localhost:3000/api/espejo/laboratorios"
+  );
+  laboratoriosArray=laboratorios;sedesArray=sedes
+  laboratorios.forEach(e=>{
+    tBody.innerHTML+=`
+    <tr>
+                              <td>${e.id}</td>
+                              <td>${e.razon_social}</td>
+                              <td><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="orange" onclick="modificarLaboratorio(${e.id},'${e.razon_social}','${e.rif}','${e.direccion}','${e.telefono}')" class="bi bi-pencil-square" viewBox="0 0 16 16">
+                                <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
+                                <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z"/>
+                              </svg></td>
+                              <td><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="red" class="bi bi-x-circle" viewBox="0 0 16 16">
+                                <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
+                                <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708"/>
+                              </svg></td>
+                            </tr>
+    `
+  })
+}
+
+function validarSelectLab(value){
+  document.getElementById('inputBusqueda').setAttribute('oninput',`buscar${value}(value)`)
+  document.getElementById('inputBusqueda').value=''
+
+  if(value=='Laboratorio'){
+
+    buscarLaboratorio()
+  }else{
+    buscarSede()
+  }
+}
+async function crearSede(){
+  const sede = document.getElementById('sede').value
+  const alerta = document.getElementById('alertaInicio')
+
+  if(sede==''){
+    alerta.className='alert alert-danger row'
+    return   alerta.innerHTML=`<span class="text-center">La Sede No puede estar vacia <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" fill="currentColor" class="bi bi-x" viewBox="0 0 16 16">
+      <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708"/>
+    </svg></span>`
+  }else{
+  try {
+    const {data:res} = await axios.post(
+      `http://localhost:3000/api/espejo/crear-sede`,
+      {
+        nombre:sede
+      },
+      
+    );
+    console.log(res)
+    alerta.className='alert alert-success row'
+    alerta.innerHTML=`<span class="text-center">Sede insertada correctamente <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-check2-all" viewBox="0 0 16 16">
+    <path d="M12.354 4.354a.5.5 0 0 0-.708-.708L5 10.293 1.854 7.146a.5.5 0 1 0-.708.708l3.5 3.5a.5.5 0 0 0 .708 0zm-4.208 7-.896-.897.707-.707.543.543 6.646-6.647a.5.5 0 0 1 .708.708l-7 7a.5.5 0 0 1-.708 0"/>
+    <path d="m5.354 7.146.896.897-.707.707-.897-.896a.5.5 0 1 1 .708-.708"/>
+  </svg></span>`
+    render();
+  } catch (error) {
+    console.log(error);
+    if (error.response.data.mensaje) {
+      alerta.className='alert alert-danger row'
+      alerta.innerHTML=`<span class="text-center">${error.response.data.mensaje} <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" fill="currentColor" class="bi bi-x" viewBox="0 0 16 16">
+      <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708"/>
+    </svg></span>`
+    } else {
+      alerta.className='alert alert-danger row'
+      alerta.innerHTML=`<span class="text-center">ERROR <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" fill="currentColor" class="bi bi-x" viewBox="0 0 16 16">
+      <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708"/>
+    </svg></span>`
+    }
+  }
+  }
+  alerta.removeAttribute('hidden')
+
+  setTimeout(() => {
+    alerta.setAttribute('hidden','true')
+  }, 3000);
+
+}
+function formularioSede(){
+  const container = document.getElementById('formularioRow')
+  document.getElementById('h1Tipo').innerText='SEDE'
+  container.innerHTML=`
+  <div class="row mb-3 mt-3">
+                    <div class="col-4">
+                      <label for="sede" class="form-label">Sede: </label>
+                    </div>
+                    <div class="col-8">
+                      <input type="text" class="form-control" id="sede" placeholder="Sede">
+                    </div>
+  
+                  </div>
+  `
+  document.getElementById('guardarCrudLab').setAttribute('onclick','crearSede()')
+}
+function formularioLaboratorio(){
+  const container = document.getElementById('formularioRow')
+  document.getElementById('h1Tipo').innerText='LABORATORIO'
+  container.innerHTML=`
+  <div class="row mb-3 mt-3">
+  <div class="col-4">
+    <label for="rif" class="form-label">RIF: </label>
+  </div>
+  <div class="col-8">
+    <input type="number" min="0" class="form-control" id="rif" placeholder="RIF del laboratorio">
+  </div>
+
+  </div>
+  <div class="row mb-3">
+    <div class="col-4">
+      <label for="razonSocial" class="form-label">Razon Social: </label>
+    </div>
+    <div class="col-8">
+      <input type="text" class="form-control" id="razonSocial" placeholder="Razon Social del laboratorio">
+    </div>
+
+  </div>
+  <div class="row mb-3">
+    <div class="col-4">
+      <label for="direccion" class="form-label">Direccion: </label>
+    </div>
+    <div class="col-8">
+      <input type="text" class="form-control" id="direccion" placeholder="Direccion del laboratorio">
+    </div>
+
+  </div>
+  <div class="row mb-3">
+    <div class="col-4">
+      <label for="telefono" class="form-label">Telefono: </label>
+    </div>
+    <div class="col-8">
+      <input type="number" min="0" class="form-control" id="telefono" placeholder="Telefono del laboratorio">
+    </div>
+
+  </div>
+  `
+  document.getElementById('guardarCrudLab').setAttribute('onclick','crearLaboratorio()')
+}
+
+function buscarLaboratorio(value){
+  document.getElementById('guardarCrudLab').setAttribute('onclick','crearLaboratorio()')
+  
+  console.log(value)
+  const tBody=document.getElementById(`tBodyTabLab`)
+  tBody.innerHTML=''
+  let labora
+  if(value==null){
+    labora = laboratoriosArray
+  }else{
+    labora= laboratoriosArray.filter(e=>e.razon_social.toLowerCase().includes(value.toLowerCase()))
+
+  }
+  labora.forEach(e=>{
+    tBody.innerHTML+=`
+    <tr>
+                              <td>${e.id}</td>
+                              <td>${e.razon_social}</td>
+                              <td><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="orange" class="bi bi-pencil-square" viewBox="0 0 16 16">
+                                <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
+                                <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z"/>
+                              </svg></td>
+                              <td><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="red" class="bi bi-x-circle" viewBox="0 0 16 16">
+                                <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
+                                <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708"/>
+                              </svg></td>
+                            </tr>
+    `
+  })
+}
+
+function buscarSede(value){
+  document.getElementById('guardarCrudLab').setAttribute('onclick','crearSede()')
+  
+  console.log(value)
+  const tBody=document.getElementById(`tBodyTabLab`)
+  tBody.innerHTML=''
+  let labora
+  if(value==null){
+    labora = sedesArray
+  }else{
+    labora= sedesArray.filter(e=>e.nombre.toLowerCase().includes(value.toLowerCase()))
+
+  }
+  labora.forEach(e=>{
+    tBody.innerHTML+=`
+    <tr>
+                              <td>${e.id}</td>
+                              <td>${e.nombre}</td>
+                              <td><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="orange" onclick='modificarSede("${e.id}","${e.nombre}")' class="bi bi-pencil-square" viewBox="0 0 16 16">
+                                <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
+                                <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z"/>
+                              </svg></td>
+                              <td><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="red" class="bi bi-x-circle" viewBox="0 0 16 16">
+                                <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
+                                <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708"/>
+                              </svg></td>
+                            </tr>
+    `
+  })
+}
+
 
 
 

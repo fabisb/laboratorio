@@ -79,10 +79,7 @@ var laboratoriosData = [];
 const render = async () => {
   try {
     const { token } = await login.getToken();
-    const laboratorios = await axios.get(
-      urlsv + "/api/modulo-examenes/laboratorios",
-      { headers: { token } }
-    );
+
     const secciones = await axios.get(
       urlsv + "/api/modulo-examenes/secciones",
       { headers: { token } }
@@ -95,7 +92,10 @@ const render = async () => {
       urlsv + "/api/modulo-examenes/sedes",
       { headers: { token } }
     );
-    console.log(sedes)
+    const laboratorios = await axios.get(
+      urlsv + "/api/modulo-examenes/laboratorios",
+      { headers: { token } }
+    );
     const { data: examenesGet } = await axios.get(
       urlsv + "/api/examenes/get-examenes",
       { headers: { token } }
