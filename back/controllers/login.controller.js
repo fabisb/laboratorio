@@ -41,6 +41,23 @@ const publics = path.join(__dirname, "../public");
       .json({ mensaje: "Ha ocurrido un error en el servidor" });
   }
 }; */
+export const getSedes = async (req, res) => {
+  try {
+    const [sedes] = await pool.execute("SELECT * FROM sede");
+    if (sedes.length == 0) {
+      return await res
+        .status(404)
+        .json({ mensaje: "No se encuentran sedes" });
+    } else {
+      return await res.status(200).json(sedes);
+    }
+  } catch (error) {
+    console.log(error);
+    return await res
+      .status(500)
+      .json({ mensaje: "Ha ocurrido un error en el servidor" });
+  }
+};
 export const loginController = async (req, res, next) => {
   const { user, pass } = req.body;
   if (!(user || pass) || user == "" || pass == "") {
@@ -50,7 +67,7 @@ export const loginController = async (req, res, next) => {
   }
   try {
     const [id] = await pool.execute(
-      "SELECT id, nivel, password, nombre FROM users WHERE cedula = ?",
+      "SELECT id, nivel, password, nombre, cedula FROM users WHERE cedula = ?",
       [user]
     );
 
@@ -59,14 +76,14 @@ export const loginController = async (req, res, next) => {
 
       if (comparacionClave) {
         var token = await jwt.sign(
-          { id: id[0].id, user, nivel: id[0].nivel, nombre: id[0].nombre},
+          { id: id[0].id, user, nivel: id[0].nivel, nombre: id[0].nombre, cedula : id[0].cedula},
           "secret",
           {
             expiresIn: "1 days",
           }
         );
 
-        return await res.status(200).json({ token, user, nivel: id[0].nivel,nombre: id[0].nombre });
+        return await res.status(200).json({ token, user, nivel: id[0].nivel,nombre: id[0].nombre,cedula : id[0].cedula, id:id[0].id });
       } else {
         return await res.status(404).json({
           mensaje: "Contraseña no valida",
@@ -208,7 +225,7 @@ export async function loginEspejo(req, res) {
   }
   try {
     const [id] = await pool.execute(
-      "SELECT id, nivel, password, nombre FROM users WHERE cedula = ?",
+      "SELECT id, nivel, password, nombre, cedula FROM users WHERE cedula = ?",
       [user]
     );
 
@@ -217,7 +234,7 @@ export async function loginEspejo(req, res) {
 
       if (comparacionClave) {
         var token = await jwt.sign(
-          { id: id[0].id, user, nivel: id[0].nivel },
+          { id: id[0].id, user, nivel: id[0].nivel, cedula: id[0].cedula },
           "secret",
           {
             expiresIn: "1 days",
@@ -261,7 +278,6 @@ export async function loginEspejo(req, res) {
 //COOKIES CONTROLLER
 
 export const imagen = async (req, res, next) => {
-  console.log("imagen");
   const { img, cedula, nombre, colegio } = req.body;
   try {
     await pool.execute(

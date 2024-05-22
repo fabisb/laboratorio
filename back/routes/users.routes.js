@@ -4,6 +4,7 @@ import {
   loginController,
   loginEspejo,
   verifyToken,
+  getSedes
 } from "../controllers/login.controller.js";
 import { getHijosController } from "../controllers/creacion.controller.js";
 import { syncFiles } from "../controllers/imagenesController.js";
@@ -18,5 +19,7 @@ router.post("/imagen", imagen);
 //router.get("/hijos",verifyToken, getHijosController);
 router.get("/get-hijos", verifyToken, getHijosController);
 router.get("/firma", verifyToken, syncFiles);
+router.get("/sedes", getSedes);
+
 
 export default router;

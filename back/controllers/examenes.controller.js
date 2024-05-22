@@ -9,6 +9,8 @@ export const getExamenReimpresion = async(req,res)=>{
       const [examen]= await pool.execute(`SELECT * FROM examenes_paciente where id = ?`,[ex])
       const [infoExamen] = await pool.execute(`SELECT * FROM examenes where id =?`, [examen[0].id_ex])
       const [seccion]= await pool.execute(`SELECT * FROM seccion_examen WHERE id = ?`, [infoExamen[0].id_seccion])
+      const [bioanalista]= await pool.execute(`SELECT * FROM bioanalistas WHERE id = ?`, [examen[0].id_bio])
+
 
       const [detalles]= await pool.execute(`SELECT * FROM detalles_examenes_paciente where id_ex_pac= ?`,[ex])
       let detalles2 =detalles
@@ -43,10 +45,15 @@ export const getExamenReimpresion = async(req,res)=>{
           subCaracteristicas
         })
       }
-      
+      bioanalista[0].foto_firma = `${Buffer.from(
+        bioanalista[0].foto_firma,
+        "base64"
+      )}`
       examenes.push({
         examen: infoExamen[0].nombre,
         nombreSeccion: seccion[0].nombre,
+        bioanalista:bioanalista[0],
+       
         caracteristicas
       })
     }
@@ -593,11 +600,21 @@ export const crearExamen = async (req, res) => {
   }
 };
 export const crearOrden = async (req, res) => {
-  const {orden} = req.body;
+  const {orden,sedeVar,user} = req.body;
+  if (user == '' || sedeVar == "") {
+    return await res
+    .status(400)
+    .json({ mensaje: "Datos de token erroneo"});
+  }
   var ordenId
   console.log("🚀 ~ crearOrden ~ Orden:", orden);
   try {
     const [validarOrden] = await pool.execute(`SELECT id FROM ordenes WHERE orden='${orden.orden}' AND clave = '${orden.clave}'`)
+    if(orden.expediente==''){
+      return await res
+      .status(400)
+      .json({ mensaje: "El expediente no puede estar Vacio"});
+    }
     
     if(validarOrden.length > 0) {
       return await res
@@ -635,7 +652,7 @@ export const crearOrden = async (req, res) => {
     for await (const ex of orden.examenes) {
       console.log(ex)
       const [examenBdd] = await pool.execute(`
-      INSERT INTO examenes_paciente(id_orden, id_ex, id_pac, id_bio) VALUES ('${ordenId}','${ex.id_ex}','${ex.idPac}','${orden.id_bio}')
+      INSERT INTO examenes_paciente(id_orden, id_ex, id_pac, id_bio,id_sede,id_usuario) VALUES ('${ordenId}','${ex.id_ex}','${ex.idPac}','${orden.id_bio}','${sedeVar}','${user}')
       `)
       for await (const dt of ex.detallesExamen){
         const [detalleBdd] = await pool.execute(`

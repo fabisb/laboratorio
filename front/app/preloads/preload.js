@@ -46,6 +46,14 @@ contextBridge.exposeInMainWorld("examenVar", {
   get: async () => await ipcRenderer.invoke("getExamen"),
 });
 
+contextBridge.exposeInMainWorld("sedeVar", {
+  store: async (sede) => {
+    await ipcRenderer.send("sede", sede);
+    return;
+  },
+  get: async () => await ipcRenderer.invoke("getSede"),
+});
+
 contextBridge.exposeInMainWorld("ticket", {
   store: async (producto) => {
     const result = await ipcRenderer.send("setTicketProducto", producto);

@@ -30,6 +30,15 @@ ipcMain.handle("getToken", (event, arg) => {
   return token;
 });
 
+ipcMain.on("sede", async (event, sede) => {
+  store.delete("sede");
+  await store.set("sede", sede);
+});
+ipcMain.handle("getSede", (event, arg) => {
+  const sede = store.get("sede");
+  return sede;
+});
+
 ipcMain.on("examen", async (event, examen) => {
   store.delete("examen");
   await store.set("examen", examen);
