@@ -4,16 +4,16 @@ import { modificarResultadoExamen,modificarExamenExterno,modificarLaboratorio,de
 var router = express.Router();
 
 //GET
-router.get("/get-bioanalistas", verifyToken, getBioanalistas);
-router.get("/get-paciente", verifyToken, getPaciente);
-router.get("/get-pendientes-paciente", verifyToken, getPendientesPaciente);
-router.get("/get-pendiente-examen", verifyToken, getPendienteExamen);
-router.get("/get-paciente-hijo", verifyToken, getPacienteHijo);
-router.get("/get-examenes", verifyToken,getExamenes);
-router.get("/get-paciente-externo", verifyToken,getExamenesExternos);
-router.get("/get-examenesPaciente", verifyToken,getExamenesPaciente);
-router.get("/get-caracteristicasExamenPaciente", verifyToken,getCaracteristicasExamenPaciente);
-router.get("/resultados-examen", verifyToken, getExamenResultados);
+router.get("/get-bioanalistas", verifyToken, getBioanalistas);//TODOS
+router.get("/get-paciente", verifyToken, getPaciente);//TODOS
+router.get("/get-pendientes-paciente", verifyToken, getPendientesPaciente);//TODOS
+router.get("/get-pendiente-examen", verifyToken, getPendienteExamen);//TODOS
+router.get("/get-paciente-hijo", verifyToken, getPacienteHijo);//TODOS
+router.get("/get-examenes", verifyToken,getExamenes);//TODOS
+router.get("/get-paciente-externo", verifyToken,getExamenesExternos);//TODOS
+router.get("/get-examenesPaciente", verifyToken,getExamenesPaciente);//TODOS
+router.get("/get-caracteristicasExamenPaciente", verifyToken,getCaracteristicasExamenPaciente);//TODOS
+router.get("/resultados-examen", verifyToken, getExamenResultados);//TODOS
 
 
 
@@ -22,26 +22,26 @@ router.get("/resultados-examen", verifyToken, getExamenResultados);
 
 
 //POST
-router.post("/get-examen",getExamen);
-router.post("/crear-examen", verifyToken,crearExamen);
-router.post("/crear-examenExterno", verifyToken,crearExamenExterno);
-router.post("/crear-orden", verifyToken,crearOrden);
-router.post("/crear-examen-pendiente", verifyToken,crearExamenPendiente);
-router.post("/reimpresion-examen", verifyToken, getExamenReimpresion);
+router.post("/get-examen",getExamen);//TODOS
+router.post("/crear-examen", verifyToken,crearExamen);//TODOS EXCEPTO AUXILIAR
+router.post("/crear-examenExterno", verifyToken,crearExamenExterno);//ADMIN SOLO
+router.post("/crear-orden", verifyToken,crearOrden);//TODOS EXCEPTO AUXILIAR
+router.post("/crear-examen-pendiente", verifyToken,crearExamenPendiente);//TODOS
+router.post("/reimpresion-examen", verifyToken, getExamenReimpresion);//TODOS
 
 
 
 
 //PUT
-router.put("/modificar-examenExterno", verifyToken,modificarExamenExterno);
-router.put("/modificar-examen", verifyToken,modificarExamen);
-router.put("/modificar-laboratorio", verifyToken,modificarLaboratorio);
-router.put("/modificar-resultado-examen", verifyToken,modificarResultadoExamen);
-router.put("/update-subCaracteristicasCar", verifyToken, updateSubCaracteristicaCar);
+router.put("/modificar-examenExterno", verifyToken,modificarExamenExterno);//ADMIN
+router.put("/modificar-examen", verifyToken,modificarExamen);//ADMIN Y BIO SOLO ANTES DE 48HRS
+router.put("/modificar-laboratorio", verifyToken,modificarLaboratorio);//ADMIN
+router.put("/modificar-resultado-examen", verifyToken,modificarResultadoExamen);//ADMIN Y BIO SOLO ANTES DE 48HRS
+router.put("/update-subCaracteristicasCar", verifyToken, updateSubCaracteristicaCar);//ADMIN Y BIO SOLO ANTES DE 48HRS
 
 //DELETE
 
-router.get("/delete-pendientes-paciente", verifyToken, deletePendientesPaciente);
+router.get("/delete-pendientes-paciente", verifyToken, deletePendientesPaciente); //TODOS
 
 
 

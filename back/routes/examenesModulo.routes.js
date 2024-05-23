@@ -36,7 +36,7 @@ import {
   crearSede
 } from "../controllers/examenesModulo.controller.js";
 var router = express.Router();
-
+//ADMINISTRADOR SOLAMENTE
 //GET
 router.get("/laboratorios", verifyToken, getLaboratorios);
 router.get("/secciones", verifyToken, getSecciones);

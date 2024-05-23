@@ -23,35 +23,35 @@ import {
 var router = express.Router();
 
 //GET
-router.get("/get-examenes-paciente", getExamenesPacientes);
-router.get("/get-pacientes-dia", getPacientesDia);
-router.get("/get-examen-dia", getExamenDia);
-router.get("/get-examen-byFecha", getExamenByFecha);
-router.get("/sedes", getSedes);
-router.get("/laboratorios", getLaboratorios);
-router.get("/get-examen-detalle", getExamenDetalle);
-router.get("/get-examen-resultado", getExamenResultados);
+router.get("/get-examenes-paciente", getExamenesPacientes);//Administrador y impresion
+router.get("/get-pacientes-dia", getPacientesDia);//Administrador y impresion
+router.get("/get-examen-dia", getExamenDia);//Administrador y impresion
+router.get("/get-examen-byFecha", getExamenByFecha);//Administrador y impresion
+router.get("/sedes", getSedes);//Administrador y impresion
+router.get("/laboratorios", getLaboratorios);//Administrador y impresion
+router.get("/get-examen-detalle", getExamenDetalle);//Administrador y impresion
+router.get("/get-examen-resultado", getExamenResultados);//Administrador y impresion
 
 
 //GET USUARIOS
-router.get("/get-usuarios", verifyCookie, getAllUsers);
+router.get("/get-usuarios", verifyCookie, getAllUsers);//Administrador
 
 //POST
-router.post("/guardar-usuario", verifyCookie, crearUsuario);
-router.post("/guardar-bioanalista", verifyCookie, crearBioanalsita);
-router.post("/crear-laboratorio", crearLaboratorio);
-router.post("/crear-sede", crearSede);
+router.post("/guardar-usuario", verifyCookie, crearUsuario);//Administrador
+router.post("/guardar-bioanalista", verifyCookie, crearBioanalsita);//Administrador
+router.post("/crear-laboratorio", crearLaboratorio);//Administrador
+router.post("/crear-sede", crearSede);//Administrador
 
 
 
 //PUT
 
 //PUT USUARIOS
-router.put("/editar-usuario", verifyCookie, editarUsuario);
-router.put("/editar-bioanalista", verifyCookie, editarBioanalista);
-router.put("/editar-status", verifyCookie, cambiarStatus);
-router.put("/update-laboratorio", updateLaboratorio);
-router.put("/update-sede", updateSede);
+router.put("/editar-usuario", verifyCookie, editarUsuario);//Administrador
+router.put("/editar-bioanalista", verifyCookie, editarBioanalista);//Administrador
+router.put("/editar-status", verifyCookie, cambiarStatus);//Administrador
+router.put("/update-laboratorio", updateLaboratorio);//Administrador
+router.put("/update-sede", updateSede);//Administrador
 
 
 
