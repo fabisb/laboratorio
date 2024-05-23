@@ -37,6 +37,8 @@ import {
 } from "../controllers/examenesModulo.controller.js";
 var router = express.Router();
 
+//TODO PERMISOS PARA BIOANALISTA Y ADMINISTRADOR
+
 //GET
 router.get("/laboratorios", verifyToken, getLaboratorios);
 router.get("/secciones", verifyToken, getSecciones);

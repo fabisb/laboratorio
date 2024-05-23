@@ -23,14 +23,14 @@ import {
 var router = express.Router();
 
 //GET
-router.get("/get-examenes-paciente", getExamenesPacientes);
-router.get("/get-pacientes-dia", getPacientesDia);
-router.get("/get-examen-dia", getExamenDia);
-router.get("/get-examen-byFecha", getExamenByFecha);
-router.get("/sedes", getSedes);
-router.get("/laboratorios", getLaboratorios);
-router.get("/get-examen-detalle", getExamenDetalle);
-router.get("/get-examen-resultado", getExamenResultados);
+router.get("/get-examenes-paciente",verifyCookie, getExamenesPacientes);
+router.get("/get-pacientes-dia",verifyCookie, getPacientesDia);
+router.get("/get-examen-dia", verifyCookie,getExamenDia);
+router.get("/get-examen-byFecha", verifyCookie,getExamenByFecha);
+router.get("/sedes", verifyCookie,getSedes);
+router.get("/laboratorios",verifyCookie, getLaboratorios);
+router.get("/get-examen-detalle", verifyCookie,getExamenDetalle);
+router.get("/get-examen-resultado", verifyCookie,getExamenResultados);
 
 
 //GET USUARIOS
@@ -39,8 +39,8 @@ router.get("/get-usuarios", verifyCookie, getAllUsers);
 //POST
 router.post("/guardar-usuario", verifyCookie, crearUsuario);
 router.post("/guardar-bioanalista", verifyCookie, crearBioanalsita);
-router.post("/crear-laboratorio", crearLaboratorio);
-router.post("/crear-sede", crearSede);
+router.post("/crear-laboratorio", verifyCookie,crearLaboratorio);
+router.post("/crear-sede", verifyCookie,crearSede);
 
 
 
@@ -50,8 +50,8 @@ router.post("/crear-sede", crearSede);
 router.put("/editar-usuario", verifyCookie, editarUsuario);
 router.put("/editar-bioanalista", verifyCookie, editarBioanalista);
 router.put("/editar-status", verifyCookie, cambiarStatus);
-router.put("/update-laboratorio", updateLaboratorio);
-router.put("/update-sede", updateSede);
+router.put("/update-laboratorio", verifyCookie,updateLaboratorio);
+router.put("/update-sede", verifyCookie,updateSede);
 
 
 

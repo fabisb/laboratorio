@@ -21,6 +21,10 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.json({ limit: "20mb" }));
 
+app.get("/", (req, res) => {
+  res.redirect("/login");
+});
+
 app.use("/assets", express.static(path.join(__dirname, "public/assets")));
 app.use(
   "/login",
@@ -50,6 +54,7 @@ app.use("/api/modulo-examenes", moduloExamenesRouter);
 app.use("/api/users", usersRouter);
 app.use("/api/espejo", espejoRouter);
 app.use("/api/productos", productosRouter);
+
 // middleware para manejar rutas que no se encuentran
 app.use((req, res, next) => {
   res.status(404).sendFile(path.join(__dirname, "public/404.html"));

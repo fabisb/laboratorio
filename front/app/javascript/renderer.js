@@ -32,8 +32,8 @@ async function loguear(e) {
   console.log("🚀 ~ file: renderer.js:19 ~ loguear ~ pass:", pass);
   const sedeSlct = document.getElementById("selectSede").value;
   console.log("🚀 ~ loguear ~ sedeSlct :", sedeSlct);
-
-  const calveSede = document.getElementById("claveSede").value;
+  //VALIDAR CLAVE DE SEDE
+  const claveSede = document.getElementById("claveSede").value;
 
   if (user == "" || pass == "") {
     return await alerta.alert(
@@ -44,7 +44,22 @@ async function loguear(e) {
   if (sedeSlct == "") {
     return await alerta.alert("Error al iniciar sesion", "SELECCIONE UNA SEDE");
   }
-  sedesVar.find();
+  if (claveSede == "") {
+    return await alerta.alert(
+      "Error al iniciar sesion",
+      "INGRESE UNA CLAVE DE SEDE VALIDA"
+    );
+  }
+  const sedeFind = sedesVar.find(
+    (e) => e.id == sedeSlct && e.clave == claveSede
+  );
+  console.log("🚀 ~ loguear ~ sedeFind:", sedeFind);
+  if (!sedeFind) {
+    return await alerta.alert(
+      "Error de sede",
+      "La clave no coincide con la sede"
+    );
+  }
   try {
     const { data } = await axios.post(urlsv + "/api/users/login", {
       user,
