@@ -45,9 +45,7 @@ export const getSedes = async (req, res) => {
   try {
     const [sedes] = await pool.execute("SELECT * FROM sede");
     if (sedes.length == 0) {
-      return await res
-        .status(404)
-        .json({ mensaje: "No se encuentran sedes" });
+      return await res.status(404).json({ mensaje: "No se encuentran sedes" });
     } else {
       return await res.status(200).json(sedes);
     }
@@ -76,14 +74,27 @@ export const loginController = async (req, res, next) => {
 
       if (comparacionClave) {
         var token = await jwt.sign(
-          { id: id[0].id, user, nivel: id[0].nivel, nombre: id[0].nombre, cedula : id[0].cedula},
+          {
+            id: id[0].id,
+            user,
+            nivel: id[0].nivel,
+            nombre: id[0].nombre,
+            cedula: id[0].cedula,
+          },
           "secret",
           {
             expiresIn: "1 days",
           }
         );
 
-        return await res.status(200).json({ token, user, nivel: id[0].nivel,nombre: id[0].nombre,cedula : id[0].cedula, id:id[0].id });
+        return await res.status(200).json({
+          token,
+          user,
+          nivel: id[0].nivel,
+          nombre: id[0].nombre,
+          cedula: id[0].cedula,
+          id: id[0].id,
+        });
       } else {
         return await res.status(404).json({
           mensaje: "Contraseña no valida",
@@ -184,12 +195,103 @@ export const verifyToken = async (req, res, next) => {
     var decoded = await jwt.verify(token, "secret");
     if (decoded) {
       req.user = decoded;
+      /* return await res.status(401).json({
+          mensaje: "Su nivel de usuario no esta autorizado para esta peticion",
+        }); */
       await next();
     }
   } catch (err) {
     // err
     console.log(err);
     return await res.status(401).sendFile(path.join(publics, "/401.html"));
+  }
+};
+export const administradorToken = async (req, res, next) => {
+  const { token } = req.headers;
+  try {
+    var decoded = await jwt.verify(token, "secret");
+    if (decoded) {
+      req.user = decoded;
+      if (decoded.nivel == 1) {
+        await next();
+      } else {
+        return await res.status(401).json({
+          mensaje: "Su nivel de usuario no esta autorizado para esta peticion",
+        });
+      }
+    }
+  } catch (err) {
+    // err
+    console.log(err);
+    return await res.status(401).json({
+      mensaje: "Su nivel de usuario no esta autorizado para esta peticion",
+    });
+  }
+};
+export const bioanalistaToken = async (req, res, next) => {
+  const { token } = req.headers;
+  try {
+    var decoded = await jwt.verify(token, "secret");
+    if (decoded) {
+      req.user = decoded;
+      if (decoded.nivel == 3) {
+        await next();
+      } else {
+        return await res.status(401).json({
+          mensaje: "Su nivel de usuario no esta autorizado para esta peticion",
+        });
+      }
+    }
+  } catch (err) {
+    // err
+    console.log(err);
+    return await res.status(401).json({
+      mensaje: "Su nivel de usuario no esta autorizado para esta peticion",
+    });
+  }
+};
+export const auxiliarToken = async (req, res, next) => {
+  const { token } = req.headers;
+  try {
+    var decoded = await jwt.verify(token, "secret");
+    if (decoded) {
+      req.user = decoded;
+      if (decoded.nivel == 2) {
+        await next();
+      } else {
+        return await res.status(401).json({
+          mensaje: "Su nivel de usuario no esta autorizado para esta peticion",
+        });
+      }
+    }
+  } catch (err) {
+    // err
+    console.log(err);
+    return await res.status(401).json({
+      mensaje: "Su nivel de usuario no esta autorizado para esta peticion",
+    });
+  }
+};
+export const impresionToken = async (req, res, next) => {
+  const { token } = req.headers;
+  try {
+    var decoded = await jwt.verify(token, "secret");
+    if (decoded) {
+      req.user = decoded;
+      if (decoded.nivel == 4) {
+        await next();
+      } else {
+        return await res.status(401).json({
+          mensaje: "Su nivel de usuario no esta autorizado para esta peticion",
+        });
+      }
+    }
+  } catch (err) {
+    // err
+    console.log(err);
+    return await res.status(401).json({
+      mensaje: "Su nivel de usuario no esta autorizado para esta peticion",
+    });
   }
 };
 
@@ -201,7 +303,31 @@ export async function verifyCookie(req, res, next) {
     var decoded = await jwt.verify(token, "secret");
     if (decoded) {
       req.user = decoded;
-      await next();
+      if (decoded.nivel == 4 || decoded.nivel == 2 || decoded.nivel == 3) {
+        res.status(401).sendFile(path.join(publics, "/401.html"));
+      } else {
+        await next();
+      }
+    }
+  } catch (err) {
+    console.log(err);
+    return await res
+      .status(420)
+      .json({ mensaje: "Error de autentificacion, verificar token" });
+  }
+}
+
+export async function impresionCookie(req, res, next) {
+  const { token } = req.cookies;
+  try {
+    var decoded = await jwt.verify(token, "secret");
+    if (decoded) {
+      req.user = decoded;
+      if (decoded.nivel == 1 || decoded.nivel == 4) {
+        await next();
+      } else {
+        res.status(401).sendFile(path.join(publics, "/401.html"));
+      }
     }
   } catch (err) {
     console.log(err);

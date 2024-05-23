@@ -25,8 +25,8 @@ router.post("/agregar-paciente", verifyToken, agregarPacienteController);
 router.post("/agregar-usuario", verifyToken, agregarUsuarioController);
 router.post("/agregar-bioanalista", verifyToken, agregarBioanalistaController);
 
-router.post("/guardar-usuario", crearUsuario);
-router.post("/guardar-bioanalista", crearBioanalista);
+router.post("/guardar-usuario", verifyToken,crearUsuario);
+router.post("/guardar-bioanalista", verifyToken,crearBioanalista);
 
 //PUT
 router.put("/editar-usuario", verifyToken, editarUsuario);
