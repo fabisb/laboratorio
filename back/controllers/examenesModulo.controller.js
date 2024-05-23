@@ -75,7 +75,7 @@ export const getCaracteristicasById = async (req, res) => {
   const { id } = req.query;
   try {
     const [caracteristicas] = await pool.execute(
-      "SELECT * FROM detalles_examen WHERE id_ex = ?",
+      "SELECT * FROM detalles_examen WHERE id_ex = ? and status ='activo'",
       [id]
     );
     if (caracteristicas.length == 0) {

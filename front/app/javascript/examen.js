@@ -263,9 +263,7 @@ const render = async () => {
       urlsv + "/api/modulo-examenes/laboratorios",
       { headers: { token } }
     );
-    console.log(laboratorios)
     examenes = examenesGet;
-    console.log("🚀 ~ render ~ examenes:", examenes);
     let { data: bioanalistas } = await axios.get(
       urlsv + "/api/examenes/get-bioanalistas",
       { headers: { token } }
@@ -537,10 +535,20 @@ function buscarExamen() {
 
 async function detalleExamen(id) {
   const { token } = await login.getToken();
-  const { data: caracteristicas } = await axios.get(
+  let { data: caracteristicas } = await axios.get(
     urlsv + "/api/modulo-examenes/caracteristicas-id_ex",
     { headers: { token }, params: { id } }
   );
+  caracteristicas = caracteristicas.sort(function (a, b) {
+    if (a.posicion > b.posicion) {
+      return 1;
+    }
+    if (a.posicion < b.posicion) {
+      return -1;
+    }
+    // a must be equal to b
+    return 0;
+  });
   const collapse = document.getElementById(`collapseMenu${id}`);
   collapse.innerHTML = `
   <table class="table table-sm text-center" style="border: 2px solid green; font-size:15px">
@@ -565,7 +573,7 @@ async function detalleExamen(id) {
       <td scope="col">${c.nombre}</td>
       <td scope="col">${c.unidad}</td>
       <td scope="col">${c.posicion}</td>
-      <td scope="col">${c.imprimir}</td>
+      <td scope="col">${c.imprimir ? c.imprimir: 'NO'}</td>
     </tr>
     `;
   });
@@ -1919,7 +1927,7 @@ const abrirResultadosModal = async (examen, idEx, n) => {
                       
                     </select></td>
                       <td>${ct.unidad}</td>
-                      <td>${rango.inferior}  -  ${rango.superior}</td>
+                      <td>${rango.inferior%1 == 0 ? rango.inferior.split('.')[0] : rango.inferior}  -  ${rango.superior%1 == 0 ? rango.superior.split('.')[0] : rango.superior}</td>
                       <td>  <input class="form-control form-control-sm inputExDetallePacNota" name='nt-${ct.id}' type="text" id='inputNt${ct.id}' placeholder="Nota" aria-label=".form-control-sm example">              </td>
         
                     </tr>
@@ -1939,7 +1947,7 @@ const abrirResultadosModal = async (examen, idEx, n) => {
                       <th scope="row" colspan="2">${ct.nombre}</th>
                       <td>  <input class="form-control form-control-sm inputExDetallePacCar" rango='${rango.id}' inferior='${rango.inferior}' superior='${rango.superior}' name='rs-${ct.id}' type="text" id='inputRs${ct.id}' placeholder="Ingrese Resultado" aria-label=".form-control-sm example">              </td>
                       <td>${ct.unidad}</td>
-                      <td>${rango.inferior}  -  ${rango.superior}</td>
+                      <td>${rango.inferior%1 == 0 ? rango.inferior.split('.')[0] : rango.inferior}  -  ${rango.superior%1 == 0 ? rango.superior.split('.')[0] : rango.superior}</td>
                       <td>  <input class="form-control form-control-sm inputExDetallePacNota" name='nt-${ct.id}' type="text" id='inputNt${ct.id}' placeholder="Nota" aria-label=".form-control-sm example">              </td>
         
                     </tr>

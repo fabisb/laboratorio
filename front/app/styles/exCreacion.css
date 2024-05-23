@@ -1,9 +1,13 @@
 main {
     border: 5px solid #68c0c3 ;
     border-radius: 12px;
-    height: 80%;
+    min-height: 80%;
     margin: 20px;
-    padding: 25px
+    padding: 25px;
+}
+#accordionCaracteristicas{
+    max-height: 650px;
+    overflow-y: auto;
 }
 hr{
     border-top: solid 3px rgb(0, 0, 0) !important 
