@@ -89,6 +89,8 @@ const render = async () => {
     <option value="">Seccion</option>
     
     `;
+    seccionesData = secciones.data;
+
     secciones.data.forEach((seccion) => {
       
       const option = document.createElement("option");
@@ -110,6 +112,7 @@ const render = async () => {
         urlsv + "/api/modulo-examenes/categorias",
         { headers: { token } }
       );
+    categoriasData = categorias.data;
           
 
 
@@ -138,6 +141,8 @@ const render = async () => {
         urlsv + "/api/modulo-examenes/sedes",
         { headers: { token } }
       );
+    sedesData = sedes.data
+
     } catch (error) {
       console.log(error);
     if (error.response.data.mensaje) {
@@ -151,6 +156,9 @@ const render = async () => {
         urlsv + "/api/modulo-examenes/laboratorios",
         { headers: { token } }
       );
+    laboratoriosData = laboratorios.data;
+
+      
     } catch (error) {
       console.log(error);
     if (error.response.data.mensaje) {
@@ -166,8 +174,10 @@ const render = async () => {
       urlsv + "/api/examenes/get-examenes",
       { headers: { token } }
     );
+    examenes = examenesGet;
+
     const menuCreacionUl = document.getElementById("menuCreacionUl");
-    examenes.forEach((ex) => {
+    examenesGet.forEach((ex) => {
       menuCreacionUl.innerHTML += `
       <li  class="list-group-item list-group-item-light list-group-item-action">
               <div class="row">
@@ -227,11 +237,6 @@ const render = async () => {
     }
     
     
-    examenes = examenesGet;
-    seccionesData = secciones.data;
-    categoriasData = categorias.data;
-    laboratoriosData = laboratorios.data;
-    sedesData = sedes.data
     
 
 
@@ -240,7 +245,9 @@ const render = async () => {
 };
 function añadirAcordionItemEx(nombre1, idEx) {
   nombre1 = nombre1.trim();
-  const nombre = nombre1.replaceAll(" ", "-");
+  const nombre = nombre1.replaceAll(" ", "-").replaceAll("(","-").replaceAll(")","-").replaceAll(".","-");
+
+
 
   const accordionCaracteristicas = document.getElementById(
     "accordionCaracteristicas"
@@ -989,7 +996,7 @@ async function modificarExamen(id) {
     examen.detalles.forEach((dt) => {
       const divItem = document.createElement("div");
       nombre1 = dt.nombre.trim();
-      const nombre = nombre1.replaceAll(" ", "-");
+      const nombre = nombre1.replaceAll(" ", "-").replaceAll("(","-").replaceAll(")","-").replaceAll(".","-");
       caracteristicasCreadas.add(nombre);
       divItem.className = `accordion-item acordionItemCaracteristica`;
       divItem.id = `accordionItemCaracteristica${nombre}`;
@@ -2401,6 +2408,7 @@ async function guardarCambioRgBdd(id, nombre) {
     if (r.childNodes[5].childNodes[1].childNodes[1].value == "") {
       if (r.childNodes[7].childNodes[1].childNodes[1].value != "") {
         error = true;
+        console.log(1);
         return alerta.alert("Error", "Verifique los campos");
       }
     }
@@ -2409,16 +2417,23 @@ async function guardarCambioRgBdd(id, nombre) {
       r.childNodes[3].childNodes[1].childNodes[1].value == ""
     ) {
       error = true;
+      console.log(2);
+
       return alerta.alert("Error", "Verifique los campos");
     }
 
     if (
-      r.childNodes[1].childNodes[1].childNodes[1].value >
-        r.childNodes[3].childNodes[1].childNodes[1].value ||
-      r.childNodes[5].childNodes[1].childNodes[1].value >
-        r.childNodes[7].childNodes[1].childNodes[1].value
+      parseFloat(r.childNodes[1].childNodes[1].childNodes[1].value) >
+        parseFloat(r.childNodes[3].childNodes[1].childNodes[1].value) ||
+      parseFloat(r.childNodes[5].childNodes[1].childNodes[1].value) >
+        parseFloat(r.childNodes[7].childNodes[1].childNodes[1].value)
     ) {
       error = true;
+      console.log(r.childNodes[1].childNodes[1].childNodes[1].value+'>'+r.childNodes[3].childNodes[1].childNodes[1].value)
+      console.log(r.childNodes[5].childNodes[1].childNodes[1].value+'>'+r.childNodes[7].childNodes[1].childNodes[1].value)
+
+      console.log(3);
+
       return alerta.alert("Error", "Verifique los campos");
     }
   });
@@ -3226,6 +3241,7 @@ async function borrarCaracteristicaForm(nombre, id) {
       }
     );
     examenesAlerta("Caracteristica Anulada con exito", "warning");
+    caracteristicasCreadas.delete(nombre);
     return modificarExamen(data.examenId);
   } catch (error) {
     console.log("🚀 ~ borrarCaracteristicaForm ~ error:", error);
@@ -3648,7 +3664,8 @@ var caracteristicasCreadas = new Set();
 
 function añadirAcordionItem(nombre1) {
   nombre1 = nombre1.trim();
-  const nombre = nombre1.replaceAll(" ", "-");
+  const nombre = nombre1.replaceAll(" ", "-").replaceAll("(","-").replaceAll(")","-").replaceAll(".","-");
+  
 
   const accordionCaracteristicas = document.getElementById(
     "accordionCaracteristicas"
