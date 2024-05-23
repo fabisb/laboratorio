@@ -77,37 +77,14 @@ var seccionesData = [];
 var sedesData=[];
 var laboratoriosData = [];
 const render = async () => {
-  try {
+  
     const { token } = await login.getToken();
-
-    const secciones = await axios.get(
-      urlsv + "/api/modulo-examenes/secciones",
-      { headers: { token } }
-    );
-    const categorias = await axios.get(
-      urlsv + "/api/modulo-examenes/categorias",
-      { headers: { token } }
-    );
-    const sedes = await axios.get(
-      urlsv + "/api/modulo-examenes/sedes",
-      { headers: { token } }
-    );
-    const laboratorios = await axios.get(
-      urlsv + "/api/modulo-examenes/laboratorios",
-      { headers: { token } }
-    );
-    const { data: examenesGet } = await axios.get(
-      urlsv + "/api/examenes/get-examenes",
-      { headers: { token } }
-    );
-    examenes = examenesGet;
-    seccionesData = secciones.data;
-    categoriasData = categorias.data;
-    laboratoriosData = laboratorios.data;
-    sedesData = sedes.data
-    
-
-    const selectSeccion = document.getElementById("seccionExamenSelect");
+    try {
+      const secciones = await axios.get(
+        urlsv + "/api/modulo-examenes/secciones",
+        { headers: { token } }
+      );
+      const selectSeccion = document.getElementById("seccionExamenSelect");
     selectSeccion.innerHTML = `
     <option value="">Seccion</option>
     
@@ -119,6 +96,21 @@ const render = async () => {
       option.innerText = seccion.nombre;
       selectSeccion.appendChild(option);
     });
+    } catch (error) {
+      console.log(error);
+    if (error.response.data.mensaje) {
+      return await alerta.alert("Error:", error.response.data.mensaje);
+    } else {
+      return await alerta.error();
+    }
+    }
+
+    try {
+      const categorias = await axios.get(
+        urlsv + "/api/modulo-examenes/categorias",
+        { headers: { token } }
+      );
+          
 
 
     const selectCategoria = document.getElementById("categoriaExamenSelect");
@@ -133,6 +125,47 @@ const render = async () => {
       option.innerText = seccion.nombre;
       selectCategoria.appendChild(option);
     });
+    } catch (error) {
+      console.log(error);
+    if (error.response.data.mensaje) {
+      return await alerta.alert("Error:", error.response.data.mensaje);
+    } else {
+      return await alerta.error();
+    }
+    }
+    try {
+      const sedes = await axios.get(
+        urlsv + "/api/modulo-examenes/sedes",
+        { headers: { token } }
+      );
+    } catch (error) {
+      console.log(error);
+    if (error.response.data.mensaje) {
+      return await alerta.alert("Error:", error.response.data.mensaje);
+    } else {
+      return await alerta.error();
+    }
+    }
+    try {
+      const laboratorios = await axios.get(
+        urlsv + "/api/modulo-examenes/laboratorios",
+        { headers: { token } }
+      );
+    } catch (error) {
+      console.log(error);
+    if (error.response.data.mensaje) {
+      return await alerta.alert("Error:", error.response.data.mensaje);
+    } else {
+      return await alerta.error();
+    }
+    }
+    
+    try {
+      
+    const { data: examenesGet } = await axios.get(
+      urlsv + "/api/examenes/get-examenes",
+      { headers: { token } }
+    );
     const menuCreacionUl = document.getElementById("menuCreacionUl");
     examenes.forEach((ex) => {
       menuCreacionUl.innerHTML += `
@@ -184,14 +217,26 @@ const render = async () => {
   
       `;
     });
-  } catch (error) {
-    console.log(error);
+    } catch (error) {
+      console.log(error);
     if (error.response.data.mensaje) {
       return await alerta.alert("Error:", error.response.data.mensaje);
     } else {
       return await alerta.error();
     }
-  }
+    }
+    
+    
+    examenes = examenesGet;
+    seccionesData = secciones.data;
+    categoriasData = categorias.data;
+    laboratoriosData = laboratorios.data;
+    sedesData = sedes.data
+    
+
+
+    
+  
 };
 function añadirAcordionItemEx(nombre1, idEx) {
   nombre1 = nombre1.trim();
