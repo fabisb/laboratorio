@@ -21,17 +21,15 @@
               class="card flex-row my-5 border-0 shadow rounded-3 overflow-hidden"
             >
               <div class="card-img-left d-none d-md-flex">
-                
-                
                 <!-- Background image for card set in CSS! -->
               </div>
               <div class="card-body p-4 p-sm-5">
                 <a class="navbar-brand" href="#">
                   <img src="../imgs/la-milagrosa-logo.png" width="150" alt="" />
                 </a>
-                <br>
-                <br>
-                <hr>
+                <br />
+                <br />
+                <hr />
                 <form onsubmit="loguear(event)">
                   <div class="form-floating mb-3">
                     <input
@@ -69,10 +67,13 @@
 
                   <select
                     class="form-select"
+                    onchange="inputClave()"
                     aria-label="Default select example"
                     id="selectSede"
                   >
+                    <option value="" selected>SEDE</option>
                   </select>
+                  <input class="form-control mt-2 form-control-sm" id="claveSede" hidden type="number" placeholder="Clave" aria-label="Clave">
                 </form>
               </div>
             </div>
@@ -80,7 +81,6 @@
         </div>
       </div>
     </div>
-   
 
     <div hidden class="container text-center" id="isLogAdmin"></div>
     <script src="../../bower_components/jquery/dist/jquery.min.js"></script>

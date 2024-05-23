@@ -98,7 +98,12 @@ const reimprimirExamen = async () => {
                   return `
                 <tr>
                 <th scope="row">${c.nombre}</th>
-                <td>${c.resultado}</td>
+                <td>${c.resultado} ${
+                    c.nota != ""
+                      ? `<p class="m-0 fst-italic">(${c.nota})</p>`
+                      : ""
+                  } 
+                </td>
                 <td>${c.unidad}</td>
                 <td>${c.inferior}</td>
                 <td>${c.superior}</td>
@@ -155,14 +160,14 @@ const reimprimirExamen = async () => {
       <h5>Lcd. ${bioanalistaInfo?.nombre}</h5>
       <h6>BIOANALISTA</h6>
       <h6>C.I.: ${bioanalistaInfo?.cedula} - COBIOZUL: ${
-        bioanalistaInfo?.colegio
-      } - MSDS: ${bioanalistaInfo?.ministerio} </h6>
+      bioanalistaInfo?.colegio
+    } - MSDS: ${bioanalistaInfo?.ministerio} </h6>
     </div>
   <img id='bioanalistaFirma${bio}' style="width: 150px;" class="card-img-top mx-auto my-auto" alt="firma Ej">
   </div>
  
   `;
- /*  ${
+    /*  ${
     index + 1 == [...bioSet].length
       ? ""
       : '<div style="page-break-before:always"></div> '
@@ -245,13 +250,10 @@ const pintarExamen = async () => {
       <div class="card-body my-auto text-start">
         <h5>Lcd. ${bioanalista?.nombre}</h5>
         <h6>BIOANALISTA</h6>
-        <h6>C.I.: ${bioanalista?.cedula} - COBIOZUL: ${
-          bioanalista?.colegio
-        } - MSDS: ${bioanalista?.ministerio} </h6>
+        <h6>C.I.: ${bioanalista?.cedula} - COBIOZUL: ${bioanalista?.colegio} - MSDS: ${bioanalista?.ministerio} </h6>
       </div>
       <img id='bioanalistaFirma' style="width: 150px;" class="card-img-top mx-auto my-auto" alt="firma Ej">
     `
-
   }  
   `;
 
