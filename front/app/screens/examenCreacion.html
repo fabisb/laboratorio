@@ -525,7 +525,7 @@
                       name="inputTipoSeccion"
                       value="sede"
                       id="ratioSede"
-                      onclick="formularioSeccion()"
+                      onclick="formularioSede()"
                     />
                     <label class="form-check-label" for="ratioSede">
                       Sede
@@ -539,9 +539,35 @@
                 type="text"
                 class="form-control"
                 id="inputSeccion"
-                placeholder="Seccion/Categoria/Sede"
+                placeholder="Seccion/Categoria"
               />
-
+              <div id="formSede" hidden>
+                <div class="row mb-3">
+                  <div class="col-4"><label for="rifLab">Nombre</label></div>
+                  <div class="col-8">
+                    <input
+                    type="text"
+                    class="form-control"
+                    id="nombreSede"
+                    placeholder="Sede"
+                    />
+                  </div>
+                </div>
+                
+                <div class="row mb-3">
+                  <div class="col-4">
+                    <label for="razonLab">Clave</label>
+                  </div>
+                  <div class="col-8">
+                    <input
+                      type="number"
+                      class="form-control"
+                      id="claveSede"
+                      placeholder="123"
+                    />
+                  </div>
+                </div>
+              </div>
               <div id="formLaboratorio" hidden>
                 <div class="row mb-3">
                   <div class="col-4"><label for="rifLab">R.I.F</label></div>

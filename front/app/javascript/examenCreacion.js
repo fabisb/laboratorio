@@ -21,45 +21,75 @@ const {data: examen} = await axios.get(
   { headers: { token }, params: { idSeccion } }
 ); 
 */
-function formularioSeccion(){
-  const labDiv = document.getElementById(`formLaboratorio`)
-  const input= document.getElementById("inputSeccion")
-  document.getElementById('añadirSeccionModalLabel').innerText=`Seccion/Categoria`
-  input.removeAttribute('hidden')
-  labDiv.setAttribute('hidden','true')
-  document.getElementById("botonGuardarSeccion").setAttribute("onclick","crearSeccion()")
-
+function formularioSeccion() {
+  const labDiv = document.getElementById(`formLaboratorio`);
+  const sedeDiv = document.getElementById(`formSede`);
+  const input = document.getElementById("inputSeccion");
+  document.getElementById(
+    "añadirSeccionModalLabel"
+  ).innerText = `Seccion/Categoria`;
+  input.removeAttribute("hidden");
+  labDiv.setAttribute("hidden", "true");
+  sedeDiv.setAttribute("hidden", "true");
+  document
+    .getElementById("botonGuardarSeccion")
+    .setAttribute("onclick", "crearSeccion()");
 }
 
-function formularioLaboratorio(){
-  const labDiv = document.getElementById(`formLaboratorio`)
-  const input= document.getElementById("inputSeccion")
-  document.getElementById('añadirSeccionModalLabel').innerText=`Laboratorio Externo`
-  labDiv.removeAttribute('hidden')
-  input.setAttribute('hidden','true')
-  document.getElementById("botonGuardarSeccion").setAttribute("onclick","crearLaboratorio()")
-
-
+function formularioSede() {
+  const labDiv = document.getElementById(`formLaboratorio`);
+  const sedeDiv = document.getElementById(`formSede`);
+  const input = document.getElementById("inputSeccion");
+  document.getElementById("añadirSeccionModalLabel").innerText = `Sede`;
+  input.setAttribute("hidden", "true");
+  sedeDiv.removeAttribute("hidden");
+  labDiv.setAttribute("hidden", "true");
+  document
+    .getElementById("botonGuardarSeccion")
+    .setAttribute("onclick", "crearSede()");
 }
 
+function formularioLaboratorio() {
+  const labDiv = document.getElementById(`formLaboratorio`);
+  const sedeDiv = document.getElementById(`formSede`);
+  const input = document.getElementById("inputSeccion");
+  document.getElementById(
+    "añadirSeccionModalLabel"
+  ).innerText = `Laboratorio Externo`;
+  labDiv.removeAttribute("hidden");
+  input.setAttribute("hidden", "true");
+  sedeDiv.setAttribute("hidden", "true");
+  document
+    .getElementById("botonGuardarSeccion")
+    .setAttribute("onclick", "crearLaboratorio()");
+}
 
-async function crearLaboratorio(){
-  const rif = document.getElementById("rifLab")
-  const razon = document.getElementById("razonLab")
-  const telefono = document.getElementById("telefonoLab")
-  const direccion = document.getElementById("direccionLab")
-  console.log(rif.value,razon.value,telefono.value,direccion.value)
-  if(rif.value=="" || rif.value<0){
-    return alerta.alert("Error:", "Rif Invalido")
+async function crearLaboratorio() {
+  const rif = document.getElementById("rifLab");
+  const razon = document.getElementById("razonLab");
+  const telefono = document.getElementById("telefonoLab");
+  const direccion = document.getElementById("direccionLab");
+  console.log(rif.value, razon.value, telefono.value, direccion.value);
+  if (rif.value == "" || rif.value < 0) {
+    return alerta.alert("Error:", "Rif Invalido");
   }
-  if(razon.value==""){
-    return alerta.alert("Error:", "Razon social Invalida")
+  if (razon.value == "") {
+    return alerta.alert("Error:", "Razon social Invalida");
   }
   try {
     const { token } = await login.getToken();
-    
-    const res = await axios.post(urlsv + "/api/modulo-examenes/crear-laboratorio",{rif:rif.value,razon:razon.value,telefono:telefono.value,direccion:direccion.value},{ headers: { token } })
-    console.log(res)
+
+    const res = await axios.post(
+      urlsv + "/api/modulo-examenes/crear-laboratorio",
+      {
+        rif: rif.value,
+        razon: razon.value,
+        telefono: telefono.value,
+        direccion: direccion.value,
+      },
+      { headers: { token } }
+    );
+    console.log(res);
     render();
   } catch (error) {
     console.log(error);
@@ -69,49 +99,44 @@ async function crearLaboratorio(){
       return await alerta.error();
     }
   }
-
 }
 
 var examenes = [];
 var seccionesData = [];
-var sedesData=[];
+var sedesData = [];
 var laboratoriosData = [];
 const render = async () => {
-  
-    const { token } = await login.getToken();
-    try {
-      const secciones = await axios.get(
-        urlsv + "/api/modulo-examenes/secciones",
-        { headers: { token } }
-      );
-      const selectSeccion = document.getElementById("seccionExamenSelect");
+  const { token } = await login.getToken();
+  try {
+    const secciones = await axios.get(
+      urlsv + "/api/modulo-examenes/secciones",
+      { headers: { token } }
+    );
+    const selectSeccion = document.getElementById("seccionExamenSelect");
     selectSeccion.innerHTML = `
     <option value="">Seccion</option>
     
     `;
     secciones.data.forEach((seccion) => {
-      
       const option = document.createElement("option");
       option.value = seccion.id;
       option.innerText = seccion.nombre;
       selectSeccion.appendChild(option);
     });
-    } catch (error) {
-      console.log(error);
+  } catch (error) {
+    console.log(error);
     if (error.response.data.mensaje) {
       return await alerta.alert("Error:", error.response.data.mensaje);
     } else {
       return await alerta.error();
     }
-    }
+  }
 
-    try {
-      const categorias = await axios.get(
-        urlsv + "/api/modulo-examenes/categorias",
-        { headers: { token } }
-      );
-          
-
+  try {
+    const categorias = await axios.get(
+      urlsv + "/api/modulo-examenes/categorias",
+      { headers: { token } }
+    );
 
     const selectCategoria = document.getElementById("categoriaExamenSelect");
     selectCategoria.innerHTML = `
@@ -119,49 +144,46 @@ const render = async () => {
     
     `;
     categorias.data.forEach((seccion) => {
-      
       const option = document.createElement("option");
       option.value = seccion.id;
       option.innerText = seccion.nombre;
       selectCategoria.appendChild(option);
     });
-    } catch (error) {
-      console.log(error);
+  } catch (error) {
+    console.log(error);
     if (error.response.data.mensaje) {
       return await alerta.alert("Error:", error.response.data.mensaje);
     } else {
       return await alerta.error();
     }
-    }
-    try {
-      const sedes = await axios.get(
-        urlsv + "/api/modulo-examenes/sedes",
-        { headers: { token } }
-      );
-    } catch (error) {
-      console.log(error);
+  }
+  try {
+    const sedes = await axios.get(urlsv + "/api/modulo-examenes/sedes", {
+      headers: { token },
+    });
+  } catch (error) {
+    console.log(error);
     if (error.response.data.mensaje) {
       return await alerta.alert("Error:", error.response.data.mensaje);
     } else {
       return await alerta.error();
     }
-    }
-    try {
-      const laboratorios = await axios.get(
-        urlsv + "/api/modulo-examenes/laboratorios",
-        { headers: { token } }
-      );
-    } catch (error) {
-      console.log(error);
+  }
+  try {
+    const laboratorios = await axios.get(
+      urlsv + "/api/modulo-examenes/laboratorios",
+      { headers: { token } }
+    );
+  } catch (error) {
+    console.log(error);
     if (error.response.data.mensaje) {
       return await alerta.alert("Error:", error.response.data.mensaje);
     } else {
       return await alerta.error();
     }
-    }
-    
-    try {
-      
+  }
+
+  try {
     const { data: examenesGet } = await axios.get(
       urlsv + "/api/examenes/get-examenes",
       { headers: { token } }
@@ -217,26 +239,20 @@ const render = async () => {
   
       `;
     });
-    } catch (error) {
-      console.log(error);
+  } catch (error) {
+    console.log(error);
     if (error.response.data.mensaje) {
       return await alerta.alert("Error:", error.response.data.mensaje);
     } else {
       return await alerta.error();
     }
-    }
-    
-    
-    examenes = examenesGet;
-    seccionesData = secciones.data;
-    categoriasData = categorias.data;
-    laboratoriosData = laboratorios.data;
-    sedesData = sedes.data
-    
+  }
 
-
-    
-  
+  examenes = examenesGet;
+  seccionesData = secciones.data;
+  categoriasData = categorias.data;
+  laboratoriosData = laboratorios.data;
+  sedesData = sedes.data;
 };
 function añadirAcordionItemEx(nombre1, idEx) {
   nombre1 = nombre1.trim();
@@ -718,221 +734,178 @@ async function crearCaracteristicaBdd(nombre, idEx) {
     }
   }
 }
-function modificarCategoriaModal(id,nombre){
-  document.getElementById('modificarCategoriaModalLabel').innerHTML=`Modificar Categoria ${nombre}`
-  const modalModSec= new bootstrap.Modal('#modificarCategoriaModal')
-  modalModSec.toggle()
-  const buttonModify = document.getElementById('buttonModificarCategoria')
-  buttonModify.removeAttribute('onclick')
-  buttonModify.setAttribute('onclick',`modificarCategoria(${id})`)
-
+function modificarCategoriaModal(id, nombre) {
+  document.getElementById(
+    "modificarCategoriaModalLabel"
+  ).innerHTML = `Modificar Categoria ${nombre}`;
+  const modalModSec = new bootstrap.Modal("#modificarCategoriaModal");
+  modalModSec.toggle();
+  const buttonModify = document.getElementById("buttonModificarCategoria");
+  buttonModify.removeAttribute("onclick");
+  buttonModify.setAttribute("onclick", `modificarCategoria(${id})`);
 }
 
-
-async function modificarCategoria(id){
-  const input = document.getElementById('inputCategoriaModificar')
-  let value = input.value
+async function modificarCategoria(id) {
+  const input = document.getElementById("inputCategoriaModificar");
+  let value = input.value;
   try {
     const { token } = await login.getToken();
-  const { data } = await axios.put(
-    urlsv + "/api/modulo-examenes/update-categoria",
-    {
-      id_categoria:id,
-      nombre:value
-    },
-    {
-      headers: { token },
-    }
-  );
-  
- 
+    const { data } = await axios.put(
+      urlsv + "/api/modulo-examenes/update-categoria",
+      {
+        id_categoria: id,
+        nombre: value,
+      },
+      {
+        headers: { token },
+      }
+    );
 
-
-  examenesAlerta(
-    "La categoria ha sido modificada correctamente",
-    "success"
-  );
-
-
+    examenesAlerta("La categoria ha sido modificada correctamente", "success");
   } catch (error) {
     return await alerta.alert("Error:", error.response.data.mensaje);
-    
   }
-  
 }
 
-function modificarSeccionModal(id,nombre){
-  document.getElementById('modificarSeccionModalLabel').innerHTML=`Modificar Seccion ${nombre}`
-  const modalModSec= new bootstrap.Modal('#modificarSeccionModal')
-  modalModSec.toggle()
-  const buttonModify = document.getElementById('buttonModificarSeccion')
-  buttonModify.removeAttribute('onclick')
-  buttonModify.setAttribute('onclick',`modificarSeccion(${id})`)
-
+function modificarSeccionModal(id, nombre) {
+  document.getElementById(
+    "modificarSeccionModalLabel"
+  ).innerHTML = `Modificar Seccion ${nombre}`;
+  const modalModSec = new bootstrap.Modal("#modificarSeccionModal");
+  modalModSec.toggle();
+  const buttonModify = document.getElementById("buttonModificarSeccion");
+  buttonModify.removeAttribute("onclick");
+  buttonModify.setAttribute("onclick", `modificarSeccion(${id})`);
 }
-function modificarSedeModal(id,nombre){
-  document.getElementById('modificarSedeModalLabel').innerHTML=`Modificar Seccion ${nombre}`
-  const modalModSec= new bootstrap.Modal('#modificarSedeModal')
-  modalModSec.toggle()
-  const buttonModify = document.getElementById('buttonModificarSede')
-  buttonModify.removeAttribute('onclick')
-  buttonModify.setAttribute('onclick',`modificarSede(${id})`)
-
-}
-
-function modificarLaboratorioModal(id,nombre,telefono,rif,direccion){
-
-  document.getElementById('inputRazonLabModificar').value=nombre
-  document.getElementById('inputTelefonoLabModificar').value=telefono
-  document.getElementById('inputRifLabModificar').value=rif
-  document.getElementById('inputDireccionLabModificar').value=direccion
-
-
-  const modalModSec= new bootstrap.Modal('#modificarLaboratorioModal')
-  modalModSec.toggle()
-
-  const buttonModify = document.getElementById('buttonModificarLaboratorio')
-  buttonModify.removeAttribute('onclick')
-  buttonModify.setAttribute('onclick',`modificarLaboratorio(${id})`)
-
-
+function modificarSedeModal(id, nombre) {
+  document.getElementById(
+    "modificarSedeModalLabel"
+  ).innerHTML = `Modificar Seccion ${nombre}`;
+  const modalModSec = new bootstrap.Modal("#modificarSedeModal");
+  modalModSec.toggle();
+  const buttonModify = document.getElementById("buttonModificarSede");
+  buttonModify.removeAttribute("onclick");
+  buttonModify.setAttribute("onclick", `modificarSede(${id})`);
 }
 
-async function modificarLaboratorio(id){
-  const razon=document.getElementById('inputRazonLabModificar').value
-  const telefono=document.getElementById('inputTelefonoLabModificar').value
-  const rif=document.getElementById('inputRifLabModificar').value
-  const direccion=document.getElementById('inputDireccionLabModificar').value
+function modificarLaboratorioModal(id, nombre, telefono, rif, direccion) {
+  document.getElementById("inputRazonLabModificar").value = nombre;
+  document.getElementById("inputTelefonoLabModificar").value = telefono;
+  document.getElementById("inputRifLabModificar").value = rif;
+  document.getElementById("inputDireccionLabModificar").value = direccion;
 
+  const modalModSec = new bootstrap.Modal("#modificarLaboratorioModal");
+  modalModSec.toggle();
+
+  const buttonModify = document.getElementById("buttonModificarLaboratorio");
+  buttonModify.removeAttribute("onclick");
+  buttonModify.setAttribute("onclick", `modificarLaboratorio(${id})`);
+}
+
+async function modificarLaboratorio(id) {
+  const razon = document.getElementById("inputRazonLabModificar").value;
+  const telefono = document.getElementById("inputTelefonoLabModificar").value;
+  const rif = document.getElementById("inputRifLabModificar").value;
+  const direccion = document.getElementById("inputDireccionLabModificar").value;
 
   try {
     const { token } = await login.getToken();
-  const { data } = await axios.put(
-    urlsv + "/api/modulo-examenes/update-laboratorio",
-    {
-      id_laboratorio:id,
-      razon,telefono,direccion,rif
-    },
-    {
-      headers: { token },
-    }
-  );
-  
- 
+    const { data } = await axios.put(
+      urlsv + "/api/modulo-examenes/update-laboratorio",
+      {
+        id_laboratorio: id,
+        razon,
+        telefono,
+        direccion,
+        rif,
+      },
+      {
+        headers: { token },
+      }
+    );
 
-
-  examenesAlerta(
-    "El Laboratorio ha sido modificado correctamente",
-    "success"
-  );
-  render()
-
-
+    examenesAlerta(
+      "El Laboratorio ha sido modificado correctamente",
+      "success"
+    );
+    render();
   } catch (error) {
     return await alerta.alert("Error:", error.response.data.mensaje);
-    
   }
-  
 }
-async function modificarSede(id){
-  const input = document.getElementById('inputSedeModificar')
-  let value = input.value
+async function modificarSede(id) {
+  const input = document.getElementById("inputSedeModificar");
+  let value = input.value;
   try {
     const { token } = await login.getToken();
-  const { data } = await axios.put(
-    urlsv + "/api/modulo-examenes/update-sede",
-    {
-      id_sede:id,
-      nombre:value
-    },
-    {
-      headers: { token },
-    }
-  );
-  
- 
+    const { data } = await axios.put(
+      urlsv + "/api/modulo-examenes/update-sede",
+      {
+        id_sede: id,
+        nombre: value,
+      },
+      {
+        headers: { token },
+      }
+    );
 
-
-  examenesAlerta(
-    "La sede ha sido modificada correctamente",
-    "success"
-  );
-  render()
-
-
+    examenesAlerta("La sede ha sido modificada correctamente", "success");
+    render();
   } catch (error) {
     return await alerta.alert("Error:", error.response.data.mensaje);
-    
   }
-  
 }
 
-
-
-async function modificarSeccion(id){
-  const input = document.getElementById('inputSeccionModificar')
-  let value = input.value
+async function modificarSeccion(id) {
+  const input = document.getElementById("inputSeccionModificar");
+  let value = input.value;
   try {
     const { token } = await login.getToken();
-  const { data } = await axios.put(
-    urlsv + "/api/modulo-examenes/update-seccion",
-    {
-      id_seccion:id,
-      nombre:value
-    },
-    {
-      headers: { token },
-    }
-  );
-  
- 
+    const { data } = await axios.put(
+      urlsv + "/api/modulo-examenes/update-seccion",
+      {
+        id_seccion: id,
+        nombre: value,
+      },
+      {
+        headers: { token },
+      }
+    );
 
-
-  examenesAlerta(
-    "La seccion ha sido modificada correctamente",
-    "success"
-  );
-  render()
-
+    examenesAlerta("La seccion ha sido modificada correctamente", "success");
+    render();
   } catch (error) {
     return await alerta.alert("Error:", error.response.data.mensaje);
-    
   }
-  
 }
 
-async function modificarExamenTabla(id){
+async function modificarExamenTabla(id) {
   const inputExamenNombre = document.getElementById("inputNombreExamen");
   const seccionSelect = document.getElementById("seccionExamenSelect");
-  const categoriaSelect= document.getElementById("categoriaExamenSelect");
-  console.log(inputExamenNombre.value, seccionSelect.value, categoriaSelect.value)
+  const categoriaSelect = document.getElementById("categoriaExamenSelect");
+  console.log(
+    inputExamenNombre.value,
+    seccionSelect.value,
+    categoriaSelect.value
+  );
   try {
     const { token } = await login.getToken();
-  const { data } = await axios.put(
-    urlsv + "/api/modulo-examenes/update-examen-tabla",
-    {
-      id_seccion:seccionSelect.value,
-      nombre:inputExamenNombre.value,
-      id_examen: id,
-      id_categoria: categoriaSelect.value
-    },
-    {
-      headers: { token },
-    }
-  );
-  
- 
+    const { data } = await axios.put(
+      urlsv + "/api/modulo-examenes/update-examen-tabla",
+      {
+        id_seccion: seccionSelect.value,
+        nombre: inputExamenNombre.value,
+        id_examen: id,
+        id_categoria: categoriaSelect.value,
+      },
+      {
+        headers: { token },
+      }
+    );
 
-
-  examenesAlerta(
-    "El examen ha sido modificado correctamente",
-    "success"
-  );
-
-
+    examenesAlerta("El examen ha sido modificado correctamente", "success");
   } catch (error) {
     return await alerta.alert("Error:", error.response.data.mensaje);
-    
   }
 }
 
@@ -956,24 +929,29 @@ async function modificarExamen(id) {
       urlsv + "/api/modulo-examenes/examen-id",
       { headers: { token }, params: { idExamen: id } }
     );
-    console.log(examen)
-    const botonRefrescarFooter = document.getElementById("buttonRefrescarFooter")
+    console.log(examen);
+    const botonRefrescarFooter = document.getElementById(
+      "buttonRefrescarFooter"
+    );
     const inputExamenNombre = document.getElementById("inputNombreExamen");
     const seccionSelect = document.getElementById("seccionExamenSelect");
-    const categoriaSelect= document.getElementById("categoriaExamenSelect");
+    const categoriaSelect = document.getElementById("categoriaExamenSelect");
     const botonGuardarExamen = document.getElementById("buttonGuardarExamen");
     botonGuardarExamen.setAttribute("disabled", "true");
     const accordionDiv = document.getElementById("accordionCaracteristicas");
     const botonModalCaracteristica = document.getElementById(
       "botonModalCaracteristica"
     );
-    const botonModificarExamenTab=document.getElementById(`modificarExamenTab`)
-    const refrescar=document.getElementById(`refrescarButton`)
-    refrescar.setAttribute('hidden','true')
-    botonModificarExamenTab.removeAttribute('hidden')
-    botonRefrescarFooter.removeAttribute('hidden')
-    botonModificarExamenTab.setAttribute('onclick',`modificarExamenTabla(${id})`)
-
+    const botonModificarExamenTab =
+      document.getElementById(`modificarExamenTab`);
+    const refrescar = document.getElementById(`refrescarButton`);
+    refrescar.setAttribute("hidden", "true");
+    botonModificarExamenTab.removeAttribute("hidden");
+    botonRefrescarFooter.removeAttribute("hidden");
+    botonModificarExamenTab.setAttribute(
+      "onclick",
+      `modificarExamenTabla(${id})`
+    );
 
     botonModalCaracteristica.removeAttribute("onclick");
     botonModalCaracteristica.setAttribute(
@@ -2562,25 +2540,24 @@ function validarSelectTipoBusqueda(value) {
       buscarExamen();
       input.setAttribute("oninput", "buscarExamen()");
       break;
-  
+
     case "seccion":
       buscarSeccion();
       input.setAttribute("oninput", "buscarSeccion()");
       break;
-    case "categoria": 
-    buscarCategoria();
-    input.setAttribute("oninput", "buscarCategoria()");  
-    break;
-    case "laboratorio": 
-    buscarLaboratorio();
-    input.setAttribute("oninput", "buscarLaboratorio()");  
-    break;
-    case "sede": 
-    buscarSede();
-    input.setAttribute("oninput", "buscarSede()");  
-    break;
+    case "categoria":
+      buscarCategoria();
+      input.setAttribute("oninput", "buscarCategoria()");
+      break;
+    case "laboratorio":
+      buscarLaboratorio();
+      input.setAttribute("oninput", "buscarLaboratorio()");
+      break;
+    case "sede":
+      buscarSede();
+      input.setAttribute("oninput", "buscarSede()");
+      break;
   }
-
 }
 
 async function detalleSeccion(id) {
@@ -2685,8 +2662,6 @@ async function detalleExamen(id) {
     `;
   });
 }
-
-
 
 function buscarSeccion() {
   input = document.getElementById("inputDescripcionBusqueda");
@@ -2804,7 +2779,6 @@ function buscarSede() {
     `;
   });
 }
-
 
 function buscarCategoria() {
   input = document.getElementById("inputDescripcionBusqueda");
@@ -3421,9 +3395,11 @@ async function crearExamen() {
   const nombre = document.getElementById("inputNombreExamen").value;
   const seccion = document.getElementById("seccionExamenSelect").value;
   const categoria = document.getElementById("categoriaExamenSelect").value;
-  if(seccion == '' || categoria == ''){
-    return examenesAlerta("Ingrese una Categoria y una Seccion valida", "warning");
-
+  if (seccion == "" || categoria == "") {
+    return examenesAlerta(
+      "Ingrese una Categoria y una Seccion valida",
+      "warning"
+    );
   }
   console.log(nombre, seccion, categoria);
   console.log(caracteristicas);
@@ -3432,9 +3408,9 @@ async function crearExamen() {
   }
   try {
     const { token } = await login.getToken();
-    const {data} = await axios.post(
+    const { data } = await axios.post(
       urlsv + "/api/modulo-examenes/crear-examen",
-      { nombre, seccion, caracteristicas,categoria },
+      { nombre, seccion, caracteristicas, categoria },
       { headers: { token } }
     );
     examenesAlerta(
@@ -3442,7 +3418,6 @@ async function crearExamen() {
       "success"
     );
     return modificarExamen(data.examenId);
-
   } catch (error) {
     console.log(error);
     if (error.response.data.mensaje) {
@@ -3454,22 +3429,22 @@ async function crearExamen() {
 }
 
 async function crearSeccion() {
-  const ratio=document.getElementsByName('inputTipoSeccion')
-  let arrRatio=[...ratio]
+  const ratio = document.getElementsByName("inputTipoSeccion");
+  let arrRatio = [...ratio];
 
-  let value=arrRatio.find(e=>e.checked==true)
-  
+  let value = arrRatio.find((e) => e.checked == true);
+
   const nombre = document.getElementById("inputSeccion").value;
 
-  if(nombre==''){
-    return alerta.alert("Error:", "El nombre no puede estar vacio")
+  if (nombre == "") {
+    return alerta.alert("Error:", "El nombre no puede estar vacio");
   }
   try {
     const { token } = await login.getToken();
     const seccion = await axios.post(
       urlsv + `/api/modulo-examenes/crear-${value.value}`,
       {
-        nombre
+        nombre,
       },
       { headers: { token } }
     );
@@ -3478,6 +3453,35 @@ async function crearSeccion() {
   } catch (error) {
     console.log(error);
     if (error.response.data.mensaje) {
+      return await alerta.alert("Error:", error.response.data.mensaje);
+    } else {
+      return await alerta.error();
+    }
+  }
+}
+
+async function crearSede() {
+  const nombre = document.getElementById("nombreSede").value;
+  const clave = document.getElementById("claveSede").value;
+
+  if (nombre == "" || isNaN(clave) || clave == "") {
+    return alerta.alert("Error:", "Ingrese un nombre o clave valida");
+  }
+  try {
+    const { token } = await login.getToken();
+    const sede = await axios.post(
+      urlsv + `/api/modulo-examenes/crear-sede`,
+      {
+        nombre,
+        clave
+      },
+      { headers: { token } }
+    );
+
+    await render();
+  } catch (error) {
+    console.log(error);
+    if (error.response?.data?.mensaje) {
       return await alerta.alert("Error:", error.response.data.mensaje);
     } else {
       return await alerta.error();

@@ -207,7 +207,7 @@ async function crearLaboratorio(){
 }
 async function render(){
   const tBody=document.getElementById(`tBodyTabLab`)
-  tBody.innerHTML=''
+  tBody.innerHTML='';
   const {data:sedes} = await axios.get(
     "http://localhost:3000/api/espejo/sedes"
   );
@@ -246,11 +246,12 @@ function validarSelectLab(value){
 }
 async function crearSede(){
   const sede = document.getElementById('sede').value
+  const clave = document.getElementById('clave').value
   const alerta = document.getElementById('alertaInicio')
 
-  if(sede==''){
+  if(sede=='' || clave == ''){
     alerta.className='alert alert-danger row'
-    return   alerta.innerHTML=`<span class="text-center">La Sede No puede estar vacia <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" fill="currentColor" class="bi bi-x" viewBox="0 0 16 16">
+    return   alerta.innerHTML=`<span class="text-center">La SEDE o la CLAVE no puede estar vacia <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" fill="currentColor" class="bi bi-x" viewBox="0 0 16 16">
       <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708"/>
     </svg></span>`
   }else{
@@ -258,7 +259,8 @@ async function crearSede(){
     const {data:res} = await axios.post(
       `http://localhost:3000/api/espejo/crear-sede`,
       {
-        nombre:sede
+        nombre:sede,
+        clave
       },
       
     );
@@ -296,11 +298,17 @@ function formularioSede(){
   document.getElementById('h1Tipo').innerText='SEDE'
   container.innerHTML=`
   <div class="row mb-3 mt-3">
-                    <div class="col-4">
-                      <label for="sede" class="form-label">Sede: </label>
+                    <div class="col-4 my-auto">
+                      <label for="sede" class="m-0 form-label">Sede: </label>
                     </div>
                     <div class="col-8">
                       <input type="text" class="form-control" id="sede" placeholder="Sede">
+                    </div>
+                    <div class="col-4 my-auto">
+                      <label for="sede" class="m-0 form-label">Clave: </label>
+                    </div>
+                    <div class="col-8">
+                      <input type="number" class="form-control" id="clave" placeholder="123">
                     </div>
   
                   </div>

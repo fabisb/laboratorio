@@ -21,9 +21,7 @@ export const getSedes = async (req, res) => {
   try {
     const [sedes] = await pool.execute("SELECT * FROM sede");
     if (sedes.length == 0) {
-      return await res
-        .status(404)
-        .json({ mensaje: "No se encuentran sedes" });
+      return await res.status(404).json({ mensaje: "No se encuentran sedes" });
     } else {
       return await res.status(200).json(sedes);
     }
@@ -54,7 +52,9 @@ export const getCategorias = async (req, res) => {
 
 export const getLaboratorios = async (req, res) => {
   try {
-    const [laboratorios] = await pool.execute("SELECT * FROM laboratorios_externos");
+    const [laboratorios] = await pool.execute(
+      "SELECT * FROM laboratorios_externos"
+    );
     if (laboratorios.length == 0) {
       return await res
         .status(404)
@@ -69,9 +69,6 @@ export const getLaboratorios = async (req, res) => {
       .json({ mensaje: "Ha ocurrido un error en el servidor" });
   }
 };
-
-
-
 
 export const getCaracteristicasById = async (req, res) => {
   console.log("aaabb");
@@ -169,7 +166,7 @@ export const getExamenById = async (req, res) => {
       [examenes[0].id_seccion]
     );
     console.log(seccion);
-    
+
     if (examenes.length == 0) {
       return await res
         .status(404)
@@ -196,9 +193,18 @@ export const getExamenById = async (req, res) => {
         );
         return await res
           .status(200)
-          .json({ examen: examenes[0], detalles, rangos, resultados, subCa,seccion });
+          .json({
+            examen: examenes[0],
+            detalles,
+            rangos,
+            resultados,
+            subCa,
+            seccion,
+          });
       } else {
-        return await res.status(200).json({ examen: examenes[0], detalles,seccion});
+        return await res
+          .status(200)
+          .json({ examen: examenes[0], detalles, seccion });
       }
     }
   } catch (error) {
@@ -253,7 +259,7 @@ export const getExamenByCategoria = async (req, res) => {
 };
 export const crearExamen = async (req, res) => {
   try {
-    const { seccion, nombre, caracteristicas,categoria } = req.body;
+    const { seccion, nombre, caracteristicas, categoria } = req.body;
     console.log("🚀 ~ crearExamen ~ req.body:", req.body);
     if (!nombre || nombre == "") {
       return await res
@@ -350,7 +356,7 @@ export const crearExamen = async (req, res) => {
       //INSERCION
       const [examenNew] = await pool.execute(
         "INSERT INTO examenes (nombre, id_seccion,id_categoria) VALUES (?,?,?)",
-        [nombre, seccion,categoria]
+        [nombre, seccion, categoria]
       );
       /* examenNew.insertId */
       await Promise.all(
@@ -432,7 +438,7 @@ export const crearExamen = async (req, res) => {
       );
       return await res.status(200).json({
         mensaje: "Examen insertado correctamente",
-        examenId: examenNew.insertId
+        examenId: examenNew.insertId,
       });
     }
   } catch (error) {
@@ -614,7 +620,7 @@ export const insertCaracteristica = async (req, res) => {
       );
       return await res.status(200).json({
         mensaje: "Caracteristica insertada correctamente",
-        examenId: idEx
+        examenId: idEx,
       });
     }
   } catch (error) {
@@ -660,12 +666,12 @@ export const crearSeccion = async (req, res) => {
 };
 
 export const crearSede = async (req, res) => {
-  const { nombre } = req.body;
+  const { nombre, clave } = req.body;
   try {
-    if (!nombre || nombre == "") {
+    if (!nombre || nombre == "" || !clave || clave == "" || isNaN(clave)) {
       return await res
         .status(400)
-        .json({ mensaje: "Ingrese un nombre valido" });
+        .json({ mensaje: "Ingrese un nombre o una clave valida" });
     }
     const [nombreExistente] = await pool.execute(
       "SELECT nombre FROM sede WHERE nombre = ?",
@@ -677,8 +683,8 @@ export const crearSede = async (req, res) => {
       });
     } else {
       const [sede] = await pool.execute(
-        "INSERT INTO sede (nombre) VALUES (?)",
-        [nombre]
+        "INSERT INTO sede (nombre, clave) VALUES (?, ?)",
+        [nombre, clave]
       );
       return await res.status(200).json({
         mensaje: "Sede insertada correctamente",
@@ -694,19 +700,17 @@ export const crearSede = async (req, res) => {
 };
 
 export const crearLaboratorio = async (req, res) => {
-  const { rif,razon,direccion,telefono } = req.body;
+  const { rif, razon, direccion, telefono } = req.body;
   try {
-    if (!rif || rif == "" || rif<0) {
-      return await res
-        .status(400)
-        .json({ mensaje: "Ingrese un rif valido" });
+    if (!rif || rif == "" || rif < 0) {
+      return await res.status(400).json({ mensaje: "Ingrese un rif valido" });
     }
-    if (!razon|| razon == "") {
+    if (!razon || razon == "") {
       return await res
         .status(400)
         .json({ mensaje: "Ingrese un nommbre valido" });
     }
-    
+
     const [nombreExistente] = await pool.execute(
       "SELECT razon_social FROM laboratorios_externos WHERE razon_social = ?",
       [razon]
@@ -716,14 +720,15 @@ export const crearLaboratorio = async (req, res) => {
       [rif]
     );
 
-    if (nombreExistente.length > 0 || rifExistente.length>0) {
+    if (nombreExistente.length > 0 || rifExistente.length > 0) {
       return await res.status(400).json({
-        mensaje: "El nombre/rif que intenta agregar para este laboratorio ya existe",
+        mensaje:
+          "El nombre/rif que intenta agregar para este laboratorio ya existe",
       });
     } else {
       const [categoria] = await pool.execute(
         "INSERT INTO laboratorios_externos (rif,razon_social,direccion,telefono) VALUES (?,?,?,?)",
-        [rif,razon,direccion,telefono]
+        [rif, razon, direccion, telefono]
       );
       return await res.status(200).json({
         mensaje: "Laboratorio insertado correctamente",
@@ -771,7 +776,6 @@ export const crearCategoria = async (req, res) => {
       .json({ mensaje: "Ha ocurrido un error en el servidor" });
   }
 };
-
 
 export const updateExamen = async (req, res) => {
   const { id_examen, nombre, id_seccion } = req.body;
@@ -833,7 +837,7 @@ export const updateSeccion = async (req, res) => {
       "SELECT * FROM seccion_examen where nombre = ?",
       [nombre]
     );
-    if(existenteName.length>0){
+    if (existenteName.length > 0) {
       return await res.status(200).json({
         mensaje: `La seccion no se ha podido ingresar por duplicidad en el nombre`,
       });
@@ -865,7 +869,7 @@ export const updateSeccion = async (req, res) => {
 export const updateSede = async (req, res) => {
   const { id_sede, nombre } = req.body;
 
-  if (!id_sede|| id_sede < 0 || isNaN(id_sede)) {
+  if (!id_sede || id_sede < 0 || isNaN(id_sede)) {
     return await res
       .status(400)
       .json({ mensaje: "El id de la sede enviado no es valido" });
@@ -880,15 +884,14 @@ export const updateSede = async (req, res) => {
       "SELECT * FROM sede where nombre = ?",
       [nombre]
     );
-    if(existenteName.length>0){
+    if (existenteName.length > 0) {
       return await res.status(200).json({
         mensaje: `La seccion no se ha podido ingresar por duplicidad en el nombre`,
       });
     }
-    const [existente] = await pool.execute(
-      "SELECT * FROM sede where id = ?",
-      [id_sede]
-    );
+    const [existente] = await pool.execute("SELECT * FROM sede where id = ?", [
+      id_sede,
+    ]);
     if (existente.length > 0) {
       await pool.execute("UPDATE sede SET nombre = ? WHERE id = ?", [
         nombre,
@@ -911,7 +914,7 @@ export const updateSede = async (req, res) => {
 };
 
 export const updateLaboratorio = async (req, res) => {
-  const { id_laboratorio, razon,direccion,telefono,rif } = req.body;
+  const { id_laboratorio, razon, direccion, telefono, rif } = req.body;
 
   if (!id_laboratorio || id_laboratorio < 0 || isNaN(id_laboratorio)) {
     return await res
@@ -930,17 +933,18 @@ export const updateLaboratorio = async (req, res) => {
     );
     const [rifExistente] = await pool.execute(
       "SELECT rif FROM laboratorios_externos WHERE rif = ? AND id != ?",
-      [rif,id_laboratorio]
+      [rif, id_laboratorio]
     );
 
-    if (nombreExistente.length > 0 || rifExistente.length>0) {
+    if (nombreExistente.length > 0 || rifExistente.length > 0) {
       return await res.status(400).json({
-        mensaje: "El nombre/rif que intenta agregar para este laboratorio ya existe",
+        mensaje:
+          "El nombre/rif que intenta agregar para este laboratorio ya existe",
       });
     } else {
       const [categoria] = await pool.execute(
         "UPDATE laboratorios_externos set razon_social = ?, direccion = ?, rif = ?, telefono =? where id = ?",
-        [razon,direccion,rif,telefono,id_laboratorio]
+        [razon, direccion, rif, telefono, id_laboratorio]
       );
       return await res.status(200).json({
         mensaje: "Laboratorio insertado correctamente",
@@ -955,7 +959,7 @@ export const updateLaboratorio = async (req, res) => {
   }
 };
 export const updateExamenTabla = async (req, res) => {
-  const { id_categoria,id_seccion, nombre,id_examen } = req.body;
+  const { id_categoria, id_seccion, nombre, id_examen } = req.body;
 
   if (!id_seccion || id_seccion < 0 || isNaN(id_seccion)) {
     return await res
@@ -989,20 +993,18 @@ export const updateExamenTabla = async (req, res) => {
     );
     const [existenteName] = await pool.execute(
       "SELECT * FROM examenes where nombre = ? AND id != ?",
-      [nombre,id_examen]
+      [nombre, id_examen]
     );
-    if(existenteName.length>0){
+    if (existenteName.length > 0) {
       return await res.status(400).json({
         mensaje: `El Examen no se ha podido ingresar por duplicidad en el nombre`,
       });
     }
     if (existente.length > 0) {
-      await pool.execute("UPDATE examenes SET nombre = ?, id_categoria=?, id_seccion=? WHERE id = ?", [
-        nombre,
-        id_categoria,
-        id_seccion,
-        id_examen
-      ]);
+      await pool.execute(
+        "UPDATE examenes SET nombre = ?, id_categoria=?, id_seccion=? WHERE id = ?",
+        [nombre, id_categoria, id_seccion, id_examen]
+      );
       return await res.status(200).json({
         mensaje: `El examen #${id_examen} ha sido modificado correctamente`,
       });
@@ -1037,7 +1039,7 @@ export const updateCategoria = async (req, res) => {
       "SELECT * FROM categoria_examen where nombre = ?",
       [nombre]
     );
-    if(existenteName.length>0){
+    if (existenteName.length > 0) {
       return await res.status(200).json({
         mensaje: `La categoria no se ha podido ingresar por duplicidad en el nombre`,
       });
@@ -1047,10 +1049,10 @@ export const updateCategoria = async (req, res) => {
       [id_categoria]
     );
     if (existente.length > 0) {
-      await pool.execute("UPDATE categoria_examen SET nombre = ? WHERE id = ?", [
-        nombre,
-        id_categoria,
-      ]);
+      await pool.execute(
+        "UPDATE categoria_examen SET nombre = ? WHERE id = ?",
+        [nombre, id_categoria]
+      );
       return await res.status(200).json({
         mensaje: `La categoria #${id_categoria} ha sido modificada correctamente`,
       });
@@ -1126,8 +1128,6 @@ export const updateCaracteristica = async (req, res) => {
     }
   }
 };
-
-
 
 export const updateSubCaracteristica = async (req, res) => {
   const { id_subCaracteristica, subCaracteristica } = req.body;
