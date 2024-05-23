@@ -1,5 +1,5 @@
 import express from "express";
-import { verifyToken } from "../controllers/login.controller.js";
+import { adminBioToken, administradorToken, noAuxToken, verifyToken } from "../controllers/login.controller.js";
 import {
   modificarResultadoExamen,
   modificarExamenExterno,
@@ -40,18 +40,18 @@ router.get("/resultados-examen", verifyToken, getExamenResultados);//TODOS
 
 //POST
 router.post("/get-examen",getExamen);//TODOS
-router.post("/crear-examen", verifyToken,crearExamen);//TODOS EXCEPTO AUXILIAR
-router.post("/crear-examenExterno", verifyToken,crearExamenExterno);//ADMIN SOLO
-router.post("/crear-orden", verifyToken,crearOrden);//TODOS EXCEPTO AUXILIAR
+router.post("/crear-examen", noAuxToken,crearExamen);//TODOS EXCEPTO AUXILIAR
+router.post("/crear-examenExterno", administradorToken,crearExamenExterno);//ADMIN SOLO
+router.post("/crear-orden", noAuxToken,crearOrden);//TODOS EXCEPTO AUXILIAR
 router.post("/crear-examen-pendiente", verifyToken,crearExamenPendiente);//TODOS
 router.post("/reimpresion-examen", verifyToken, getExamenReimpresion);//TODOS
 
 //PUT
-router.put("/modificar-examenExterno", verifyToken,modificarExamenExterno);//ADMIN
-router.put("/modificar-examen", verifyToken,modificarExamen);//ADMIN Y BIO SOLO ANTES DE 48HRS
-router.put("/modificar-laboratorio", verifyToken,modificarLaboratorio);//ADMIN
-router.put("/modificar-resultado-examen", verifyToken,modificarResultadoExamen);//ADMIN Y BIO SOLO ANTES DE 48HRS
-router.put("/update-subCaracteristicasCar", verifyToken, updateSubCaracteristicaCar);//ADMIN Y BIO SOLO ANTES DE 48HRS
+router.put("/modificar-examenExterno", administradorToken,modificarExamenExterno);//ADMIN
+router.put("/modificar-examen", adminBioToken,modificarExamen);//ADMIN Y BIO SOLO ANTES DE 48HRS
+router.put("/modificar-laboratorio", administradorToken,modificarLaboratorio);//ADMIN
+router.put("/modificar-resultado-examen", adminBioToken,modificarResultadoExamen);//ADMIN Y BIO SOLO ANTES DE 48HRS
+router.put("/update-subCaracteristicasCar", adminBioToken, updateSubCaracteristicaCar);//ADMIN Y BIO SOLO ANTES DE 48HRS
 
 //DELETE
 

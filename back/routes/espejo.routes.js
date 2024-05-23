@@ -10,11 +10,19 @@ import {
   crearLaboratorio,
   crearSede,
   updateLaboratorio,
-  updateSede
+  updateSede,
 } from "../controllers/espejo.controller.js";
 import { getExamenResultados } from "../controllers/examenes.controller.js";
-import { crearBioanalsita, crearUsuario, getAllUsers } from "../controllers/usuariosEspejo.controller.js";
-import { verifyCookie } from "../controllers/login.controller.js";
+import {
+  crearBioanalsita,
+  crearUsuario,
+  getAllUsers,
+} from "../controllers/usuariosEspejo.controller.js";
+import {
+  adminCookie,
+  impresionCookie,
+  verifyCookie,
+} from "../controllers/login.controller.js";
 import {
   cambiarStatus,
   editarBioanalista,
@@ -23,36 +31,31 @@ import {
 var router = express.Router();
 
 //GET
-router.get("/get-examenes-paciente", getExamenesPacientes);//Administrador y impresion
-router.get("/get-pacientes-dia", getPacientesDia);//Administrador y impresion
-router.get("/get-examen-dia", getExamenDia);//Administrador y impresion
-router.get("/get-examen-byFecha", getExamenByFecha);//Administrador y impresion
-router.get("/sedes", getSedes);//Administrador y impresion
-router.get("/laboratorios", getLaboratorios);//Administrador y impresion
-router.get("/get-examen-detalle", getExamenDetalle);//Administrador y impresion
-router.get("/get-examen-resultado", getExamenResultados);//Administrador y impresion
-
+router.get("/get-examenes-paciente", verifyCookie, getExamenesPacientes); //Administrador y impresion
+router.get("/get-pacientes-dia", verifyCookie, getPacientesDia); //Administrador y impresion
+router.get("/get-examen-dia", verifyCookie, getExamenDia); //Administrador y impresion
+router.get("/get-examen-byFecha", verifyCookie, getExamenByFecha); //Administrador y impresion
+router.get("/sedes", verifyCookie, getSedes); //Administrador y impresion
+router.get("/laboratorios", verifyCookie, getLaboratorios); //Administrador y impresion
+router.get("/get-examen-detalle", verifyCookie, getExamenDetalle); //Administrador y impresion
+router.get("/get-examen-resultado", verifyCookie, getExamenResultados); //Administrador y impresion
 
 //GET USUARIOS
-router.get("/get-usuarios", verifyCookie, getAllUsers);//Administrador
+router.get("/get-usuarios", adminCookie, getAllUsers); //Administrador
 
 //POST
-router.post("/guardar-usuario", verifyCookie, crearUsuario);//Administrador
-router.post("/guardar-bioanalista", verifyCookie, crearBioanalsita);//Administrador
-router.post("/crear-laboratorio", crearLaboratorio);//Administrador
-router.post("/crear-sede", crearSede);//Administrador
-
-
+router.post("/guardar-usuario", adminCookie, crearUsuario); //Administrador
+router.post("/guardar-bioanalista", adminCookie, crearBioanalsita); //Administrador
+router.post("/crear-laboratorio", adminCookie, crearLaboratorio); //Administrador
+router.post("/crear-sede", adminCookie, crearSede); //Administrador
 
 //PUT
 
 //PUT USUARIOS
-router.put("/editar-usuario", verifyCookie, editarUsuario);//Administrador
-router.put("/editar-bioanalista", verifyCookie, editarBioanalista);//Administrador
-router.put("/editar-status", verifyCookie, cambiarStatus);//Administrador
-router.put("/update-laboratorio", updateLaboratorio);//Administrador
-router.put("/update-sede", updateSede);//Administrador
-
-
+router.put("/editar-usuario", adminCookie, editarUsuario); //Administrador
+router.put("/editar-bioanalista", adminCookie, editarBioanalista); //Administrador
+router.put("/editar-status", adminCookie, cambiarStatus); //Administrador
+router.put("/update-laboratorio", adminCookie, updateLaboratorio); //Administrador
+router.put("/update-sede", adminCookie, updateSede); //Administrador
 
 export default router;

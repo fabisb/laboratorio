@@ -228,13 +228,13 @@ export const administradorToken = async (req, res, next) => {
     });
   }
 };
-export const bioanalistaToken = async (req, res, next) => {
+export const adminBioToken = async (req, res, next) => {
   const { token } = req.headers;
   try {
     var decoded = await jwt.verify(token, "secret");
     if (decoded) {
       req.user = decoded;
-      if (decoded.nivel == 3) {
+      if (decoded.nivel == 1 || decoded.nivel == 3 ) {
         await next();
       } else {
         return await res.status(401).json({
@@ -250,40 +250,19 @@ export const bioanalistaToken = async (req, res, next) => {
     });
   }
 };
-export const auxiliarToken = async (req, res, next) => {
+
+export const noAuxToken = async (req, res, next) => {
   const { token } = req.headers;
   try {
     var decoded = await jwt.verify(token, "secret");
     if (decoded) {
       req.user = decoded;
-      if (decoded.nivel == 2) {
-        await next();
-      } else {
+      if (decoded.nivel == 2 ) {
         return await res.status(401).json({
           mensaje: "Su nivel de usuario no esta autorizado para esta peticion",
         });
-      }
-    }
-  } catch (err) {
-    // err
-    console.log(err);
-    return await res.status(401).json({
-      mensaje: "Su nivel de usuario no esta autorizado para esta peticion",
-    });
-  }
-};
-export const impresionToken = async (req, res, next) => {
-  const { token } = req.headers;
-  try {
-    var decoded = await jwt.verify(token, "secret");
-    if (decoded) {
-      req.user = decoded;
-      if (decoded.nivel == 4) {
-        await next();
       } else {
-        return await res.status(401).json({
-          mensaje: "Su nivel de usuario no esta autorizado para esta peticion",
-        });
+        await next();
       }
     }
   } catch (err) {
@@ -317,6 +296,25 @@ export async function verifyCookie(req, res, next) {
   }
 }
 
+export async function adminCookie(req, res, next) {
+  const { token } = req.cookies;
+  try {
+    var decoded = await jwt.verify(token, "secret");
+    if (decoded) {
+      req.user = decoded;
+      if (decoded.nivel == 1 ) {
+        await next();
+      } else {
+        res.status(401).sendFile(path.join(publics, "/401.html"));
+      }
+    }
+  } catch (err) {
+    console.log(err);
+    return await res
+      .status(420)
+      .json({ mensaje: "Error de autentificacion, verificar token" });
+  }
+}
 export async function impresionCookie(req, res, next) {
   const { token } = req.cookies;
   try {
@@ -403,21 +401,4 @@ export async function loginEspejo(req, res) {
 
 //COOKIES CONTROLLER
 
-export const imagen = async (req, res, next) => {
-  const { img, cedula, nombre, colegio } = req.body;
-  try {
-    await pool.execute(
-      "INSERT INTO bioanalistas (foto_carnet, cedula, nombre, colegio) VALUES (?,?,?,?)",
-      [img, cedula, nombre, colegio]
-    );
-    const [imgNueva] = await pool.execute(
-      "SELECT foto_carnet FROM bioanalistas"
-    );
-    return await res
-      .status(200)
-      .json({ mensaje: "exitoso", img: imgNueva[0].foto_carnet });
-  } catch (error) {
-    console.log(error);
-    return await res.status(500).json({ mensaje: "ERROR DE SERVIDOR" });
-  }
-};
+

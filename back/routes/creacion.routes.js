@@ -1,5 +1,5 @@
 import express from "express";
-import { verifyToken } from "../controllers/login.controller.js";
+import { adminBioToken, administradorToken, verifyToken } from "../controllers/login.controller.js";
 import {
   agregarPacienteController,
   agregarBioanalistaController,
@@ -14,23 +14,24 @@ import {
 } from "../controllers/creacion.controller.js";
 var router = express.Router();
 
+//TODOS LOS PERMISOS SOLO ADMIN
 //GET
 router.get("/buscar-usuarios", verifyToken, buscarUsuarios);
 router.get("/buscar-usuario", verifyToken, buscarUsuario);
 router.get("/buscar-bioanalista", verifyToken, buscarBioanalista);
 
 //POST
-router.post("/agregar-paciente", verifyToken, agregarPacienteController);
+router.post("/agregar-paciente", adminBioToken, agregarPacienteController); //MENOS AGREGAR PACIENTE
 
-router.post("/agregar-usuario", verifyToken, agregarUsuarioController);
-router.post("/agregar-bioanalista", verifyToken, agregarBioanalistaController);
+router.post("/agregar-usuario", administradorToken, agregarUsuarioController);
+router.post("/agregar-bioanalista", administradorToken, agregarBioanalistaController);
 
-router.post("/guardar-usuario", verifyToken,crearUsuario);
-router.post("/guardar-bioanalista", verifyToken,crearBioanalista);
+router.post("/guardar-usuario", administradorToken,crearUsuario);
+router.post("/guardar-bioanalista", administradorToken,crearBioanalista);
 
 //PUT
-router.put("/editar-usuario", verifyToken, editarUsuario);
-router.put("/editar-bioanalista", verifyToken, editarBioanalista);
-router.put("/editar-status", verifyToken, cambiarStatus);
+router.put("/editar-usuario", administradorToken, editarUsuario);
+router.put("/editar-bioanalista", administradorToken, editarBioanalista);
+router.put("/editar-status", administradorToken, cambiarStatus);
 
 export default router;

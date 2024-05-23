@@ -1,5 +1,5 @@
 import express from "express";
-import { verifyToken } from "../controllers/login.controller.js";
+import { administradorToken, verifyToken } from "../controllers/login.controller.js";
 import {
   crearExamen,
   crearSeccion,
@@ -51,38 +51,38 @@ router.get("/caracteristicas-id_ex", verifyToken, getCaracteristicasById);
 
 
 //POST
-router.post("/crear-seccion", verifyToken, crearSeccion);
-router.post("/crear-sede", verifyToken, crearSede);
-router.post("/crear-categoria", verifyToken, crearCategoria);
-router.post("/crear-examen", verifyToken, crearExamen);
-router.post("/crear-laboratorio", verifyToken, crearLaboratorio);
+router.post("/crear-seccion", administradorToken, crearSeccion);
+router.post("/crear-sede", administradorToken, crearSede);
+router.post("/crear-categoria", administradorToken, crearCategoria);
+router.post("/crear-examen", administradorToken, crearExamen);
+router.post("/crear-laboratorio", administradorToken, crearLaboratorio);
 
 //PUT
-router.put("/update-laboratorio", verifyToken, updateLaboratorio);
-router.put("/update-categoria", verifyToken, updateCategoria);
-router.put("/update-seccion", verifyToken, updateSeccion);
-router.put("/update-sede", verifyToken, updateSede);
-router.put("/update-examen", verifyToken, updateExamen);
-router.put("/update-examen-tabla", verifyToken, updateExamenTabla);
-router.put("/update-caracteristica", verifyToken, updateCaracteristica);
-router.put("/update-subcaracteristica", verifyToken, updateSubCaracteristica);
-router.put("/update-rango", verifyToken, updateRango);
-router.put("/update-resultado", verifyToken, updateResultados);
+router.put("/update-laboratorio", administradorToken, updateLaboratorio);
+router.put("/update-categoria", administradorToken, updateCategoria);
+router.put("/update-seccion", administradorToken, updateSeccion);
+router.put("/update-sede", administradorToken, updateSede);
+router.put("/update-examen", administradorToken, updateExamen);
+router.put("/update-examen-tabla", administradorToken, updateExamenTabla);
+router.put("/update-caracteristica", administradorToken, updateCaracteristica);
+router.put("/update-subcaracteristica", administradorToken, updateSubCaracteristica);
+router.put("/update-rango", administradorToken, updateRango);
+router.put("/update-resultado", administradorToken, updateResultados);
 
 //INSERT
-router.post("/insert-caracteristica", verifyToken, insertCaracteristica);
-router.post("/insert-subcaracteristica", verifyToken, insertSubCaracteristica);
-router.post("/insert-rango", verifyToken, insertRango);
-router.post("/insert-resultado", verifyToken, insertResultado);
+router.post("/insert-caracteristica", administradorToken, insertCaracteristica);
+router.post("/insert-subcaracteristica", administradorToken, insertSubCaracteristica);
+router.post("/insert-rango", administradorToken, insertRango);
+router.post("/insert-resultado", administradorToken, insertResultado);
 
 //DELETE
-router.delete("/delete-caracteristica", verifyToken, deleteCaracteristica);
+router.delete("/delete-caracteristica", administradorToken, deleteCaracteristica);
 router.delete(
   "/delete-subcaracteristica",
-  verifyToken,
+  administradorToken,
   deleteSubCaracteristica
 );
-router.delete("/delete-rango", verifyToken, deleteRango);
-router.delete("/delete-resultado", verifyToken, deleteResultado);
+router.delete("/delete-rango", administradorToken, deleteRango);
+router.delete("/delete-resultado", administradorToken, deleteResultado);
 
 export default router;

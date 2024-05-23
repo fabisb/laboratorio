@@ -10,7 +10,6 @@ import creacionRouter from "./routes/creacion.routes.js";
 import examenesRouter from "./routes/examenes.routes.js";
 import moduloExamenesRouter from "./routes/examenesModulo.routes.js";
 import usersRouter from "./routes/users.routes.js";
-import productosRouter from "./routes/producto.routes.js";
 import espejoRouter from "./routes/espejo.routes.js";
 import { clearCookie, verifyCookie } from "./controllers/login.controller.js";
 
@@ -53,7 +52,6 @@ app.use("/api/examenes", examenesRouter);
 app.use("/api/modulo-examenes", moduloExamenesRouter);
 app.use("/api/users", usersRouter);
 app.use("/api/espejo", espejoRouter);
-app.use("/api/productos", productosRouter);
 
 // middleware para manejar rutas que no se encuentran
 app.use((req, res, next) => {
