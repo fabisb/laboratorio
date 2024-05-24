@@ -337,6 +337,7 @@ const pintarExamen = async () => {
 
 const whatsapp = async () =>{
   const numero = document.getElementById('numeroTlf').value;
+  const code = document.getElementById('codeTlf').value;
   try {
     await wsPDF(numero);
   } catch (error) {
