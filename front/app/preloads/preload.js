@@ -1,4 +1,4 @@
-const { contextBridge, ipcRenderer, dialog } = require("electron");
+const { contextBridge, ipcRenderer } = require("electron");
 
 /**
  * The preload script runs before. It has access to web APIs
@@ -86,5 +86,9 @@ contextBridge.exposeInMainWorld("alerta", {
 contextBridge.exposeInMainWorld(
   "imprimirPDF",
   async () => await ipcRenderer.send("print", JSON.stringify())
+);
+contextBridge.exposeInMainWorld(
+  "wsPDF",
+  async (numero) => await ipcRenderer.send("ws", JSON.stringify(numero))
 );
 

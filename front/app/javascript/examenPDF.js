@@ -334,3 +334,12 @@ const pintarExamen = async () => {
     })
     .join("");
 };
+
+const whatsapp = async () =>{
+  const numero = document.getElementById('numeroTlf').value;
+  try {
+    await wsPDF(numero);
+  } catch (error) {
+    console.log("🚀 ~ imprimir ~ error:", error);
+  }
+}
