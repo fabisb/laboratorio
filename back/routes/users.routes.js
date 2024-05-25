@@ -17,7 +17,7 @@ router.post("/espejo-login", loginEspejo);
 //router.get("/hijos",verifyToken, getHijosController);
 router.get("/get-hijos", verifyToken, getHijosController);
 router.get("/firma", verifyToken, syncFiles);
-router.get("/sedes",verifyToken, getSedes);
+router.get("/sedes", getSedes);
 
 
 export default router;

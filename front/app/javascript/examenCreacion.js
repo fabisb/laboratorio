@@ -3678,6 +3678,10 @@ var caracteristicasCreadas = new Set();
 
 function añadirAcordionItem(nombre1) {
   nombre1 = nombre1.trim();
+  if (nombre1=='') {
+    return alerta.alert("Error", "El nombre no puede estar vacio");
+    
+  }
   const nombre = nombre1.replaceAll(" ", "-").replaceAll("(","-").replaceAll(")","-").replaceAll(".","-");
   
 
