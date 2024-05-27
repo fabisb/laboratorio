@@ -100,7 +100,7 @@ export const crearExamenPendiente = async (req, res) => {
           dt.id_ex,
           examen.insertId,
           dt.id_rango,
-          dt.resultado,
+          dt.resultado.toUpperCase(),
           dt.nota,
           dt.inferior,
           dt.superior,
@@ -522,11 +522,11 @@ export const modificarExamen = async (req, res) => {
         await pool.execute(
           "UPDATE detalles_examen SET nombre = ?, posicion = ?, unidad = ?, impsiempre = ?, resultados = ? WHERE id = ? AND status = 'activo'",
           [
-            dato.nombre,
+            dato.nombre.toUpperCase(),
             dato.posicion,
             dato.unidad,
             dato.impsiempre,
-            dato.resultados ? dato.resultados : null,
+            dato.resultados ? dato.resultados.toUpperCase() : null,
             dato.idDetalleBdd,
           ]
         );
@@ -626,7 +626,7 @@ export const crearExamen = async (req, res) => {
       let cadenaRangos = "";
 
       const [consulta] = await pool.execute(
-        `INSERT INTO detalles_examen(id_ex, nombre, posicion, unidad, impsiempre, resultados) VALUES('${examenInsert.insertId}','${nombre}','${posicion}','${unidad}','','${resultados}')`
+        `INSERT INTO detalles_examen(id_ex, nombre, posicion, unidad, impsiempre, resultados) VALUES('${examenInsert.insertId}','${nombre.toUpperCase()}','${posicion}','${unidad}','','${resultados.toUpperCase()}')`
       );
       console.log("🚀 ~ forawait ~ consulta:", consulta);
       rangos.forEach(async (rg) => {
@@ -642,7 +642,7 @@ export const crearExamen = async (req, res) => {
 
     const valores = detalle
       .map((dato) => {
-        return `('${examenInsert.insertId}','${dato.nombre}','${dato.posicion}','${dato.unidad}','${dato.impsiempre}','${dato.resultados}')`;
+        return `('${examenInsert.insertId}','${dato.nombre.toUpperCase()}','${dato.posicion}','${dato.unidad}','${dato.impsiempre}','${dato.resultados.toUpperCase()}')`;
       })
       .join(", ");
     //const consulta = `INSERT INTO detalles_examen(id_ex, nombre, posicion, unidad, impsiempre, resultados) VALUES ${valores}`;
@@ -712,7 +712,7 @@ export const crearOrden = async (req, res) => {
       `);
       for await (const dt of ex.detallesExamen) {
         const [detalleBdd] = await pool.execute(`
-        INSERT INTO detalles_examenes_paciente(id_dt, id_ex, id_ex_pac, id_rango,superior,inferior, resultado, nota) VALUES ('${dt.id_dt}','${ex.id_ex}','${examenBdd.insertId}','${dt.id_rango}','${dt.superior}','${dt.inferior}','${dt.resultado}','${dt.nota}')
+        INSERT INTO detalles_examenes_paciente(id_dt, id_ex, id_ex_pac, id_rango,superior,inferior, resultado, nota) VALUES ('${dt.id_dt}','${ex.id_ex}','${examenBdd.insertId}','${dt.id_rango}','${dt.superior}','${dt.inferior}','${dt.resultado.toUpperCase()}','${dt.nota}')
         `);
         for await (const sb of dt.subCaracteristicasDt) {
           const [subCaracteristicaBdd] = await pool.execute(`

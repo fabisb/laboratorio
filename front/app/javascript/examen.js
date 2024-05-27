@@ -1980,7 +1980,7 @@ async function previewPdf(tipo, ordenId) {
   examenesChecked.forEach((e) => {
     const caracteristicas = [];
 
-    e.detallesExamenPc.forEach((el) => {
+    e.detallesExamenPc.forEach((el,i) => {
       let subCa = e.subCaracteristicasExPc.filter((sb) => sb.idCar == el.idCar);
       if (el.imprimir == 1) {
         caracteristicas.push({
@@ -1992,6 +1992,9 @@ async function previewPdf(tipo, ordenId) {
           nota: el.nota,
           imprimir: el.imprimir,
           subCaracteristicas: subCa,
+          //AQUI HAY QUE PONER EL STATUS DEL TITULO
+          //status: i == 1 ? 'titulo':''
+          //AQUI HAY QUE PONER EL STATUS DEL TITULO
         });
       } else {
         if (el.resultado != "") {
@@ -2004,6 +2007,9 @@ async function previewPdf(tipo, ordenId) {
             nota: el.nota,
             imprimir: el.imprimir,
             subCaracteristicas: subCa,
+            //AQUI HAY QUE PONER EL STATUS DEL TITULO
+            //status: i == 1 ? 'titulo':''
+            //AQUI HAY QUE PONER EL STATUS DEL TITULO
           });
         }
       }
