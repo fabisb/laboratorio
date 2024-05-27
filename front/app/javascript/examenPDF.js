@@ -97,14 +97,21 @@ const reimprimirExamen = async () => {
               <tbody>
               ${ex.caracteristicas
                 .map((c) => {
-                  return `
+                  if (c?.status == "titulo") {
+                    return `
+                    <tr>
+                    <th colspan="5" scope="row">${c.nombre}</th>
+                  </tr>
+                    `;
+                  } else {
+                    return `
                 <tr>
                 <th scope="row">${c.nombre}</th>
                 <td>${c.resultado} ${
-                    c.nota != ""
-                      ? `<p class="m-0 fst-italic">(${c.nota})</p>`
-                      : ""
-                  } 
+                      c.nota != ""
+                        ? `<p class="m-0 fst-italic">(${c.nota})</p>`
+                        : ""
+                    } 
                 </td>
                 <td>${c.unidad}</td>
                 <td>${c.inferior}</td>
@@ -137,6 +144,7 @@ const reimprimirExamen = async () => {
                   : ""
               }
                 `;
+                  }
                 })
                 .join("")}
               </tbody>
@@ -286,7 +294,14 @@ const pintarExamen = async () => {
             <tbody>
             ${e.caracteristicas
               .map((c) => {
-                return `
+                if (c?.status == "titulo") {
+                  return `
+                  <tr>
+                  <th colspan="5" scope="row">${c.nombre}</th>
+                </tr>
+                  `;
+                } else {
+                  return `
               <tr>
               <th scope="row">${c.nombre}</th>
               <td>${c.resultado}</td>
@@ -321,6 +336,7 @@ const pintarExamen = async () => {
                 : ""
             }
               `;
+                }
               })
               .join("")}
             </tbody>
