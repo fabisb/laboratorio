@@ -23,6 +23,7 @@ import {
   crearOrden,
   getExamenResultados,
   updateSubCaracteristicaCar,
+  statusExamenes,
 } from "../controllers/examenes.controller.js";
 var router = express.Router();
 
@@ -52,6 +53,8 @@ router.put("/modificar-examen", adminBioToken,modificarExamen);//ADMIN Y BIO SOL
 router.put("/modificar-laboratorio", administradorToken,modificarLaboratorio);//ADMIN
 router.put("/modificar-resultado-examen", adminBioToken,modificarResultadoExamen);//ADMIN Y BIO SOLO ANTES DE 48HRS
 router.put("/update-subCaracteristicasCar", adminBioToken, updateSubCaracteristicaCar);//ADMIN Y BIO SOLO ANTES DE 48HRS
+
+router.put("/status-examen", verifyToken, statusExamenes);
 
 //DELETE
 

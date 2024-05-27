@@ -12,6 +12,9 @@
 
   <body onload="pintarExamen()">
     <style>
+      .modal-backdrop {
+        background-color: rgba(0, 0, 0, 0.0001) !important;
+      }
       table {
         page-break-inside: auto;
       }
@@ -358,24 +361,25 @@
     >
       <div class="modal-dialog">
         <div class="modal-content">
-          <div class="modal-header">
-            <h1 class="modal-title fs-5" id="exampleModalLabel">
-              Ingrese numero de telefono
-            </h1>
-            <button
-              type="button"
-              class="btn-close"
-              data-bs-dismiss="modal"
-              aria-label="Close"
-            ></button>
-          </div>
-          <div class="modal-body">
-            <div class="PDFAlerta"></div>
-            <form onsubmit="event.preventDefault(), whatsapp()">
+          <form onsubmit="event.preventDefault(), whatsapp()">
+            <div class="modal-header">
+              <h1 class="modal-title fs-5" id="exampleModalLabel">
+                Ingrese numero de telefono
+              </h1>
+              <button
+                type="button"
+                class="btn-close"
+                data-bs-dismiss="modal"
+                id="wsModalBtnClose"
+                aria-label="Close"
+              ></button>
+            </div>
+            <div class="modal-body">
+              <div id="PDFAlerta"></div>
               <div class="input-group">
                 <span class="input-group-text">+</span>
                 <input
-                  type="text"
+                  type="number"
                   aria-label="Codigo"
                   min="0"
                   step="1"
@@ -386,7 +390,7 @@
                   value="58"
                 />
                 <input
-                  type="text"
+                  type="number"
                   aria-label="Numero"
                   min="0"
                   step="1"
@@ -397,16 +401,16 @@
               </div>
             </div>
             <div class="modal-footer">
-            <button
-              type="button"
-              class="btn btn-secondary"
-              data-bs-dismiss="modal"
-            >
-            Cerrar
-          </button>
-          <button type="submit" class="btn btn-success">Guardar</button>
-        </div>
-      </form>
+              <button
+                type="button"
+                class="btn btn-secondary"
+                data-bs-dismiss="modal"
+              >
+                Cerrar
+              </button>
+              <button type="submit" class="btn btn-success">Guardar</button>
+            </div>
+          </form>
         </div>
       </div>
     </div>

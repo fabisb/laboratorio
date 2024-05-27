@@ -5,7 +5,7 @@ const os = require("os");
 const path = require("path");
 const fs = require("fs").promises;
 var moment = require("moment"); // require
-
+const axios = require("axios");
 //RECARGA AUTOMATICA
 
 /* const electronReload = require("electron-reload");
@@ -19,6 +19,9 @@ if (env === "development") {
 }  */
 //RECARGA AUTOMATICA
 
+//URL DE SEVIDOR
+const urlsv = "http://localhost:3000";
+//URL DE SEVIDOR
 const store = new Store();
 store.clear();
 
@@ -281,7 +284,7 @@ function examenPDFWindow() {
 }
 ipcMain.handle("examenPDFWindow", () => examenPDFWindow());
 
-ipcMain.on("print", async (e, arg) => {
+ipcMain.on("print", async (event, arg) => {
   if (!examenPDFVar) {
     return;
   } else {
@@ -397,20 +400,44 @@ ipcMain.on("print", async (e, arg) => {
     `,
         marginType: 0,
       })
-      .then((data) => {
+      .then(async (data) => {
         // Save the PDF data to a file (you can modify the path)
         const fs = require("fs");
         fs.writeFileSync("app/assets/my_generated_pdf.pdf", data);
         shell.openPath(path.join(__dirname, "app/assets/my_generated_pdf.pdf"));
+        if (examen.orden != "Reimpresion") {
+          const { token } = await store.get("token");
+          try {
+            await axios.put(
+              urlsv + "/api/examenes/status-examen",
+              { col: "status_imp", status: 1, id: examen?.ordenId },
+              { headers: { token } }
+            );
+          } catch (error) {
+            console.log("🚀 ~ .then ~ error):", error);
+            const currentWindow = event.sender.getOwnerBrowserWindow();
+            const result = await dialog.showErrorBox(
+              "ERROR",
+              "Ha ocurrido un error confirmando el status de Impresion"
+            );
+            return result;
+          }
+        }
       })
-      .catch((error) => {
+      .catch(async (error) => {
         console.error("Error generating PDF:", error);
+        const currentWindow = event.sender.getOwnerBrowserWindow();
+        const result = await dialog.showErrorBox(
+          "ERROR",
+          "Ha ocurrido un generando el PDF"
+        );
+        return result;
       });
   }
 
   // When the page finishes loading, generate the PDF
 });
-ipcMain.on("ws", async (e, numero) => {
+ipcMain.on("ws", async (event, numeroArg) => {
   if (!examenPDFVar) {
     return;
   } else {
@@ -526,7 +553,7 @@ ipcMain.on("ws", async (e, numero) => {
     `,
         marginType: 0,
       })
-      .then((data) => {
+      .then(async (data) => {
         const desktopDir = path.join(os.homedir(), "Desktop");
         const rutaArchivo = path.join(
           desktopDir,
@@ -555,19 +582,50 @@ ipcMain.on("ws", async (e, numero) => {
           }
         } catch (err) {
           console.error(err);
+          const currentWindow = event.sender.getOwnerBrowserWindow();
+          const result = dialog.showErrorBox(
+            "ERROR",
+            "Ha ocurrido un generando la carpeta del paciente"
+          );
+          return result;
         }
-        
+
         fs.writeFileSync(rutaArchivo, data);
         shell.showItemInFolder(rutaArchivo);
         const texto = `${examen.paciente.pre_cedula}-${examen.paciente.cedula} ${examen.orden}`;
-        window.open(
+        const numero = JSON.parse(numeroArg);
+        const linkWs =
           `https://wa.me/+${numero.code}${numero.numero}?text=` +
-            encodeURI(texto),
-          "_blank"
-        );
+          encodeURI(texto);
+        shell.openExternal(linkWs);
+
+        if (examen.orden != "Reimpresion") {
+          const { token } = await store.get("token");
+          try {
+            await axios.put(
+              urlsv + "/api/examenes/status-examen",
+              { col: "status_ws", status: 1, id: examen?.ordenId },
+              { headers: { token } }
+            );
+          } catch (error) {
+            console.log("🚀 ~ .then ~ error):", error);
+            const currentWindow = event.sender.getOwnerBrowserWindow();
+            const result = await dialog.showErrorBox(
+              "ERROR",
+              "Ha ocurrido un error confirmando el status de WhatsApp"
+            );
+            return result;
+          }
+        }
       })
-      .catch((error) => {
+      .catch(async (error) => {
         console.error("Error generating PDF:", error);
+        const currentWindow = event.sender.getOwnerBrowserWindow();
+        const result = await dialog.showErrorBox(
+          "ERROR",
+          "Ha ocurrido un generando el PDF y enviandolo por WhatsApp"
+        );
+        return result;
       });
   }
 

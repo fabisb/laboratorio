@@ -3,6 +3,9 @@ const imprimir = async () => {
   botones.hidden = true;
   try {
     await imprimirPDF();
+    setTimeout(() => {
+      botones.hidden = false;
+    }, 3000);
   } catch (error) {
     console.log("🚀 ~ imprimir ~ error:", error);
     botones.removeAttribute("hidden");
@@ -20,7 +23,6 @@ const reimprimirExamen = async () => {
   examen.examenes.forEach((ex) => {
     bioSet.add(ex.bioanalista.id);
   });
-  console.log("🚀 ~ pintarExamen ~ bioSet:", bioSet);
   /* 
   document.getElementsByName("direccion")[0].innerText =
     examen.paciente.direccion;
@@ -184,7 +186,7 @@ const pintarExamen = async () => {
   var imageUrl = "";
   var bioanalista;
   var reimpresion = false;
-  document.getElementById("numeroTlf").value = examen.paciente.telefono
+  document.getElementById("numeroTlf").value = examen.paciente.telefono;
   if (examen.orden == "Reimpresion") return reimprimirExamen();
   if (reimpresion == false) {
     const { data } = await axios.get(urlsv + "/api/users/firma", {
@@ -196,7 +198,6 @@ const pintarExamen = async () => {
     //const imageUrl = await syncFiles(firmaImg.foto_firma)
     imageUrl = bioanalista.foto_firma;
   }
-  console.log("🚀 ~ pintarExamen ~ reimpresion:", reimpresion);
 
   examen.examenes.forEach((ex) => {
     ex.caracteristicas.sort(function (a, b) {
@@ -336,7 +337,12 @@ const pintarExamen = async () => {
 };
 
 const whatsapp = async () => {
-  const numero = (document.getElementById("numeroTlf").value).slice(1, -1);
+  const numero =
+    document.getElementById("numeroTlf").value.charAt(0) == "0"
+      ? document.getElementById("numeroTlf").value.slice(1)
+      : document.getElementById("numeroTlf").value;
+  console.log("🚀 ~ whatsapp ~ numeroInput:", numero);
+
   const code = document.getElementById("codeTlf").value;
   if (numero == "" || isNaN(numero) || numero <= 0) {
     return whatsappAlerta("Error en el numero de telefono", "warning");
@@ -344,9 +350,17 @@ const whatsapp = async () => {
   if (code == "" || isNaN(code) || code <= 0) {
     return whatsappAlerta("Error en el codigo de pais", "warning");
   }
+
+  const botones = document.getElementsByName("botones")[0];
   try {
+    await document.getElementById("wsModalBtnClose").click();
+    botones.hidden = true;
     await wsPDF({ numero, code });
+    setTimeout(() => {
+      botones.hidden = false;
+    }, 3000);
   } catch (error) {
     console.log("🚀 ~ imprimir ~ error:", error);
+    botones.hidden = false;
   }
 };

@@ -1997,7 +1997,7 @@ const abrirResultadosModal = async (examen, idEx, n) => {
 };
 
 
-async function previewPdf(tipo){
+async function previewPdf(tipo,ordenId){
 
   const checksH=document.getElementsByName(`checksOrden`)
   const checks = [...checksH]
@@ -2075,7 +2075,7 @@ async function previewPdf(tipo){
   console.log(examenesPreview)
   const examen = {
     orden: tipo == 'no' ? `Cortesia` : `${tipo}-${inputOrden.value}`,
-
+    ordenId,
     bioanalista: selectBioAnalista.value,
     paciente: pacienteObj,
     examenes: examenesPreview
@@ -2196,7 +2196,7 @@ async function guardarOrden(tipo){
                 </a>
       `
       
-      previewPdf(tipo)
+      previewPdf(tipo,res.data.ordenId)
       examenesDelPaciente = []
     }
    

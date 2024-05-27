@@ -21,6 +21,7 @@ const inputClave = () => {
     document.getElementById("claveSede").hidden = true;
   } else {
     document.getElementById("claveSede").hidden = false;
+    document.getElementById("claveSede").focus()
   }
   document.getElementById("claveSede").value = "";
 };
