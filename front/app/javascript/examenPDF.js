@@ -184,7 +184,7 @@ const pintarExamen = async () => {
   var imageUrl = "";
   var bioanalista;
   var reimpresion = false;
-  console.log(examen.orden);
+  document.getElementById("numeroTlf").value = examen.paciente.telefono
   if (examen.orden == "Reimpresion") return reimprimirExamen();
   if (reimpresion == false) {
     const { data } = await axios.get(urlsv + "/api/users/firma", {
@@ -335,12 +335,18 @@ const pintarExamen = async () => {
     .join("");
 };
 
-const whatsapp = async () =>{
-  const numero = document.getElementById('numeroTlf').value;
-  const code = document.getElementById('codeTlf').value;
+const whatsapp = async () => {
+  const numero = (document.getElementById("numeroTlf").value).slice(1, -1);
+  const code = document.getElementById("codeTlf").value;
+  if (numero == "" || isNaN(numero) || numero <= 0) {
+    return whatsappAlerta("Error en el numero de telefono", "warning");
+  }
+  if (code == "" || isNaN(code) || code <= 0) {
+    return whatsappAlerta("Error en el codigo de pais", "warning");
+  }
   try {
-    await wsPDF(numero);
+    await wsPDF({ numero, code });
   } catch (error) {
     console.log("🚀 ~ imprimir ~ error:", error);
   }
-}
+};

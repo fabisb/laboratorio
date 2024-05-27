@@ -556,11 +556,13 @@ ipcMain.on("ws", async (e, numero) => {
         } catch (err) {
           console.error(err);
         }
+        
         fs.writeFileSync(rutaArchivo, data);
         shell.showItemInFolder(rutaArchivo);
         const texto = `${examen.paciente.pre_cedula}-${examen.paciente.cedula} ${examen.orden}`;
         window.open(
-          `https://wa.me/${numero}?text=` + encodeURI(texto),
+          `https://wa.me/+${numero.code}${numero.numero}?text=` +
+            encodeURI(texto),
           "_blank"
         );
       })
