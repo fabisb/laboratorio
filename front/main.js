@@ -572,7 +572,7 @@ ipcMain.on("ws", async (event, numeroArg) => {
 
         try {
           if (!fs.existsSync(rutaCarpeta)) {
-            fs.mkdirSync(rutaCarpeta);
+            fs.mkdirSync(rutaCarpeta, { recursive: true });
           }
           if (!fs.existsSync(rutaPaciente)) {
             fs.mkdirSync(rutaPaciente);
