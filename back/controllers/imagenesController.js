@@ -8,11 +8,12 @@ export const syncFiles = async (req, res) => {
       "SELECT * FROM bioanalistas WHERE id = ?",
       [idBioanalista]
     );
-
-    bioanalistas[0].foto_firma = `${Buffer.from(
-      bioanalistas[0].foto_firma,
-      "base64"
-    )}`;
+    if (bioanalistas[0].foto_firma != null) {
+      bioanalistas[0].foto_firma = `${Buffer.from(
+        bioanalistas[0].foto_firma,
+        "base64"
+      )}`;
+    }
     return await res.status(200).json(bioanalistas[0]);
   } catch (error) {
     console.log("🚀 ~ syncFiles ~ error:", error);

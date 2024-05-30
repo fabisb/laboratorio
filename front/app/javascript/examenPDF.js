@@ -3,6 +3,9 @@ const imprimir = async () => {
   botones.hidden = true;
   try {
     await imprimirPDF();
+    setTimeout(() => {
+      botones.hidden = false;
+    }, 3000);
   } catch (error) {
     console.log("🚀 ~ imprimir ~ error:", error);
     botones.removeAttribute("hidden");
@@ -20,7 +23,6 @@ const reimprimirExamen = async () => {
   examen.examenes.forEach((ex) => {
     bioSet.add(ex.bioanalista.id);
   });
-  console.log("🚀 ~ pintarExamen ~ bioSet:", bioSet);
   /* 
   document.getElementsByName("direccion")[0].innerText =
     examen.paciente.direccion;
@@ -95,14 +97,21 @@ const reimprimirExamen = async () => {
               <tbody>
               ${ex.caracteristicas
                 .map((c) => {
-                  return `
+                  if (c?.status == "titulo") {
+                    return `
+                    <tr>
+                    <th colspan="5" scope="row">${c.nombre}</th>
+                  </tr>
+                    `;
+                  } else {
+                    return `
                 <tr>
                 <th scope="row">${c.nombre}</th>
                 <td>${c.resultado} ${
-                    c.nota != ""
-                      ? `<p class="m-0 fst-italic">(${c.nota})</p>`
-                      : ""
-                  } 
+                      c.nota != ""
+                        ? `<p class="m-0 fst-italic">(${c.nota})</p>`
+                        : ""
+                    } 
                 </td>
                 <td>${c.unidad}</td>
                 <td>${c.inferior}</td>
@@ -135,6 +144,7 @@ const reimprimirExamen = async () => {
                   : ""
               }
                 `;
+                  }
                 })
                 .join("")}
               </tbody>
@@ -184,7 +194,7 @@ const pintarExamen = async () => {
   var imageUrl = "";
   var bioanalista;
   var reimpresion = false;
-  console.log(examen.orden);
+  document.getElementById("numeroTlf").value = examen.paciente.telefono;
   if (examen.orden == "Reimpresion") return reimprimirExamen();
   if (reimpresion == false) {
     const { data } = await axios.get(urlsv + "/api/users/firma", {
@@ -196,7 +206,6 @@ const pintarExamen = async () => {
     //const imageUrl = await syncFiles(firmaImg.foto_firma)
     imageUrl = bioanalista.foto_firma;
   }
-  console.log("🚀 ~ pintarExamen ~ reimpresion:", reimpresion);
 
   examen.examenes.forEach((ex) => {
     ex.caracteristicas.sort(function (a, b) {
@@ -285,7 +294,14 @@ const pintarExamen = async () => {
             <tbody>
             ${e.caracteristicas
               .map((c) => {
-                return `
+                if (c?.status == "titulo") {
+                  return `
+                  <tr>
+                  <th colspan="5" scope="row">${c.nombre}</th>
+                </tr>
+                  `;
+                } else {
+                  return `
               <tr>
               <th scope="row">${c.nombre}</th>
               <td>${c.resultado}</td>
@@ -320,6 +336,7 @@ const pintarExamen = async () => {
                 : ""
             }
               `;
+                }
               })
               .join("")}
             </tbody>
@@ -335,12 +352,31 @@ const pintarExamen = async () => {
     .join("");
 };
 
-const whatsapp = async () =>{
-  const numero = document.getElementById('numeroTlf').value;
-  const code = document.getElementById('codeTlf').value;
+const whatsapp = async () => {
+  const numero =
+    document.getElementById("numeroTlf").value.charAt(0) == "0"
+      ? document.getElementById("numeroTlf").value.slice(1)
+      : document.getElementById("numeroTlf").value;
+  console.log("🚀 ~ whatsapp ~ numeroInput:", numero);
+
+  const code = document.getElementById("codeTlf").value;
+  if (numero == "" || isNaN(numero) || numero <= 0) {
+    return whatsappAlerta("Error en el numero de telefono", "warning");
+  }
+  if (code == "" || isNaN(code) || code <= 0) {
+    return whatsappAlerta("Error en el codigo de pais", "warning");
+  }
+
+  const botones = document.getElementsByName("botones")[0];
   try {
-    await wsPDF(numero);
+    await document.getElementById("wsModalBtnClose").click();
+    botones.hidden = true;
+    await wsPDF({ numero, code });
+    setTimeout(() => {
+      botones.hidden = false;
+    }, 3000);
   } catch (error) {
     console.log("🚀 ~ imprimir ~ error:", error);
+    botones.hidden = false;
   }
-}
+};

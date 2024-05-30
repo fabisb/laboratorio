@@ -76,3 +76,24 @@ const usuariosAlerta = (message, type) => {
     }, 6000);
   }
 };
+
+const PDFAlerta = document.getElementById(
+  "PDFAlerta"
+);
+const whatsappAlerta = (message, type) => {
+  const wrapper = document.createElement("div");
+  wrapper.innerHTML = [
+    `<div id="PDFAlertaDiv" class="alert alert-${type} alert-dismissible fade show" role="alert">`,
+    `   <div>${message.toUpperCase()}</div>`,
+    '   <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>',
+    "</div>",
+  ].join("");
+  if (PDFAlerta.children.length == 0) {
+    PDFAlerta.append(wrapper);
+    setTimeout(() => {
+      new bootstrap.Alert("#PDFAlertaDiv").close();
+      PDFAlerta.removeChild(PDFAlerta.firstChild);
+      return;
+    }, 6000);
+  }
+};

@@ -23,6 +23,7 @@ import {
   crearOrden,
   getExamenResultados,
   updateSubCaracteristicaCar,
+  statusExamenes,
 } from "../controllers/examenes.controller.js";
 var router = express.Router();
 
@@ -39,7 +40,7 @@ router.get("/get-caracteristicasExamenPaciente", verifyToken,getCaracteristicasE
 router.get("/resultados-examen", verifyToken, getExamenResultados);//TODOS
 
 //POST
-router.post("/get-examen",getExamen);//TODOS
+router.post("/get-examen",verifyToken,getExamen);//TODOS
 router.post("/crear-examen", noAuxToken,crearExamen);//TODOS EXCEPTO AUXILIAR
 router.post("/crear-examenExterno", administradorToken,crearExamenExterno);//ADMIN SOLO
 router.post("/crear-orden", noAuxToken,crearOrden);//TODOS EXCEPTO AUXILIAR
@@ -52,6 +53,8 @@ router.put("/modificar-examen", adminBioToken,modificarExamen);//ADMIN Y BIO SOL
 router.put("/modificar-laboratorio", administradorToken,modificarLaboratorio);//ADMIN
 router.put("/modificar-resultado-examen", adminBioToken,modificarResultadoExamen);//ADMIN Y BIO SOLO ANTES DE 48HRS
 router.put("/update-subCaracteristicasCar", adminBioToken, updateSubCaracteristicaCar);//ADMIN Y BIO SOLO ANTES DE 48HRS
+
+router.put("/status-examen", verifyToken, statusExamenes);
 
 //DELETE
 

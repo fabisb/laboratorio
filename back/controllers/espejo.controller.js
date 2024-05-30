@@ -121,13 +121,16 @@ export const getExamenDia = async (req, res) => {
     );
     for await (const ex of examenes) {
       const [examen] = await pool.execute(
-        `SELECT * FROM examenes where id=${ex.id_ex}`
+        `SELECT * FROM examenes where id = ?`,[ex.id_ex]
       );
       const [paciente] = await pool.execute(
-        `SELECT * FROM pacientes WHERE id=${ex.id_pac}`
+        `SELECT * FROM pacientes WHERE id = ?`,[ex.id_pac]
       );
       const [bioanalista] = await pool.execute(
-        `SELECT * FROM bioanalistas WHERE id=${ex.id_bio}`
+        `SELECT * FROM bioanalistas WHERE id = ?`,[ex.id_bio]
+      );
+      const [orden] = await pool.execute(
+        `SELECT * FROM ordenes WHERE id = ?`,[ex.id_orden]
       );
       console.log(ex);
       let hora = ex.fecha.toJSON().split("T")[1].split(".")[0];
@@ -137,6 +140,9 @@ export const getExamenDia = async (req, res) => {
         paciente: paciente[0].nombre,
         bioanalista: bioanalista[0].nombre,
         examen: examen[0].nombre,
+        status_ws: orden[0].status_ws,
+        status_imp: orden[0].status_imp,
+        status_correo: orden[0].status_correo,
         hora,
       });
     }

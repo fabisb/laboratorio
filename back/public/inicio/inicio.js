@@ -1,222 +1,221 @@
-let examenesDia  =[]
-let laboratoriosArray =[]
-let sedesArray=[]
+let examenesDia = [];
+let laboratoriosArray = [];
+let sedesArray = [];
 
-function modificarSede(id,nombre){
-  formularioSede()
-  const sede= document.getElementById('sede')
+function modificarSede(id, nombre) {
+  formularioSede();
+  const sede = document.getElementById("sede");
 
-  sede.value=nombre
-  document.getElementById('guardarCrudLab').setAttribute('onclick',`guardarModSede(${id})`)
+  sede.value = nombre;
+  document
+    .getElementById("guardarCrudLab")
+    .setAttribute("onclick", `guardarModSede(${id})`);
 }
 
-function modificarLaboratorio(id,razon1,rif1,direccion1,telefono1){
-  formularioLaboratorio()
-  const rif=document.getElementById('rif')
-  const direccion= document.getElementById('direccion')
-  const razon=document.getElementById('razonSocial')
-  const telefono=document.getElementById('telefono')
+function modificarLaboratorio(id, razon1, rif1, direccion1, telefono1) {
+  formularioLaboratorio();
+  const rif = document.getElementById("rif");
+  const direccion = document.getElementById("direccion");
+  const razon = document.getElementById("razonSocial");
+  const telefono = document.getElementById("telefono");
 
-  rif.value=rif1
-  direccion.value=direccion1
-  razon.value=razon1
-  telefono.value=telefono1
-  document.getElementById('guardarCrudLab').setAttribute('onclick',`guardarModLaboratorio(${id})`)
+  rif.value = rif1;
+  direccion.value = direccion1;
+  razon.value = razon1;
+  telefono.value = telefono1;
+  document
+    .getElementById("guardarCrudLab")
+    .setAttribute("onclick", `guardarModLaboratorio(${id})`);
 }
 
-async function guardarModLaboratorio(id){
-  const rif=document.getElementById('rif')
-  const direccion= document.getElementById('direccion')
-  const razon=document.getElementById('razonSocial')
-  const telefono=document.getElementById('telefono')
-  const alerta = document.getElementById('alertaInicio')
-  
+async function guardarModLaboratorio(id) {
+  const rif = document.getElementById("rif");
+  const direccion = document.getElementById("direccion");
+  const razon = document.getElementById("razonSocial");
+  const telefono = document.getElementById("telefono");
+  const alerta = document.getElementById("alertaInicio");
 
-  if(rif.value=="" || rif.value<0){
-    alerta.className='alert alert-danger row'
-    
-    alerta.innerHTML=`<span class="text-center">/RIF no ingresado <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" fill="currentColor" class="bi bi-x" viewBox="0 0 16 16">
+  if (rif.value == "" || rif.value < 0) {
+    alerta.className = "alert alert-danger row";
+
+    alerta.innerHTML = `<span class="text-center">/RIF no ingresado <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" fill="currentColor" class="bi bi-x" viewBox="0 0 16 16">
     <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708"/>
-  </svg></span>`
-  }else if(razon.value==""){
-    alerta.className='alert alert-danger row'
-    return alerta.innerHTML=`<span class="text-center">Razon social Invalida <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" fill="currentColor" class="bi bi-x" viewBox="0 0 16 16">
+  </svg></span>`;
+  } else if (razon.value == "") {
+    alerta.className = "alert alert-danger row";
+    return (alerta.innerHTML = `<span class="text-center">Razon social Invalida <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" fill="currentColor" class="bi bi-x" viewBox="0 0 16 16">
     <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708"/>
-  </svg></span>`
-  }else{
-  
-  try {
-  const { data } = await axios.put(
-    "http://localhost:3000/api/espejo/update-laboratorio",
-    {
-      id_laboratorio:id,
-      razon:razon.value,telefono:telefono.value,direccion:direccion.value,rif:rif.value
-    }
-  );
-  console.log(data)
- 
-  
-
-
-  
-  render()
-
-
-  rif.value='';razon.value='';telefono.value='';direccion.value=''
-    
-  alerta.className='alert alert-success row'
-  alerta.innerHTML=`<span class="text-center">Laboratorio insertado correctamente <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-check2-all" viewBox="0 0 16 16">
-  <path d="M12.354 4.354a.5.5 0 0 0-.708-.708L5 10.293 1.854 7.146a.5.5 0 1 0-.708.708l3.5 3.5a.5.5 0 0 0 .708 0zm-4.208 7-.896-.897.707-.707.543.543 6.646-6.647a.5.5 0 0 1 .708.708l-7 7a.5.5 0 0 1-.708 0"/>
-  <path d="m5.354 7.146.896.897-.707.707-.897-.896a.5.5 0 1 1 .708-.708"/>`
-
-} catch (error) {
-  console.log(error);
-  if (error.response.data.mensaje) {
-    alerta.className='alert alert-danger row'
-    alerta.innerHTML=`<span class="text-center">${error.response.data.mensaje} <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" fill="currentColor" class="bi bi-x" viewBox="0 0 16 16">
-    <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708"/>
-  </svg></span>`
+  </svg></span>`);
   } else {
-    alerta.className='alert alert-danger row'
-    alerta.innerHTML=`<span class="text-center">ERROR <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" fill="currentColor" class="bi bi-x" viewBox="0 0 16 16">
+    try {
+      const { data } = await axios.put(
+        "http://localhost:3000/api/espejo/update-laboratorio",
+        {
+          id_laboratorio: id,
+          razon: razon.value,
+          telefono: telefono.value,
+          direccion: direccion.value,
+          rif: rif.value,
+        }
+      );
+      console.log(data);
+
+      render();
+
+      rif.value = "";
+      razon.value = "";
+      telefono.value = "";
+      direccion.value = "";
+
+      alerta.className = "alert alert-success row";
+      alerta.innerHTML = `<span class="text-center">Laboratorio insertado correctamente <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-check2-all" viewBox="0 0 16 16">
+  <path d="M12.354 4.354a.5.5 0 0 0-.708-.708L5 10.293 1.854 7.146a.5.5 0 1 0-.708.708l3.5 3.5a.5.5 0 0 0 .708 0zm-4.208 7-.896-.897.707-.707.543.543 6.646-6.647a.5.5 0 0 1 .708.708l-7 7a.5.5 0 0 1-.708 0"/>
+  <path d="m5.354 7.146.896.897-.707.707-.897-.896a.5.5 0 1 1 .708-.708"/>`;
+    } catch (error) {
+      console.log(error);
+      if (error.response.data.mensaje) {
+        alerta.className = "alert alert-danger row";
+        alerta.innerHTML = `<span class="text-center">${error.response.data.mensaje} <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" fill="currentColor" class="bi bi-x" viewBox="0 0 16 16">
     <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708"/>
-  </svg></span>`
-  }
-}
-}
-alerta.removeAttribute('hidden')
-
-setTimeout(() => {
-  alerta.setAttribute('hidden','true')
-}, 3000);
-
-}
-
-async function guardarModSede(id){
-  const sede = document.getElementById('sede').value
-  const alerta = document.getElementById('alertaInicio')
-  
-  if(sede==''){
-    alerta.className='alert alert-danger row'
-    alerta.innerHTML=`<span class="text-center">${error.response.data.mensaje} <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" fill="currentColor" class="bi bi-x" viewBox="0 0 16 16">
-      <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708"/>
-    </svg></span>`
-    
-    
-  }else{
-  try {
-  const { data:res } = await axios.put(
-    "http://localhost:3000/api/espejo/update-sede",
-    {
-      id_sede:id,
-      nombre:sede
+  </svg></span>`;
+      } else {
+        alerta.className = "alert alert-danger row";
+        alerta.innerHTML = `<span class="text-center">ERROR <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" fill="currentColor" class="bi bi-x" viewBox="0 0 16 16">
+    <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708"/>
+  </svg></span>`;
+      }
     }
-  );
-  alerta.className='alert alert-success row'
-    alerta.innerHTML=`<span class="text-center">Sede insertada correctamente <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-check2-all" viewBox="0 0 16 16">
+  }
+  alerta.removeAttribute("hidden");
+
+  setTimeout(() => {
+    alerta.setAttribute("hidden", "true");
+  }, 3000);
+}
+
+async function guardarModSede(id) {
+  const sede = document.getElementById("sede").value;
+  const alerta = document.getElementById("alertaInicio");
+
+  if (sede == "") {
+    alerta.className = "alert alert-danger row";
+    alerta.innerHTML = `<span class="text-center">${error.response.data.mensaje} <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" fill="currentColor" class="bi bi-x" viewBox="0 0 16 16">
+      <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708"/>
+    </svg></span>`;
+  } else {
+    try {
+      const { data: res } = await axios.put(
+        "http://localhost:3000/api/espejo/update-sede",
+        {
+          id_sede: id,
+          nombre: sede,
+        }
+      );
+      alerta.className = "alert alert-success row";
+      alerta.innerHTML = `<span class="text-center">Sede insertada correctamente <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-check2-all" viewBox="0 0 16 16">
     <path d="M12.354 4.354a.5.5 0 0 0-.708-.708L5 10.293 1.854 7.146a.5.5 0 1 0-.708.708l3.5 3.5a.5.5 0 0 0 .708 0zm-4.208 7-.896-.897.707-.707.543.543 6.646-6.647a.5.5 0 0 1 .708.708l-7 7a.5.5 0 0 1-.708 0"/>
     <path d="m5.354 7.146.896.897-.707.707-.897-.896a.5.5 0 1 1 .708-.708"/>
-  </svg></span>`
-    render();
-  } catch (error) {
-    console.log(error);
-    if (error.response.data.mensaje) {
-      alerta.className='alert alert-danger row'
-      alerta.innerHTML=`<span class="text-center">${error.response.data.mensaje} <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" fill="currentColor" class="bi bi-x" viewBox="0 0 16 16">
+  </svg></span>`;
+      render();
+    } catch (error) {
+      console.log(error);
+      if (error.response.data.mensaje) {
+        alerta.className = "alert alert-danger row";
+        alerta.innerHTML = `<span class="text-center">${error.response.data.mensaje} <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" fill="currentColor" class="bi bi-x" viewBox="0 0 16 16">
       <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708"/>
-    </svg></span>`
-    } else {
-      alerta.className='alert alert-danger row'
-      alerta.innerHTML=`<span class="text-center">ERROR <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" fill="currentColor" class="bi bi-x" viewBox="0 0 16 16">
+    </svg></span>`;
+      } else {
+        alerta.className = "alert alert-danger row";
+        alerta.innerHTML = `<span class="text-center">ERROR <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" fill="currentColor" class="bi bi-x" viewBox="0 0 16 16">
       <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708"/>
-    </svg></span>`
+    </svg></span>`;
+      }
     }
   }
-  }
-  alerta.removeAttribute('hidden')
+  alerta.removeAttribute("hidden");
   setTimeout(() => {
-    alerta.setAttribute('hidden','true')
+    alerta.setAttribute("hidden", "true");
   }, 3000);
 }
 
-
-
-
-
-function validarSelect(value){
-  const inp= document.getElementById(`inputFiltro`)
-  inp.setAttribute("oninput",value)
- 
-  
+function validarSelect(value) {
+  const inp = document.getElementById(`inputFiltro`);
+  inp.setAttribute("oninput", value);
 }
 
-async function crearLaboratorio(){
-  const alerta = document.getElementById('alertaInicio')
-  const rif=document.getElementById('rif')
-  const direccion= document.getElementById('direccion')
-  const razon=document.getElementById('razonSocial')
-  const telefono=document.getElementById('telefono')
-  console.log(rif.value,razon.value,telefono.value,direccion.value)
-  if(rif.value=="" || rif.value<0){
-    alerta.className='alert alert-danger row'
-    return alerta.innerHTML=`<span class="text-center">/RIF no ingresado <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" fill="currentColor" class="bi bi-x" viewBox="0 0 16 16">
+async function crearLaboratorio() {
+  const alerta = document.getElementById("alertaInicio");
+  const rif = document.getElementById("rif");
+  const direccion = document.getElementById("direccion");
+  const razon = document.getElementById("razonSocial");
+  const telefono = document.getElementById("telefono");
+  console.log(rif.value, razon.value, telefono.value, direccion.value);
+  if (rif.value == "" || rif.value < 0) {
+    alerta.className = "alert alert-danger row";
+    return (alerta.innerHTML = `<span class="text-center">/RIF no ingresado <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" fill="currentColor" class="bi bi-x" viewBox="0 0 16 16">
     <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708"/>
-  </svg></span>`
-  }else if(razon.value==""){
-    alerta.className='alert alert-danger row'
-    return alerta.innerHTML=`<span class="text-center">Razon social Invalida <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" fill="currentColor" class="bi bi-x" viewBox="0 0 16 16">
+  </svg></span>`);
+  } else if (razon.value == "") {
+    alerta.className = "alert alert-danger row";
+    return (alerta.innerHTML = `<span class="text-center">Razon social Invalida <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" fill="currentColor" class="bi bi-x" viewBox="0 0 16 16">
     <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708"/>
-  </svg></span>`
-  }else{
-  
-  
-  try {
-    
-    
-    const res = await axios.post("http://localhost:3000/api/espejo/crear-laboratorio",{rif:rif.value,razon:razon.value,telefono:telefono.value,direccion:direccion.value})
-    console.log(res)
-    render();
-    rif.value='';razon.value='';telefono.value='';direccion.value=''
-    
-    alerta.className='alert alert-success row'
-    alerta.innerHTML=`<span class="text-center">Laboratorio insertado correctamente <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-check2-all" viewBox="0 0 16 16">
+  </svg></span>`);
+  } else {
+    try {
+      const res = await axios.post(
+        "http://localhost:3000/api/espejo/crear-laboratorio",
+        {
+          rif: rif.value,
+          razon: razon.value,
+          telefono: telefono.value,
+          direccion: direccion.value,
+        }
+      );
+      console.log(res);
+      render();
+      rif.value = "";
+      razon.value = "";
+      telefono.value = "";
+      direccion.value = "";
+
+      alerta.className = "alert alert-success row";
+      alerta.innerHTML = `<span class="text-center">Laboratorio insertado correctamente <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-check2-all" viewBox="0 0 16 16">
     <path d="M12.354 4.354a.5.5 0 0 0-.708-.708L5 10.293 1.854 7.146a.5.5 0 1 0-.708.708l3.5 3.5a.5.5 0 0 0 .708 0zm-4.208 7-.896-.897.707-.707.543.543 6.646-6.647a.5.5 0 0 1 .708.708l-7 7a.5.5 0 0 1-.708 0"/>
-    <path d="m5.354 7.146.896.897-.707.707-.897-.896a.5.5 0 1 1 .708-.708"/>`
-
-  } catch (error) {
-    console.log(error);
-    if (error.response.data.mensaje) {
-      alerta.className='alert alert-danger row'
-      alerta.innerHTML=`<span class="text-center">${error.response.data.mensaje} <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" fill="currentColor" class="bi bi-x" viewBox="0 0 16 16">
+    <path d="m5.354 7.146.896.897-.707.707-.897-.896a.5.5 0 1 1 .708-.708"/>`;
+    } catch (error) {
+      console.log(error);
+      if (error.response.data.mensaje) {
+        alerta.className = "alert alert-danger row";
+        alerta.innerHTML = `<span class="text-center">${error.response.data.mensaje} <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" fill="currentColor" class="bi bi-x" viewBox="0 0 16 16">
       <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708"/>
-    </svg></span>`
-    } else {
-      alerta.className='alert alert-danger row'
-      alerta.innerHTML=`<span class="text-center">ERROR <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" fill="currentColor" class="bi bi-x" viewBox="0 0 16 16">
+    </svg></span>`;
+      } else {
+        alerta.className = "alert alert-danger row";
+        alerta.innerHTML = `<span class="text-center">ERROR <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" fill="currentColor" class="bi bi-x" viewBox="0 0 16 16">
       <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708"/>
-    </svg></span>`
+    </svg></span>`;
+      }
     }
   }
-  }
-  alerta.removeAttribute('hidden')
+  alerta.removeAttribute("hidden");
 
   setTimeout(() => {
-    alerta.setAttribute('hidden','true')
+    alerta.setAttribute("hidden", "true");
   }, 3000);
-
 }
-async function render(){
-  const tBody=document.getElementById(`tBodyTabLab`)
-  tBody.innerHTML='';
-  const {data:sedes} = await axios.get(
+async function render() {
+  const tBody = document.getElementById(`tBodyTabLab`);
+  tBody.innerHTML = "";
+  const { data: sedes } = await axios.get(
     "http://localhost:3000/api/espejo/sedes"
   );
-  const {data:laboratorios} = await axios.get(
+  const { data: laboratorios } = await axios.get(
     "http://localhost:3000/api/espejo/laboratorios"
   );
-  laboratoriosArray=laboratorios;sedesArray=sedes
-  laboratorios.forEach(e=>{
-    tBody.innerHTML+=`
+  laboratoriosArray = laboratorios;
+  sedesArray = sedes;
+  laboratorios.forEach((e) => {
+    tBody.innerHTML += `
     <tr>
                               <td>${e.id}</td>
                               <td>${e.razon_social}</td>
@@ -229,74 +228,73 @@ async function render(){
                                 <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708"/>
                               </svg></td>
                             </tr>
-    `
-  })
+    `;
+  });
 }
 
-function validarSelectLab(value){
-  document.getElementById('inputBusqueda').setAttribute('oninput',`buscar${value}(value)`)
-  document.getElementById('inputBusqueda').value=''
+function validarSelectLab(value) {
+  document
+    .getElementById("inputBusqueda")
+    .setAttribute("oninput", `buscar${value}(value)`);
+  document.getElementById("inputBusqueda").value = "";
 
-  if(value=='Laboratorio'){
-
-    buscarLaboratorio()
-  }else{
-    buscarSede()
+  if (value == "Laboratorio") {
+    buscarLaboratorio();
+  } else {
+    buscarSede();
   }
 }
-async function crearSede(){
-  const sede = document.getElementById('sede').value
-  const clave = document.getElementById('clave').value
-  const alerta = document.getElementById('alertaInicio')
+async function crearSede() {
+  const sede = document.getElementById("sede").value;
+  const clave = document.getElementById("clave").value;
+  const alerta = document.getElementById("alertaInicio");
 
-  if(sede=='' || clave == ''){
-    alerta.className='alert alert-danger row'
-    return   alerta.innerHTML=`<span class="text-center">La SEDE o la CLAVE no puede estar vacia <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" fill="currentColor" class="bi bi-x" viewBox="0 0 16 16">
+  if (sede == "" || clave == "") {
+    alerta.className = "alert alert-danger row";
+    return (alerta.innerHTML = `<span class="text-center">La SEDE o la CLAVE no puede estar vacia <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" fill="currentColor" class="bi bi-x" viewBox="0 0 16 16">
       <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708"/>
-    </svg></span>`
-  }else{
-  try {
-    const {data:res} = await axios.post(
-      `http://localhost:3000/api/espejo/crear-sede`,
-      {
-        nombre:sede,
-        clave
-      },
-      
-    );
-    console.log(res)
-    alerta.className='alert alert-success row'
-    alerta.innerHTML=`<span class="text-center">Sede insertada correctamente <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-check2-all" viewBox="0 0 16 16">
+    </svg></span>`);
+  } else {
+    try {
+      const { data: res } = await axios.post(
+        `http://localhost:3000/api/espejo/crear-sede`,
+        {
+          nombre: sede,
+          clave,
+        }
+      );
+      console.log(res);
+      alerta.className = "alert alert-success row";
+      alerta.innerHTML = `<span class="text-center">Sede insertada correctamente <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-check2-all" viewBox="0 0 16 16">
     <path d="M12.354 4.354a.5.5 0 0 0-.708-.708L5 10.293 1.854 7.146a.5.5 0 1 0-.708.708l3.5 3.5a.5.5 0 0 0 .708 0zm-4.208 7-.896-.897.707-.707.543.543 6.646-6.647a.5.5 0 0 1 .708.708l-7 7a.5.5 0 0 1-.708 0"/>
     <path d="m5.354 7.146.896.897-.707.707-.897-.896a.5.5 0 1 1 .708-.708"/>
-  </svg></span>`
-    render();
-  } catch (error) {
-    console.log(error);
-    if (error.response.data.mensaje) {
-      alerta.className='alert alert-danger row'
-      alerta.innerHTML=`<span class="text-center">${error.response.data.mensaje} <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" fill="currentColor" class="bi bi-x" viewBox="0 0 16 16">
+  </svg></span>`;
+      render();
+    } catch (error) {
+      console.log(error);
+      if (error.response.data.mensaje) {
+        alerta.className = "alert alert-danger row";
+        alerta.innerHTML = `<span class="text-center">${error.response.data.mensaje} <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" fill="currentColor" class="bi bi-x" viewBox="0 0 16 16">
       <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708"/>
-    </svg></span>`
-    } else {
-      alerta.className='alert alert-danger row'
-      alerta.innerHTML=`<span class="text-center">ERROR <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" fill="currentColor" class="bi bi-x" viewBox="0 0 16 16">
+    </svg></span>`;
+      } else {
+        alerta.className = "alert alert-danger row";
+        alerta.innerHTML = `<span class="text-center">ERROR <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" fill="currentColor" class="bi bi-x" viewBox="0 0 16 16">
       <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708"/>
-    </svg></span>`
+    </svg></span>`;
+      }
     }
   }
-  }
-  alerta.removeAttribute('hidden')
+  alerta.removeAttribute("hidden");
 
   setTimeout(() => {
-    alerta.setAttribute('hidden','true')
+    alerta.setAttribute("hidden", "true");
   }, 3000);
-
 }
-function formularioSede(){
-  const container = document.getElementById('formularioRow')
-  document.getElementById('h1Tipo').innerText='SEDE'
-  container.innerHTML=`
+function formularioSede() {
+  const container = document.getElementById("formularioRow");
+  document.getElementById("h1Tipo").innerText = "SEDE";
+  container.innerHTML = `
   <div class="row mb-3 mt-3">
                     <div class="col-4 my-auto">
                       <label for="sede" class="m-0 form-label">Sede: </label>
@@ -312,13 +310,15 @@ function formularioSede(){
                     </div>
   
                   </div>
-  `
-  document.getElementById('guardarCrudLab').setAttribute('onclick','crearSede()')
+  `;
+  document
+    .getElementById("guardarCrudLab")
+    .setAttribute("onclick", "crearSede()");
 }
-function formularioLaboratorio(){
-  const container = document.getElementById('formularioRow')
-  document.getElementById('h1Tipo').innerText='LABORATORIO'
-  container.innerHTML=`
+function formularioLaboratorio() {
+  const container = document.getElementById("formularioRow");
+  document.getElementById("h1Tipo").innerText = "LABORATORIO";
+  container.innerHTML = `
   <div class="row mb-3 mt-3">
   <div class="col-4">
     <label for="rif" class="form-label">RIF: </label>
@@ -355,25 +355,30 @@ function formularioLaboratorio(){
     </div>
 
   </div>
-  `
-  document.getElementById('guardarCrudLab').setAttribute('onclick','crearLaboratorio()')
+  `;
+  document
+    .getElementById("guardarCrudLab")
+    .setAttribute("onclick", "crearLaboratorio()");
 }
 
-function buscarLaboratorio(value){
-  document.getElementById('guardarCrudLab').setAttribute('onclick','crearLaboratorio()')
-  
-  console.log(value)
-  const tBody=document.getElementById(`tBodyTabLab`)
-  tBody.innerHTML=''
-  let labora
-  if(value==null){
-    labora = laboratoriosArray
-  }else{
-    labora= laboratoriosArray.filter(e=>e.razon_social.toLowerCase().includes(value.toLowerCase()))
+function buscarLaboratorio(value) {
+  document
+    .getElementById("guardarCrudLab")
+    .setAttribute("onclick", "crearLaboratorio()");
 
+  console.log(value);
+  const tBody = document.getElementById(`tBodyTabLab`);
+  tBody.innerHTML = "";
+  let labora;
+  if (value == null) {
+    labora = laboratoriosArray;
+  } else {
+    labora = laboratoriosArray.filter((e) =>
+      e.razon_social.toLowerCase().includes(value.toLowerCase())
+    );
   }
-  labora.forEach(e=>{
-    tBody.innerHTML+=`
+  labora.forEach((e) => {
+    tBody.innerHTML += `
     <tr>
                               <td>${e.id}</td>
                               <td>${e.razon_social}</td>
@@ -386,25 +391,28 @@ function buscarLaboratorio(value){
                                 <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708"/>
                               </svg></td>
                             </tr>
-    `
-  })
+    `;
+  });
 }
 
-function buscarSede(value){
-  document.getElementById('guardarCrudLab').setAttribute('onclick','crearSede()')
-  
-  console.log(value)
-  const tBody=document.getElementById(`tBodyTabLab`)
-  tBody.innerHTML=''
-  let labora
-  if(value==null){
-    labora = sedesArray
-  }else{
-    labora= sedesArray.filter(e=>e.nombre.toLowerCase().includes(value.toLowerCase()))
+function buscarSede(value) {
+  document
+    .getElementById("guardarCrudLab")
+    .setAttribute("onclick", "crearSede()");
 
+  console.log(value);
+  const tBody = document.getElementById(`tBodyTabLab`);
+  tBody.innerHTML = "";
+  let labora;
+  if (value == null) {
+    labora = sedesArray;
+  } else {
+    labora = sedesArray.filter((e) =>
+      e.nombre.toLowerCase().includes(value.toLowerCase())
+    );
   }
-  labora.forEach(e=>{
-    tBody.innerHTML+=`
+  labora.forEach((e) => {
+    tBody.innerHTML += `
     <tr>
                               <td>${e.id}</td>
                               <td>${e.nombre}</td>
@@ -417,18 +425,15 @@ function buscarSede(value){
                                 <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708"/>
                               </svg></td>
                             </tr>
-    `
-  })
+    `;
+  });
 }
 
-
-
-
-function buscarCedula(value){
-  const tBodyExamenesDia = document.getElementById('tBodyExamenesDia')
-  tBodyExamenesDia.innerHTML =""
-  let examenes = examenesDia.filter(e=>e.cedula.toString().includes(value))
-  examenes.forEach(ex => {
+function buscarCedula(value) {
+  const tBodyExamenesDia = document.getElementById("tBodyExamenesDia");
+  tBodyExamenesDia.innerHTML = "";
+  let examenes = examenesDia.filter((e) => e.cedula.toString().includes(value));
+  examenes.forEach((ex) => {
     tBodyExamenesDia.innerHTML += `
     <tr>
                 <td scope="col">${ex.id}</td>
@@ -490,15 +495,16 @@ function buscarCedula(value){
                   </svg>
                 </td>
               </tr>
-    `
-    
-});
+    `;
+  });
 }
-function buscarPaciente(value){
-  const tBodyExamenesDia = document.getElementById('tBodyExamenesDia')
-  tBodyExamenesDia.innerHTML =""
-  let examenes = examenesDia.filter(e=>e.paciente.toString().toLowerCase().includes(value.toLowerCase()))
-  examenes.forEach(ex => {
+function buscarPaciente(value) {
+  const tBodyExamenesDia = document.getElementById("tBodyExamenesDia");
+  tBodyExamenesDia.innerHTML = "";
+  let examenes = examenesDia.filter((e) =>
+    e.paciente.toString().toLowerCase().includes(value.toLowerCase())
+  );
+  examenes.forEach((ex) => {
     tBodyExamenesDia.innerHTML += `
     <tr>
                 <td scope="col">${ex.id}</td>
@@ -560,15 +566,16 @@ function buscarPaciente(value){
                   </svg>
                 </td>
               </tr>
-    `
-    
-});
+    `;
+  });
 }
-function buscarExamen(value){
-  const tBodyExamenesDia = document.getElementById('tBodyExamenesDia')
-  tBodyExamenesDia.innerHTML =""
-  let examenes = examenesDia.filter(e=>e.examen.toString().toLowerCase().includes(value.toLowerCase()))
-  examenes.forEach(ex => {
+function buscarExamen(value) {
+  const tBodyExamenesDia = document.getElementById("tBodyExamenesDia");
+  tBodyExamenesDia.innerHTML = "";
+  let examenes = examenesDia.filter((e) =>
+    e.examen.toString().toLowerCase().includes(value.toLowerCase())
+  );
+  examenes.forEach((ex) => {
     tBodyExamenesDia.innerHTML += `
     <tr>
                 <td scope="col">${ex.id}</td>
@@ -630,15 +637,16 @@ function buscarExamen(value){
                   </svg>
                 </td>
               </tr>
-    `
-    
-});
+    `;
+  });
 }
-function buscarBioanalista(value){
-  const tBodyExamenesDia = document.getElementById('tBodyExamenesDia')
-  tBodyExamenesDia.innerHTML =""
-  let examenes = examenesDia.filter(e=>e.bioanalista.toString().toLowerCase().includes(value.toLowerCase()))
-  examenes.forEach(ex => {
+function buscarBioanalista(value) {
+  const tBodyExamenesDia = document.getElementById("tBodyExamenesDia");
+  tBodyExamenesDia.innerHTML = "";
+  let examenes = examenesDia.filter((e) =>
+    e.bioanalista.toString().toLowerCase().includes(value.toLowerCase())
+  );
+  examenes.forEach((ex) => {
     tBodyExamenesDia.innerHTML += `
     <tr>
                 <td scope="col">${ex.id}</td>
@@ -700,25 +708,26 @@ function buscarBioanalista(value){
                   </svg>
                 </td>
               </tr>
-    `
-    
-});
+    `;
+  });
 }
 
-async function traerExamenesByFecha(value){
+async function traerExamenesByFecha(value) {
   let validar = validarFecha(value);
-  if(validar =="true"){
-    const res = await axios.get(`http://localhost:3000/api/espejo/get-examen-byFecha`,
-    {
-      params: {
-        fecha: value
+  if (validar == "true") {
+    const res = await axios.get(
+      `http://localhost:3000/api/espejo/get-examen-byFecha`,
+      {
+        params: {
+          fecha: value,
+        },
       }
-    })
-    examenesDia=res.data.examenes
-        const tBodyExamenesDia = document.getElementById('tBodyExamenesDia')
-        tBodyExamenesDia.innerHTML =""
-        res.data.examenes.forEach(ex => {
-            tBodyExamenesDia.innerHTML += `
+    );
+    examenesDia = res.data.examenes;
+    const tBodyExamenesDia = document.getElementById("tBodyExamenesDia");
+    tBodyExamenesDia.innerHTML = "";
+    res.data.examenes.forEach((ex) => {
+      tBodyExamenesDia.innerHTML += `
             <tr>
                         <td scope="col">${ex.id}</td>
                         <td scope="col">${ex.cedula}</td>
@@ -779,23 +788,20 @@ async function traerExamenesByFecha(value){
                           </svg>
                         </td>
                       </tr>
-            `
-            
-        });
-  }else{
-    return
+            `;
+    });
+  } else {
+    return;
   }
-
 }
 
-function validarFecha(value){
-  let fecha = value
+function validarFecha(value) {
+  let fecha = value;
   let fechaActual = moment().format("YYYY-MM-DD");
   console.log(fechaActual);
 
   let fecha2 = (document.getElementById("fecha_filtro").value =
     moment(fecha).format("YYYY-MM-DD"));
-
 
   const mes = moment(fecha).format("MM");
   const ano = moment(fecha).format("YYYY");
@@ -810,15 +816,15 @@ function validarFecha(value){
   }
   return "true";
 }
-async function traerExamenesDia(){
-    try {
-        const res = await axios.get("http://localhost:3000/api/espejo/get-examen-dia")
-        console.log(res)
-        examenesDia=res.data.examenes
-        const tBodyExamenesDia = document.getElementById('tBodyExamenesDia')
-        tBodyExamenesDia.innerHTML =""
-        res.data.examenes.forEach(ex => {
-            tBodyExamenesDia.innerHTML += `
+async function traerExamenesDia() {
+  try {
+    const res = await axios.get("/api/espejo/get-examen-dia");
+    console.log(res);
+    examenesDia = res.data.examenes;
+    const tBodyExamenesDia = document.getElementById("tBodyExamenesDia");
+    tBodyExamenesDia.innerHTML = "";
+    res.data.examenes.forEach((ex) => {
+      tBodyExamenesDia.innerHTML += `
             <tr>
                         <td scope="col">${ex.id}</td>
                         <td scope="col">${ex.cedula}</td>
@@ -850,7 +856,7 @@ async function traerExamenesDia(){
                             xmlns="http://www.w3.org/2000/svg"
                             width="20"
                             height="20"
-                            fill="red"
+                            fill=${ex.status_imp == 1 ? "red" : "gray"}
                             class="bi bi-filetype-pdf"
                             viewBox="0 0 16 16"
                           >
@@ -862,11 +868,18 @@ async function traerExamenesDia(){
                         </td>
   
                         <td scope="col">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="${
+                          ex.status_ws == 1 ? "green" : "gray"
+                        }" class="bi bi-whatsapp" viewBox="0 0 16 16">
+                        <path d="M13.601 2.326A7.85 7.85 0 0 0 7.994 0C3.627 0 .068 3.558.064 7.926c0 1.399.366 2.76 1.057 3.965L0 16l4.204-1.102a7.9 7.9 0 0 0 3.79.965h.004c4.368 0 7.926-3.558 7.93-7.93A7.9 7.9 0 0 0 13.6 2.326zM7.994 14.521a6.6 6.6 0 0 1-3.356-.92l-.24-.144-2.494.654.666-2.433-.156-.251a6.56 6.56 0 0 1-1.007-3.505c0-3.626 2.957-6.584 6.591-6.584a6.56 6.56 0 0 1 4.66 1.931 6.56 6.56 0 0 1 1.928 4.66c-.004 3.639-2.961 6.592-6.592 6.592m3.615-4.934c-.197-.099-1.17-.578-1.353-.646-.182-.065-.315-.099-.445.099-.133.197-.513.646-.627.775-.114.133-.232.148-.43.05-.197-.1-.836-.308-1.592-.985-.59-.525-.985-1.175-1.103-1.372-.114-.198-.011-.304.088-.403.087-.088.197-.232.296-.346.1-.114.133-.198.198-.33.065-.134.034-.248-.015-.347-.05-.099-.445-1.076-.612-1.47-.16-.389-.323-.335-.445-.34-.114-.007-.247-.007-.38-.007a.73.73 0 0 0-.529.247c-.182.198-.691.677-.691 1.654s.71 1.916.81 2.049c.098.133 1.394 2.132 3.383 2.992.47.205.84.326 1.129.418.475.152.904.129 1.246.08.38-.058 1.171-.48 1.338-.943.164-.464.164-.86.114-.943-.049-.084-.182-.133-.38-.232"/>
+                      </svg>
+                        </td>
+                        <td scope="col">
                           <svg
                             xmlns="http://www.w3.org/2000/svg"
                             width="20"
                             height="20"
-                            fill="orange"
+                            fill="${ex.status_correo == 1 ? "orange" : "gray"}"
                             class="bi bi-envelope-at"
                             viewBox="0 0 16 16"
                           >
@@ -879,55 +892,50 @@ async function traerExamenesDia(){
                           </svg>
                         </td>
                       </tr>
-            `
-            
-        });
-    } catch (error) {
-        console.log(error)
-    }
+            `;
+    });
+  } catch (error) {
+    console.log(error);
+  }
 }
 
-
-async function detalleExamen(id,examen){
-  const tBody= document.getElementById("tBodyDetalle");
-  const tHead= document.getElementById("headTableDetalle");
-  tBody.innerHTML='';
-    try {
-    
-      const { data: resultados} = await axios.get(
-          "http://localhost:3000/api/espejo/get-examen-resultado",
-        {
-          params: {
-            id
-          }
-        }
-      );
-      console.log(resultados)
-      tHead.innerText = `RESULTADOS ${examen} #${id}`
-      resultados.forEach(e=>{
-        if(e.rango){
-          tBody.innerHTML +=`
+async function detalleExamen(id, examen) {
+  const tBody = document.getElementById("tBodyDetalle");
+  const tHead = document.getElementById("headTableDetalle");
+  tBody.innerHTML = "";
+  try {
+    const { data: resultados } = await axios.get(
+      "http://localhost:3000/api/espejo/get-examen-resultado",
+      {
+        params: {
+          id,
+        },
+      }
+    );
+    console.log(resultados);
+    tHead.innerText = `RESULTADOS ${examen} #${id}`;
+    resultados.forEach((e) => {
+      if (e.rango) {
+        tBody.innerHTML += `
           <tr>
                       <td scope="col">${e.nombre}</td>
                       <td scope="col">${e.resultado}</td>
                       <td scope="col">${e.nota}</td>
                       <td scope="col">${e.rango.inferior} - ${e.rango.superior}</td>
                     </tr>
-          `
-        }else{
-          tBody.innerHTML +=`
+          `;
+      } else {
+        tBody.innerHTML += `
         <tr>
                     <td scope="col">${e.nombre}</td>
                     <td scope="col">${e.resultado}</td>
                     <td scope="col">${e.nota}</td>
                     <td scope="col"> - </td>
                   </tr>
-        `
-        }
-        
-      })
-      
-    } catch (error) {
-      console.log(error)
-    }
+        `;
+      }
+    });
+  } catch (error) {
+    console.log(error);
+  }
 }
