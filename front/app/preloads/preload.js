@@ -15,6 +15,8 @@ contextBridge.exposeInMainWorld("ventanas", {
   creacionBioWindow: async () => await ipcRenderer.invoke("creacionBioWindow"),
   creacionExamenWindow: async () =>
     await ipcRenderer.invoke("creacionExamenWindow"),
+  creacionEstadisticasWindow: async () =>
+    await ipcRenderer.invoke("estadisticasWindow"),
   creacionExWindow: async () => await ipcRenderer.invoke("creacionExWindow"),
   mainWindow: async () => await ipcRenderer.invoke("createWindow"),
   menuExamenesWindow: async () =>

@@ -126,6 +126,28 @@ function creacionPaciWindow() {
 }
 ipcMain.handle("creacionPaciWindow", () => creacionPaciWindow());
 
+let estadisticasWindowVar;
+function estadisticasWindow() {
+  if (!estadisticasWindowVar) {
+    estadisticasWindowVar = new BrowserWindow({
+      width: 1368,
+      icon: path.join(__dirname, "app/imgs/icons/app-logo.ico"),
+      height: 960,
+      title: "Estadisticas",
+      webPreferences: {
+        preload: path.join(__dirname, "app/preloads/preload.js"),
+        //devTools:false
+      },
+    });
+    estadisticasWindowVar.maximize()
+    estadisticasWindowVar.loadFile("app/screens/estadisticas.html");
+    estadisticasWindowVar.on("closed", () => (estadisticasWindowVar = null));
+  } else {
+    estadisticasWindowVar.focus();
+  }
+}
+ipcMain.handle("estadisticasWindow", () => estadisticasWindow());
+
 let creacionBioWindowVar;
 function creacionBioWindow() {
   if (!creacionBioWindowVar) {

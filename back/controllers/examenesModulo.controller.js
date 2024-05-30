@@ -72,17 +72,23 @@ export const getLaboratorios = async (req, res) => {
 
 export const getCaracteristicasById = async (req, res) => {
   console.log("aaabb");
+  let caracteristicas=[];
   const { id } = req.query;
   try {
-    const [caracteristicas] = await pool.execute(
+    const [caracteristicasDet] = await pool.execute(
       "SELECT * FROM detalles_examen WHERE id_ex = ? and status ='activo'",
       [id]
     );
-    if (caracteristicas.length == 0) {
+    const [titulos] = await pool.execute(
+      "SELECT * FROM titulos WHERE id_ex = ?",
+      [id]
+    );
+    if (caracteristicasDet.length == 0) {
       return await res
         .status(404)
         .json({ mensaje: "No se encuentran caracteristicas" });
     } else {
+      caracteristicas=[...caracteristicasDet,...titulos]
       return await res.status(200).json(caracteristicas);
     }
   } catch (error) {
@@ -165,7 +171,14 @@ export const getExamenById = async (req, res) => {
       "SELECT * FROM seccion_examen WHERE id = ?",
       [examenes[0].id_seccion]
     );
-    console.log(seccion);
+    const [titulos] = await pool.execute(
+      "SELECT * FROM titulos WHERE id_ex = ?",
+      [idExamen]
+    );
+
+    
+    
+    console.log(titulos);
 
     if (examenes.length == 0) {
       return await res
@@ -200,11 +213,12 @@ export const getExamenById = async (req, res) => {
             resultados,
             subCa,
             seccion,
+            titulos
           });
       } else {
         return await res
           .status(200)
-          .json({ examen: examenes[0], detalles, seccion });
+          .json({ examen: examenes[0], detalles, seccion, titulos });
       }
     }
   } catch (error) {
@@ -259,7 +273,7 @@ export const getExamenByCategoria = async (req, res) => {
 };
 export const crearExamen = async (req, res) => {
   try {
-    const { seccion, nombre, caracteristicas, categoria } = req.body;
+    const { seccion, nombre, caracteristicas, categoria,titulos } = req.body;
     console.log("🚀 ~ crearExamen ~ req.body:", req.body);
     if (!nombre || nombre == "") {
       return await res
@@ -436,6 +450,22 @@ export const crearExamen = async (req, res) => {
           }
         })
       );
+      console.log(titulos)
+      if (titulos.length > 0) {
+        await Promise.all(
+          await titulos.map(async (t) => {
+            const [titulos] = await pool.execute(
+              "INSERT INTO `titulos`(`titulo`, `posicion`,`id_ex`) VALUES (?,?,?)",
+              [
+                t.titulo,
+                t.posicion,
+                examenNew.insertId
+              ]
+            );
+          })
+        );
+      }
+      
       return await res.status(200).json({
         mensaje: "Examen insertado correctamente",
         examenId: examenNew.insertId,
@@ -621,6 +651,40 @@ export const insertCaracteristica = async (req, res) => {
       return await res.status(200).json({
         mensaje: "Caracteristica insertada correctamente",
         examenId: idEx,
+      });
+    }
+  } catch (error) {
+    console.log(error);
+    return await res
+      .status(500)
+      .json({ mensaje: "Ha ocurrido un error en el servidor" });
+  }
+};
+export const crearTitulo = async (req, res) => {
+  const { titulo,posicion,id_ex } = req.body;
+  console.log(req.body)
+  try {
+    if (!titulo || titulo== "") {
+      return await res
+        .status(400)
+        .json({ mensaje: "Ingrese un nombre valido" });
+    }
+    const [nombreExistente] = await pool.execute(
+      "SELECT titulo FROM titulos WHERE titulo = ? and id_ex =?",
+      [titulo,id_ex]
+    );
+    if (nombreExistente.length > 0) {
+      return await res.status(400).json({
+        mensaje: "El titulo que intenta agregar para este examen ya existe",
+      });
+    } else {
+      const [seccion] = await pool.execute(
+        "INSERT INTO titulos (titulo,posicion,id_ex) VALUES (?,?,?)",
+        [titulo,posicion,id_ex]
+      );
+      return await res.status(200).json({
+        mensaje: "Titulo insertado correctamente",
+        tituloId: seccion.insertId,
       });
     }
   } catch (error) {
@@ -1068,6 +1132,57 @@ export const updateCategoria = async (req, res) => {
       .json({ mensaje: "Ha ocurrido un error en el servidor" });
   }
 };
+
+export const updateTitulo = async (req, res) => {
+  const { id_titulo, titulo,posicion } = req.body;
+
+  if (!id_titulo || id_titulo < 0 || isNaN(id_titulo)) {
+    return await res
+      .status(400)
+      .json({ mensaje: "El id de la seccion enviado no es valido" });
+  }
+  if (!titulo || titulo == "") {
+    return await res
+      .status(400)
+      .json({ mensaje: "El nombre a ingresar no es valido" });
+  }
+  try {
+    const [existenteName] = await pool.execute(
+      "SELECT * FROM titulos where titulo = ? and id != ?",
+      [titulo,id_titulo]
+    );
+    if (existenteName.length > 0) {
+      return await res.status(200).json({
+        mensaje: `El titulo no se ha podido ingresar por duplicidad en el nombre`,
+      });
+    }
+    const [existente] = await pool.execute(
+      "SELECT * FROM titulos where id = ?",
+      [id_titulo]
+    );
+    if (existente.length > 0) {
+      const[tit]=await pool.execute(
+        "UPDATE titulos SET titulo = ?, posicion = ? WHERE id = ?",
+        [titulo,posicion, id_titulo]
+      );
+      console.log(existente)
+      return await res.status(200).json({
+        mensaje: `EL titulo #${id_titulo} ha sido modificada correctamente`,
+        examenId: existente[0].id_ex
+      });
+      
+    } else {
+      return await res
+        .status(400)
+        .json({ mensaje: "El id del titulo no existe" });
+    }
+  } catch (error) {
+    console.log("🚀 ~ updateTitulo ~ error:", error);
+    return await res
+      .status(500)
+      .json({ mensaje: "Ha ocurrido un error en el servidor" });
+  }
+};
 export const updateCaracteristica = async (req, res) => {
   const { id_caracteristica, caracteristica } = req.body;
   console.log("🚀 ~ updateCaracteristica ~ req.body:", req.body);
@@ -1430,6 +1545,41 @@ export const insertResultado = async (req, res) => {
     }
   } catch (error) {
     console.log("🚀 ~ insertResultado ~ error:", error);
+    return await res
+      .status(500)
+      .json({ mensaje: "Ha ocurrido un error en el servidor" });
+  }
+};
+
+export const deleteTitulo = async (req, res) => {
+  const { id_titulo } = req.body;
+  console.log(req.body)
+  console.log(id_titulo)
+  if (!id_titulo || id_titulo < 0 || isNaN(id_titulo)) {
+    return await res
+      .status(400)
+      .json({ mensaje: "El id del titulo no es valido" });
+  }
+  try {
+    const [existente] = await pool.execute(
+      "SELECT * FROM titulos WHERE id = ?",
+      [id_titulo]
+    );
+    if (existente.length > 0) {
+      const [resultadoDelete] = await pool.execute(
+        "DELETE FROM `titulos` WHERE id = ?",
+        [id_titulo]
+      );
+      return await res.status(200).json({
+        mensaje: "Titulo eliminado correctamente",examenId:existente[0].id_ex
+      });
+    } else {
+      return await res
+        .status(400)
+        .json({ mensaje: "El titulo que intenta eliminar no existe" });
+    }
+  } catch (error) {
+    console.log("🚀 ~ deleteResultado ~ error:", error);
     return await res
       .status(500)
       .json({ mensaje: "Ha ocurrido un error en el servidor" });

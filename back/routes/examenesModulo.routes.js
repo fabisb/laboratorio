@@ -5,8 +5,10 @@ import {
   crearSeccion,
   crearCategoria,
   crearLaboratorio,
+  crearTitulo,
   deleteCaracteristica,
   deleteRango,
+  deleteTitulo,
   deleteResultado,
   deleteSubCaracteristica,
   getCaracteristicasById,
@@ -33,6 +35,7 @@ import {
   updateSubCaracteristica,
   updateLaboratorio,
   updateSede,
+  updateTitulo,
   crearSede
 } from "../controllers/examenesModulo.controller.js";
 var router = express.Router();
@@ -56,12 +59,15 @@ router.post("/crear-sede", administradorToken, crearSede);
 router.post("/crear-categoria", administradorToken, crearCategoria);
 router.post("/crear-examen", administradorToken, crearExamen);
 router.post("/crear-laboratorio", administradorToken, crearLaboratorio);
+router.post("/crear-titulo", administradorToken, crearTitulo);
+
 
 //PUT
 router.put("/update-laboratorio", administradorToken, updateLaboratorio);
 router.put("/update-categoria", administradorToken, updateCategoria);
 router.put("/update-seccion", administradorToken, updateSeccion);
 router.put("/update-sede", administradorToken, updateSede);
+router.put("/update-titulo", administradorToken, updateTitulo);
 router.put("/update-examen", administradorToken, updateExamen);
 router.put("/update-examen-tabla", administradorToken, updateExamenTabla);
 router.put("/update-caracteristica", administradorToken, updateCaracteristica);
@@ -84,5 +90,7 @@ router.delete(
 );
 router.delete("/delete-rango", administradorToken, deleteRango);
 router.delete("/delete-resultado", administradorToken, deleteResultado);
+router.delete("/delete-titulo",administradorToken, deleteTitulo);
+
 
 export default router;

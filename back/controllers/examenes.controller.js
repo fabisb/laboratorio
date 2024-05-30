@@ -45,10 +45,25 @@ export const getExamenReimpresion = async(req,res)=>{
           subCaracteristicas
         })
       }
+      const [titulos]= await pool.execute(`SELECT * FROM titulos where id_ex=?`,[examen[0].id_ex])
+      titulos.map(e=>{
+        caracteristicas.push(e)
+      })
       bioanalista[0].foto_firma = `${Buffer.from(
         bioanalista[0].foto_firma,
         "base64"
       )}`
+      caracteristicas = caracteristicas.sort(function (a, b) {
+        if (a.posicion > b.posicion) {
+          return 1;
+        }
+        if (a.posicion < b.posicion) {
+          return -1;
+        }
+        // a must be equal to b
+        return 0;
+      });
+
       examenes.push({
         examen: infoExamen[0].nombre,
         nombreSeccion: seccion[0].nombre,
@@ -70,7 +85,7 @@ export const getExamenReimpresion = async(req,res)=>{
 export const crearExamenPendiente = async (req,res)=>{
   const {examenPac,idPac}=req.body;
   try {
-    const [examen] = await pool.execute(`INSERT INTO examenes_pendientes (id_ex,id_pac) VALUES (?, ?, ?)`,[examenPac.examenId,idPac])
+    const [examen] = await pool.execute(`INSERT INTO examenes_pendientes (id_ex,id_pac) VALUES (?, ?)`,[examenPac.examenId,idPac])
 
     for await (const dt of examenPac.detallesExamenPd){
       const [detalle] = await pool.execute(`INSERT INTO detalles_ex_pendientes(id_dt,id_ex,id_ex_pd,id_rango,resultado,nota,inferior,superior) VALUES (?,?,?,?,?,?,?,?)`,[dt.id_dt,dt.id_ex,examen.insertId,dt.id_rango,dt.resultado,dt.nota,dt.inferior,dt.superior])
@@ -98,6 +113,9 @@ export const getPendienteExamen = async (req, res) => {
 
     const [examen] = await pool.execute(
       `SELECT * FROM examenes where id = ${pendiente[0].id_ex}`
+    );
+    const [titulos] = await pool.execute(
+      `SELECT * FROM titulos where id_ex = ${pendiente[0].id_ex}`
     );
     const [seccion] = await pool.execute(
       `SELECT * FROM seccion_examen where id =${examen[0].id_seccion}`
@@ -142,6 +160,7 @@ export const getPendienteExamen = async (req, res) => {
         unidad:caracteristica[0].unidad
       })
     }
+    titulos.map(e=>detallesExamenPc.push(e))
 
     console.log(pendiente)
    
@@ -281,7 +300,12 @@ export const getExamenResultados = async (req, res) => {
         resultados
       })
     }
-    
+
+    const [titulos]= await pool.execute(`select * from titulos where id_ex=?`,[detalles[0].id_ex])
+   console.log(titulos)
+    titulos.map(e=>{
+      detalleResultados.push(e)
+    })
     return await res.status(200).json(detalleResultados)
 
   } catch (error) {
@@ -655,7 +679,8 @@ export const crearOrden = async (req, res) => {
       INSERT INTO examenes_paciente(id_orden, id_ex, id_pac, id_bio,id_sede,id_usuario) VALUES ('${ordenId}','${ex.id_ex}','${ex.idPac}','${orden.id_bio}','${sedeVar}','${user}')
       `)
       for await (const dt of ex.detallesExamen){
-        const [detalleBdd] = await pool.execute(`
+        if(dt.status!='titulo'){
+          const [detalleBdd] = await pool.execute(`
         INSERT INTO detalles_examenes_paciente(id_dt, id_ex, id_ex_pac, id_rango,superior,inferior, resultado, nota) VALUES ('${dt.id_dt}','${ex.id_ex}','${examenBdd.insertId}','${dt.id_rango}','${dt.superior}','${dt.inferior}','${dt.resultado}','${dt.nota}')
         `)
         for await (const sb of dt.subCaracteristicasDt){
@@ -663,6 +688,8 @@ export const crearOrden = async (req, res) => {
           INSERT INTO detalle_subcaracteristica_paciente(id_det_ex, id_detalle_sub, resultado, nota) VALUES ('${detalleBdd.insertId}','${sb.id_detalle_sub}','${sb.resultado}','${sb.nota}')
           `)
         }
+        }
+        
         
       }
     }
@@ -761,13 +788,16 @@ export const getExamenesPaciente = async (req, res) => {
 
       for await (const ex of examenes) {
         const [examen] = await pool.execute(`SELECT * FROM examenes where id=${ex.id_ex}`)
-        examenesData.push({
-          id:ex.id,
-          id_bio:ex.id_bio,
-          nombreEx:examen[0].nombre,
-          id_ex:ex.id_ex,
-          fecha:ex.fecha
-        })
+        if(examen.length>0){
+          examenesData.push({
+            id:ex.id,
+            id_bio:ex.id_bio,
+            nombreEx:examen[0].nombre,
+            id_ex:ex.id_ex,
+            fecha:ex.fecha
+          })
+        }
+        
       }
       return await res
       .status(200)
