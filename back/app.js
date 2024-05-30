@@ -11,6 +11,8 @@ import examenesRouter from "./routes/examenes.routes.js";
 import moduloExamenesRouter from "./routes/examenesModulo.routes.js";
 import usersRouter from "./routes/users.routes.js";
 import espejoRouter from "./routes/espejo.routes.js";
+import estadisticasRouter from "./routes/estadisticas.routes.js";
+
 import { clearCookie, verifyCookie } from "./controllers/login.controller.js";
 
 var app = express();
@@ -52,6 +54,7 @@ app.use("/api/examenes", examenesRouter);
 app.use("/api/modulo-examenes", moduloExamenesRouter);
 app.use("/api/users", usersRouter);
 app.use("/api/espejo", espejoRouter);
+app.use("/api/estadisticas", estadisticasRouter);
 
 // middleware para manejar rutas que no se encuentran
 app.use((req, res, next) => {

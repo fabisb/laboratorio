@@ -21,6 +21,8 @@ const {data: examen} = await axios.get(
   { headers: { token }, params: { idSeccion } }
 ); 
 */
+var examenesArray = [];
+var titulosArray =[];
 function formularioSeccion() {
   const labDiv = document.getElementById(`formLaboratorio`);
   const sedeDiv = document.getElementById(`formSede`);
@@ -105,6 +107,18 @@ var examenes = [];
 var seccionesData = [];
 var sedesData = [];
 var laboratoriosData = [];
+
+function validarSelectSeccionMenu(value) {
+  if (value == "todos") {
+    examenes = examenesArray;
+  } else {
+    examenes = examenesArray.filter((ex) => {
+      return ex.id_seccion == value;
+    });
+    console.log(examenes);
+  }
+  buscarExamen();
+}
 const render = async () => {
   const { token } = await login.getToken();
   try {
@@ -113,18 +127,29 @@ const render = async () => {
       { headers: { token } }
     );
     const selectSeccion = document.getElementById("seccionExamenSelect");
+    const selectSeccionMenu = document.getElementById(
+      "seccionExamenSelectMenu"
+    );
+
     selectSeccion.innerHTML = `
     <option value="">Seccion</option>
+    
+    `;
+    selectSeccionMenu.innerHTML = `
+    <option value="todos">Filtrar por Seccion</option>
     
     `;
     seccionesData = secciones.data;
 
     secciones.data.forEach((seccion) => {
-      
       const option = document.createElement("option");
       option.value = seccion.id;
       option.innerText = seccion.nombre;
+      const option2 = document.createElement("option");
+      option2.value = seccion.id;
+      option2.innerText = seccion.nombre;
       selectSeccion.appendChild(option);
+      selectSeccionMenu.appendChild(option2);
     });
   } catch (error) {
     console.log(error);
@@ -135,14 +160,12 @@ const render = async () => {
     }
   }
 
-    try {
-      const categorias = await axios.get(
-        urlsv + "/api/modulo-examenes/categorias",
-        { headers: { token } }
-      );
+  try {
+    const categorias = await axios.get(
+      urlsv + "/api/modulo-examenes/categorias",
+      { headers: { token } }
+    );
     categoriasData = categorias.data;
-          
-
 
     const selectCategoria = document.getElementById("categoriaExamenSelect");
     selectCategoria.innerHTML = `
@@ -162,32 +185,28 @@ const render = async () => {
     } else {
       return await alerta.error();
     }
-    }
-    try {
-      const sedes = await axios.get(
-        urlsv + "/api/modulo-examenes/sedes",
-        { headers: { token } }
-      );
-    sedesData = sedes.data
-
-    } catch (error) {
-      console.log(error);
+  }
+  try {
+    const sedes = await axios.get(urlsv + "/api/modulo-examenes/sedes", {
+      headers: { token },
+    });
+    sedesData = sedes.data;
+  } catch (error) {
+    console.log(error);
     if (error.response.data.mensaje) {
       return await alerta.alert("Error:", error.response.data.mensaje);
     } else {
       return await alerta.error();
     }
-    }
-    try {
-      const laboratorios = await axios.get(
-        urlsv + "/api/modulo-examenes/laboratorios",
-        { headers: { token } }
-      );
+  }
+  try {
+    const laboratorios = await axios.get(
+      urlsv + "/api/modulo-examenes/laboratorios",
+      { headers: { token } }
+    );
     laboratoriosData = laboratorios.data;
-
-      
-    } catch (error) {
-      console.log(error);
+  } catch (error) {
+    console.log(error);
     if (error.response.data.mensaje) {
       return await alerta.alert("Error:", error.response.data.mensaje);
     } else {
@@ -200,6 +219,7 @@ const render = async () => {
       urlsv + "/api/examenes/get-examenes",
       { headers: { token } }
     );
+    examenesArray = examenesGet;
     examenes = examenesGet;
 
     const menuCreacionUl = document.getElementById("menuCreacionUl");
@@ -260,20 +280,17 @@ const render = async () => {
     } else {
       return await alerta.error();
     }
-    }
-    
-    
-    
-
-
-    
-  
+  }
 };
 function añadirAcordionItemEx(nombre1, idEx) {
   nombre1 = nombre1.trim();
-  const nombre = nombre1.replaceAll(" ", "-").replaceAll("(","-").replaceAll(")","-").replaceAll(".","-");
-
-
+  const nombre = nombre1
+    .replaceAll(" ", "-")
+    .replaceAll("(", "-")
+    .replaceAll(")", "-")
+    .replaceAll(".", "-")
+    .replaceAll("+", "-")
+    .replaceAll("/", "-");
 
   const accordionCaracteristicas = document.getElementById(
     "accordionCaracteristicas"
@@ -946,6 +963,9 @@ async function modificarExamen(id) {
       urlsv + "/api/modulo-examenes/examen-id",
       { headers: { token }, params: { idExamen: id } }
     );
+
+  
+    titulosArray=[];
     console.log(examen);
     const botonRefrescarFooter = document.getElementById(
       "buttonRefrescarFooter"
@@ -980,11 +1000,162 @@ async function modificarExamen(id) {
     seccionSelect.value = examen.examen.id_seccion;
     categoriaSelect.value = examen.examen.id_categoria;
     accordionDiv.innerHTML = "";
+    examen.titulos.forEach(t=>{
+ 
+
+      const posicion=t.posicion
+      const nombre1=t.titulo
+  const nombre = t.titulo
+    .replaceAll(" ", "-")
+    .replaceAll("(", "-")
+    .replaceAll(")", "-")
+    .replaceAll(".", "-")
+    .replaceAll("+", "-")
+    .replaceAll("/", "-");
+
+  const accordionCaracteristicas = document.getElementById(
+    "accordionCaracteristicas"
+  );
+  
+  caracteristicasCreadas.add(nombre);
+  
+
+  const divItem = document.createElement("div");
+  divItem.className = `accordion-item acordionItemCaracteristica`;
+  divItem.id = `accordionItemCaracteristica${nombre}`;
+
+  divItem.innerHTML = `
+  
+  
+  <h2 class="accordion-header headerCaracteristica"  >
+    <button class="accordion-button collapsed" id="collapseTitulo${nombre}" type="button" data-bs-toggle="collapse" data-bs-target="#collapseCaracteristica${nombre}" aria-expanded="false" aria-controls="collapseCaracteristica${nombre}">
+     ${nombre1}  --- TITULO
+    </button>
+    
+  </h2>
+  <div id="collapseCaracteristica${nombre}" class="accordion-collapse collapse" data-bs-parent="#accordionItemCaracteristica">
+    <div class="accordion-body m-0 p-0 text-center" id="accordionBodyCaracteristica${nombre}">
+    
+      <div class="row my-3" style="font-size:medium">
+      <div class='col-2'>
+        <label
+        for="inputTitulo${nombre}"
+        name="titulo"
+        class="form-label formCaracteristica "
+        >Titulo</label
+      > 
+        </div>
+        
+        <div class="col-2">
+        
+          <input
+            type="text"
+            class="form-control form-control-sm"
+            id="inputTitulo${nombre}"
+            placeholder="Titulo"
+            disabled
+            value="${nombre1}"
+          />
+        </div>
+        <div class="col-2">
+        <label
+    for="inputPosicion${nombre}"
+    name="posicion"
+    class="form-label formCaracteristica"
+    >Posicion</label>
+  
+        </div>
+        <div class='col-2'>
+        <input
+    type="number"
+    min='0'
+    step='1'
+    value="${posicion}"
+    class="form-control form-control-sm"
+    id="inputPosicion${nombre}"
+    placeholder="Posicion"
+    disabled
+  />
+        </div>
+        <div class='col-4'>
+          <div class='row'>
+            <div class='col'>
+            <button class='button${nombre} btnIcon'>
+            
+            <svg
+            xmlns="http://www.w3.org/2000/svg"
+            style="cursor: pointer"
+            width="40"
+            height="40"
+            fill="#FACD0B"
+            class="bi bi-pencil-square botonModificarTitulo${nombre}"
+            viewBox="0 0 20 20"
+            id="botonModificarTitulo${nombre}"
+            onclick="modificarTitulo('${nombre}','${nombre1}')"
+          >
+            <path
+              d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"
+            />
+            <path
+              fill-rule="evenodd"
+              d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z"
+            />
+          </svg>
+          </button>
+          </div>
+            <div class='col'><button class='button${nombre} btnIcon' id="botonBorrarTitulo${nombre}" onclick="deleteTituloBdd('${t.id}')">
+            <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="red" class="bi bi-x-circle" viewBox="0 0 16 16">
+            <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
+            <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708"/>
+            </svg>
+            </button></div>
+            <div class='col'>
+              <button class='button${nombre} btnIcon'id="botonGuardarTitulo${nombre}" onclick="guardarTituloBdd('${nombre}','${t.id}')" hidden>
+                <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="blue" class="bi bi-save" viewBox="0 0 16 16">
+                <path d="M2 1a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H9.5a1 1 0 0 0-1 1v7.293l2.646-2.647a.5.5 0 0 1 .708.708l-3.5 3.5a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L7.5 9.293V2a2 2 0 0 1 2-2H14a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2h2.5a.5.5 0 0 1 0 1z"/>
+                </svg>
+              </button>
+            </div>
+
+
+          </div>
+
+        
+
+
+
+
+
+        </div>
+        
+      </div>
+      
+    
+  
+      </div>
+
+  </div>
+
+
+  `;
+
+  accordionCaracteristicas.appendChild(divItem);
+  titulosArray.push({
+    titulo:nombre1,
+    posicion
+  })
+    })
 
     examen.detalles.forEach((dt) => {
       const divItem = document.createElement("div");
       nombre1 = dt.nombre.trim();
-      const nombre = nombre1.replaceAll(" ", "-").replaceAll("(","-").replaceAll(")","-").replaceAll(".","-");
+      const nombre = nombre1
+        .replaceAll(" ", "-")
+        .replaceAll("(", "-")
+        .replaceAll(")", "-")
+        .replaceAll(".", "-")
+        .replaceAll("+", "-")
+        .replaceAll("/", "-");
       caracteristicasCreadas.add(nombre);
       divItem.className = `accordion-item acordionItemCaracteristica`;
       divItem.id = `accordionItemCaracteristica${nombre}`;
@@ -994,7 +1165,7 @@ async function modificarExamen(id) {
   
   <h2 class="accordion-header headerCaracteristica"  >
     <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseCaracteristica${nombre}" aria-expanded="false" aria-controls="collapseCaracteristica${nombre}">
-     ${nombre}
+     ${nombre1}
     </button>
     
   </h2>
@@ -1539,6 +1710,7 @@ onclick="modificarSubCaForm('${sb.id}','${nombre}')"
         tBodyResultados.appendChild(tr);
       });
     });
+    document.getElementById('botonModalTitulo').setAttribute('onclick',`añadirTituloBdd(${id})`)
     document.getElementById("busquedaModalCloseBtn").click();
   } catch (error) {
     console.log("🚀 ~ modificarExamen ~ error:", error);
@@ -1548,6 +1720,62 @@ onclick="modificarSubCaForm('${sb.id}','${nombre}')"
       return await alerta.error();
     }
   }
+}
+
+async function deleteTituloBdd(id){
+  try {
+    const { token } = await login.getToken();
+      const { data } = await axios.delete(
+        urlsv + "/api/modulo-examenes/delete-titulo",
+        {
+          headers: { token },
+          data: { id_titulo: id },
+        }
+      );
+
+    examenesAlerta("Titulo eliminado con exito!", "danger");
+    return modificarExamen(data.examenId);
+
+  } catch (error) {
+    console.log("🚀 ~ guardarCambioRsBdd ~ error:", error);
+    if (error.response.data.mensaje) {
+      return await alerta.alert("Error:", error.response.data.mensaje);
+    } else {
+      return await alerta.error();
+    }
+  }
+}
+
+async function guardarTituloBdd(nombre,id){
+  const tituloInp= document.getElementById(`inputTitulo${nombre}`)
+  const posicionInp= document.getElementById(`inputPosicion${nombre}`)
+  console.log(tituloInp.value,posicionInp.value)
+  try {
+    const { token } = await login.getToken();
+    const { data } = await axios.put(
+      urlsv + "/api/modulo-examenes/update-titulo",
+      {
+        id_titulo: id,
+        titulo:tituloInp.value,
+        posicion:posicionInp.value
+      },
+      {
+        headers: { token },
+      }
+    );
+
+    examenesAlerta("Titulo modificado con exito!", "success");
+    return modificarExamen(data.examenId);
+
+  } catch (error) {
+    console.log("🚀 ~ guardarCambioRsBdd ~ error:", error);
+    if (error.response.data.mensaje) {
+      return await alerta.alert("Error:", error.response.data.mensaje);
+    } else {
+      return await alerta.error();
+    }
+  }
+
 }
 function modificarResultadoForm(id, nombre) {
   const resultadoInput = document.getElementById(`resultadoRs${id}`);
@@ -1564,7 +1792,7 @@ function modificarResultadoForm(id, nombre) {
 async function guardarCambioRsBdd(id, nombre) {
   const resultadoInput = document.getElementById(`resultadoRs${id}`);
 
-  resultadoInput.value = resultadoInput.value.slice(0, 20);
+  resultadoInput.value = resultadoInput.value.slice(0, 60);
   console.log(resultadoInput.value);
   resultadoInput.setAttribute("readonly", "true");
   const btnModi = document.getElementsByClassName(`buttonModificarRs`);
@@ -1616,6 +1844,7 @@ function modificarCaracteristicaForm(nombre) {
   document
     .getElementById("botonGuardarCaracteristica" + nombre)
     .removeAttribute("hidden");
+  caracteristicasCreadas.delete(nombre);
 }
 
 function añadirRangoEx(id, nombre) {
@@ -2417,8 +2646,16 @@ async function guardarCambioRgBdd(id, nombre) {
         parseFloat(r.childNodes[7].childNodes[1].childNodes[1].value)
     ) {
       error = true;
-      console.log(r.childNodes[1].childNodes[1].childNodes[1].value+'>'+r.childNodes[3].childNodes[1].childNodes[1].value)
-      console.log(r.childNodes[5].childNodes[1].childNodes[1].value+'>'+r.childNodes[7].childNodes[1].childNodes[1].value)
+      console.log(
+        r.childNodes[1].childNodes[1].childNodes[1].value +
+          ">" +
+          r.childNodes[3].childNodes[1].childNodes[1].value
+      );
+      console.log(
+        r.childNodes[5].childNodes[1].childNodes[1].value +
+          ">" +
+          r.childNodes[7].childNodes[1].childNodes[1].value
+      );
 
       console.log(3);
 
@@ -2559,27 +2796,34 @@ async function guardarCambioCaracteristicaBdd(id, nombre) {
 
 function validarSelectTipoBusqueda(value) {
   const input = document.getElementById("inputDescripcionBusqueda");
+  const selectSeccionMenu = document.getElementById("seccionExamenSelectMenu");
 
   switch (value) {
     case "examen":
       buscarExamen();
+      selectSeccionMenu.removeAttribute("hidden");
       input.setAttribute("oninput", "buscarExamen()");
       break;
 
     case "seccion":
       buscarSeccion();
+      selectSeccionMenu.setAttribute("hidden", "true");
+
       input.setAttribute("oninput", "buscarSeccion()");
       break;
     case "categoria":
       buscarCategoria();
+      selectSeccionMenu.setAttribute("hidden", "true");
       input.setAttribute("oninput", "buscarCategoria()");
       break;
     case "laboratorio":
       buscarLaboratorio();
+      selectSeccionMenu.setAttribute("hidden", "true");
       input.setAttribute("oninput", "buscarLaboratorio()");
       break;
     case "sede":
       buscarSede();
+      selectSeccionMenu.setAttribute("hidden", "true");
       input.setAttribute("oninput", "buscarSede()");
       break;
   }
@@ -2658,6 +2902,7 @@ async function detalleExamen(id) {
     urlsv + "/api/modulo-examenes/caracteristicas-id_ex",
     { headers: { token }, params: { id } }
   );
+  console.log(caracteristicas)
   const collapse = document.getElementById(`collapseMenu${id}`);
   collapse.innerHTML = `
   <table class="table table-sm text-center" style="border: 2px solid green; font-size:15px">
@@ -2675,16 +2920,37 @@ async function detalleExamen(id) {
 </table>
   `;
   const tBody = document.getElementById(`tBody${id}`);
+  let caracteristicas2=caracteristicas.sort(function (a, b) {
+    
+    if (a.posicion > b.posicion) {
+      return 1;
+    }
+    if (a.posicion < b.posicion) {
+      return -1;
+    }
+    // a must be equal to b
+    return 0;
+  });
 
-  caracteristicas.forEach((c) => {
-    tBody.innerHTML += `
-    <tr>
-      <td scope="col">${c.nombre}</td>
-      <td scope="col">${c.unidad}</td>
-      <td scope="col">${c.posicion}</td>
-      <td scope="col">${c.impsiempre == 1 ? "SI" : "NO"}</td>
-    </tr>
-    `;
+  caracteristicas2.forEach((c) => {
+    if(c.status=='titulo'){
+      tBody.innerHTML += `
+      <tr>
+        <th colspan="4" scope="col">${c.titulo}</th>
+        
+      </tr>
+      `;
+    }else{
+      tBody.innerHTML += `
+      <tr>
+        <td scope="col">${c.nombre}</td>
+        <td scope="col">${c.unidad}</td>
+        <td scope="col">${c.posicion}</td>
+        <td scope="col">${c.impsiempre == 1 ? "SI" : "NO"}</td>
+      </tr>
+      `;
+    }
+    
   });
 }
 
@@ -3038,6 +3304,289 @@ function desactivarSelects(nombre) {
   arrSelects.forEach((sl) => {
     sl.setAttribute("disabled", "true");
   });
+}
+
+function borrarTitulo(event,nombre,titulo){
+  const accordion = document.getElementById("accordionCaracteristicas");
+  
+  const accordionCar = document.getElementById(
+    `accordionItemCaracteristica${nombre}`
+  );
+  console.log(accordionCar);
+  caracteristicasCreadas.delete(nombre);
+  accordion.removeChild(accordionCar);
+
+  
+
+  titulosArray=titulosArray.filter(e=>e.titulo!=titulo)
+
+}
+
+function modificarTitulo(nombre,titulo){
+  const buttonMod= document.getElementById(`botonModificarTitulo${nombre}`)
+  const buttonGuardar= document.getElementById(`botonGuardarTitulo${nombre}`)
+  const tituloInp= document.getElementById(`inputTitulo${nombre}`)
+  const posicionInp= document.getElementById(`inputPosicion${nombre}`)
+  const accordionCar = document.getElementById(
+    `accordionItemCaracteristica${nombre}`
+  );
+  accordionCar.id='auxiliar'
+
+  tituloInp.removeAttribute('disabled')
+  posicionInp.removeAttribute('disabled')
+  buttonGuardar.removeAttribute('hidden')
+  buttonMod.setAttribute('hidden','true')
+  titulosArray=titulosArray.filter(e=>e.titulo!=titulo)
+  caracteristicasCreadas.delete(nombre)
+
+
+}
+
+function guardarTitulo(nombre2){
+  const tituloInp= document.getElementById(`inputTitulo${nombre2}`)
+  const posicionInp= document.getElementById(`inputPosicion${nombre2}`)
+  const buttonMod= document.getElementById(`botonModificarTitulo${nombre2}`)
+  const buttonGuardar= document.getElementById(`botonGuardarTitulo${nombre2}`)
+  const buttonBorrar= document.getElementById(`botonBorrarTitulo${nombre2}`)
+  const accordionCar = document.getElementById(
+    `auxiliar`
+  );
+
+  const collapseTitulo= document.getElementById(`collapseTitulo${nombre2}`)
+  let nombre1 = tituloInp.value
+  let posicion = posicionInp.value
+  
+  nombre1 = nombre1.trim();
+  if (nombre1 == "") {
+    return alerta.alert("Error", "El nombre no puede estar vacio");
+  }
+
+  const nombre = nombre1
+  .replaceAll(" ", "-")
+  .replaceAll("(", "-")
+  .replaceAll(")", "-")
+  .replaceAll(".", "-")
+  .replaceAll("+", "-")
+  .replaceAll("/", "-");
+  if (caracteristicasCreadas.has(nombre)) {
+    return alerta.alert("Error", "Ya existe una caracteristica con ese nombre");
+  } else {
+    caracteristicasCreadas.add(nombre);
+  }
+  tituloInp.setAttribute('disabled','true')
+  posicionInp.setAttribute('disabled','true')
+  buttonGuardar.setAttribute('hidden','true')
+  buttonMod.removeAttribute('hidden')
+  buttonMod.setAttribute('onclick',`modificarTitulo('${nombre}','${nombre1}')`)
+  buttonGuardar.setAttribute('onclick',`guardarTitulo('${nombre}')`)
+  buttonBorrar.setAttribute('onclick',`borrarTitulo(event,'${nombre}','${nombre1}')`)
+  accordionCar.id=`accordionItemCaracteristica${nombre}`
+
+
+  collapseTitulo.innerText=`${nombre1}  --- TITULO`
+  titulosArray.push({
+    titulo:nombre1,
+    posicion
+  })
+
+}
+
+
+function añadirAcordionItemTitulo(idEx) {
+  let nombre1 = document.getElementById("inputTitulo").value;
+  let posicion = document.getElementById("inputPosicion").value;
+
+  nombre1 = nombre1.trim();
+  if (nombre1 == "") {
+    return alerta.alert("Error", "El nombre no puede estar vacio");
+  }
+  const nombre = nombre1
+    .replaceAll(" ", "-")
+    .replaceAll("(", "-")
+    .replaceAll(")", "-")
+    .replaceAll(".", "-")
+    .replaceAll("+", "-")
+    .replaceAll("/", "-");
+
+  const accordionCaracteristicas = document.getElementById(
+    "accordionCaracteristicas"
+  );
+  if (caracteristicasCreadas.has(nombre)) {
+    return alerta.alert("Error", "Ya existe una caracteristica con ese nombre");
+  } else {
+    caracteristicasCreadas.add(nombre);
+  }
+
+  const divItem = document.createElement("div");
+  divItem.className = `accordion-item acordionItemCaracteristica`;
+  divItem.id = `accordionItemCaracteristica${nombre}`;
+
+  divItem.innerHTML = `
+  
+  
+  <h2 class="accordion-header headerCaracteristica"  >
+    <button class="accordion-button collapsed" id="collapseTitulo${nombre}" type="button" data-bs-toggle="collapse" data-bs-target="#collapseCaracteristica${nombre}" aria-expanded="false" aria-controls="collapseCaracteristica${nombre}">
+     ${nombre1}  --- TITULO
+    </button>
+    
+  </h2>
+  <div id="collapseCaracteristica${nombre}" class="accordion-collapse collapse" data-bs-parent="#accordionItemCaracteristica">
+    <div class="accordion-body m-0 p-0 text-center" id="accordionBodyCaracteristica${nombre}">
+    
+      <div class="row my-3" style="font-size:medium">
+      <div class='col-2'>
+        <label
+        for="inputTitulo${nombre}"
+        name="titulo"
+        class="form-label formCaracteristica "
+        >Titulo</label
+      > 
+        </div>
+        
+        <div class="col-2">
+        
+          <input
+            type="text"
+            class="form-control form-control-sm"
+            id="inputTitulo${nombre}"
+            placeholder="Titulo"
+            disabled
+            value="${nombre1}"
+          />
+        </div>
+        <div class="col-2">
+        <label
+    for="inputPosicion${nombre}"
+    name="posicion"
+    class="form-label formCaracteristica"
+    >Posicion</label>
+  
+        </div>
+        <div class='col-2'>
+        <input
+    type="number"
+    min='0'
+    step='1'
+    value="${posicion}"
+    class="form-control form-control-sm"
+    id="inputPosicion${nombre}"
+    placeholder="Posicion"
+    disabled
+  />
+        </div>
+        <div class='col-4'>
+          <div class='row'>
+            <div class='col'>
+            <button class='button${nombre} btnIcon'>
+            
+            <svg
+            xmlns="http://www.w3.org/2000/svg"
+            style="cursor: pointer"
+            width="40"
+            height="40"
+            fill="#FACD0B"
+            class="bi bi-pencil-square botonModificarTitulo${nombre}"
+            viewBox="0 0 20 20"
+            id="botonModificarTitulo${nombre}"
+            onclick="modificarTitulo('${nombre}','${nombre1}')"
+          >
+            <path
+              d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"
+            />
+            <path
+              fill-rule="evenodd"
+              d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z"
+            />
+          </svg>
+          </button>
+          </div>
+            <div class='col'><button class='button${nombre} btnIcon' id="botonBorrarTitulo${nombre}" onclick="borrarTitulo(event,'${nombre}','${nombre1}')">
+            <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="red" class="bi bi-x-circle" viewBox="0 0 16 16">
+            <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
+            <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708"/>
+            </svg>
+            </button></div>
+            <div class='col'>
+              <button class='button${nombre} btnIcon'id="botonGuardarTitulo${nombre}" onclick="guardarTitulo('${nombre}')" hidden>
+                <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="blue" class="bi bi-save" viewBox="0 0 16 16">
+                <path d="M2 1a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H9.5a1 1 0 0 0-1 1v7.293l2.646-2.647a.5.5 0 0 1 .708.708l-3.5 3.5a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L7.5 9.293V2a2 2 0 0 1 2-2H14a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2h2.5a.5.5 0 0 1 0 1z"/>
+                </svg>
+              </button>
+            </div>
+
+
+          </div>
+
+        
+
+
+
+
+
+        </div>
+        
+      </div>
+      
+    
+  
+      </div>
+
+  </div>
+
+
+  `;
+
+  accordionCaracteristicas.appendChild(divItem);
+  titulosArray.push({
+    titulo:nombre1,
+    posicion
+  })
+}
+
+async function añadirTituloBdd(idEx){
+  let nombre1 = document.getElementById("inputTitulo").value;
+  let posicion = document.getElementById("inputPosicion").value;
+  if (nombre1 == "") {
+    return alerta.alert("Error", "El nombre no puede estar vacio");
+  }
+  const nombre = nombre1
+    .replaceAll(" ", "-")
+    .replaceAll("(", "-")
+    .replaceAll(")", "-")
+    .replaceAll(".", "-")
+    .replaceAll("+", "-")
+    .replaceAll("/", "-");
+
+  const accordionCaracteristicas = document.getElementById(
+    "accordionCaracteristicas"
+  );
+  if (caracteristicasCreadas.has(nombre)) {
+    return alerta.alert("Error", "Ya existe una caracteristica con ese nombre");
+  } 
+
+  try {
+    const { token } = await login.getToken();
+    const titulo = await axios.post(
+      urlsv + `/api/modulo-examenes/crear-titulo`,
+      {
+        titulo:nombre1,
+        posicion,
+        id_ex:idEx
+      },
+      { headers: { token } }
+    );
+    examenesAlerta("Titulo creado con exito!", "success");
+    return modificarExamen(idEx);
+
+  } catch (error) {
+    console.log(error);
+    if (error.response.data.mensaje) {
+      return await alerta.alert("Error:", error.response.data.mensaje);
+    } else {
+      return await alerta.error();
+    }
+  }
+
 }
 
 function validarNombreCaracteristica(mod, idEx) {
@@ -3436,7 +3985,7 @@ async function crearExamen() {
     const { token } = await login.getToken();
     const { data } = await axios.post(
       urlsv + "/api/modulo-examenes/crear-examen",
-      { nombre, seccion, caracteristicas, categoria },
+      { nombre, seccion, caracteristicas, categoria,titulos:titulosArray },
       { headers: { token } }
     );
     examenesAlerta(
@@ -3499,7 +4048,7 @@ async function crearSede() {
       urlsv + `/api/modulo-examenes/crear-sede`,
       {
         nombre,
-        clave
+        clave,
       },
       { headers: { token } }
     );
@@ -3654,7 +4203,7 @@ function crearCaracteristica(nombre) {
   console.log(rangos, resultado, subCaracteristica);
 
   const resultados = [...resultado].map((rs) => {
-    return rs.children[0].children[0].children[0].value.slice(0, 20);
+    return rs.children[0].children[0].children[0].value.slice(0, 60);
   });
 
   caracteristicas.push({
@@ -3678,12 +4227,16 @@ var caracteristicasCreadas = new Set();
 
 function añadirAcordionItem(nombre1) {
   nombre1 = nombre1.trim();
-  if (nombre1=='') {
+  if (nombre1 == "") {
     return alerta.alert("Error", "El nombre no puede estar vacio");
-    
   }
-  const nombre = nombre1.replaceAll(" ", "-").replaceAll("(","-").replaceAll(")","-").replaceAll(".","-");
-  
+  const nombre = nombre1
+    .replaceAll(" ", "-")
+    .replaceAll("(", "-")
+    .replaceAll(")", "-")
+    .replaceAll(".", "-")
+    .replaceAll("+", "-")
+    .replaceAll("/", "-");
 
   const accordionCaracteristicas = document.getElementById(
     "accordionCaracteristicas"
@@ -3928,7 +4481,7 @@ function añadirAcordionItem(nombre1) {
 }
 function borrarCaracteristica(event, nombre) {
   const accordion = document.getElementById("accordionCaracteristicas");
-  console.log(accordion.children);
+  
   const accordionCar = document.getElementById(
     `accordionItemCaracteristica${nombre}`
   );
@@ -3950,6 +4503,7 @@ function modificarCrtCreacionFront(nombre) {
   caracteristicas = caracteristicas.filter(
     (c) => c.caracteristica[0].valor !== nombre
   );
+  caracteristicasCreadas.delete(nombre);
 }
 function validarInputFormula(nombre, event) {
   const value = event.target.value;
@@ -4070,7 +4624,7 @@ function validarInferior(event, tipo) {
   }
 }
 function validarResultado(event) {
-  if (event.target.value.length > 20) {
+  if (event.target.value.length > 60) {
     event.target.style.borderColor = "red";
   } else {
     event.target.style.borderColor = "green";

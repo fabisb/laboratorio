@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title >Estadisticas</title>
+    <link rel="stylesheet" href="../styles/navBar.css" />
+    <link
+      rel="stylesheet"
+      href="../../bower_components/bootstrap/dist/css/bootstrap.min.css"
+    />
+    <link rel="stylesheet" href="../styles/estadisticas.css">
+
+  </head>
+  <body
+    class="fs-5"
+    onload="tok(),render()"
+    style="
+      background: rgb(214, 255, 242);
+      background: linear-gradient(
+        180deg,
+        rgba(214, 255, 242, 1) 01%,
+        rgba(255, 255, 255, 1) 04%,
+        rgba(255, 255, 255, 1) 87%,
+        rgba(214, 255, 242, 1) 92%
+      );
+      height: 100vh;
+    "
+  >
+    <section>
+      <nav class="navbar navbar bg-transparent">
+        <div class="container-fluid">
+          <a class="navbar-brand" href="#">
+            <img src="../imgs/la-milagrosa-logo.png" width="100" alt="" />
+          </a>
+          <div class="">
+            <h1 class="display-3">Estadisticas</h1>
+          </div>
+          <button
+            class="navbar-toggler"
+            type="button"
+            data-bs-toggle="offcanvas"
+            data-bs-target="#offcanvasDarkNavbar"
+            aria-controls="offcanvasDarkNavbar"
+            aria-label="Toggle navigation"
+          >
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div
+            class="offcanvas offcanvas-end"
+            tabindex="-1"
+            id="offcanvasDarkNavbar"
+            aria-labelledby="offcanvasDarkNavbarLabel"
+          >
+            <div class="offcanvas-header">
+              <h5 class="offcanvas-title" id="offcanvasDarkNavbarLabel">
+                <img src="../imgs/la-milagrosa-logo.png" alt="" />
+              </h5>
+              <button
+                type="button"
+                class="btn-close btn-close-white"
+                data-bs-dismiss="offcanvas"
+                aria-label="Close"
+              ></button>
+            </div>
+            <div class="offcanvas-body">
+              <ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
+                <li class="nav-item">
+                  <a
+                    class="nav-link active"
+                    aria-current="page"
+                    onclick="abrirExamenesWindow()"
+                    style="cursor: pointer"
+                    >Diagnosticos</a
+                  >
+                </li>
+                <li class="nav-item user1" hidden>
+                  <a
+                    class="nav-link"
+                    aria-current="page"
+                    onclick="abrirExWindow()"
+                    style="cursor: pointer"
+                    >Examenes</a
+                  >
+                </li>
+                <li class="nav-item user1 user3" hidden>
+                    <a class="nav-link" onclick="abrirEstadisticasWindow()" style="cursor: pointer;">Estadisticas</a>
+                  </li>
+                <li class="nav-item user1" hidden>
+                  <a
+                    class="nav-link"
+                    onclick="abrirCreacionBioWindow()"
+                    style="cursor: pointer"
+                    >Usuarios</a
+                  >
+                </li>
+
+                <li class="nav-item">
+                  <a
+                    class="nav-link"
+                    onclick="abrirLoginWindow()"
+                    style="cursor: pointer"
+                    >Cerrar Sesion</a
+                  >
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </nav>
+    </section>
+
+    <body>
+        <div class="container-fluid p-0">
+            <div class="row ">
+                <div class="col-2 rowNav">
+                    <h1 class="display-6 text-center">Filtrar por: </h1>
+                </div>
+                <div class="col-10 rowNav" style="border-left: none;">
+                    <div class="row">
+                        <div class="col-4">
+                            <div class="row my-3">
+                                <div class="col-4">
+                                    <label for="">Desde: </label>
+        
+                                    </div>
+                                    <div class="col-8">
+                                        <input
+                                        onchange=""
+                                        name="fechaDesde"
+                                        type="date"
+                                        class="form-control w-75"
+                                        id="fechaExamenInput"
+                                        />
+                                    </div>
+                            </div>
+                            
+                            
+                        </div>
+                        <div class="col-3">
+                            <div class="row my-3">
+                                <div class="col-4" >
+                                    <label for="">Hasta: </label>
+        
+                                    </div>
+                                    <div class="col-8">
+                                        <input
+                                        onchange=""
+                                        name="fechaHasta"
+                                        type="date"
+                                        class="form-control w-100"
+                                        id="fechaExamenInput"
+                                        />
+                                    </div>
+                            </div>
+                        </div>
+                        <div class="col-5">
+
+                            <div class="row my-2">
+                                <div class="col d-flex justify-content-center">
+                                  <input type="radio" class="btn-check" name="tipoOrden"  id="milagrosaOption" autocomplete="off">
+                                  <label class="btn btn-light" for="milagrosaOption" ><img src="../imgs/la-milagrosa-logo.png"   width="50" alt="" srcset=""></label>
+                                </div>
+                                <div class="col d-flex justify-content-center">
+                                  <input type="radio" class="btn-check" name="tipoOrden"  id="saludOption" autocomplete="off" >
+                                  <label class="btn btn-light" for="saludOption"><img src="../imgs/salud-vital-logo.png"  width="50" alt="" srcset=""></label>
+                                </div>
+                                <div class="col d-flex justify-content-center">
+                                  <input type="radio" class="btn-check" name="tipoOrden" id="todoOption" autocomplete="off" checked>
+                                  <label class="btn btn-light" for="todoOption"><img src="../imgs/Diseño sin título.png" alt="" width="50" srcset=""></label>
+                                </div>
+                                <div class="col d-flex justify-content-center">
+                                    <button type="button" class="btn btn-light"><svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" fill="green" id="botonBuscar" class="bi bi-search" viewBox="0 0 16 16">
+                                        <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"/>
+                                      </svg></button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-2 p-0 acordionEstadistica" style="border-top: none">
+                    <div class="accordion ms-3" id="acordionEstadistica">
+                        <div class="accordion-item">
+                          <h2 class="accordion-header">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapsePaciente" aria-expanded="true" aria-controls="collapsePaciente">
+                              Paciente
+                            </button>
+                          </h2>
+                          <div id="collapsePaciente" class="accordion-collapse collapse " data-bs-parent="#acordionEstadistica">
+                            <div class="accordion-body">
+                                <div class="input-group mb-3">
+                                    <input type="number" class="form-control form-control-sm" min="0" onchange="validarInputsExamenPaciente('examen')" id="examenInputPaciente" placeholder="Examen" aria-label="examenInputPac" aria-describedby="examenFiltro">
+                                    <button class="btn btn-success btn-sm" type="button" id="button-addon2"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down-square" viewBox="0 0 16 16">
+                                        <path d="M3.626 6.832A.5.5 0 0 1 4 6h8a.5.5 0 0 1 .374.832l-4 4.5a.5.5 0 0 1-.748 0z"/>
+                                        <path d="M0 2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2zm15 0a1 1 0 0 0-1-1H2a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1z"/>
+                                      </svg></button>
+                                      
+                                  </div>
+                                <select class="form-select form-select-sm mb-3 sedeSelect" id="selectSedePaciente" aria-label="Default select example">
+                                    
+                                  </select>
+                                  <select class="form-select form-select-sm mb-3 bioanalistaSelect" id="selectBioanalistaPaciente" aria-label="Default select example">
+                                    
+                                  </select>
+                                  <select class="form-select form-select-sm mb-3 categoriaSelect" onchange="validarInputsExamenPaciente('categoria')" id="selectCategoriaPaciente" aria-label="Default select example">
+                                    
+                                  </select>
+                                  <select class="form-select form-select-sm mb-3 seccionSelect" onchange="validarInputsExamenPaciente('seccion')" id="selectSeccionPaciente" aria-label="Default select example">
+                                    
+                                  </select>
+                                  <select class="form-select form-select-sm mb-3" id="selectGeneroPaciente" aria-label="Default select example">
+                                    <option selected>Genero</option>
+                                    <option value="masculino">Masculino</option>
+                                    <option value="femenino">Femenino</option>
+                                   
+                                  </select>
+                                  <div class="row">
+                                    <span class="mb-1 text-center" style="font-size: smaller;">Edad (años)</span>
+                                    <div class="col">
+                                        <input class="form-control form-control-sm mb-3" type="text" placeholder="Desde" id="inputDesdePaciente" aria-label=".form-control-sm example">
+
+                                    </div>
+                                    <div class="col">
+                                        <input class="form-control form-control-sm mb-3" type="text" placeholder="Hasta" id="inputHastaPaciente" aria-label=".form-control-sm example">
+
+                                    </div>
+                                  </div>
+                                  
+                                  <select class="form-select form-select-sm mb-3 selectUsuario" id="usuariosSelectPaciente" aria-label="Default select example">
+                                    <option selected>Usuarios</option>
+                                    <option value="1">One</option>
+                                    <option value="2">Two</option>
+                                    <option value="3">Three</option>
+                                  </select>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="accordion-item">
+                          <h2 class="accordion-header">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseExamen" aria-expanded="false" aria-controls="collapseExamen">
+                              Examen
+                            </button>
+                          </h2>
+                          <div id="collapseExamen" class="accordion-collapse collapse" data-bs-parent="#acordionEstadistica">
+                            <div class="accordion-body">
+                                <div class="input-group mb-3">
+                                  <div class="input-group mb-3">
+                                    <input type="number" min="0" onchange="validarInputExamenEx('examen')" class="form-control form-control-sm" placeholder="Examen" aria-label="Recipient's username" aria-describedby="basic-addon2" id="inputExamenEx">
+                                    <button class="btn btn-success btn-sm" type="button" id="button-addon2"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down-square" viewBox="0 0 16 16">
+                                        <path d="M3.626 6.832A.5.5 0 0 1 4 6h8a.5.5 0 0 1 .374.832l-4 4.5a.5.5 0 0 1-.748 0z"/>
+                                        <path d="M0 2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2zm15 0a1 1 0 0 0-1-1H2a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1z"/>
+                                      </svg></button>
+                                      
+                                  </div>
+                                    <input type="number" min="0" id="inputPacienteEx" onchange="validarInputExamenEx('paciente')" class="form-control form-control-sm" placeholder="Paciente" aria-label="Recipient's username" aria-describedby="basic-addon2">
+                                    <button class="btn btn-success btn-sm" type="button" id="button-addon2"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down-square" viewBox="0 0 16 16">
+                                        <path d="M3.626 6.832A.5.5 0 0 1 4 6h8a.5.5 0 0 1 .374.832l-4 4.5a.5.5 0 0 1-.748 0z"/>
+                                        <path d="M0 2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2zm15 0a1 1 0 0 0-1-1H2a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1z"/>
+                                      </svg></button>
+                                      
+                                  </div>
+                                  <div class="input-group mb-3">
+                                    <input type="number" min="0" id="inputOrdenEx" onchange="validarInputExamenEx('orden')" class="form-control form-control-sm" placeholder="Orden" aria-label="Recipient's username" aria-describedby="basic-addon2">
+                                    <button class="btn btn-success btn-sm" type="button" id="button-addon2"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down-square" viewBox="0 0 16 16">
+                                        <path d="M3.626 6.832A.5.5 0 0 1 4 6h8a.5.5 0 0 1 .374.832l-4 4.5a.5.5 0 0 1-.748 0z"/>
+                                        <path d="M0 2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2zm15 0a1 1 0 0 0-1-1H2a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1z"/>
+                                      </svg></button>
+                                      
+                                  </div>
+                                <select class="form-select form-select-sm mb-3 sedeSelect" onchange="validarInputExamenEx('sede')" id="selectSedeExamen" aria-label="Default select example">
+                                    <option value="" selected>Sede</option>
+                                    
+                                  </select>
+                                  <select class="form-select form-select-sm mb-3 bioanalistaSelect" onchange="validarInputExamenEx('bioanalista')" id="selectBioanalistaExamen" aria-label="Default select example">
+                                    <option value="" selected>Bioanalista</option>
+                                    
+                                  </select>
+                                  <select class="form-select form-select-sm mb-3 categoriaSelect" id="selectCategoriaExamen" onchange="validarInputExamenEx('categoria')" aria-label="Default select example">
+                                    <option value="" selected>Categoria</option>
+                                    
+                                  </select>
+                                  <select class="form-select form-select-sm mb-3 seccionSelect" onchange="validarInputExamenEx('seccion')" id="selectSeccionExamen" aria-label="Default select example">
+                                    <option value="" selected>Seccion</option>
+                                    
+                                  </select>
+                                  <select class="form-select form-select-sm mb-3" id="selectGeneroExamen" onchange="validarInputExamenEx('genero')" aria-label="Default select example">
+                                    <option value="" selected>Genero</option>
+                                    <option value="masculino">Masculino</option>
+                                    <option value="femenino">Femenino</option>
+                                   
+                                  </select>
+                                  <div class="row">
+                                    <span class="mb-1 text-center" style="font-size: smaller;">Edad (años)</span>
+                                    <div class="col">
+                                        <input class="form-control form-control-sm mb-3" type="number" min="0" onchange="validarInputExamenEx('edad')" placeholder="Desde" id="inputDesdeExamen" aria-label=".form-control-sm example">
+
+                                    </div>
+                                    <div class="col">
+                                        <input class="form-control form-control-sm mb-3" type="number" min="0" onchange="validarInputExamenEx('edad')" placeholder="Hasta" id="inputHastaExamen" aria-label=".form-control-sm example">
+
+                                    </div>
+                                  </div>
+                                  
+                                  <select class="form-select form-select-sm mb-3 selectUsuario" onchange="validarInputExamenEx('usuario')" id="usuariosSelectExamen" aria-label="Default select example">
+                                    <option selected>Usuarios</option>
+                                    
+                                  </select>  
+                                  
+                                  <select class="form-select form-select-sm mb-3" id="selectTipoExamen" onchange="validarInputExamenEx(value)" aria-label="Default select example">
+                                    <option value="" selected>Tipo</option>
+                                    <option value="local">Local</option>
+                                    <option value="externo">Externo</option>
+                                  </select>
+                                  <select class="form-select form-select-sm mb-3 laboratorioSelect" id="selectLaboratorioExamen" onchange="validarInputExamenEx('laboratorio')" aria-label="Default select example">
+                                    <option value="" selected>Laboratorio</option>
+                                    
+                                  </select>
+                                
+                                </div>
+                          </div>
+                        </div>
+                        <div class="accordion-item">
+                          <h2 class="accordion-header">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOrden" aria-expanded="false" aria-controls="collapseOrden">
+                              Orden
+                            </button>
+                          </h2>
+                          <div id="collapseOrden" class="accordion-collapse collapse" data-bs-parent="#acordionEstadistica">
+                            <div class="accordion-body">
+                                <div class="input-group mb-3">
+                                    <input type="text" class="form-control form-control-sm" placeholder="Paciente" aria-label="Recipient's username" aria-describedby="basic-addon2">
+                                    <button class="btn btn-success btn-sm" type="button" id="button-addon2"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down-square" viewBox="0 0 16 16">
+                                        <path d="M3.626 6.832A.5.5 0 0 1 4 6h8a.5.5 0 0 1 .374.832l-4 4.5a.5.5 0 0 1-.748 0z"/>
+                                        <path d="M0 2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2zm15 0a1 1 0 0 0-1-1H2a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1z"/>
+                                      </svg></button>
+                                      
+                                  </div>
+                                  <div class="input-group mb-3">
+                                    <input type="text" class="form-control form-control-sm" placeholder="Examen" aria-label="Recipient's username" aria-describedby="basic-addon2">
+                                    <button class="btn btn-success btn-sm" type="button" id="button-addon2"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down-square" viewBox="0 0 16 16">
+                                        <path d="M3.626 6.832A.5.5 0 0 1 4 6h8a.5.5 0 0 1 .374.832l-4 4.5a.5.5 0 0 1-.748 0z"/>
+                                        <path d="M0 2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2zm15 0a1 1 0 0 0-1-1H2a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1z"/>
+                                      </svg>
+                                    </button>
+                                      
+                                  </div>
+                                  <input type="text" class="form-control form-control-sm mb-3" placeholder="Expediente" aria-label="Recipient's username" aria-describedby="basic-addon2">
+                                  <select class="form-select form-select-sm mb-3 sedeSelect" id="selectSedeOrden" aria-label="Default select example">
+                                    <option selected>Sede</option>
+                                    <option value="1">One</option>
+                                    <option value="2">Two</option>
+                                    <option value="3">Three</option>
+                                  </select>
+                                
+                                  <select class="form-select form-select-sm mb-3" id="selectGeneroExamen" aria-label="Default select example">
+                                    <option selected>Genero</option>
+                                    <option value="masculino">Masculino</option>
+                                    <option value="femenino">Femenino</option>
+                                   
+                                  </select>
+                                  <select class="form-select form-select-sm mb-3 bioanalistaSelect" id="selectBioanalistaOrden" aria-label="Default select example">
+                                    <option selected>Bioanalista</option>
+                                    <option value="1">One</option>
+                                    <option value="2">Two</option>
+                                    <option value="3">Three</option>
+                                  </select>
+                                  <div class="row">
+                                    <span class="mb-1 text-center" style="font-size: smaller;">Edad (años)</span>
+                                    <div class="col">
+                                        <input class="form-control form-control-sm mb-3" type="text" placeholder="Desde" id="inputDesdeOrden" aria-label=".form-control-sm example">
+
+                                    </div>
+                                    <div class="col">
+                                        <input class="form-control form-control-sm mb-3" type="text" placeholder="Hasta" id="inputHastaOrden" aria-label=".form-control-sm example">
+
+                                    </div>
+                                  </div>
+                                  <select class="form-select form-select-sm mb-3 selectUsuario" id="usuariosSelectOrden" aria-label="Default select example">
+                                    <option selected>Usuarios</option>
+                                    <option value="1">One</option>
+                                    <option value="2">Two</option>
+                                    <option value="3">Three</option>
+                                  </select>  
+                                  
+                                                         </div>
+                          </div>
+                        </div>
+                        
+                        <div class="accordion-item">
+                          <h2 class="accordion-header">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse4" aria-expanded="false" aria-controls="collapseTwo">
+                              Bioanalistas
+                            </button>
+                          </h2>
+                          <div id="collapse4" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
+                            <div class="accordion-body">
+                                <div class="input-group mb-3">
+                                    <input type="text" class="form-control form-control-sm" placeholder="Paciente" aria-label="Recipient's username" aria-describedby="basic-addon2">
+                                    <button class="btn btn-success btn-sm" type="button" id="button-addon2"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down-square" viewBox="0 0 16 16">
+                                        <path d="M3.626 6.832A.5.5 0 0 1 4 6h8a.5.5 0 0 1 .374.832l-4 4.5a.5.5 0 0 1-.748 0z"/>
+                                        <path d="M0 2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2zm15 0a1 1 0 0 0-1-1H2a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1z"/>
+                                      </svg></button>
+                                      
+                                  </div>
+                                  <div class="input-group mb-3">
+                                    <input type="text" class="form-control form-control-sm" placeholder="Examenes" aria-label="Recipient's username" aria-describedby="basic-addon2">
+                                    <button class="btn btn-success btn-sm" type="button" id="button-addon2"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down-square" viewBox="0 0 16 16">
+                                        <path d="M3.626 6.832A.5.5 0 0 1 4 6h8a.5.5 0 0 1 .374.832l-4 4.5a.5.5 0 0 1-.748 0z"/>
+                                        <path d="M0 2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2zm15 0a1 1 0 0 0-1-1H2a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1z"/>
+                                      </svg></button>
+                                      
+                                  </div>
+                                <select class="form-select form-select-sm mb-3 sedeSelect" id="selectSedeBioanalista" aria-label="Default select example">
+                                    <option selected>Sede</option>
+                                    <option value="1">One</option>
+                                    <option value="2">Two</option>
+                                    <option value="3">Three</option>
+                                  </select>
+                                  <select class="form-select form-select-sm mb-3 categoriaSelect" id="selectCategoriaBioanalista" aria-label="Default select example">
+                                    <option selected>Categoria</option>
+                                    <option value="1">One</option>
+                                    <option value="2">Two</option>
+                                    <option value="3">Three</option>
+                                  </select>
+                                  <select class="form-select form-select-sm mb-3 seccionSelect" id="selectSeccionBioanalista" aria-label="Default select example">
+                                    <option selected>Seccion</option>
+                                    <option value="1">One</option>
+                                    <option value="2">Two</option>
+                                    <option value="3">Three</option>
+                                  </select>
+                                  
+                                
+                                </div>
+                          </div>
+                        </div>
+                      </div>
+                </div>
+                <div class="col-10">
+                    <div class="row mx-2 my-1">
+                      <table class="table table-sm table-hover text-center" >
+                        <thead id="tHeadTable">
+                          <tr>
+                            <th scope="col">#</th>
+                            <th scope="col">First</th>
+                            <th scope="col">Last</th>
+                            <th scope="col">Handle</th>
+                            
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr>
+                            <td scope="row">1</td>
+                            <td>Mark</td>
+                            <td>Otto</td>
+                            <td>@mdo</td>
+                          </tr>
+                          <tr>
+                            <td scope="row">1</td>
+                            <td>Mark</td>
+                            <td>Otto</td>
+                            <td>@mdo</td>
+                          </tr><tr>
+                            <td scope="row">1</td>
+                            <td>Mark</td>
+                            <td>Otto</td>
+                            <td>@mdo</td>
+                          </tr><tr>
+                            <td scope="row">1</td>
+                            <td>Mark</td>
+                            <td>Otto</td>
+                            <td>@mdo</td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                </div>
+            </div>
+            
+        </div>
+    </body>
+    <script src="../modules/axios.min.js"></script>
+    <script src="../../bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+    <script src="../../bower_components/moment/moment.js"></script>
+    <script src="../javascript/estadisticas.js"></script>
+    <script src="../javascript/ventanas.js"></script>
+</html>

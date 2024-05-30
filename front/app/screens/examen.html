@@ -83,7 +83,7 @@
                   >
                 </li>
                 <li class="nav-item user1 user3" hidden>
-                  <a class="nav-link">Reportes</a>
+                  <a class="nav-link" onclick="abrirEstadisticasWindow()" style="cursor: pointer;">Estadisticas</a>
                 </li>
                 <li class="nav-item user1" hidden>
                   <a
@@ -462,9 +462,8 @@
           <h1 class="display-6 text-center">Diagnosticos</h1>
           <hr>
           <div class="d-flex justify-content-center">
-            <select class="form-select w-25 mx-2" onchange="validarSelectDiagnostico(value)" aria-label="Default select example">
-              <option value="nuevo" selected>Nuevo</option>
-              <option value="pendiente">Pendiente</option>
+            <select class="form-select w-25 mx-2" id="seccionExamenSelect"  onchange="validarSelectSeccion(value)" aria-label="Default select example">
+              <option value="todas" selected>Filtrar por seccion</option>
             </select>
             <input type="text" id="examenDiagnosticoInput" oninput="buscarExamen()" class="form-control w-50 inputExamen" placeholder="Examen" aria-label="Username" aria-describedby="addon-wrapping">
 
@@ -475,13 +474,31 @@
           
         </div>
         <div class="modal-footer">
-          <button
-            type="button"
-            class="btn btn-secondary"
-            data-bs-dismiss="modal"
-          >
-            Cerrar
-          </button>
+          <div class="w-100 d-flex justify-content-between">
+            <div class="d-flex justify-content-around" style="font-size: smaller;">
+              <div class="form-check">
+                <input class="form-check-input" type="radio" name="flexRadioTipo"  onclick="validarSelectDiagnostico('nuevo')" id="ratioNuevo" checked>
+                <label class="form-check-label" for="ratioNuevo">
+                  Nuevo
+                </label>
+              </div>
+              <div class="form-check ms-2">
+                <input class="form-check-input" type="radio" name="flexRadioTipo" id="ratioPendiente" onclick="validarSelectDiagnostico('pendiente')" >
+                <label class="form-check-label" for="ratioPendiente">
+                  Pendiente
+                </label>
+              </div>
+            </div>
+            
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-bs-dismiss="modal"
+            >
+              Cerrar
+            </button>
+          </div>
+          
           
         </div>
       </div>

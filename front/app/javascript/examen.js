@@ -1,4 +1,4 @@
-var examenes = [];
+var examenes = [],examenesArray=[]
 var idPaciente = "";
 var pacienteObj = {};
 let examenesDelPaciente = [];
@@ -224,14 +224,43 @@ async function guardarModificacionExamenExterno() {
   </svg>  <div>
       ${error.response.data.mensaje}
     </div>`,
-      "warning"
-    );
+      "warning")
   }
+  
 }
+function validarSelectSeccion(value){
+  if(value=='todos'){
+    examenes=examenesArray
+  }else{
+    examenes=examenesArray.filter(ex=>{
+      return ex.id_seccion==value
+    })
+    console.log(examenes)
 
+  }
+  buscarExamen()
+}
 const render = async () => {
   try {
     const { token } = await login.getToken();
+    const secciones = await axios.get(
+      urlsv + "/api/modulo-examenes/secciones",
+      { headers: { token } }
+    );
+    const selectSeccion = document.getElementById("seccionExamenSelect");
+    selectSeccion.innerHTML = `
+    <option value="todos">Filtrar por seccion</option>
+    
+    `;
+    seccionesData = secciones.data;
+
+    secciones.data.forEach((seccion) => {
+      
+      const option = document.createElement("option");
+      option.value = seccion.id;
+      option.innerText = seccion.nombre;
+      selectSeccion.appendChild(option);
+    });
 
     const { data: examenesGet } = await axios.get(
       urlsv + "/api/examenes/get-examenes",
@@ -242,11 +271,12 @@ const render = async () => {
       urlsv + "/api/modulo-examenes/laboratorios",
       { headers: { token } }
     );
-    examenes = examenesGet;
+    examenesArray = examenesGet;
     let { data: bioanalistas } = await axios.get(
       urlsv + "/api/examenes/get-bioanalistas",
       { headers: { token } }
     );
+    examenes= examenesGet
     const selectBio = document.getElementById("selectBioAnalista");
 
     if (nivelUser == 3) {
@@ -269,7 +299,7 @@ const render = async () => {
       `;
     });
     const menuDiagnosticoUl = document.getElementById("menuDiagnosticoUl");
-    examenes.forEach((ex) => {
+    examenesArray.forEach((ex) => {
       menuDiagnosticoUl.innerHTML += `
       <li class="list-group-item list-group-item-light list-group-item-action" >
             <div class="row">
@@ -348,9 +378,22 @@ async function eliminarPendiente(id) {
     ).innerHTML = `<strong>Examen pendiente eliminado con exito</strong>`;
     document.getElementById("alertaExamen").removeAttribute("hidden");
     const menuDiagnosticoUl = document.getElementById("menuDiagnosticoUl");
-    cedulaPaciente();
-
-    menuDiagnosticoUl.innerHTML = "";
+    try {
+      const { data: pendientes } = await axios.get(
+        urlsv + "/api/examenes/get-pendientes-paciente",
+        {
+          params: {
+            idPac:pacienteObj.id
+          },
+          headers: { token },
+        }
+      );
+      examenesPendientes=pendientes
+    } catch (error) {
+      console.log(error)
+    }
+    
+    menuDiagnosticoUl.innerHTML=""
     setTimeout(() => {
       document.getElementById("alertaExamen").setAttribute("hidden", "true");
       document.getElementById("alertaExamen").className = "alert alert-danger";
@@ -475,6 +518,7 @@ function buscarExamenPendiente() {
 }
 function buscarExamen() {
   input = document.getElementById("examenDiagnosticoInput");
+
   filtro = examenes.filter((ex) =>
     ex.nombre.toLowerCase().includes(input.value.toLowerCase())
   );
@@ -569,14 +613,23 @@ async function detalleExamen(id) {
   const tBody = document.getElementById(`tBody${id}`);
 
   caracteristicas.forEach((c) => {
-    tBody.innerHTML += `
-    <tr>
-      <td scope="col">${c.nombre}</td>
-      <td scope="col">${c.unidad}</td>
-      <td scope="col">${c.posicion}</td>
-      <td scope="col">${c.imprimir ? c.imprimir : "NO"}</td>
-    </tr>
-    `;
+    if(c.status=='titulo'){
+      tBody.innerHTML += `
+      <tr>
+        <th colspan="4" scope="col">${c.titulo}</th>
+        
+      </tr>
+      `;
+    }else{
+      tBody.innerHTML += `
+      <tr>
+        <td scope="col">${c.nombre}</td>
+        <td scope="col">${c.unidad}</td>
+        <td scope="col">${c.posicion}</td>
+        <td scope="col">${c.impsiempre == 1 ? "SI" : "NO"}</td>
+      </tr>
+      `;
+    }
   });
 }
 function vaciarExamenes() {
@@ -1135,9 +1188,10 @@ async function reimprimirExamenes() {
     const examen = {
       orden: "Reimpresion",
       paciente: pacienteObj,
-      examenes: res.data.examenes,
-    };
-    console.log("🚀 ~ previewPdf ~ examen:", examen);
+      examenes: res.data.examenes
+    }
+    console.log(res.data.examen)
+    console.log("🚀 ~ previewPdf ~ examen:", examen)
     await examenVar.store(examen);
     abrirPDFWindow();
   } catch (error) {}
@@ -1255,15 +1309,35 @@ const abrirModalTotalizar = () => {
     const tBodyOrdenCollapse = document.getElementById(
       `tBodyOrdenCollapseEx${ex.examenId}`
     );
+    ex.detallesExamenPc=ex.detallesExamenPc.sort(function (a, b) {
+      if (a.posicion > b.posicion) {
+        return 1;
+      }
+      if (a.posicion < b.posicion) {
+        return -1;
+      }
+      // a must be equal to b
+      return 0;
+    });
     ex.detallesExamenPc.forEach((dt) => {
-      tBodyOrdenCollapse.innerHTML += `
+      if(dt.status=='titulo'){
+        tBodyOrdenCollapse.innerHTML += `
     <tr>
+      <td scope="col" colspan="3" style="font-size:10px">${dt.titulo}</td>
+    
+      
+    </tr>
+
+`;
+      }else{
+      tBodyOrdenCollapse.innerHTML += `
+    <tr style="font-size:10px">
       <td scope="col">${dt.nombreCar}</td>
       <td scope="col">${dt.resultado}</td>
       <td scope="col">${dt.nota}</td>
     </tr>
 
-`;
+`;}
     });
   });
 
@@ -1364,8 +1438,8 @@ const modificarExamenPacienteBDD = async (examen, idEx, idExPc) => {
 
   try {
     const { token } = await login.getToken();
-
-    const { data: resultados } = await axios.get(
+    
+    let { data: resultados} = await axios.get(
       urlsv + "/api/examenes/resultados-examen",
       {
         params: {
@@ -1374,9 +1448,33 @@ const modificarExamenPacienteBDD = async (examen, idEx, idExPc) => {
         headers: { token },
       }
     );
-    console.log(resultados);
+    console.log(resultados)
+    resultados=resultados.sort(function (a, b) {
+      if (a.posicion > b.posicion) {
+        return 1;
+      }
+      if (a.posicion < b.posicion) {
+        return -1;
+      }
+      // a must be equal to b
+      return 0;
+    })
+
 
     resultados.forEach((ct) => {
+      
+  
+      if(ct.status=='titulo'){
+        tBodyDiagnosticos.innerHTML += `
+            <tr>
+                        <th scope="row" colspan="7">${ct.titulo}</th>
+                        
+          
+                      </tr>
+            `;
+      }else{
+  
+      
       if (ct.sub.length > 0) {
         tBodyDiagnosticos.innerHTML += `
         <tr >
@@ -1571,6 +1669,7 @@ const modificarExamenPacienteBDD = async (examen, idEx, idExPc) => {
           }
         }
       }
+    }
     });
   } catch (error) {
     console.log(error);
@@ -1702,9 +1801,12 @@ const abrirResultadosModal = async (examen, idEx, n) => {
     urlsv + "/api/modulo-examenes/examen-id",
     { headers: { token }, params: { idExamen: idEx } }
   );
+  console.log(examenData)
 
+
+  let caracteristicas= [...examenData.detalles,...examenData.titulos]
   examenDataPc = examenData;
-  examenData.detalles = examenData.detalles.sort(function (a, b) {
+  caracteristicas = caracteristicas.sort(function (a, b) {
     if (a.posicion > b.posicion) {
       return 1;
     }
@@ -1717,7 +1819,16 @@ const abrirResultadosModal = async (examen, idEx, n) => {
   console.log(examenData);
   let edad = parseInt(pacienteObj.edad.split(";")[0].split(" ")[0]);
   let generoPc = pacienteObj.genero == "Hombre" ? "masculino" : "femenino";
-  examenData.detalles.forEach((ct) => {
+  caracteristicas.forEach((ct) => {
+    if(ct.status=='titulo'){
+      tBodyDiagnosticos.innerHTML += `
+      <tr>
+                  <th scope="row" colspan="6">${ct.titulo}</th>
+    
+                </tr>
+      `;
+    }else{
+      
     let resultadosDt = examenData.resultados.filter(
       (r) => r.id_det_ex == ct.id
     );
@@ -1947,6 +2058,7 @@ const abrirResultadosModal = async (examen, idEx, n) => {
         }
       }
     }
+    }
   });
   if (n == "false") {
     setInputs(idEx);
@@ -2066,16 +2178,17 @@ async function guardarOrden(tipo) {
           });
         });
       detallesExamen.push({
-        id_dt: dt.idCar,
-        id_ex: ex.examenId,
-        id_rango: dt.rango,
-        inferior: dt.inferior,
-        superior: dt.superior,
-        resultado: dt.resultado,
-        nota: dt.nota,
+        id_dt:dt.idCar,
+        id_ex:ex.examenId,
+        id_rango:dt.rango,
+        inferior:dt.inferior,
+        superior:dt.superior,
+        resultado:dt.resultado,
+        nota:dt.nota,
         subCaracteristicasDt,
-      });
-    });
+        status: dt.status
+      })
+    })
     examenes.push({
       id_ex: ex.examenId,
       idPac: pacienteObj.id,
@@ -2501,6 +2614,10 @@ function guardarResultadosExamen() {
       posicion: e.posicion,
     };
   });
+
+  examenDataPc.titulos.map(e=>{
+    detallesExamenPc.push(e)
+  })
   const subCaracteristicas = examenDataPc.subCa.map((e) => {
     const res = document.getElementById("Rs-" + e.id);
     const nota = document.getElementById("Nt-" + e.id);
@@ -2606,17 +2723,18 @@ async function guardarResultadosExamenPd() {
         });
       });
     detallesExamenPd.push({
-      id_dt: dt.idCar,
-      id_ex: examenDataPc.examen.id,
-      id_rango: dt.rango,
-      inferior: dt.inferior,
-      superior: dt.superior,
-      resultado: dt.resultado,
-      nota: dt.nota,
-      subCaracteristicasDt,
-    });
-  });
+      id_dt:dt.idCar,
+      id_ex:examenDataPc.examen.id,
+      id_rango:dt.rango,
+      inferior:dt.inferior,
+      superior:dt.superior,
+      resultado:dt.resultado,
+      nota:dt.nota,
+      subCaracteristicasDt
+    })
+  })
 
+  
   let examenPac = {
     examenId: examenDataPc.examen.id,
     examenNombre: examenDataPc.examen.nombre,
@@ -2656,17 +2774,20 @@ function setInputs(idEx) {
   const examen = examenesDelPaciente.find((e) => e.examenId == idEx);
 
   examen.detallesExamenPc.forEach((e) => {
-    console.log(`inputRs${e.idCar}`);
-    const res = document.getElementById(`inputRs${e.idCar}`);
-    const nota = document.getElementById(`inputNt${e.idCar}`);
-
-    console.log(res, nota, e);
-    nota.value = e.nota;
-    try {
-      res.value = e.resultado;
-    } catch (error) {
-      console.log(error);
+    if(e.status!='titulo'){
+      console.log(`inputRs${e.idCar}`);
+      const res = document.getElementById(`inputRs${e.idCar}`);
+      const nota = document.getElementById(`inputNt${e.idCar}`);
+  
+      console.log(res, nota, e);
+      nota.value = e.nota;
+      try {
+        res.value = e.resultado;
+      } catch (error) {
+        console.log(error);
+      }
     }
+   
   });
   examen.subCaracteristicasExPc.forEach((e) => {
     const res = document.getElementById(`Rs-${e.idSub}`);
@@ -2789,14 +2910,17 @@ function añadirRowTablaExPac(examenPac) {
 
   examenPac.detallesExamenPc.forEach((e) => {
     tBodyCollapse.innerHTML += `
-    <tr>
-            <th scope="row">${e.nombreCar}</th>
-            <td>${e.resultado}</td>
-            <td>${e.unidad ? e.unidad : "-"}</td>
-            <td>${e.rango == "no" ? "-" : e.rango}</td>
-            <td>${e.nota}</td>
-          </tr>
-    `;
+    ${e.status=='titulo' ? `<tr>
+    <th scope="row" colspan='5'>${e.titulo}</th>
+    
+  </tr>` : `<tr>
+  <th scope="row">${e.nombreCar}</th>
+  <td>${e.resultado}</td>
+  <td>${e.unidad ? e.unidad : "-"}</td>
+  <td>${e.rango == "no" ? "-" : e.rango}</td>
+  <td>${e.nota}</td>
+</tr>`}
+    `
   });
 }
 
