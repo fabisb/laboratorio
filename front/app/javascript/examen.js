@@ -3019,14 +3019,9 @@ const calcularEdad = () => {
 const calcularEdadNormal = (fecha) => {
   let fechaActual = moment().format("YYYY-MM-DD");
 
-  let fecha2 = (document.getElementsByName("fecha_nacimiento")[0].value =
-    moment(fecha).format("YYYY-MM-DD"));
-
-  console.log("momentisAfter:", moment(fecha2).isAfter(fechaActual));
-
+  let fecha2 = (document.getElementsByName("fecha_nacimiento")[0].value = moment(fecha).format("YYYY-MM-DD"));
   const mes = moment(fecha).format("MM");
   const ano = moment(fecha).format("YYYY");
-  console.log("🚀 ~ calcularEdadNormal ~ ano:", ano);
   const dia = moment(fecha).format("DD");
   if (
     (mes == 2 && dia > 29) ||
@@ -3036,6 +3031,7 @@ const calcularEdadNormal = (fecha) => {
     document.getElementsByName("fecha_nacimiento")[0].value = "";
     return "";
   }
+  
 
   const mesAc = moment().format("MM");
   const anoAc = moment().format("YYYY");

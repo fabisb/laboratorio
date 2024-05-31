@@ -126,11 +126,11 @@
                                     </div>
                                     <div class="col-8">
                                         <input
-                                        onchange=""
                                         name="fechaDesde"
                                         type="date"
                                         class="form-control w-75"
-                                        id="fechaExamenInput"
+                                        onchange="validarFechas(event,value,'desde')"
+                                        id="fechaDesdeInput"
                                         />
                                     </div>
                             </div>
@@ -145,11 +145,11 @@
                                     </div>
                                     <div class="col-8">
                                         <input
-                                        onchange=""
                                         name="fechaHasta"
                                         type="date"
                                         class="form-control w-100"
-                                        id="fechaExamenInput"
+                                        onchange="validarFechas(event,value,'hasta')"
+                                        id="fechaHastaInput"
                                         />
                                     </div>
                             </div>
@@ -158,19 +158,19 @@
 
                             <div class="row my-2">
                                 <div class="col d-flex justify-content-center">
-                                  <input type="radio" class="btn-check" name="tipoOrden"  id="milagrosaOption" autocomplete="off">
+                                  <input type="radio" class="btn-check" name="tipoOrden" value="milagrosa"  id="milagrosaOption" autocomplete="off">
                                   <label class="btn btn-light" for="milagrosaOption" ><img src="../imgs/la-milagrosa-logo.png"   width="50" alt="" srcset=""></label>
                                 </div>
                                 <div class="col d-flex justify-content-center">
-                                  <input type="radio" class="btn-check" name="tipoOrden"  id="saludOption" autocomplete="off" >
+                                  <input type="radio" class="btn-check" name="tipoOrden" value="salud"  id="saludOption" autocomplete="off" >
                                   <label class="btn btn-light" for="saludOption"><img src="../imgs/salud-vital-logo.png"  width="50" alt="" srcset=""></label>
                                 </div>
                                 <div class="col d-flex justify-content-center">
-                                  <input type="radio" class="btn-check" name="tipoOrden" id="todoOption" autocomplete="off" checked>
+                                  <input type="radio" class="btn-check" name="tipoOrden" value="" id="todoOption" autocomplete="off" checked>
                                   <label class="btn btn-light" for="todoOption"><img src="../imgs/Diseño sin título.png" alt="" width="50" srcset=""></label>
                                 </div>
                                 <div class="col d-flex justify-content-center">
-                                    <button type="button" class="btn btn-light"><svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" fill="green" id="botonBuscar" class="bi bi-search" viewBox="0 0 16 16">
+                                    <button type="button" class="btn btn-light"  id="botonBuscar" onclick="validarSeleccionBusqueda()"><svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" fill="green"  class="bi bi-search" viewBox="0 0 16 16">
                                         <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"/>
                                       </svg></button>
                                 </div>
@@ -185,7 +185,7 @@
                     <div class="accordion ms-3" id="acordionEstadistica">
                         <div class="accordion-item">
                           <h2 class="accordion-header">
-                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapsePaciente" aria-expanded="true" aria-controls="collapsePaciente">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapsePaciente" onclick="cambiarFuncionBuscar('paciente')" aria-expanded="true" aria-controls="collapsePaciente">
                               Paciente
                             </button>
                           </h2>
@@ -193,7 +193,7 @@
                             <div class="accordion-body">
                                 <div class="input-group mb-3">
                                     <input type="number" class="form-control form-control-sm" min="0" onchange="validarInputsExamenPaciente('examen')" id="examenInputPaciente" placeholder="Examen" aria-label="examenInputPac" aria-describedby="examenFiltro">
-                                    <button class="btn btn-success btn-sm" type="button" id="button-addon2"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down-square" viewBox="0 0 16 16">
+                                    <button class="btn btn-success btn-sm" type="button"  onclick="abrirModalExamenes(event,'paciente')" id="button-addon2"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down-square" viewBox="0 0 16 16">
                                         <path d="M3.626 6.832A.5.5 0 0 1 4 6h8a.5.5 0 0 1 .374.832l-4 4.5a.5.5 0 0 1-.748 0z"/>
                                         <path d="M0 2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2zm15 0a1 1 0 0 0-1-1H2a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1z"/>
                                       </svg></button>
@@ -240,7 +240,7 @@
                         </div>
                         <div class="accordion-item">
                           <h2 class="accordion-header">
-                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseExamen" aria-expanded="false" aria-controls="collapseExamen">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"  onclick="cambiarFuncionBuscar('examen')"  data-bs-target="#collapseExamen" aria-expanded="false" aria-controls="collapseExamen">
                               Examen
                             </button>
                           </h2>
@@ -249,14 +249,14 @@
                                 <div class="input-group mb-3">
                                   <div class="input-group mb-3">
                                     <input type="number" min="0" onchange="validarInputExamenEx('examen')" class="form-control form-control-sm" placeholder="Examen" aria-label="Recipient's username" aria-describedby="basic-addon2" id="inputExamenEx">
-                                    <button class="btn btn-success btn-sm" type="button" id="button-addon2"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down-square" viewBox="0 0 16 16">
+                                    <button class="btn btn-success btn-sm" type="button" id="button-addon2" onclick="abrirModalExamenes(event,'examen')"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down-square" viewBox="0 0 16 16">
                                         <path d="M3.626 6.832A.5.5 0 0 1 4 6h8a.5.5 0 0 1 .374.832l-4 4.5a.5.5 0 0 1-.748 0z"/>
                                         <path d="M0 2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2zm15 0a1 1 0 0 0-1-1H2a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1z"/>
                                       </svg></button>
                                       
                                   </div>
                                     <input type="number" min="0" id="inputPacienteEx" onchange="validarInputExamenEx('paciente')" class="form-control form-control-sm" placeholder="Paciente" aria-label="Recipient's username" aria-describedby="basic-addon2">
-                                    <button class="btn btn-success btn-sm" type="button" id="button-addon2"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down-square" viewBox="0 0 16 16">
+                                    <button class="btn btn-success btn-sm" onclick="validarInputExamenEx('paciente'),abrirModalPacientes(event)" type="button" id="button-addon2"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down-square" viewBox="0 0 16 16">
                                         <path d="M3.626 6.832A.5.5 0 0 1 4 6h8a.5.5 0 0 1 .374.832l-4 4.5a.5.5 0 0 1-.748 0z"/>
                                         <path d="M0 2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2zm15 0a1 1 0 0 0-1-1H2a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1z"/>
                                       </svg></button>
@@ -264,10 +264,7 @@
                                   </div>
                                   <div class="input-group mb-3">
                                     <input type="number" min="0" id="inputOrdenEx" onchange="validarInputExamenEx('orden')" class="form-control form-control-sm" placeholder="Orden" aria-label="Recipient's username" aria-describedby="basic-addon2">
-                                    <button class="btn btn-success btn-sm" type="button" id="button-addon2"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down-square" viewBox="0 0 16 16">
-                                        <path d="M3.626 6.832A.5.5 0 0 1 4 6h8a.5.5 0 0 1 .374.832l-4 4.5a.5.5 0 0 1-.748 0z"/>
-                                        <path d="M0 2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2zm15 0a1 1 0 0 0-1-1H2a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1z"/>
-                                      </svg></button>
+                                    
                                       
                                   </div>
                                 <select class="form-select form-select-sm mb-3 sedeSelect" onchange="validarInputExamenEx('sede')" id="selectSedeExamen" aria-label="Default select example">
@@ -324,65 +321,60 @@
                         </div>
                         <div class="accordion-item">
                           <h2 class="accordion-header">
-                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOrden" aria-expanded="false" aria-controls="collapseOrden">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"  onclick="cambiarFuncionBuscar('orden')"  data-bs-target="#collapseOrden" aria-expanded="false" aria-controls="collapseOrden">
                               Orden
                             </button>
                           </h2>
                           <div id="collapseOrden" class="accordion-collapse collapse" data-bs-parent="#acordionEstadistica">
                             <div class="accordion-body">
                                 <div class="input-group mb-3">
-                                    <input type="text" class="form-control form-control-sm" placeholder="Paciente" aria-label="Recipient's username" aria-describedby="basic-addon2">
-                                    <button class="btn btn-success btn-sm" type="button" id="button-addon2"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down-square" viewBox="0 0 16 16">
+                                    <input type="number" min="0" id="inputPacienteOrden" onchange="validarInputOrden('paciente')" class="form-control form-control-sm" placeholder="Paciente" aria-label="Recipient's username" aria-describedby="basic-addon2">
+                                    <button class="btn btn-success btn-sm" type="button" onclick="validarInputOrden('paciente'),abrirModalPacientes2(event)"  id="button-addon2"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down-square" viewBox="0 0 16 16">
                                         <path d="M3.626 6.832A.5.5 0 0 1 4 6h8a.5.5 0 0 1 .374.832l-4 4.5a.5.5 0 0 1-.748 0z"/>
                                         <path d="M0 2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2zm15 0a1 1 0 0 0-1-1H2a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1z"/>
                                       </svg></button>
                                       
                                   </div>
                                   <div class="input-group mb-3">
-                                    <input type="text" class="form-control form-control-sm" placeholder="Examen" aria-label="Recipient's username" aria-describedby="basic-addon2">
-                                    <button class="btn btn-success btn-sm" type="button" id="button-addon2"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down-square" viewBox="0 0 16 16">
+                                    <input type="number" min="0" id="inputExamenOrden" class="form-control form-control-sm" placeholder="Examen" aria-label="Recipient's username" aria-describedby="basic-addon2">
+                                    <button class="btn btn-success btn-sm" type="button" onclick="abrirModalExamenes(event,'orden')" id="button-addon2"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down-square" viewBox="0 0 16 16">
                                         <path d="M3.626 6.832A.5.5 0 0 1 4 6h8a.5.5 0 0 1 .374.832l-4 4.5a.5.5 0 0 1-.748 0z"/>
                                         <path d="M0 2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2zm15 0a1 1 0 0 0-1-1H2a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1z"/>
                                       </svg>
                                     </button>
                                       
                                   </div>
-                                  <input type="text" class="form-control form-control-sm mb-3" placeholder="Expediente" aria-label="Recipient's username" aria-describedby="basic-addon2">
+                                  <input type="number" min="0" id="inputExpedienteOrden" class="form-control form-control-sm mb-3" placeholder="Expediente" aria-label="Recipient's username" aria-describedby="basic-addon2">
                                   <select class="form-select form-select-sm mb-3 sedeSelect" id="selectSedeOrden" aria-label="Default select example">
-                                    <option selected>Sede</option>
-                                    <option value="1">One</option>
-                                    <option value="2">Two</option>
-                                    <option value="3">Three</option>
+                                    <option value="" selected>Sede</option>
+                                    
                                   </select>
                                 
-                                  <select class="form-select form-select-sm mb-3" id="selectGeneroExamen" aria-label="Default select example">
-                                    <option selected>Genero</option>
+                                  
+                                  <select class="form-select form-select-sm mb-3 bioanalistaSelect" id="selectBioanalistaOrden" aria-label="Default select example">
+                                    <option value="" selected>Bioanalista</option>
+                                   
+                                  </select>
+                                  <select class="form-select form-select-sm mb-3" id="selectGeneroOrden"  onchange="validarInputOrden('genero')"  aria-label="Default select example">
+                                    <option value="" selected>Genero</option>
                                     <option value="masculino">Masculino</option>
                                     <option value="femenino">Femenino</option>
                                    
                                   </select>
-                                  <select class="form-select form-select-sm mb-3 bioanalistaSelect" id="selectBioanalistaOrden" aria-label="Default select example">
-                                    <option selected>Bioanalista</option>
-                                    <option value="1">One</option>
-                                    <option value="2">Two</option>
-                                    <option value="3">Three</option>
-                                  </select>
                                   <div class="row">
                                     <span class="mb-1 text-center" style="font-size: smaller;">Edad (años)</span>
                                     <div class="col">
-                                        <input class="form-control form-control-sm mb-3" type="text" placeholder="Desde" id="inputDesdeOrden" aria-label=".form-control-sm example">
+                                        <input class="form-control form-control-sm mb-3" onchange="validarInputOrden('edad')" type="number" min="0" max="200" placeholder="Desde" id="inputDesdeOrden" aria-label=".form-control-sm example">
 
                                     </div>
                                     <div class="col">
-                                        <input class="form-control form-control-sm mb-3" type="text" placeholder="Hasta" id="inputHastaOrden" aria-label=".form-control-sm example">
+                                        <input class="form-control form-control-sm mb-3" onchange="validarInputOrden('edad')" type="number" min="0" max="200" placeholder="Hasta" id="inputHastaOrden" aria-label=".form-control-sm example">
 
                                     </div>
                                   </div>
                                   <select class="form-select form-select-sm mb-3 selectUsuario" id="usuariosSelectOrden" aria-label="Default select example">
-                                    <option selected>Usuarios</option>
-                                    <option value="1">One</option>
-                                    <option value="2">Two</option>
-                                    <option value="3">Three</option>
+                                    <option value="" selected>Usuarios</option>
+ 
                                   </select>  
                                   
                                                          </div>
@@ -391,45 +383,39 @@
                         
                         <div class="accordion-item">
                           <h2 class="accordion-header">
-                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse4" aria-expanded="false" aria-controls="collapseTwo">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"  onclick="cambiarFuncionBuscar('bioanalista')"  data-bs-target="#collapseBioanalista" aria-expanded="false" aria-controls="collapseTwo">
                               Bioanalistas
                             </button>
                           </h2>
-                          <div id="collapse4" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
+                          <div id="collapseBioanalista" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
                             <div class="accordion-body">
                                 <div class="input-group mb-3">
-                                    <input type="text" class="form-control form-control-sm" placeholder="Paciente" aria-label="Recipient's username" aria-describedby="basic-addon2">
-                                    <button class="btn btn-success btn-sm" type="button" id="button-addon2"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down-square" viewBox="0 0 16 16">
+                                    <input type="number" min="0" id="inputPacienteBio" class="form-control form-control-sm" placeholder="Paciente" aria-label="Recipient's username" aria-describedby="basic-addon2">
+                                    <button class="btn btn-success btn-sm" type="button" onclick="abrirModalPacientes2(event)" id="button-addon2"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down-square" viewBox="0 0 16 16">
                                         <path d="M3.626 6.832A.5.5 0 0 1 4 6h8a.5.5 0 0 1 .374.832l-4 4.5a.5.5 0 0 1-.748 0z"/>
                                         <path d="M0 2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2zm15 0a1 1 0 0 0-1-1H2a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1z"/>
                                       </svg></button>
                                       
                                   </div>
                                   <div class="input-group mb-3">
-                                    <input type="text" class="form-control form-control-sm" placeholder="Examenes" aria-label="Recipient's username" aria-describedby="basic-addon2">
-                                    <button class="btn btn-success btn-sm" type="button" id="button-addon2"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down-square" viewBox="0 0 16 16">
+                                    <input type="number" min="0" id="inputExamenBio" onchange="validarInputBio('examen')" class="form-control form-control-sm" placeholder="Examenes" aria-label="Recipient's username" aria-describedby="basic-addon2">
+                                    <button class="btn btn-success btn-sm" type="button" id="button-addon2" onclick="abrirModalExamenes(event,'bioanalista')" ><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down-square" viewBox="0 0 16 16">
                                         <path d="M3.626 6.832A.5.5 0 0 1 4 6h8a.5.5 0 0 1 .374.832l-4 4.5a.5.5 0 0 1-.748 0z"/>
                                         <path d="M0 2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2zm15 0a1 1 0 0 0-1-1H2a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1z"/>
                                       </svg></button>
                                       
                                   </div>
                                 <select class="form-select form-select-sm mb-3 sedeSelect" id="selectSedeBioanalista" aria-label="Default select example">
-                                    <option selected>Sede</option>
-                                    <option value="1">One</option>
-                                    <option value="2">Two</option>
-                                    <option value="3">Three</option>
+                                    <option value="" selected>Sede</option>
+                                    
                                   </select>
-                                  <select class="form-select form-select-sm mb-3 categoriaSelect" id="selectCategoriaBioanalista" aria-label="Default select example">
-                                    <option selected>Categoria</option>
-                                    <option value="1">One</option>
-                                    <option value="2">Two</option>
-                                    <option value="3">Three</option>
+                                  <select class="form-select form-select-sm mb-3 categoriaSelect" onchange="validarInputBio('seccion')" id="selectCategoriaBioanalista" aria-label="Default select example">
+                                    <option value="" selected>Categoria</option>
+                                    
                                   </select>
-                                  <select class="form-select form-select-sm mb-3 seccionSelect" id="selectSeccionBioanalista" aria-label="Default select example">
-                                    <option selected>Seccion</option>
-                                    <option value="1">One</option>
-                                    <option value="2">Two</option>
-                                    <option value="3">Three</option>
+                                  <select class="form-select form-select-sm mb-3 seccionSelect" onchange="validarInputBio('categoria')" id="selectSeccionBioanalista" aria-label="Default select example">
+                                    <option value="" selected>Seccion</option>
+                                   
                                   </select>
                                   
                                 
@@ -439,6 +425,7 @@
                       </div>
                 </div>
                 <div class="col-10">
+                    <div class="alert-warning alert" id="alertFiltro" hidden>Por favor seleccione un filtro</div>
                     <div class="row mx-2 my-1">
                       <table class="table table-sm table-hover text-center" >
                         <thead id="tHeadTable">
@@ -480,6 +467,105 @@
             </div>
             
         </div>
+        <div
+    class="modal fade"
+    id="examenes-list"
+    tabindex="-1"
+    aria-labelledby="ExameneslLabel"
+    aria-hidden="true"
+  >
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content" style="border: 5px solid #68c0c3;">
+        <div class="modal-header">
+          <h1 class="fs-3" id="ExamenesLabel">
+            Busqueda Examenes
+          </h1>
+          <img src="../imgs/la-milagrosa-logo.png" width="70" alt="" />
+
+          
+        </div>
+        <div class="modal-body container" >
+
+          <h1 class="display-6 text-center">Busqueda Examenes</h1>
+          <hr>
+          <div class="d-flex justify-content-center">
+            <select class="form-select w-25 mx-2" id="seccionExamenSelect"  onchange="validarSelectSeccion(value)" aria-label="Default select example">
+              <option value="todas" selected>Filtrar por seccion</option>
+            </select>
+            <input type="text" id="examenDiagnosticoInput" class="form-control w-50 inputExamen" placeholder="Examen" aria-label="Username" aria-describedby="addon-wrapping">
+
+          </div>
+          <hr>
+          <ul class="list-group" id="menuDiagnosticoUl" style="max-height: 50vh; overflow-y: auto;">      
+          </ul>
+          
+        </div>
+        <div class="modal-footer">
+          
+            
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-bs-dismiss="modal"
+            >
+              Cerrar
+            </button>
+         
+          
+          
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div
+  class="modal fade"
+  id="pacientes-list"
+  tabindex="-1"
+  aria-labelledby="PacientesLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content" style="border: 5px solid #68c0c3;">
+      <div class="modal-header">
+        <h1 class="fs-3" id="PacientesLabel">
+          Busqueda Pacientes
+        </h1>
+        <img src="../imgs/la-milagrosa-logo.png" width="70" alt="" />
+
+        
+      </div>
+      <div class="modal-body container" >
+
+        <h1 class="display-6 text-center">Busqueda Pacientes</h1>
+        <hr>
+        <div class="d-flex justify-content-center">
+         
+          <input type="text" id="examenDiagnosticoInput" class="form-control w-50 inputPaciente" placeholder="Paciente" aria-label="Username" aria-describedby="addon-wrapping">
+
+        </div>
+        <hr>
+        <ul class="list-group" id="menuPacientesUl" style="max-height: 50vh; overflow-y: auto;">      
+        </ul>
+        
+      </div>
+      <div class="modal-footer">
+        
+          
+          <button
+            type="button"
+            class="btn btn-secondary"
+            data-bs-dismiss="modal"
+          >
+            Cerrar
+          </button>
+       
+        
+        
+      </div>
+    </div>
+  </div>
+</div>
     </body>
     <script src="../modules/axios.min.js"></script>
     <script src="../../bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
