@@ -215,37 +215,10 @@ const pintarExamen = async () => {
       if (a.posicion < b.posicion) {
         return -1;
       }
-      // a must be equal to b
       return 0;
     });
   });
 
-  /* 
-  document.getElementsByName("direccion")[0].innerText =
-    examen.paciente.direccion;
-  document.getElementsByName("correo")[0].innerText =
-    "Email: " + examen.paciente.correo;
-  document.getElementsByName("cabecera")[0].innerHTML = `
-  <div class="col" style="font-size: small;">
-  <div class="card-body">
-    <ul class="list-group list-group-flush">
-      <li class="list-group-item"><span class="fw-bold">Paciente:</span> <br> ${examen.paciente.nombre}</li>
-      <li class="list-group-item"><span class="fw-bold">Cedula:</span><br> ${examen.paciente.pre_cedula}-${examen.paciente.cedula}</li>
-      <li class="list-group-item"><span class="fw-bold">Factura: </span><br> ${examen.orden}</li>
-    </ul>
-  </div>
-</div>
-<div class="col" style="font-size: small;">
-  <div class="card-body">
-    <ul class="list-group list-group-flush">
-      <li class="list-group-item"><span class="fw-bold">Fecha Nacimiento:</span><br> ${examen.paciente.fecha_nacimiento}</li>
-      <li class="list-group-item"><span class="fw-bold">Edad:</span><br> ${examen.paciente.edad}</li>
-      <li class="list-group-item"><span class="fw-bold">Emision:</span><br> ${moment().format('DD-MM-YYYY')}</li>
-    </ul>
-  </div>
-</div>
-  `;
- */
   const seccionesSet = new Set(examen.examenes.map((e) => e.nombreSeccion));
   console.log("🚀 ~ pintarExamen ~ seccionesSet:", seccionesSet);
   document.getElementsByName("firmaBioanalista")[0].innerHTML = `
@@ -276,10 +249,16 @@ const pintarExamen = async () => {
     <div class="card-header text-start fw-bolder fs-6">${s}</div>
     ${examen.examenes
       .map((e) => {
+        let nombreExamen = e.examen;
         if (e.nombreSeccion == s) {
+          if (e.caracteristicas.length == 1) {
+            if (e.examen == e.caracteristicas[0].nombre) {
+              nombreExamen = e.caracteristicas[0].nombre;
+            }
+          }
           return ` 
         <div class="card">
-        <div class="card-header">${e.examen}</div>
+        <div class="card-header" id="headerExamen">${e.examen}</div>
         <div class="card-body">
           <table class="table table-sm" style="font-size: 11px;">
             <thead>
