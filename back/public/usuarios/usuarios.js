@@ -106,7 +106,6 @@ async function modificarFormulario(id, nombre) {
       .getElementById(`guardarButton`)
       .setAttribute("onclick", `modificarUsuario('${id}')`);
   }
-  precedula.value = usuario.pre_cedula;
   nombreInp.value = usuarioInfo.nombre;
   cedulaInp.value = usuarioInfo.cedula;
   direccionInp.value = usuarioInfo.direccion;
@@ -469,6 +468,21 @@ const subirImagen = async () => {
     const imagen = document.getElementById("firma");
 
     if (imagen.value !== "") {
+      const file = imagen.files[0];
+      const validImageTypes = [
+        "image/jpeg",
+        "image/png",
+        "image/gif",
+        "image/bmp",
+        "image/webp"
+      ];
+
+      // Validar que el archivo sea una imagen
+      if (!validImageTypes.includes(file.type)) {
+     await usuariosAlerta("Solo se permiten archivos de imagen (JPEG, PNG, GIF, BMP, WebP).", "warning");
+
+        return "";
+      }
       return new Promise((resolve, reject) => {
         const reader = new FileReader();
         reader.readAsDataURL(imagen.files[0]);

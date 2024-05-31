@@ -14,6 +14,7 @@ export const buscarUsuarios = async (req, res) => {
 
 export const cambiarStatus = async (req, res) => {
   const { status, tipo, id } = req.body;
+  console.log("🚀 ~ cambiarStatus ~ req.body:", req.body)
   if (id < 0 || id == "" || !id)
     return await res
       .status(400)
@@ -117,7 +118,6 @@ export const editarBioanalista = async (req, res) => {
     colegio,
     ministerio,
     direccion,
-    ingreso,
     firma,
   } = req.body;
   if (id < 0 || id == "" || !id) {
@@ -129,8 +129,7 @@ export const editarBioanalista = async (req, res) => {
     nombre == "" ||
     telefono == "" ||
     colegio == "" ||
-    ministerio == "" ||
-    ingreso == ""
+    ministerio == "" 
   ) {
     return await res.status(400).json({ mensaje: "Algun dato no es valido" });
   }
@@ -145,10 +144,9 @@ export const editarBioanalista = async (req, res) => {
         .json({ mensaje: "El usuario que intenta editar no existe" });
     } else {
       const [bioUpdate] = await pool.execute(
-        "UPDATE bioanalistas SET nombre = ?, ingreso = ?, telefono = ?, direccion = ?, colegio = ?, ministerio = ?, foto_firma = ? WHERE id = ?",
+        "UPDATE bioanalistas SET nombre = ?, telefono = ?, direccion = ?, colegio = ?, ministerio = ?, foto_firma = ? WHERE id = ?",
         [
           nombre,
-          ingreso,
           telefono,
           direccion,
           colegio,
@@ -453,8 +451,12 @@ export const crearBioanalista = async (req, res) => {
 
   const validacion = bioanalista.some((el) => {
     if (el.value == "") {
-      console.log(`Campo ${el.name} vacio`);
-      return true;
+      if (el.name == "firma" || el.name == "direccion") {
+        console.log(`Campo ${el.name} vacio`);
+      } else {
+        console.log(`Campo ${el.name} vacio`);
+        return true;
+      }
     }
     if (el.name == "telefono") {
       let validarletra = false;

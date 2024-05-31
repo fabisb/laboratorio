@@ -2,9 +2,25 @@ let usuariosArray = [],
   users = [];
 const subirImagen = async () => {
   try {
-    const imagen = document.getElementById("file");
+    const imagen = document.getElementById("firma");
 
     if (imagen.value !== "") {
+      const file = imagen.files[0];
+      const validImageTypes = [
+        "image/jpeg",
+        "image/png",
+        "image/gif",
+        "image/bmp",
+        "image/webp"
+      ];
+
+      // Validar que el archivo sea una imagen
+      if (!validImageTypes.includes(file.type)) {
+        
+     await usuariosAlerta("Solo se permiten archivos de imagen (JPEG, PNG, GIF, BMP, WebP).", "warning");
+        return "";
+      }
+
       return new Promise((resolve, reject) => {
         const reader = new FileReader();
         reader.readAsDataURL(imagen.files[0]);
@@ -231,67 +247,84 @@ const guardarUsuario = async (tipo) => {
   const telefono = document.getElementById("telefono").value;
 
   if (!isNaN(nombre) || nombre == "") {
-    return console.log("Ingrese un nombre valido");
+    return usuariosAlerta("Ingrese un nombre valido", "danger");
   }
   if (pre_cedula != "V" && pre_cedula != "E") {
-    return console.log("Ingrese una pre cedula valido");
+    return usuariosAlerta("Ingrese una pre cedula", "danger");
   }
   if (cedula < 0) {
-    return console.log("Ingrese una cedula valida");
+    return usuariosAlerta("Ingrese una cedula valida", "danger");
   }
   if (telefono < 0 || telefono == "") {
-    return console.log("Ingrese un telefono valido");
+    return usuariosAlerta("Ingrese un telefono valido", "danger");
   }
 
   if (clave == "") {
-    console.log("Ingrese una clave valida");
-    return;
+    return usuariosAlerta("Ingrese una clave valida", "danger");
   }
 
   if (tipo != "1" && tipo != "2" && tipo != "3") {
     console.log("Nivel de usuario no valido");
-    return;
+    return usuariosAlerta("Error al ingresar alguno de los datos", "danger");
   }
 
   try {
+    const { token } = await login.getToken();
+
     if (tipo == "3") {
       const ministerio = document.getElementById("ministerio").value;
       const colegio = document.getElementById("colegio").value;
+      const pre_nombre = document.getElementById("pre_nombre").value;
       const firma = await subirImagen();
       const res = await axios.post(
         urlsv + "/api/creacion/guardar-bioanalista",
         {
           pre_cedula,
           cedula,
-          nombre,
+          nombre: pre_nombre + " " + nombre,
           telefono,
           direccion,
           ministerio,
           colegio,
           foto_firma: firma ? firma : null,
-        }
+        },
+        { headers: { token } }
       );
-      const res2 = await axios.post(urlsv + "/api/creacion/guardar-usuario", {
-        pre_cedula,
-        cedula,
-        nombre,
-        password: clave,
-        telefono,
-        direccion,
-        correo,
-        nivel: tipo,
-      });
+      const res2 = await axios.post(
+        urlsv + "/api/creacion/guardar-usuario",
+        {
+          pre_cedula,
+          cedula,
+          nombre: pre_nombre + " " + nombre,
+          password: clave,
+          telefono,
+          direccion,
+          correo,
+          nivel: tipo,
+        },
+        { headers: { token } }
+      );
+      const modal = new bootstrap.Modal("#confirmacion-modalBio");
+      modal.show();
+      await buscarUsuarios();
     } else {
-      const res2 = await axios.post(urlsv + "/api/creacion/guardar-usuario", {
-        pre_cedula,
-        cedula,
-        nombre,
-        password: clave,
-        telefono,
-        direccion,
-        correo,
-        nivel: tipo,
-      });
+      const res2 = await axios.post(
+        urlsv + "/api/creacion/guardar-usuario",
+        {
+          pre_cedula,
+          cedula,
+          nombre,
+          password: clave,
+          telefono,
+          direccion,
+          correo,
+          nivel: tipo,
+        },
+        { headers: { token } }
+      );
+      const modal = new bootstrap.Modal("#confirmacion-modalPaci");
+      modal.show();
+      await buscarUsuarios();
     }
   } catch (error) {
     if (error.response.data.mensaje) {
@@ -314,7 +347,7 @@ function formularioCreacion(nivel) {
   for (let index = 0; index < formulario.length; index++) {
     const element = formulario[index];
     element.removeAttribute("disabled");
-    element.value = "";
+    if (element.tagName != "SELECT") element.value = "";
   }
 
   switch (nivel) {
@@ -359,7 +392,6 @@ const buscarUsuarios = async () => {
       let bioanalista = usuariosArray.bioanalistas.filter(
         (e) => e.cedula == user.cedula
       );
-
       tBody.innerHTML += `
                     <tr>
                   <th scope="row">${user.cedula}</th>
@@ -428,7 +460,7 @@ const buscarUsuarios = async () => {
     });
   } catch (error) {
     console.log("🚀 ~ buscarUsuarios ~ error:", error);
-    if (error.response.data.mensaje) {
+    if (error?.response?.data?.mensaje) {
       return await alerta.alert("Error:", error.response.data.mensaje);
     } else {
       return await alerta.error();
@@ -1066,8 +1098,6 @@ const cambiarStatus = async (status, tipo, id) => {
   }
 };
 const modificarFormBio = async (id, idBio) => {
-
-
   const formulario = document.getElementsByClassName("formulario");
   for (let index = 0; index < formulario.length; index++) {
     const element = formulario[index];
@@ -1081,14 +1111,11 @@ const modificarFormBio = async (id, idBio) => {
   buttonGuardar.setAttribute("onclick", `modificarBio('${id}','${idBio}')`);
 };
 const modificarFormUser = async (id) => {
-
   const formulario = document.getElementsByClassName("formulario");
   for (let index = 0; index < formulario.length; index++) {
     const element = formulario[index];
     element.removeAttribute("disabled");
   }
-
-
 
   const nivelDiv = document.getElementById("nivelDiv");
   nivelDiv.hidden = false;
@@ -1113,6 +1140,7 @@ const modificarBio = async (id, idBio) => {
   const direccion = document.getElementById("direccion").value;
   const correo = document.getElementById("correo").value;
   const password = document.getElementById("clave").value;
+  const pre_nombre = document.getElementById("pre_nombre").value;
 
   if (nombre == "" || telefono == "" || colegio == "" || ministerio == "") {
     //ALERTAS PARA VALIDACION
@@ -1124,17 +1152,33 @@ const modificarBio = async (id, idBio) => {
     const { token } = await login.getToken();
     await axios.put(
       urlsv + "/api/creacion/editar-bioanalista",
-      { id:idBio, nombre, telefono, colegio, ministerio, direccion, firma },
+      {
+        id: idBio,
+        nombre: pre_nombre + " " + nombre,
+        telefono,
+        colegio,
+        ministerio,
+        direccion,
+        firma,
+      },
       { headers: { token } }
     );
     await axios.put(
       urlsv + "/api/creacion/editar-usuario",
-      { id , direccion, nombre, telefono, correo, password },
+      {
+        id,
+        direccion,
+        nombre: pre_nombre + " " + nombre,
+        telefono,
+        correo,
+        password,
+        nivel: '3'
+      },
       { headers: { token } }
     );
     const modal = new bootstrap.Modal("#confirmacion-modificar-modalBio");
     modal.show();
-    await buscarUsuarios()
+    await buscarUsuarios();
   } catch (error) {
     console.log(error);
     if (error.response.data.mensaje) {
@@ -1151,7 +1195,6 @@ const modificarUsuario = async (id) => {
   const correo = document.getElementById("correo").value;
   const password = document.getElementById("clave").value;
   const nivel = document.getElementById("nivel").value;
-
 
   if (id < 0 || id == "" || !id) {
     //ALERTAS PARA VALIDACION
@@ -1171,9 +1214,8 @@ const modificarUsuario = async (id) => {
 
     const modal = new bootstrap.Modal("#confirmacion-modificar-modalPaci");
     modal.show();
-    await buscarUsuarios()
+    await buscarUsuarios();
   } catch (error) {
-
     console.log(error);
     if (error.response.data.mensaje) {
       return await alerta.alert("Error:", error.response.data.mensaje);
