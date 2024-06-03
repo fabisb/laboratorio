@@ -1,5 +1,7 @@
 import { pool } from "../database/db.js";
 
+
+
 export const getExamenReimpresion = async (req, res) => {
   const { reimp } = req.body;
 
@@ -766,7 +768,7 @@ export const crearOrden = async (req, res) => {
     }
     if (orden.clave == "no") {
       const [ordenBdd] = await pool.execute(
-        `INSERT INTO ordenes(clave, id_paciente, id_bio, expediente) VALUES ('${orden.clave}','${orden.idPac}','${orden.id_bio}','${orden.expediente}')`
+        `INSERT INTO ordenes(clave, id_paciente, id_bio, expediente, id_empresa) VALUES ('${orden.clave}','${orden.idPac}','${orden.id_bio}','${orden.expediente}','${orden.empresa}')`
       );
       ordenId = ordenBdd.insertId;
 
@@ -775,7 +777,7 @@ export const crearOrden = async (req, res) => {
       );
     } else {
       const [ordenBdd] = await pool.execute(
-        `INSERT INTO ordenes(clave, id_paciente,orden, id_bio, expediente) VALUES ('${orden.clave}','${orden.idPac}','${orden.orden}','${orden.id_bio}','${orden.expediente}')`
+        `INSERT INTO ordenes(clave, id_paciente,orden, id_bio, expediente, id_empresa) VALUES ('${orden.clave}','${orden.idPac}','${orden.orden}','${orden.id_bio}','${orden.expediente}','${orden.empresa}')`
       );
       ordenId = ordenBdd.insertId;
     }
@@ -820,6 +822,26 @@ export const getBioanalistas = async (req, res) => {
       return await res
         .status(400)
         .json({ mensaje: "No se han encontrado bioanalistas disponibles" });
+    }
+  } catch (error) {
+    console.log(error);
+    return await res
+      .status(500)
+      .json({ mensaje: "Ha ocurrido un error en el servidor" });
+  }
+};
+
+export const getEmpresas = async (req, res) => {
+  try {
+    const [empresas] = await pool.execute(
+      'SELECT * FROM empresas'
+    );
+    if (empresas.length > 0) {
+      return await res.status(200).json(empresas);
+    } else {
+      return await res
+        .status(400)
+        .json({ mensaje: "No se han encontrado empresas disponibles" });
     }
   } catch (error) {
     console.log(error);

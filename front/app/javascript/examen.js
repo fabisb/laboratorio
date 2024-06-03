@@ -320,6 +320,25 @@ const render = async () => {
       selectSeccion.appendChild(option);
     });
 
+    try {
+      const { data: empresas } = await axios.get(
+        urlsv + "/api/examenes/get-empresas",
+        { headers: { token } }
+      );
+
+
+      const selectEmpresa= document.getElementById('selectEmpresa')
+
+      empresas.forEach(e=>{
+        selectEmpresa.innerHTML+=`
+        <option value="${e.id}">${e.nombre}</option>
+        
+        `
+      })
+    } catch (error) {
+      console.log(error)
+    }
+
     const { data: examenesGet } = await axios.get(
       urlsv + "/api/examenes/get-examenes",
       { headers: { token } }
@@ -1315,10 +1334,21 @@ function validarSelectOrden(value) {
   const inputOrden = document.getElementById("inputOrden");
   if (value == "no") {
     inputOrden.setAttribute("disabled", "true");
+    document.getElementById('selectEmpresa').setAttribute('disabled','true')
+
   } else {
     try {
       inputOrden.removeAttribute("disabled");
     } catch (error) {}
+  }
+
+  if(value=='clave'){
+    document.getElementById('selectEmpresa').removeAttribute('disabled')
+
+  }
+  if(value=='orden'){
+    document.getElementById('selectEmpresa').setAttribute('disabled','true')
+
   }
 
   document
@@ -2297,11 +2327,15 @@ async function previewPdf(tipo, ordenId) {
   abrirPDFWindow();
 }
 
+
+
+
 async function guardarOrden(tipo) {
   const sedeVar2 = await sedeVar.get();
 
   const inputOrden = document.getElementById("inputOrden");
   const selectBioAnalista = document.getElementById("selectBioAnalista");
+  const selectEmpresa = document.getElementById("selectEmpresa");
   const inputExpediente = document.getElementById("inputPacienteExpediente");
   if (inputExpediente.value == "") {
     const alertaModal = new bootstrap.Modal("#error-orden-modal", {}).toggle();
@@ -2355,6 +2389,7 @@ async function guardarOrden(tipo) {
     clave: tipo,
     id_bio: selectBioAnalista.value,
     expediente: inputExpediente.value,
+    empresa:selectEmpresa.value,
     examenes,
   };
   try {

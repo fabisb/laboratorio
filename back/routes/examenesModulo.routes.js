@@ -6,6 +6,7 @@ import {
   crearCategoria,
   crearLaboratorio,
   crearTitulo,
+  crearEmpresa,
   deleteCaracteristica,
   deleteRango,
   deleteTitulo,
@@ -20,6 +21,7 @@ import {
   getLaboratorios,
   getSecciones,
   getSedes,
+  getEmpresas,
   getCategorias,
   insertCaracteristica,
   insertRango,
@@ -32,6 +34,7 @@ import {
   updateResultados,
   updateSeccion,
   updateCategoria,
+  updateEmpresa,
   updateSubCaracteristica,
   updateLaboratorio,
   updateSede,
@@ -44,6 +47,7 @@ var router = express.Router();
 router.get("/laboratorios", verifyToken, getLaboratorios);
 router.get("/secciones", verifyToken, getSecciones);
 router.get("/categorias", verifyToken, getCategorias);
+router.get("/empresas", verifyToken, getEmpresas);
 router.get("/sedes", verifyToken, getSedes);
 router.get("/examenes", verifyToken, getExamenes);
 router.get("/examen-id", verifyToken, getExamenById);
@@ -54,6 +58,7 @@ router.get("/caracteristicas-id_ex", verifyToken, getCaracteristicasById);
 
 
 //POST
+router.post("/crear-empresa", administradorToken, crearEmpresa);
 router.post("/crear-seccion", administradorToken, crearSeccion);
 router.post("/crear-sede", administradorToken, crearSede);
 router.post("/crear-categoria", administradorToken, crearCategoria);
@@ -64,6 +69,7 @@ router.post("/crear-titulo", administradorToken, crearTitulo);
 
 //PUT
 router.put("/update-laboratorio", administradorToken, updateLaboratorio);
+router.put("/update-empresa", administradorToken, updateEmpresa);
 router.put("/update-categoria", administradorToken, updateCategoria);
 router.put("/update-seccion", administradorToken, updateSeccion);
 router.put("/update-sede", administradorToken, updateSede);

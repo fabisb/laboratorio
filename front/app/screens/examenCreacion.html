@@ -490,6 +490,7 @@
                 <option value="categoria">Categoria</option>
                 <option value="laboratorio">Laboratorio</option>
                 <option value="sede">Sede</option>
+                <option value="empresa">Empresa</option>
 
               </select>
               <select
@@ -551,7 +552,7 @@
         <div class="modal-content">
           <div class="modal-header">
             <h1 class="modal-title fs-5" id="añadirSeccionModalLabel">
-              Creacion Seccion/Categoria/Sede
+              Creacion Seccion/Categoria/Sede/Laboratorio/Empresa
             </h1>
             
             <button
@@ -563,8 +564,8 @@
           </div>
           <div class="modal-body">
             <div class="mb-3">
-              <div class="row">
-                <div class="col">
+              <div class="row row-gap-3" >
+                <div class="col-4">
                   <div class="form-check fs-6">
                     <input
                       class="form-check-input"
@@ -580,7 +581,7 @@
                     </label>
                   </div>
                 </div>
-                <div class="col">
+                <div class="col-4">
                   <div class="form-check fs-6">
                     <input
                       class="form-check-input"
@@ -596,7 +597,23 @@
                     </label>
                   </div>
                 </div>
-                <div class="col">
+                <div class="col-4">
+                  <div class="form-check fs-6">
+                    <input
+                      class="form-check-input"
+                      type="radio"
+                      name="inputTipoSeccion"
+                      value="empresa"
+                      id="ratioEmpresa"
+                      onclick="formularioSeccion()"
+
+                    />
+                    <label class="form-check-label" for="ratioEmpresa">
+                      Empresa
+                    </label>
+                  </div>
+                </div>
+                <div class="col-6">
                   <div class="form-check fs-6">
                     <input
                       class="form-check-input"
@@ -611,7 +628,7 @@
                     </label>
                   </div>
                 </div>
-                <div class="col">
+                <div class="col-6">
                   <div class="form-check fs-6">
                     <input
                       class="form-check-input"
@@ -983,6 +1000,56 @@
               class="btn btn-warning"
               data-bs-dismiss="modal"
               id="buttonModificarCategoria"
+            >
+              Modificar
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      class="modal fade"
+      id="modificarEmpresaModal"
+      tabindex="-1"
+      aria-labelledby="modificarEmpresaModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h1 class="modal-title fs-5" id="modificarEmpresaModalLabel">
+              Modificar Empresa
+            </h1>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <div class="mb-3">
+              <input
+                type="text"
+                class="form-control"
+                id="inputEmpresaModificar"
+                placeholder="Empresa"
+              />
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-bs-dismiss="modal"
+            >
+              Cerrar
+            </button>
+            <button
+              type="button"
+              class="btn btn-warning"
+              data-bs-dismiss="modal"
+              id="buttonModificarEmpresa"
             >
               Modificar
             </button>

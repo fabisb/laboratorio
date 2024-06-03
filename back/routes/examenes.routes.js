@@ -25,11 +25,13 @@ import {
   updateSubCaracteristicaCar,
   statusExamenes,
   getExamenResultadosExterno,
+  getEmpresas
 } from "../controllers/examenes.controller.js";
 var router = express.Router();
 
 //GET
 router.get("/get-bioanalistas", verifyToken, getBioanalistas);//TODOS
+router.get("/get-empresas", verifyToken, getEmpresas);//TODOS
 router.get("/get-paciente", verifyToken, getPaciente);//TODOS
 router.get("/get-pendientes-paciente", verifyToken, getPendientesPaciente);//TODOS
 router.get("/get-pendiente-examen", verifyToken, getPendienteExamen);//TODOS
