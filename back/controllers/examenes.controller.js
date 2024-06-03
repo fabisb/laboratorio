@@ -288,9 +288,8 @@ export const getExamenResultadosExterno = async (req,res)=>{
           .json({mensaje:'El examen no tiene un PDF asociado'});
       }else{
 
-        return await res
-          .status(200)
-          .json(examenExterno[0].PDF);
+      
+          return await res.status(200).setHeader('Content-Type', 'application/pdf').send(examenExterno[0].PDF);
       }
 
     }

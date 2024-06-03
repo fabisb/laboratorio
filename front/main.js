@@ -655,41 +655,7 @@ ipcMain.on("ws", async (event, numeroArg) => {
   // When the page finishes loading, generate the PDF
 });
 
-/* ipcMain.on("pdfExterno", async (event, idArg) => {
-  console.log("🚀 ~ ipcMain.on ~ idArg:", idArg)
-  try {
-    const { token } = await store.get("token");
 
-    const { data } = await axios.get(
-      urlsv + "/api/examenes/resultados-examen-externo",
-      {
-        params: {
-          id:idArg,
-        },
-        responseType: "blob",
-        headers: { token },
-      }
-    );
-    await fileDownload(data, `Examen-externo-${idArg}.pdf`);
-    return;
-  } catch (error) {
-    console.log("🚀 ~ ipcMain.on ~ error:", error);
-    const currentWindow = event.sender.getOwnerBrowserWindow();
-    if (error?.response?.data?.mensaje) {
-      const result = dialog.showErrorBox(
-        "ERROR",
-        error?.response?.data?.mensaje
-      );
-      return result;
-    } else {
-      const result = dialog.showErrorBox(
-        "ERROR",
-        "Ha ocurrido descargando el examen externo"
-      );
-      return result;
-    }
-  }
-}); */
 
 app.whenReady().then(() => {
   createWindow();
