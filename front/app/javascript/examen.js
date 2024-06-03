@@ -2511,23 +2511,23 @@ async function descargarPdfExterno(id) {
         params: {
           id,
         },
-        responseType: "blob",
+        //responseType: "blob",
         headers: { token },
       }
     );
     console.log("🚀 ~ descargarPdfExterno ~ data:", data);
-    const href = URL.createObjectURL(data);
-
-    // create "a" HTML element with href to file & click
+    document.getElementById('pdfExternoModalEmbed').src = data;
+    const myModal = new bootstrap.Modal('#pdfExternoModal')
+    myModal.show();
+    /* 
     const link = document.createElement("a");
     link.href = href;
-    link.setAttribute("download", `examen-externo${id}.pdf`); //or any other extension
+    link.setAttribute("download", `examen-externo-${id}.pdf`); //or any other extension
     document.body.appendChild(link);
     link.click();
+    document.body.removeChild(link); 
+    */
 
-    // clean up "a" element & remove ObjectURL
-    document.body.removeChild(link);
-    URL.revokeObjectURL(href);
     return;
   } catch (error) {
     console.log("🚀 ~ descargarPdfExterno ~ error:", error);

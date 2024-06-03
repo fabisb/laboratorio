@@ -93,8 +93,4 @@ contextBridge.exposeInMainWorld(
   "wsPDF",
   async (numero) => await ipcRenderer.send("ws", JSON.stringify(numero))
 );
-/* contextBridge.exposeInMainWorld(
-  "pdfExterno",
-  async (id) => await ipcRenderer.send("pdfExterno", id)
-);
- */
+
