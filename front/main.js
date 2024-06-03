@@ -5,7 +5,6 @@ const os = require("os");
 const path = require("path");
 const fs = require("fs").promises;
 var moment = require("moment");
-const fileDownload = require("js-file-download");
 const axios = require("axios");
 //RECARGA AUTOMATICA
 
