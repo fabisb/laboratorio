@@ -381,6 +381,7 @@ export const getExamenResultados = async (req, res) => {
         rango: rango[0],
         sub,
         resultados,
+        posicion: caracteristica[0].posicion
       });
     }
 

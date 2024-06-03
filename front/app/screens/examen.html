@@ -136,7 +136,7 @@
                   type="number"
                   required
                   class="form-control"
-                  id="exampleFormControlInput1"
+                  id="ciInput"
                   placeholder="Cedula"
                 />
               </div>
@@ -222,6 +222,14 @@
                     <path
                       d="M2 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2zm10-1H4a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1"
                     />
+                  </svg>
+                </div>
+
+                <div class="col">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" fill="green" style="cursor: pointer;" data-bs-target="#pacientes-list" data-bs-toggle="modal" class="bi bi-journal-check" viewBox="0 0 16 16">
+                    <path fill-rule="evenodd" d="M10.854 6.146a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708 0l-1.5-1.5a.5.5 0 1 1 .708-.708L7.5 8.793l2.646-2.647a.5.5 0 0 1 .708 0"/>
+                    <path d="M3 0h10a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2v-1h1v1a1 1 0 0 0 1 1h10a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H3a1 1 0 0 0-1 1v1H1V2a2 2 0 0 1 2-2"/>
+                    <path d="M1 5v-.5a.5.5 0 0 1 1 0V5h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1zm0 3v-.5a.5.5 0 0 1 1 0V8h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1zm0 3v-.5a.5.5 0 0 1 1 0v.5h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1z"/>
                   </svg>
                 </div>
                 <div class="col user1 user3" hidden>
@@ -995,7 +1003,54 @@
       
       </div>
     </div>
-
+    <div
+    class="modal fade"
+    id="pacientes-list"
+    tabindex="-1"
+    aria-labelledby="PacientesLabel"
+    aria-hidden="true"
+  >
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content" style="border: 5px solid #68c0c3;">
+        <div class="modal-header">
+          <h1 class="fs-3" id="PacientesLabel">
+            Busqueda Pacientes
+          </h1>
+          <img src="../imgs/la-milagrosa-logo.png" width="70" alt="" />
+  
+          
+        </div>
+        <div class="modal-body container" >
+  
+          <h1 class="display-6 text-center">Busqueda Pacientes</h1>
+          <hr>
+          <div class="d-flex justify-content-center">
+           
+            <input type="text" id="examenDiagnosticoInput" class="form-control w-50 inputPaciente" oninput="buscarPacienteInput(value)" placeholder="Paciente" aria-label="Username" aria-describedby="addon-wrapping">
+  
+          </div>
+          <hr>
+          <ul class="list-group" id="menuPacientesUl" style="max-height: 50vh; overflow-y: auto;">      
+          </ul>
+          
+        </div>
+        <div class="modal-footer">
+          
+            
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-bs-dismiss="modal"
+            >
+              Cerrar
+            </button>
+         
+          
+          
+        </div>
+      </div>
+    </div>
+  </div>
     <div class="modal fade" id="reimpresionModal" tabindex="-1" aria-labelledby="reimpresionModalLabel" aria-hidden="true">
       <div class="modal-dialog">
       

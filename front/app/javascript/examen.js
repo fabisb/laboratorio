@@ -8,6 +8,7 @@ var examenDataPc;
 let reimpresionArray = [];
 var nivelUser, cedulaUser;
 var examenPendiente;
+let pacientesArray;
 
 async function tok() {
   let token = await login.getToken();
@@ -333,7 +334,54 @@ const render = async () => {
       urlsv + "/api/examenes/get-bioanalistas",
       { headers: { token } }
     );
-    examenes = examenesGet;
+
+    try {
+      let { data: pacientes } = await axios.get(
+          urlsv + "/api/estadisticas/get-pacientes",
+          { headers: { token } }
+        );
+
+      pacientesArray=pacientes.sort(function (a, b) {
+          if (a.nombre > b.nombre) {
+            return 1;
+          }
+          if (a.nombre < b.nombre) {
+            return -1;
+          }
+          // a must be equal to b
+          return 0;
+      });
+      const menu=document.getElementById('menuPacientesUl')
+    menu.innerHTML=''
+    pacientesArray.forEach(e=>{
+        menu.innerHTML+=`
+        <li class="list-group-item list-group-item-light list-group-item-action" >
+          <div class="row">
+            <div class="col-3">
+              <span class="">${e.cedula}</span>
+
+            </div>
+            <div class="col-6">
+              <span class="">${e.nombre.trim()}</span>
+
+            </div>
+            <div class="col-3 d-flex justify-content-end align-content-center">
+            <svg xmlns="http://www.w3.org/2000/svg" style="cursor:pointer" width="24" height="24" data-bs-dismiss="modal" fill="green" onclick="setInputCedula(${e.cedula})" class="bi bi-check-circle" viewBox="0 0 16 16">
+              <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
+              <path d="m10.97 4.97-.02.022-3.473 4.425-2.093-2.094a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-1.071-1.05"/>
+            </svg>
+            </div>
+
+          </div>
+        </li> 
+        `
+    })
+      
+    } catch (error) {
+      console.log(error)
+    }
+    
+    examenes= examenesGet
     const selectBio = document.getElementById("selectBioAnalista");
 
     if (nivelUser == 3) {
@@ -415,6 +463,52 @@ const render = async () => {
     }
   }
 };
+function setInputCedula(ci){
+  document.getElementById('ciInput').value=ci
+}
+
+
+function buscarPacienteInput(value){
+  let pac = []
+
+  if(isNaN(value)){
+    pac = pacientesArray.filter(e=>e.nombre.toLowerCase().includes(value.toLowerCase()))
+  }else{
+    if(value==''){
+      pac=pacientesArray
+    }else{
+      pac = pacientesArray.filter(e=>e.cedula.toString().includes(value))
+
+    }
+
+  }
+
+ 
+
+  const menu=document.getElementById('menuPacientesUl')
+  menu.innerHTML=''
+  pac.forEach(e=>{
+      menu.innerHTML+=`
+      <li class="list-group-item list-group-item-light list-group-item-action" >
+        <div class="row">
+          <div class="col-3">
+            <span class="">${e.cedula}</span>
+
+          </div>
+          <div class="col-6">
+            <span class="">${e.nombre.trim()}</span>
+
+          </div>
+          <div class="col-3 d-flex justify-content-end align-content-center">
+          <svg xmlns="http://www.w3.org/2000/svg" data-bs-dismiss="modal" style="cursor:pointer" width="24" height="24" fill="green" onclick="setInputCedula(${e.cedula})" class="bi bi-check-circle" viewBox="0 0 16 16">
+            <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
+            <path d="m10.97 4.97-.02.022-3.473 4.425-2.093-2.094a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-1.071-1.05"/>
+          </svg>
+          </div>
+
+        </div>
+      </li`})
+}
 
 async function eliminarPendiente(id) {
   try {
@@ -2011,11 +2105,13 @@ const abrirResultadosModal = async (examen, idEx, n) => {
                       <td> <select class="form-select form-select-sm selectRs${
                         ct.nombre
                       } inputExDetallePacCar" rango='${rango.id}' inferior='${
-              rango.inferior
-            }' superior='${rango.superior}' id='inputRs${
-              ct.id
-            }' aria-label="Small select example">
-                      
+            rango.inferior
+          }' superior='${rango.superior}' id='inputRs${
+            ct.id
+          }' aria-label="Small select example">
+          <option value="" selected>
+          
+          </option>
                     </select></td>
                       <td>${ct.unidad}</td>
                       <td>${
@@ -2080,7 +2176,9 @@ const abrirResultadosModal = async (examen, idEx, n) => {
           <tr>
                       <th scope="row" colspan="2">${ct.nombre}</th>
                       <td> <select class="form-select form-select-sm selectRs${ct.nombre} inputExDetallePacCar" rango='no' inferior='no' superior='no' id='inputRs${ct.id}' aria-label="Small select example">
-                      
+                      <option value="" selected>
+          
+          </option>
                     </select></td>
                       <td>${ct.unidad}</td>
                       <td> - </td>
@@ -2117,6 +2215,7 @@ const abrirResultadosModal = async (examen, idEx, n) => {
     setInputs(idEx);
   }
 };
+
 
 async function previewPdf(tipo, ordenId) {
   const checksH = document.getElementsByName(`checksOrden`);
