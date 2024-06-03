@@ -126,10 +126,40 @@ function abrirResultadosExternosModalMod(examen, id, bio, nota, idLab) {
   tBodyDiagnosticos.innerHTML = "";
   h1Ex.innerText = `${examen} - ${pacienteObj.nombre} - ${pacienteObj.edad}`;
 }
+const subirImagenPdfExterno = async () => {
+  try {
+    const imagen = document.getElementById("inputPdfExterno");
 
+    if (imagen.value !== "") {
+      const file = imagen.files[0];
+      // Validar que el archivo sea un PDF
+      if (file.type !== "application/pdf") {
+        alert("Solo se permiten archivos PDF.");
+        return "";
+      }
+
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.readAsDataURL(imagen.files[0]);
+
+        reader.onload = () => {
+          resolve(reader.result);
+        };
+        reader.onerror = () => {
+          resolve("");
+        };
+      });
+    } else {
+      return "";
+    }
+  } catch (error) {
+    console.log(error);
+  }
+};
 async function guardarResultadosExamenExterno() {
   const inputBioanalista = document.getElementById("inputBioanalistaExterno");
   const inputNota = document.getElementById("inputNotaExterno");
+  const PDF = await subirImagenPdfExterno()
   const selectLab = document.getElementById("selectLaboratorio");
   const alertaDiv = document.getElementById("alertaExamen");
 
@@ -154,6 +184,7 @@ async function guardarResultadosExamenExterno() {
         idLab: selectLab.value,
         idPac: pacienteObj.id,
         idEx: examenPendiente,
+        PDF
       },
       { headers: { token } }
     );

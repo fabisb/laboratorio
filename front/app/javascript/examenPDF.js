@@ -75,6 +75,15 @@ const reimprimirExamen = async () => {
         ...seccionesSet,
       ]
         .map((s) => {
+          let nombreExamen = `<div class="card-header" id="headerExamen">${ex.examen}</div>`;
+          if (ex.nombreSeccion == s) {
+            if (ex.caracteristicas.length == 1) {
+              if (ex.examen == ex.caracteristicas[0].nombre) {
+                //nombreExamen = ex.caracteristicas[0].nombre;
+                nombreExamen = "";
+              }
+            }
+          }
           return `
       <div class="card">
       <div class="card-header text-start fw-bolder fs-6">${s}</div>
@@ -82,16 +91,16 @@ const reimprimirExamen = async () => {
         ex.nombreSeccion == s
           ? ` 
           <div class="card">
-          <div class="card-header">${ex.examen}</div>
+          ${nombreExamen}
           <div class="card-body">
             <table class="table table-sm" style="font-size: 11px;">
               <thead>
                 <tr>
-                  <th scope="col">Caracteristica</th>
-                  <th scope="col">Resultado</th>
-                  <th scope="col">Unidad</th>
-                  <th scope="col">Inferior</th>
-                  <th scope="col">Superior</th>
+                  <th scope="col">CARACTERISTICA</th>
+                  <th scope="col">RESULTADO</th>
+                  <th scope="col">UNIDAD</th>
+                  <th scope="col">INFERIOR</th>
+                  <th scope="col">SUPERIOR</th>
                 </tr>
               </thead>
               <tbody>
@@ -125,7 +134,7 @@ const reimprimirExamen = async () => {
               <td>-</td>
               <td>-</td>
               <td>-</td>
-              <td><span class="fw-bold">Resultado</span></td>
+              <td><span class="fw-bold">RESULTADO</span></td>
             </tr>
             ${c.subCaracteristicas
               .map((sc) => {
@@ -249,25 +258,26 @@ const pintarExamen = async () => {
     <div class="card-header text-start fw-bolder fs-6">${s}</div>
     ${examen.examenes
       .map((e) => {
-        let nombreExamen = e.examen;
+        let nombreExamen = `<div class="card-header" id="headerExamen">${e.examen}</div>`;
         if (e.nombreSeccion == s) {
           if (e.caracteristicas.length == 1) {
             if (e.examen == e.caracteristicas[0].nombre) {
-              nombreExamen = e.caracteristicas[0].nombre;
+              //nombreExamen = e.caracteristicas[0].nombre;
+              nombreExamen = "";
             }
           }
           return ` 
         <div class="card">
-        <div class="card-header" id="headerExamen">${e.examen}</div>
+        ${nombreExamen}
         <div class="card-body">
           <table class="table table-sm" style="font-size: 11px;">
             <thead>
               <tr>
-                <th scope="col">Caracteristica</th>
-                <th scope="col">Resultado</th>
-                <th scope="col">Unidad</th>
-                <th scope="col">Inferior</th>
-                <th scope="col">Superior</th>
+                <th scope="col">CARACTERISTICA</th>
+                <th scope="col">RESULTADO</th>
+                <th scope="col">UNIDAD</th>
+                <th scope="col">INFERIOR</th>
+                <th scope="col">SUPERIOR</th>
               </tr>
             </thead>
             <tbody>
@@ -283,7 +293,12 @@ const pintarExamen = async () => {
                   return `
               <tr>
               <th scope="row">${c.nombre}</th>
-              <td>${c.resultado}</td>
+              <td>${c.resultado} ${
+                    c.nota != ""
+                      ? `<p class="m-0 fst-italic">(${c.nota})</p>`
+                      : ""
+                  } 
+          </td>
               <td>${c.unidad}</td>
               <td>${c.inferior}</td>
               <td>${c.superior}</td>
@@ -296,7 +311,7 @@ const pintarExamen = async () => {
             <td>-</td>
             <td>-</td>
             <td>-</td>
-            <td><span class="fw-bold">Resultado</span></td>
+            <td><span class="fw-bold">RESULTADO</span></td>
           </tr>
           ${c.subCaracteristicas
             .map((sc) => {

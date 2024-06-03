@@ -384,7 +384,7 @@ export const modificarResultadoExamen = async (req, res) => {
 };
 
 export const crearExamenExterno = async (req, res) => {
-  const { idEx, idLab, nota, bioanalista, idPac } = req.body;
+  const { idEx, idLab, nota, bioanalista, idPac, PDF } = req.body;
   if (bioanalista == "") {
     return await res
       .status(400)
@@ -398,8 +398,8 @@ export const crearExamenExterno = async (req, res) => {
 
   try {
     const [r] = await pool.execute(
-      `INSERT INTO examenes_externos(id_ex,bioanalista,nota,id_lab ,id_pac) VALUES (?,?,?,?,?)`,
-      [idEx, bioanalista, nota, idLab, idPac]
+      `INSERT INTO examenes_externos(id_ex,bioanalista,nota,id_lab ,id_pac, PDF) VALUES (?,?,?,?,?,?)`,
+      [idEx, bioanalista, nota, idLab, idPac, PDF]
     );
     return await res
       .status(200)

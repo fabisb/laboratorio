@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 29-05-2024 a las 23:28:00
+-- Tiempo de generación: 31-05-2024 a las 17:59:17
 -- Versión del servidor: 10.4.28-MariaDB
 -- Versión de PHP: 8.2.4
 
@@ -1683,8 +1683,8 @@ CREATE TABLE `users` (
 INSERT INTO `users` (`id`, `pre_cedula`, `cedula`, `password`, `nombre`, `correo`, `telefono`, `bioanalista`, `direccion`, `foto_carnet`, `nivel`, `status`) VALUES
 (5, 'V', 28146771, '$2b$04$YGVtJYbYnEnKemyDy3VBxu6xXeti08efB7wVyY0Pe9C/Zr81K4Kyq', 'Fabian Silva Bravo', 'silvabravofabian@gmail.com', '04146308395', 44, 'San Francisco', '', 1, 'activo'),
 (6, 'V', 123, '$2b$04$Ih7JFMxYtPcWXrKupAjqnuLz.WSpE8l3Oaxofbl5IlKb4TfDbsbEi', 'prueba', 'prueba@gmail.com', '123', 44, 'prueba', '', 1, 'activo'),
-(7, 'V', 28582670, '$2b$04$Ih7JFMxYtPcWXrKupAjqnuLz.WSpE8l3Oaxofbl5IlKb4TfDbsbEi', 'Antony Benitez', '', '04146680987', 44, '', '', 1, 'activo'),
-(8, 'V', 2908, '$2b$04$Jwuj1No/o45BRs0B9cNzc.Li33bx3qEQjGGtpuO5.LwvEGEXDlSAG', 'anyi', 'asd@gmai.com', '04146680987', 0, 'kkkkkkkkk', '', 3, 'activo'),
+(7, 'V', 28582670, '$2b$04$Ih7JFMxYtPcWXrKupAjqnuLz.WSpE8l3Oaxofbl5IlKb4TfDbsbEi', 'Antony Benitez', '', '04146680987', 44, '', '', 1, 'inactivo'),
+(8, 'V', 2908, '$2b$04$Jwuj1No/o45BRs0B9cNzc.Li33bx3qEQjGGtpuO5.LwvEGEXDlSAG', 'anyi', 'asd@gmai.com', '04146680987', 0, 'kkkkkkkkk', '', 3, 'inactivo'),
 (9, 'V', 28146773, '$2b$04$s2yUCmOWuu.yvI8inW/qLuaI44y3xxNGFFr.EtBG5C6ELKwLnx5Y2', 'Bioanalista 1', '', '04146308395', 0, '', '', 3, 'activo'),
 (10, 'V', 14863779, '$2b$04$TvZhzuE/fvO.U1INSwJWWeK31XRnIG5HBTuQ4vWeXwJr5qSONavMi', 'YARLENY URDANETA', '', '04162674229', 0, 'LA CAÑADA', '', 3, 'activo'),
 (11, 'V', 4180696, '$2b$04$AjxNzhV4uLwyH0EHAgEAs.XgJL7cDou/kobr2PBCg7m8IrERYvJrO', 'ALBA ROSENDO', '', '04246628145', 0, 'CUIDAD FEDERACION MANZANA NRO. 7 CASA A69 PTO FIJO', '', 3, 'activo'),
