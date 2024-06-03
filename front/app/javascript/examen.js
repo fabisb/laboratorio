@@ -1,4 +1,5 @@
-var examenes = [],examenesArray=[]
+var examenes = [],
+  examenesArray = [];
 var idPaciente = "";
 var pacienteObj = {};
 let examenesDelPaciente = [];
@@ -92,12 +93,17 @@ function retornarSumaString(o) {
 function abrirResultadosExternosModal(examen, id) {
   const inputBioanalista = document.getElementById("inputBioanalistaExterno");
   const inputNota = document.getElementById("inputNotaExterno");
+  const inputOrden = document.getElementById("inputOrdenExterno");
+  const inputPdf = document.getElementById("inputPdfExterno");
   const selectLab = document.getElementById("selectLaboratorio");
   const button = document.getElementById("guardarResultadoExPcExterno");
   button.setAttribute("onclick", "guardarResultadosExamenExterno()");
 
   selectLab.value = "";
   inputBioanalista.value = "";
+  inputNota.value = "";
+  inputOrden.value = "";
+  inputPdf.value = "";
 
   new bootstrap.Modal("#resultadosExternosModal").toggle();
 
@@ -107,15 +113,17 @@ function abrirResultadosExternosModal(examen, id) {
   h1Ex.innerText = `${examen} - ${pacienteObj.nombre} - ${pacienteObj.edad}`;
   examenPendiente = id;
 }
-function abrirResultadosExternosModalMod(examen, id, bio, nota, idLab) {
+function abrirResultadosExternosModalMod(examen, id, bio, nota, idLab, orden) {
   const inputBioanalista = document.getElementById("inputBioanalistaExterno");
   const inputNota = document.getElementById("inputNotaExterno");
+  const inputOrden = document.getElementById("inputOrdenExterno");
   const selectLab = document.getElementById("selectLaboratorio");
   const button = document.getElementById("guardarResultadoExPcExterno");
   button.setAttribute("onclick", "guardarModificacionExamenExterno()");
   inputBioanalista.value = bio;
   inputNota.value = nota;
   selectLab.value = idLab;
+  inputOrden.value = orden;
   examenPendiente = id;
 
   new bootstrap.Modal("#resultadosExternosModal").toggle();
@@ -158,7 +166,8 @@ const subirImagenPdfExterno = async () => {
 async function guardarResultadosExamenExterno() {
   const inputBioanalista = document.getElementById("inputBioanalistaExterno");
   const inputNota = document.getElementById("inputNotaExterno");
-  const PDF = await subirImagenPdfExterno()
+  const inputOrden = document.getElementById("inputOrdenExterno");
+  const PDF = await subirImagenPdfExterno();
   const selectLab = document.getElementById("selectLaboratorio");
   const alertaDiv = document.getElementById("alertaExamen");
 
@@ -166,6 +175,15 @@ async function guardarResultadosExamenExterno() {
     alertaDiv.removeAttribute("hidden");
 
     alertaDiv.innerText = `El bioanalista no puede estar vacio`;
+    setTimeout(() => {
+      alertaDiv.setAttribute("hidden", "true");
+    }, 3000);
+    return;
+  }
+  if (inputOrden.value == "") {
+    alertaDiv.removeAttribute("hidden");
+
+    alertaDiv.innerText = `La ORDEN no puede estar vacia`;
     setTimeout(() => {
       alertaDiv.setAttribute("hidden", "true");
     }, 3000);
@@ -183,7 +201,8 @@ async function guardarResultadosExamenExterno() {
         idLab: selectLab.value,
         idPac: pacienteObj.id,
         idEx: examenPendiente,
-        PDF
+        PDF,
+        orden: inputOrden.value,
       },
       { headers: { token } }
     );
@@ -210,18 +229,28 @@ async function guardarResultadosExamenExterno() {
 async function guardarModificacionExamenExterno() {
   const inputBioanalista = document.getElementById("inputBioanalistaExterno");
   const inputNota = document.getElementById("inputNotaExterno");
+  const inputOrden = document.getElementById("inputOrdenExterno");
+  const PDF = await subirImagenPdfExterno();
   const selectLab = document.getElementById("selectLaboratorio");
   const alertaDiv = document.getElementById("alertaExamen");
 
   if (inputBioanalista.value == "") {
-    return cedulaAlerta(
-      `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-exclamation-triangle-fill" viewBox="0 0 16 16">
-    <path d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5m.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2"/>
-  </svg>  <div>
-      El bioanalista no puede estar vacio
-    </div>`,
-      "warning"
-    );
+    alertaDiv.removeAttribute("hidden");
+
+    alertaDiv.innerText = `El bioanalista no puede estar vacio`;
+    setTimeout(() => {
+      alertaDiv.setAttribute("hidden", "true");
+    }, 3000);
+    return;
+  }
+  if (inputOrden.value == "") {
+    alertaDiv.removeAttribute("hidden");
+
+    alertaDiv.innerText = `La ORDEN no puede estar vacia`;
+    setTimeout(() => {
+      alertaDiv.setAttribute("hidden", "true");
+    }, 3000);
+    return;
   }
 
   try {
@@ -234,42 +263,40 @@ async function guardarModificacionExamenExterno() {
         nota: inputNota.value,
         idLab: selectLab.value,
         idExt: examenPendiente,
+        PDF,
+        orden: inputOrden.value,
       },
       { headers: { token } }
     );
     console.log(res);
-    buscarExamenesPaciente();
-    return cedulaAlerta(
-      `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-exclamation-triangle-fill" viewBox="0 0 16 16">
-    <path d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5m.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2"/>
-  </svg>  <div>
-      ${res.data.mensaje}
-    </div>`,
-      "success"
-    );
+    const alertaDiv = document.getElementById("alertaExamen");
+
+    alertaDiv.className = `alert alert-success`;
+    alertaDiv.removeAttribute("hidden");
+
+    alertaDiv.innerText = res.data.mensaje;
   } catch (error) {
     console.log(error);
-    return cedulaAlerta(
-      `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-exclamation-triangle-fill" viewBox="0 0 16 16">
-    <path d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5m.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2"/>
-  </svg>  <div>
-      ${error.response.data.mensaje}
-    </div>`,
-      "warning")
-  }
-  
-}
-function validarSelectSeccion(value){
-  if(value=='todos'){
-    examenes=examenesArray
-  }else{
-    examenes=examenesArray.filter(ex=>{
-      return ex.id_seccion==value
-    })
-    console.log(examenes)
+    const alertaDiv = document.getElementById("alertaExamen");
 
+    alertaDiv.removeAttribute("hidden");
+
+    alertaDiv.innerText = error?.response?.data?.mensaje;
   }
-  buscarExamen()
+  setTimeout(() => {
+    alertaDiv.setAttribute("hidden", "true");
+  }, 3000);
+}
+function validarSelectSeccion(value) {
+  if (value == "todos") {
+    examenes = examenesArray;
+  } else {
+    examenes = examenesArray.filter((ex) => {
+      return ex.id_seccion == value;
+    });
+    console.log(examenes);
+  }
+  buscarExamen();
 }
 const render = async () => {
   try {
@@ -286,7 +313,6 @@ const render = async () => {
     seccionesData = secciones.data;
 
     secciones.data.forEach((seccion) => {
-      
       const option = document.createElement("option");
       option.value = seccion.id;
       option.innerText = seccion.nombre;
@@ -307,7 +333,7 @@ const render = async () => {
       urlsv + "/api/examenes/get-bioanalistas",
       { headers: { token } }
     );
-    examenes= examenesGet
+    examenes = examenesGet;
     const selectBio = document.getElementById("selectBioAnalista");
 
     if (nivelUser == 3) {
@@ -414,17 +440,17 @@ async function eliminarPendiente(id) {
         urlsv + "/api/examenes/get-pendientes-paciente",
         {
           params: {
-            idPac:pacienteObj.id
+            idPac: pacienteObj.id,
           },
           headers: { token },
         }
       );
-      examenesPendientes=pendientes
+      examenesPendientes = pendientes;
     } catch (error) {
-      console.log(error)
+      console.log(error);
     }
-    
-    menuDiagnosticoUl.innerHTML=""
+
+    menuDiagnosticoUl.innerHTML = "";
     setTimeout(() => {
       document.getElementById("alertaExamen").setAttribute("hidden", "true");
       document.getElementById("alertaExamen").className = "alert alert-danger";
@@ -644,14 +670,14 @@ async function detalleExamen(id) {
   const tBody = document.getElementById(`tBody${id}`);
 
   caracteristicas.forEach((c) => {
-    if(c.status=='titulo'){
+    if (c.status == "titulo") {
       tBody.innerHTML += `
       <tr>
         <th colspan="4" scope="col">${c.titulo}</th>
         
       </tr>
       `;
-    }else{
+    } else {
       tBody.innerHTML += `
       <tr>
         <td scope="col">${c.nombre}</td>
@@ -839,7 +865,9 @@ const desactivarInputs = () => {
       inp.id != "inputOrden" &&
       inp.id != "inputPacienteExpediente" &&
       inp.id != "inputBioanalistaExterno" &&
-      inp.id != "inputNotaExterno"
+      inp.id != "inputNotaExterno" &&
+      inp.id != "inputPdfExterno" &&
+      inp.id != "inputOrdenExterno"
     ) {
       inp.setAttribute("readonly", "true");
     }
@@ -1219,10 +1247,10 @@ async function reimprimirExamenes() {
     const examen = {
       orden: "Reimpresion",
       paciente: pacienteObj,
-      examenes: res.data.examenes
-    }
-    console.log(res.data.examen)
-    console.log("🚀 ~ previewPdf ~ examen:", examen)
+      examenes: res.data.examenes,
+    };
+    console.log(res.data.examen);
+    console.log("🚀 ~ previewPdf ~ examen:", examen);
     await examenVar.store(examen);
     abrirPDFWindow();
   } catch (error) {}
@@ -1340,7 +1368,7 @@ const abrirModalTotalizar = () => {
     const tBodyOrdenCollapse = document.getElementById(
       `tBodyOrdenCollapseEx${ex.examenId}`
     );
-    ex.detallesExamenPc=ex.detallesExamenPc.sort(function (a, b) {
+    ex.detallesExamenPc = ex.detallesExamenPc.sort(function (a, b) {
       if (a.posicion > b.posicion) {
         return 1;
       }
@@ -1351,7 +1379,7 @@ const abrirModalTotalizar = () => {
       return 0;
     });
     ex.detallesExamenPc.forEach((dt) => {
-      if(dt.status=='titulo'){
+      if (dt.status == "titulo") {
         tBodyOrdenCollapse.innerHTML += `
     <tr>
       <td scope="col" colspan="3" style="font-size:10px">${dt.titulo}</td>
@@ -1360,15 +1388,16 @@ const abrirModalTotalizar = () => {
     </tr>
 
 `;
-      }else{
-      tBodyOrdenCollapse.innerHTML += `
+      } else {
+        tBodyOrdenCollapse.innerHTML += `
     <tr style="font-size:10px">
       <td scope="col">${dt.nombreCar}</td>
       <td scope="col">${dt.resultado}</td>
       <td scope="col">${dt.nota}</td>
     </tr>
 
-`;}
+`;
+      }
     });
   });
 
@@ -1469,8 +1498,8 @@ const modificarExamenPacienteBDD = async (examen, idEx, idExPc) => {
 
   try {
     const { token } = await login.getToken();
-    
-    let { data: resultados} = await axios.get(
+
+    let { data: resultados } = await axios.get(
       urlsv + "/api/examenes/resultados-examen",
       {
         params: {
@@ -1479,8 +1508,8 @@ const modificarExamenPacienteBDD = async (examen, idEx, idExPc) => {
         headers: { token },
       }
     );
-    console.log(resultados)
-    resultados=resultados.sort(function (a, b) {
+    console.log(resultados);
+    resultados = resultados.sort(function (a, b) {
       if (a.posicion > b.posicion) {
         return 1;
       }
@@ -1489,13 +1518,10 @@ const modificarExamenPacienteBDD = async (examen, idEx, idExPc) => {
       }
       // a must be equal to b
       return 0;
-    })
-
+    });
 
     resultados.forEach((ct) => {
-      
-  
-      if(ct.status=='titulo'){
+      if (ct.status == "titulo") {
         tBodyDiagnosticos.innerHTML += `
             <tr>
                         <th scope="row" colspan="7">${ct.titulo}</th>
@@ -1503,11 +1529,9 @@ const modificarExamenPacienteBDD = async (examen, idEx, idExPc) => {
           
                       </tr>
             `;
-      }else{
-  
-      
-      if (ct.sub.length > 0) {
-        tBodyDiagnosticos.innerHTML += `
+      } else {
+        if (ct.sub.length > 0) {
+          tBodyDiagnosticos.innerHTML += `
         <tr >
                 <th scope="row" colspan="2">${ct.nombre}</th>
                 <th> <input disabled class="form-control form-control-sm inputExDetallePacCar" rango='no' name='rs-${ct.id}' type="text" id='inputRs${ct.id}' value="SubCaracteristica" placeholder="Ingrese Resultado" aria-label=".form-control-sm example"> </th>
@@ -1525,9 +1549,9 @@ const modificarExamenPacienteBDD = async (examen, idEx, idExPc) => {
               </td>
               </tr>
         `;
-        ct.sub.forEach((sb) => {
-          if (sb.tipo == "formula") {
-            tBodyDiagnosticos.innerHTML += `
+          ct.sub.forEach((sb) => {
+            if (sb.tipo == "formula") {
+              tBodyDiagnosticos.innerHTML += `
             <tr>
                   <td colspan="2"></td>
                   <th scope="row" colspan="">${sb.nombre}</th>
@@ -1538,9 +1562,9 @@ const modificarExamenPacienteBDD = async (examen, idEx, idExPc) => {
                   </td>
                 </tr>
             `;
-          } else {
-            if (sb.tipo == "numero") {
-              tBodyDiagnosticos.innerHTML += `
+            } else {
+              if (sb.tipo == "numero") {
+                tBodyDiagnosticos.innerHTML += `
               <tr>
                     <td colspan="2"></td>
                     <th scope="row" colspan="">${sb.nombre}</th>
@@ -1551,8 +1575,8 @@ const modificarExamenPacienteBDD = async (examen, idEx, idExPc) => {
                     </td>
                   </tr>
               `;
-            } else {
-              tBodyDiagnosticos.innerHTML += `
+              } else {
+                tBodyDiagnosticos.innerHTML += `
               <tr>
                     <td colspan="2"></td>
                     <th scope="row" colspan="">${sb.nombre}</th>
@@ -1563,13 +1587,13 @@ const modificarExamenPacienteBDD = async (examen, idEx, idExPc) => {
                     </td>
                   </tr>
               `;
+              }
             }
-          }
-        });
-      } else {
-        if (ct.rango) {
-          if (ct.resultados.length > 0) {
-            tBodyDiagnosticos.innerHTML += `
+          });
+        } else {
+          if (ct.rango) {
+            if (ct.resultados.length > 0) {
+              tBodyDiagnosticos.innerHTML += `
             <tr>
                         <th scope="row" colspan="2">${ct.nombre}</th>
                         <td> <select class="form-select form-select-sm selectRs${ct.nombre} inputExDetallePacCar" rango='${rango.id}' id='inputRs${ct.id}' aria-label="Small select example">
@@ -1590,32 +1614,32 @@ const modificarExamenPacienteBDD = async (examen, idEx, idExPc) => {
           
                       </tr>
             `;
-            ct.resultados.forEach((rs) => {
-              if (ct.resultado == rs.resultado) {
-                document.getElementsByClassName(
-                  `selectRs${ct.nombre}`
-                )[0].innerHTML += `
+              ct.resultados.forEach((rs) => {
+                if (ct.resultado == rs.resultado) {
+                  document.getElementsByClassName(
+                    `selectRs${ct.nombre}`
+                  )[0].innerHTML += `
                 <option selected value="${rs.resultado}">
                 ${rs.resultado}
                 </option>
                 `;
-              } else {
-                document.getElementsByClassName(
-                  `selectRs${ct.nombre}`
-                )[0].innerHTML += `
+                } else {
+                  document.getElementsByClassName(
+                    `selectRs${ct.nombre}`
+                  )[0].innerHTML += `
                 <option value="${rs.resultado}">
                 ${rs.resultado}
                 </option>
                 `;
-              }
-            });
-            console.log(
-              document.getElementsByClassName(`selectRs${ct.nombre}`)[0]
-            );
-            document.getElementsByClassName(`selectRs${ct.nombre}`)[0].value =
-              ct.resultado;
-          } else {
-            tBodyDiagnosticos.innerHTML += `
+                }
+              });
+              console.log(
+                document.getElementsByClassName(`selectRs${ct.nombre}`)[0]
+              );
+              document.getElementsByClassName(`selectRs${ct.nombre}`)[0].value =
+                ct.resultado;
+            } else {
+              tBodyDiagnosticos.innerHTML += `
             <tr>
                         <th scope="row" colspan="2">${ct.nombre}</th>
                         <td>  <input disabled class="form-control form-control-sm inputExDetallePacCar" rango='${ct.rango.id}' name='rs-${ct.id}' type="text" id='inputRs${ct.id}' value="${ct.resultado}" placeholder="Ingrese Resultado" aria-label=".form-control-sm example">              </td>
@@ -1634,10 +1658,10 @@ const modificarExamenPacienteBDD = async (examen, idEx, idExPc) => {
           
                       </tr>
             `;
-          }
-        } else {
-          if (ct.resultados.length > 0) {
-            tBodyDiagnosticos.innerHTML += `
+            }
+          } else {
+            if (ct.resultados.length > 0) {
+              tBodyDiagnosticos.innerHTML += `
             <tr>
                         <th scope="row" colspan="2">${ct.nombre}</th>
                         <td> <select disabled class="form-select form-select-sm selectRs${ct.nombre} inputExDetallePacCar" rango='no' id='inputRs${ct.id}' aria-label="Small select example">
@@ -1658,27 +1682,27 @@ const modificarExamenPacienteBDD = async (examen, idEx, idExPc) => {
           
                       </tr>
             `;
-            ct.resultados.forEach((rs) => {
-              if (ct.resultado == rs.resultado) {
-                document.getElementsByClassName(
-                  `selectRs${ct.nombre}`
-                )[0].innerHTML += `
+              ct.resultados.forEach((rs) => {
+                if (ct.resultado == rs.resultado) {
+                  document.getElementsByClassName(
+                    `selectRs${ct.nombre}`
+                  )[0].innerHTML += `
                 <option selected value="${rs.resultado}">
                 ${rs.resultado}
                 </option>
                 `;
-              } else {
-                document.getElementsByClassName(
-                  `selectRs${ct.nombre}`
-                )[0].innerHTML += `
+                } else {
+                  document.getElementsByClassName(
+                    `selectRs${ct.nombre}`
+                  )[0].innerHTML += `
                 <option value="${rs.resultado}">
                 ${rs.resultado}
                 </option>
                 `;
-              }
-            });
-          } else {
-            tBodyDiagnosticos.innerHTML += `
+                }
+              });
+            } else {
+              tBodyDiagnosticos.innerHTML += `
             <tr>
                         <th scope="row" colspan="2">${ct.nombre}</th>
                         <td>  <input disabled class="form-control form-control-sm inputExDetallePacCar" name='rs-${ct.id}' rango='no' type="text" id='inputRs${ct.id}' value='${ct.resultado}' placeholder="Ingrese Resultado" aria-label=".form-control-sm example">              </td>
@@ -1697,10 +1721,10 @@ const modificarExamenPacienteBDD = async (examen, idEx, idExPc) => {
           
                       </tr>
             `;
+            }
           }
         }
       }
-    }
     });
   } catch (error) {
     console.log(error);
@@ -1832,10 +1856,9 @@ const abrirResultadosModal = async (examen, idEx, n) => {
     urlsv + "/api/modulo-examenes/examen-id",
     { headers: { token }, params: { idExamen: idEx } }
   );
-  console.log(examenData)
+  console.log(examenData);
 
-
-  let caracteristicas= [...examenData.detalles,...examenData.titulos]
+  let caracteristicas = [...examenData.detalles, ...examenData.titulos];
   examenDataPc = examenData;
   caracteristicas = caracteristicas.sort(function (a, b) {
     if (a.posicion > b.posicion) {
@@ -1851,88 +1874,87 @@ const abrirResultadosModal = async (examen, idEx, n) => {
   let edad = parseInt(pacienteObj.edad.split(";")[0].split(" ")[0]);
   let generoPc = pacienteObj.genero == "Hombre" ? "masculino" : "femenino";
   caracteristicas.forEach((ct) => {
-    if(ct.status=='titulo'){
+    if (ct.status == "titulo") {
       tBodyDiagnosticos.innerHTML += `
       <tr>
                   <th scope="row" colspan="6">${ct.titulo}</th>
     
                 </tr>
       `;
-    }else{
-      
-    let resultadosDt = examenData.resultados.filter(
-      (r) => r.id_det_ex == ct.id
-    );
+    } else {
+      let resultadosDt = examenData.resultados.filter(
+        (r) => r.id_det_ex == ct.id
+      );
 
-    let rangosDt = examenData.rangos.filter((r) => {
-      return r.id_det_ex == ct.id;
-    });
-    let subDt = examenData.subCa.filter((s) => {
-      return s.id_det_ex == ct.id;
-    });
+      let rangosDt = examenData.rangos.filter((r) => {
+        return r.id_det_ex == ct.id;
+      });
+      let subDt = examenData.subCa.filter((s) => {
+        return s.id_det_ex == ct.id;
+      });
 
-    subDt.sort(function (a, b) {
-      if (a.tipo < b.tipo) {
-        return 1;
+      subDt.sort(function (a, b) {
+        if (a.tipo < b.tipo) {
+          return 1;
+        }
+        if (a.tipo > b.tipo) {
+          return -1;
+        }
+        // a must be equal to b
+        return 0;
+      });
+      let rango;
+
+      let filtro1 = rangosDt.filter(
+        (el) =>
+          el.desde < edad &&
+          edad < el.hasta &&
+          el.genero == generoPc &&
+          el.desde != 0 &&
+          el.hasta != 1000
+      );
+      let filtro2 = rangosDt.filter(
+        (el) => el.desde < edad && edad < el.hasta && el.genero == generoPc
+      );
+      let filtro3 = rangosDt.filter(
+        (el) => el.desde < edad && edad < el.hasta && el.genero == "todos"
+      );
+
+      if (filtro3.length > 0) {
+        let menor = 100000000;
+        let index;
+        filtro3.forEach((f, il) => {
+          if (edad - f.desde < menor) {
+            menor = edad - f.desde;
+            index = il;
+          }
+        });
+        rango = filtro3[index];
       }
-      if (a.tipo > b.tipo) {
-        return -1;
+      if (filtro2.length > 0) {
+        let menor = 100000000;
+        let index;
+        filtro2.forEach((f, il) => {
+          if (edad - f.desde < menor) {
+            menor = edad - f.desde;
+            index = il;
+          }
+        });
+        rango = filtro2[index];
       }
-      // a must be equal to b
-      return 0;
-    });
-    let rango;
-
-    let filtro1 = rangosDt.filter(
-      (el) =>
-        el.desde < edad &&
-        edad < el.hasta &&
-        el.genero == generoPc &&
-        el.desde != 0 &&
-        el.hasta != 1000
-    );
-    let filtro2 = rangosDt.filter(
-      (el) => el.desde < edad && edad < el.hasta && el.genero == generoPc
-    );
-    let filtro3 = rangosDt.filter(
-      (el) => el.desde < edad && edad < el.hasta && el.genero == "todos"
-    );
-
-    if (filtro3.length > 0) {
-      let menor = 100000000;
-      let index;
-      filtro3.forEach((f, il) => {
-        if (edad - f.desde < menor) {
-          menor = edad - f.desde;
-          index = il;
-        }
-      });
-      rango = filtro3[index];
-    }
-    if (filtro2.length > 0) {
-      let menor = 100000000;
-      let index;
-      filtro2.forEach((f, il) => {
-        if (edad - f.desde < menor) {
-          menor = edad - f.desde;
-          index = il;
-        }
-      });
-      rango = filtro2[index];
-    }
-    if (filtro1.length > 0) {
-      let menor = 100000000;
-      let index;
-      filtro1.forEach((f, il) => {
-        if (edad - f.desde < menor) {
-          menor = edad - f.desde;
-          index = il;
-        }
-      });
-      rango = filtro1[index];
-    }
-    if (subDt.length > 0) {
-      tBodyDiagnosticos.innerHTML += `
+      if (filtro1.length > 0) {
+        let menor = 100000000;
+        let index;
+        filtro1.forEach((f, il) => {
+          if (edad - f.desde < menor) {
+            menor = edad - f.desde;
+            index = il;
+          }
+        });
+        rango = filtro1[index];
+      }
+      if (subDt.length > 0) {
+        tBodyDiagnosticos.innerHTML += `
       <tr >
               <th scope="row" colspan="2">${ct.nombre}</th>
               <th> SubCaracteristica </th>
@@ -1942,9 +1964,9 @@ const abrirResultadosModal = async (examen, idEx, n) => {
 
             </tr>
       `;
-      subDt.forEach((sb) => {
-        if (sb.tipo == "formula") {
-          tBodyDiagnosticos.innerHTML += `
+        subDt.forEach((sb) => {
+          if (sb.tipo == "formula") {
+            tBodyDiagnosticos.innerHTML += `
           <tr>
                 <td colspan="2"></td>
                 <th scope="row" colspan="">${sb.nombre}</th>
@@ -1954,9 +1976,9 @@ const abrirResultadosModal = async (examen, idEx, n) => {
   
               </tr>
           `;
-        } else {
-          if (sb.tipo == "numero") {
-            tBodyDiagnosticos.innerHTML += `
+          } else {
+            if (sb.tipo == "numero") {
+              tBodyDiagnosticos.innerHTML += `
             <tr>
                   <td colspan="2"></td>
                   <th scope="row" colspan="">${sb.nombre}</th>
@@ -1966,8 +1988,8 @@ const abrirResultadosModal = async (examen, idEx, n) => {
     
                 </tr>
             `;
-          } else {
-            tBodyDiagnosticos.innerHTML += `
+            } else {
+              tBodyDiagnosticos.innerHTML += `
             <tr>
                   <td colspan="2"></td>
                   <th scope="row" colspan="">${sb.nombre}</th>
@@ -1977,22 +1999,22 @@ const abrirResultadosModal = async (examen, idEx, n) => {
     
                 </tr>
             `;
+            }
           }
-        }
-      });
-    } else {
-      if (rango) {
-        if (resultadosDt.length > 0) {
-          tBodyDiagnosticos.innerHTML += `
+        });
+      } else {
+        if (rango) {
+          if (resultadosDt.length > 0) {
+            tBodyDiagnosticos.innerHTML += `
           <tr>
                       <th scope="row" colspan="2">${ct.nombre}</th>
                       <td> <select class="form-select form-select-sm selectRs${
                         ct.nombre
                       } inputExDetallePacCar" rango='${rango.id}' inferior='${
-            rango.inferior
-          }' superior='${rango.superior}' id='inputRs${
-            ct.id
-          }' aria-label="Small select example">
+              rango.inferior
+            }' superior='${rango.superior}' id='inputRs${
+              ct.id
+            }' aria-label="Small select example">
                       
                     </select></td>
                       <td>${ct.unidad}</td>
@@ -2001,60 +2023,60 @@ const abrirResultadosModal = async (examen, idEx, n) => {
                           ? rango.inferior.split(".")[0]
                           : rango.inferior
                       }  -  ${
-            rango.superior % 1 == 0
-              ? rango.superior.split(".")[0]
-              : rango.superior
-          }</td>
+              rango.superior % 1 == 0
+                ? rango.superior.split(".")[0]
+                : rango.superior
+            }</td>
                       <td>  <input class="form-control form-control-sm inputExDetallePacNota" name='nt-${
                         ct.id
                       }' type="text" id='inputNt${
-            ct.id
-          }' placeholder="Nota" aria-label=".form-control-sm example">              </td>
+              ct.id
+            }' placeholder="Nota" aria-label=".form-control-sm example">              </td>
         
                     </tr>
           `;
-          resultadosDt.forEach((rs) => {
-            document.getElementsByClassName(
-              `selectRs${ct.nombre}`
-            )[0].innerHTML += `
+            resultadosDt.forEach((rs) => {
+              document.getElementsByClassName(
+                `selectRs${ct.nombre}`
+              )[0].innerHTML += `
             <option value="${rs.resultado}">
             ${rs.resultado}
             </option>
             `;
-          });
-        } else {
-          tBodyDiagnosticos.innerHTML += `
+            });
+          } else {
+            tBodyDiagnosticos.innerHTML += `
           <tr>
                       <th scope="row" colspan="2">${ct.nombre}</th>
                       <td>  <input class="form-control form-control-sm inputExDetallePacCar" rango='${
                         rango.id
                       }' inferior='${rango.inferior}' superior='${
-            rango.superior
-          }' name='rs-${ct.id}' type="text" id='inputRs${
-            ct.id
-          }' placeholder="Ingrese Resultado" aria-label=".form-control-sm example">              </td>
+              rango.superior
+            }' name='rs-${ct.id}' type="text" id='inputRs${
+              ct.id
+            }' placeholder="Ingrese Resultado" aria-label=".form-control-sm example">              </td>
                       <td>${ct.unidad}</td>
                       <td>${
                         rango.inferior % 1 == 0
                           ? rango.inferior.split(".")[0]
                           : rango.inferior
                       }  -  ${
-            rango.superior % 1 == 0
-              ? rango.superior.split(".")[0]
-              : rango.superior
-          }</td>
+              rango.superior % 1 == 0
+                ? rango.superior.split(".")[0]
+                : rango.superior
+            }</td>
                       <td>  <input class="form-control form-control-sm inputExDetallePacNota" name='nt-${
                         ct.id
                       }' type="text" id='inputNt${
-            ct.id
-          }' placeholder="Nota" aria-label=".form-control-sm example">              </td>
+              ct.id
+            }' placeholder="Nota" aria-label=".form-control-sm example">              </td>
         
                     </tr>
           `;
-        }
-      } else {
-        if (resultadosDt.length > 0) {
-          tBodyDiagnosticos.innerHTML += `
+          }
+        } else {
+          if (resultadosDt.length > 0) {
+            tBodyDiagnosticos.innerHTML += `
           <tr>
                       <th scope="row" colspan="2">${ct.nombre}</th>
                       <td> <select class="form-select form-select-sm selectRs${ct.nombre} inputExDetallePacCar" rango='no' inferior='no' superior='no' id='inputRs${ct.id}' aria-label="Small select example">
@@ -2066,17 +2088,17 @@ const abrirResultadosModal = async (examen, idEx, n) => {
         
                     </tr>
           `;
-          resultadosDt.forEach((rs) => {
-            document.getElementsByClassName(
-              `selectRs${ct.nombre}`
-            )[0].innerHTML += `
+            resultadosDt.forEach((rs) => {
+              document.getElementsByClassName(
+                `selectRs${ct.nombre}`
+              )[0].innerHTML += `
             <option value="${rs.resultado}">
             ${rs.resultado}
             </option>
             `;
-          });
-        } else {
-          tBodyDiagnosticos.innerHTML += `
+            });
+          } else {
+            tBodyDiagnosticos.innerHTML += `
           <tr>
                       <th scope="row" colspan="2">${ct.nombre}</th>
                       <td>  <input class="form-control form-control-sm inputExDetallePacCar" name='rs-${ct.id}' rango='no' inferior='no' superior='no' type="text" id='inputRs${ct.id}' placeholder="Ingrese Resultado" aria-label=".form-control-sm example">              </td>
@@ -2086,9 +2108,9 @@ const abrirResultadosModal = async (examen, idEx, n) => {
         
                     </tr>
           `;
+          }
         }
       }
-    }
     }
   });
   if (n == "false") {
@@ -2123,7 +2145,7 @@ async function previewPdf(tipo, ordenId) {
   examenesChecked.forEach((e) => {
     const caracteristicas = [];
 
-    e.detallesExamenPc.forEach((el,i) => {
+    e.detallesExamenPc.forEach((el, i) => {
       let subCa = e.subCaracteristicasExPc.filter((sb) => sb.idCar == el.idCar);
       if (el.imprimir == 1) {
         caracteristicas.push({
@@ -2209,17 +2231,17 @@ async function guardarOrden(tipo) {
           });
         });
       detallesExamen.push({
-        id_dt:dt.idCar,
-        id_ex:ex.examenId,
-        id_rango:dt.rango,
-        inferior:dt.inferior,
-        superior:dt.superior,
-        resultado:dt.resultado,
-        nota:dt.nota,
+        id_dt: dt.idCar,
+        id_ex: ex.examenId,
+        id_rango: dt.rango,
+        inferior: dt.inferior,
+        superior: dt.superior,
+        resultado: dt.resultado,
+        nota: dt.nota,
         subCaracteristicasDt,
-        status: dt.status
-      })
-    })
+        status: dt.status,
+      });
+    });
     examenes.push({
       id_ex: ex.examenId,
       idPac: pacienteObj.id,
@@ -2341,6 +2363,40 @@ async function pedirCaracteristicas(id) {
     });
   } catch (error) {
     console.log(error);
+  }
+}
+
+async function descargarPdfExterno(id) {
+  try {
+    //await pdfExterno(id)
+    const { token } = await login.getToken();
+
+    const { data } = await axios.get(
+      urlsv + "/api/examenes/resultados-examen-externo",
+      {
+        params: {
+          id,
+        },
+        responseType: "blob",
+        headers: { token },
+      }
+    );
+    console.log("🚀 ~ descargarPdfExterno ~ data:", data);
+    const href = URL.createObjectURL(data);
+
+    // create "a" HTML element with href to file & click
+    const link = document.createElement("a");
+    link.href = href;
+    link.setAttribute("download", `examen-externo${id}.pdf`); //or any other extension
+    document.body.appendChild(link);
+    link.click();
+
+    // clean up "a" element & remove ObjectURL
+    document.body.removeChild(link);
+    URL.revokeObjectURL(href);
+    return;
+  } catch (error) {
+    console.log("🚀 ~ descargarPdfExterno ~ error:", error);
   }
 }
 
@@ -2526,13 +2582,17 @@ async function buscarExamenesPaciente() {
                   nivelUser == 2 || nivelUser == 3
                     ? ""
                     : `
+                    <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="red" class="bi bi-file-earmark-pdf-fill mx-4 my-1 svgButton" onclick="descargarPdfExterno('${ex.id}')" viewBox="0 0 16 16">
+  <path d="M5.523 12.424q.21-.124.459-.238a8 8 0 0 1-.45.606c-.28.337-.498.516-.635.572l-.035.012a.3.3 0 0 1-.026-.044c-.056-.11-.054-.216.04-.36.106-.165.319-.354.647-.548m2.455-1.647q-.178.037-.356.078a21 21 0 0 0 .5-1.05 12 12 0 0 0 .51.858q-.326.048-.654.114m2.525.939a4 4 0 0 1-.435-.41q.344.007.612.054c.317.057.466.147.518.209a.1.1 0 0 1 .026.064.44.44 0 0 1-.06.2.3.3 0 0 1-.094.124.1.1 0 0 1-.069.015c-.09-.003-.258-.066-.498-.256M8.278 6.97c-.04.244-.108.524-.2.829a5 5 0 0 1-.089-.346c-.076-.353-.087-.63-.046-.822.038-.177.11-.248.196-.283a.5.5 0 0 1 .145-.04c.013.03.028.092.032.198q.008.183-.038.465z"/>
+  <path fill-rule="evenodd" d="M4 0h5.293A1 1 0 0 1 10 .293L13.707 4a1 1 0 0 1 .293.707V14a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2m5.5 1.5v2a1 1 0 0 0 1 1h2zM4.165 13.668c.09.18.23.343.438.419.207.075.412.04.58-.03.318-.13.635-.436.926-.786.333-.401.683-.927 1.021-1.51a11.7 11.7 0 0 1 1.997-.406c.3.383.61.713.91.95.28.22.603.403.934.417a.86.86 0 0 0 .51-.138c.155-.101.27-.247.354-.416.09-.181.145-.37.138-.563a.84.84 0 0 0-.2-.518c-.226-.27-.596-.4-.96-.465a5.8 5.8 0 0 0-1.335-.05 11 11 0 0 1-.98-1.686c.25-.66.437-1.284.52-1.794.036-.218.055-.426.048-.614a1.24 1.24 0 0 0-.127-.538.7.7 0 0 0-.477-.365c-.202-.043-.41 0-.601.077-.377.15-.576.47-.651.823-.073.34-.04.736.046 1.136.088.406.238.848.43 1.295a20 20 0 0 1-1.062 2.227 7.7 7.7 0 0 0-1.482.645c-.37.22-.699.48-.897.787-.21.326-.275.714-.08 1.103"/>
+</svg>
                 <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="25"
                 height="25"
                 fill="#FACD0B"
                 class="bi bi-pencil-square mx-4 my-1 svgButton"
-                onclick="abrirResultadosExternosModalMod('${ex.nombreEx}','${ex.id}','${ex.bioanalista}','${ex.nota}','${ex.idLab}')"
+                onclick="abrirResultadosExternosModalMod('${ex.nombreEx}','${ex.id}','${ex.bioanalista}','${ex.nota}','${ex.idLab}','${ex.id_orden}')"
                 viewBox="0 0 20 20"
               >
                 <path
@@ -2543,6 +2603,8 @@ async function buscarExamenesPaciente() {
                   d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z"
                 />
               </svg>
+               
+              
                 `
                 }
                 
@@ -2562,19 +2624,13 @@ async function buscarExamenesPaciente() {
                 />
               </svg>`
                   : ``
-              }
-              
-                
-               
+              }       
               </div>
-            </div>
-            
-            
+            </div>           
           </div>
           <div class="col-2">${ex.fecha.split("T")[0]}</div>
         </div>
-      </div>
-      
+      </div>     
     </a>
       `;
     });
@@ -2646,9 +2702,9 @@ function guardarResultadosExamen() {
     };
   });
 
-  examenDataPc.titulos.map(e=>{
-    detallesExamenPc.push(e)
-  })
+  examenDataPc.titulos.map((e) => {
+    detallesExamenPc.push(e);
+  });
   const subCaracteristicas = examenDataPc.subCa.map((e) => {
     const res = document.getElementById("Rs-" + e.id);
     const nota = document.getElementById("Nt-" + e.id);
@@ -2754,18 +2810,17 @@ async function guardarResultadosExamenPd() {
         });
       });
     detallesExamenPd.push({
-      id_dt:dt.idCar,
-      id_ex:examenDataPc.examen.id,
-      id_rango:dt.rango,
-      inferior:dt.inferior,
-      superior:dt.superior,
-      resultado:dt.resultado,
-      nota:dt.nota,
-      subCaracteristicasDt
-    })
-  })
+      id_dt: dt.idCar,
+      id_ex: examenDataPc.examen.id,
+      id_rango: dt.rango,
+      inferior: dt.inferior,
+      superior: dt.superior,
+      resultado: dt.resultado,
+      nota: dt.nota,
+      subCaracteristicasDt,
+    });
+  });
 
-  
   let examenPac = {
     examenId: examenDataPc.examen.id,
     examenNombre: examenDataPc.examen.nombre,
@@ -2805,11 +2860,11 @@ function setInputs(idEx) {
   const examen = examenesDelPaciente.find((e) => e.examenId == idEx);
 
   examen.detallesExamenPc.forEach((e) => {
-    if(e.status!='titulo'){
+    if (e.status != "titulo") {
       console.log(`inputRs${e.idCar}`);
       const res = document.getElementById(`inputRs${e.idCar}`);
       const nota = document.getElementById(`inputNt${e.idCar}`);
-  
+
       console.log(res, nota, e);
       nota.value = e.nota;
       try {
@@ -2818,7 +2873,6 @@ function setInputs(idEx) {
         console.log(error);
       }
     }
-   
   });
   examen.subCaracteristicasExPc.forEach((e) => {
     const res = document.getElementById(`Rs-${e.idSub}`);
@@ -2941,17 +2995,21 @@ function añadirRowTablaExPac(examenPac) {
 
   examenPac.detallesExamenPc.forEach((e) => {
     tBodyCollapse.innerHTML += `
-    ${e.status=='titulo' ? `<tr>
+    ${
+      e.status == "titulo"
+        ? `<tr>
     <th scope="row" colspan='5'>${e.titulo}</th>
     
-  </tr>` : `<tr>
+  </tr>`
+        : `<tr>
   <th scope="row">${e.nombreCar}</th>
   <td>${e.resultado}</td>
   <td>${e.unidad ? e.unidad : "-"}</td>
   <td>${e.rango == "no" ? "-" : e.rango}</td>
   <td>${e.nota}</td>
-</tr>`}
-    `
+</tr>`
+    }
+    `;
   });
 }
 
@@ -3050,7 +3108,8 @@ const calcularEdad = () => {
 const calcularEdadNormal = (fecha) => {
   let fechaActual = moment().format("YYYY-MM-DD");
 
-  let fecha2 = (document.getElementsByName("fecha_nacimiento")[0].value = moment(fecha).format("YYYY-MM-DD"));
+  let fecha2 = (document.getElementsByName("fecha_nacimiento")[0].value =
+    moment(fecha).format("YYYY-MM-DD"));
   const mes = moment(fecha).format("MM");
   const ano = moment(fecha).format("YYYY");
   const dia = moment(fecha).format("DD");
@@ -3062,7 +3121,6 @@ const calcularEdadNormal = (fecha) => {
     document.getElementsByName("fecha_nacimiento")[0].value = "";
     return "";
   }
-  
 
   const mesAc = moment().format("MM");
   const anoAc = moment().format("YYYY");

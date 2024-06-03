@@ -184,19 +184,34 @@
     </nav>
     <main>
       <div class="container-fluid">
-        <div class="alert alert-success row" id="alertaInicio" hidden role="alert">
+        <div
+          class="alert alert-success row"
+          id="alertaInicio"
+          hidden
+          role="alert"
+        >
           <span class="text-center">
             Laboratorio Insertado Correctamente
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-check2-all" viewBox="0 0 16 16">
-              <path d="M12.354 4.354a.5.5 0 0 0-.708-.708L5 10.293 1.854 7.146a.5.5 0 1 0-.708.708l3.5 3.5a.5.5 0 0 0 .708 0zm-4.208 7-.896-.897.707-.707.543.543 6.646-6.647a.5.5 0 0 1 .708.708l-7 7a.5.5 0 0 1-.708 0"/>
-              <path d="m5.354 7.146.896.897-.707.707-.897-.896a.5.5 0 1 1 .708-.708"/>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="16"
+              height="16"
+              fill="currentColor"
+              class="bi bi-check2-all"
+              viewBox="0 0 16 16"
+            >
+              <path
+                d="M12.354 4.354a.5.5 0 0 0-.708-.708L5 10.293 1.854 7.146a.5.5 0 1 0-.708.708l3.5 3.5a.5.5 0 0 0 .708 0zm-4.208 7-.896-.897.707-.707.543.543 6.646-6.647a.5.5 0 0 1 .708.708l-7 7a.5.5 0 0 1-.708 0"
+              />
+              <path
+                d="m5.354 7.146.896.897-.707.707-.897-.896a.5.5 0 1 1 .708-.708"
+              />
             </svg>
-
           </span>
         </div>
         <div class="row">
-          <br>
-          <br>
+          <br />
+          <br />
           <div class="col-12 col-md-8">
             <br class="brsm" />
             <div class="">
@@ -238,7 +253,6 @@
                   />
                 </div>
               </div>
-              
 
               <div class="table-responsive">
                 <table
@@ -249,7 +263,6 @@
                     <tr>
                       <th colspan="10">EXAMENES DEL DIA</th>
                     </tr>
-                    
 
                     <tr>
                       <th class="headTable" scope="col">ID</th>
@@ -261,22 +274,35 @@
                       <th scope="col" colspan="4" class="headTable">STATUS</th>
                     </tr>
                   </thead>
-                  <tbody id="tBodyExamenesDia">
-                   
-                  </tbody>
+                  <tbody id="tBodyExamenesDia"></tbody>
                 </table>
               </div>
             </div>
           </div>
 
           <div class="col-12 col-md-4">
-            <div class="col colNav p-0 " style="height: 50px; " >
-              <button class="buttonNav p-2"  data-bs-toggle="modal" data-bs-target="#laboratoriosModal">
+            <div class="col colNav p-0" style="height: 50px">
+              <button
+                class="buttonNav p-2"
+                data-bs-toggle="modal"
+                data-bs-target="#laboratoriosModal"
+              >
                 <div class="d-flex justify-content-around w-100">
-                  <span >LABORATORIOS / SEDES </span>
-                  <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-folder-plus" viewBox="0 0 16 16">
-                    <path d="m.5 3 .04.87a2 2 0 0 0-.342 1.311l.637 7A2 2 0 0 0 2.826 14H9v-1H2.826a1 1 0 0 1-.995-.91l-.637-7A1 1 0 0 1 2.19 4h11.62a1 1 0 0 1 .996 1.09L14.54 8h1.005l.256-2.819A2 2 0 0 0 13.81 3H9.828a2 2 0 0 1-1.414-.586l-.828-.828A2 2 0 0 0 6.172 1H2.5a2 2 0 0 0-2 2m5.672-1a1 1 0 0 1 .707.293L7.586 3H2.19q-.362.002-.683.12L1.5 2.98a1 1 0 0 1 1-.98z"/>
-                    <path d="M13.5 9a.5.5 0 0 1 .5.5V11h1.5a.5.5 0 1 1 0 1H14v1.5a.5.5 0 1 1-1 0V12h-1.5a.5.5 0 0 1 0-1H13V9.5a.5.5 0 0 1 .5-.5"/>
+                  <span>LABORATORIOS / SEDES / EMPRESAS</span>
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="30"
+                    height="30"
+                    fill="currentColor"
+                    class="bi bi-folder-plus"
+                    viewBox="0 0 16 16"
+                  >
+                    <path
+                      d="m.5 3 .04.87a2 2 0 0 0-.342 1.311l.637 7A2 2 0 0 0 2.826 14H9v-1H2.826a1 1 0 0 1-.995-.91l-.637-7A1 1 0 0 1 2.19 4h11.62a1 1 0 0 1 .996 1.09L14.54 8h1.005l.256-2.819A2 2 0 0 0 13.81 3H9.828a2 2 0 0 1-1.414-.586l-.828-.828A2 2 0 0 0 6.172 1H2.5a2 2 0 0 0-2 2m5.672-1a1 1 0 0 1 .707.293L7.586 3H2.19q-.362.002-.683.12L1.5 2.98a1 1 0 0 1 1-.98z"
+                    />
+                    <path
+                      d="M13.5 9a.5.5 0 0 1 .5.5V11h1.5a.5.5 0 1 1 0 1H14v1.5a.5.5 0 1 1-1 0V12h-1.5a.5.5 0 0 1 0-1H13V9.5a.5.5 0 0 1 .5-.5"
+                    />
                   </svg>
                 </div>
               </button>
@@ -304,75 +330,154 @@
                     <th scope="col" class="headTable">RANGO</th>
                   </tr>
                 </thead>
-                <tbody id="tBodyDetalle">
-                </tbody>
+                <tbody id="tBodyDetalle"></tbody>
               </table>
             </div>
-            
           </div>
         </div>
       </div>
     </main>
 
-    <div class="modal fade" id="laboratoriosModal" tabindex="-1" aria-labelledby="laboratoriosModalLabel" aria-hidden="true">
+    <div
+      class="modal fade"
+      id="laboratoriosModal"
+      tabindex="-1"
+      aria-labelledby="laboratoriosModalLabel"
+      aria-hidden="true"
+    >
       <div class="modal-dialog">
         <div class="modal-content">
-          <div class="modal-header d-flex justify-content-around" style="background: rgb(28,132,132);
-          background: linear-gradient(87deg, rgba(28,132,132,1) 30%, rgba(104,192,195,1) 50%, rgba(28,132,132,1) 80%); color: white;">
-            
-            
-            <h1 class="modal-title fs-5 me-5" id="exampleModalLabel">Laboratorios / Sedes </h1>
-            <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-folder-plus" viewBox="0 0 16 16">
-              <path d="m.5 3 .04.87a2 2 0 0 0-.342 1.311l.637 7A2 2 0 0 0 2.826 14H9v-1H2.826a1 1 0 0 1-.995-.91l-.637-7A1 1 0 0 1 2.19 4h11.62a1 1 0 0 1 .996 1.09L14.54 8h1.005l.256-2.819A2 2 0 0 0 13.81 3H9.828a2 2 0 0 1-1.414-.586l-.828-.828A2 2 0 0 0 6.172 1H2.5a2 2 0 0 0-2 2m5.672-1a1 1 0 0 1 .707.293L7.586 3H2.19q-.362.002-.683.12L1.5 2.98a1 1 0 0 1 1-.98z"/>
-              <path d="M13.5 9a.5.5 0 0 1 .5.5V11h1.5a.5.5 0 1 1 0 1H14v1.5a.5.5 0 1 1-1 0V12h-1.5a.5.5 0 0 1 0-1H13V9.5a.5.5 0 0 1 .5-.5"/>
+          <div
+            class="modal-header d-flex justify-content-around"
+            style="
+              background: rgb(28, 132, 132);
+              background: linear-gradient(
+                87deg,
+                rgba(28, 132, 132, 1) 30%,
+                rgba(104, 192, 195, 1) 50%,
+                rgba(28, 132, 132, 1) 80%
+              );
+              color: white;
+            "
+          >
+            <h1 class="modal-title fs-5 me-5" id="exampleModalLabel">
+              Laboratorios / Sedes
+            </h1>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="30"
+              height="30"
+              fill="currentColor"
+              class="bi bi-folder-plus"
+              viewBox="0 0 16 16"
+            >
+              <path
+                d="m.5 3 .04.87a2 2 0 0 0-.342 1.311l.637 7A2 2 0 0 0 2.826 14H9v-1H2.826a1 1 0 0 1-.995-.91l-.637-7A1 1 0 0 1 2.19 4h11.62a1 1 0 0 1 .996 1.09L14.54 8h1.005l.256-2.819A2 2 0 0 0 13.81 3H9.828a2 2 0 0 1-1.414-.586l-.828-.828A2 2 0 0 0 6.172 1H2.5a2 2 0 0 0-2 2m5.672-1a1 1 0 0 1 .707.293L7.586 3H2.19q-.362.002-.683.12L1.5 2.98a1 1 0 0 1 1-.98z"
+              />
+              <path
+                d="M13.5 9a.5.5 0 0 1 .5.5V11h1.5a.5.5 0 1 1 0 1H14v1.5a.5.5 0 1 1-1 0V12h-1.5a.5.5 0 0 1 0-1H13V9.5a.5.5 0 0 1 .5-.5"
+              />
             </svg>
-            
           </div>
           <div class="modal-body">
-            <div class="container-fluid" style="border: solid 3px rgba(28,132,132,1); border-radius: 30px;">
+            <div
+              class="container-fluid"
+              style="
+                border: solid 3px rgba(28, 132, 132, 1);
+                border-radius: 30px;
+              "
+            >
               <div class="row mx-1 my-2">
-                <div class="col colNav p-0 " style="height: 25px; " >
-                  <button onclick="formularioLaboratorio()" class="buttonNav p-1" style="border-top-left-radius: 25px;border-bottom-left-radius: 25px;" >
+                <div class="col colNav p-0" style="height: 25px">
+                  <button
+                    onclick="formularioLaboratorio()"
+                    class="buttonNav p-1 rounded-start"
+                    
+                  >
                     <div class="d-flex justify-content-around w-100">
-                      <span style="font-size: smaller;">LABORATORIOS</span>
-                      
+                      <span style="font-size: smaller">LABORATORIOS</span>
                     </div>
                   </button>
-                </div><div class="col colNav p-0 " style="height: 25px; " >
-                  <button onclick="formularioSede()" class="buttonNav p-1" style="border-top-right-radius: 25px;border-bottom-right-radius: 25px;">
+                </div>
+                <div class="col colNav p-0" style="height: 25px">
+                  <button
+                    onclick="formularioSede()"
+                    class="buttonNav p-1"
+                  >
                     <div class="d-flex justify-content-around w-100">
-                      <span style="font-size: smaller;">SEDES</span>
-                      
+                      <span style="font-size: smaller">SEDES</span>
+                    </div>
+                  </button>
+                </div>
+                <div class="col colNav p-0" style="height: 25px">
+                  <button
+                    onclick="formularioEmpresa()"
+                    class="buttonNav p-1 rounded-end"
+                    
+                  >
+                    <div class="d-flex justify-content-around w-100">
+                      <span style="font-size: smaller">EMPRESAS</span>
                     </div>
                   </button>
                 </div>
               </div>
-              
-              <div class="row"  >
+
+              <div class="row">
                 <div class="d-flex justify-content-around my-4">
-                <h1 class="display-6 text-center" id="h1Tipo" style="font-size: large;">LABORATORIOS</h1>
-                <svg xmlns="http://www.w3.org/2000/svg"  data-bs-toggle="collapse" data-bs-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample" width="20" height="20" fill="orange" class="bi bi-search" style="cursor: pointer;" viewBox="0 0 16 16">
-                  <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"/>
-                </svg>
+                  <h1
+                    class="display-6 text-center"
+                    id="h1Tipo"
+                    style="font-size: large"
+                  >
+                    LABORATORIOS
+                  </h1>
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    data-bs-toggle="collapse"
+                    data-bs-target="#collapseExample"
+                    aria-expanded="false"
+                    aria-controls="collapseExample"
+                    width="20"
+                    height="20"
+                    fill="orange"
+                    class="bi bi-search"
+                    style="cursor: pointer"
+                    viewBox="0 0 16 16"
+                  >
+                    <path
+                      d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"
+                    />
+                  </svg>
                 </div>
-                <hr>
-                <div class="collapse row mb-3" id="collapseExample" >
-                  <div class="card card-body mx-2" style="max-height: 300px; overflow-y: auto;">
+                <hr />
+                <div class="collapse row mb-3" id="collapseExample">
+                  <div
+                    class="card card-body mx-2"
+                    style="max-height: 300px; overflow-y: auto"
+                  >
                     <div class="row">
                       <div class="col-4">
-                        <select class="form-select" id="selectBusquedaLab" onchange="validarSelectLab(value)">
+                        <select
+                          class="form-select"
+                          id="selectBusquedaLab"
+                          onchange="validarSelectLab(value)"
+                        >
                           <option value="Laboratorio">Laboratorio</option>
                           <option value="Sede">Sede</option>
-
-                          
+                          <option value="Empresa">Empresa</option>
                         </select>
                       </div>
                       <div class="col-8">
-                        <input type="text" class="form-control" id="inputBusqueda" oninput="buscarLaboratorio(value)" placeholder="Ingresa cadena a filtrar">
-
+                        <input
+                          type="text"
+                          class="form-control"
+                          id="inputBusqueda"
+                          oninput="buscarLaboratorio(value)"
+                          placeholder="Ingresa cadena a filtrar"
+                        />
                       </div>
                     </div>
-                    <br>
+                    <br />
                     <div class="row">
                       <div class="table-responsive">
                         <table
@@ -382,85 +487,134 @@
                           <thead>
                             <tr>
                               <th class="headTable" scope="col">ID</th>
-                              <th scope="col" colspan="3" class="headTable">DESCRIPCION</th>
-                              
+                              <th scope="col" colspan="3" class="headTable">
+                                DESCRIPCION
+                              </th>
                             </tr>
                           </thead>
                           <tbody id="tBodyTabLab">
                             <tr>
                               <td>1</td>
                               <td>Laboratorios</td>
-                              <td><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="orange" class="bi bi-pencil-square" viewBox="0 0 16 16">
-                                <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
-                                <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z"/>
-                              </svg></td>
-                              <td><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="red" class="bi bi-x-circle" viewBox="0 0 16 16">
-                                <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
-                                <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708"/>
-                              </svg></td>
+                              <td>
+                                <svg
+                                  xmlns="http://www.w3.org/2000/svg"
+                                  width="16"
+                                  height="16"
+                                  fill="orange"
+                                  class="bi bi-pencil-square"
+                                  viewBox="0 0 16 16"
+                                >
+                                  <path
+                                    d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"
+                                  />
+                                  <path
+                                    fill-rule="evenodd"
+                                    d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z"
+                                  />
+                                </svg>
+                              </td>
+                              <td>
+                                <svg
+                                  xmlns="http://www.w3.org/2000/svg"
+                                  width="16"
+                                  height="16"
+                                  fill="red"
+                                  class="bi bi-x-circle"
+                                  viewBox="0 0 16 16"
+                                >
+                                  <path
+                                    d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"
+                                  />
+                                  <path
+                                    d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708"
+                                  />
+                                </svg>
+                              </td>
                             </tr>
-                            
                           </tbody>
                         </table>
                       </div>
                     </div>
                   </div>
-                  
-                
-
                 </div>
-                <hr>
+                <hr />
                 <div id="formularioRow">
                   <div class="row mb-3 mt-3">
                     <div class="col-4">
                       <label for="rif" class="form-label">RIF: </label>
                     </div>
                     <div class="col-8">
-                      <input type="number" min="0" class="form-control" id="rif" placeholder="RIF del laboratorio">
+                      <input
+                        type="number"
+                        min="0"
+                        class="form-control"
+                        id="rif"
+                        placeholder="RIF del laboratorio"
+                      />
                     </div>
-  
                   </div>
                   <div class="row mb-3">
                     <div class="col-4">
-                      <label for="razonSocial" class="form-label">Razon Social: </label>
+                      <label for="razonSocial" class="form-label"
+                        >Razon Social:
+                      </label>
                     </div>
                     <div class="col-8">
-                      <input type="text" class="form-control" id="razonSocial" placeholder="Razon Social del laboratorio">
+                      <input
+                        type="text"
+                        class="form-control"
+                        id="razonSocial"
+                        placeholder="Razon Social del laboratorio"
+                      />
                     </div>
-  
                   </div>
                   <div class="row mb-3">
                     <div class="col-4">
-                      <label for="direccion" class="form-label">Direccion: </label>
+                      <label for="direccion" class="form-label"
+                        >Direccion:
+                      </label>
                     </div>
                     <div class="col-8">
-                      <input type="text" class="form-control" id="direccion" placeholder="Direccion del laboratorio">
+                      <input
+                        type="text"
+                        class="form-control"
+                        id="direccion"
+                        placeholder="Direccion del laboratorio"
+                      />
                     </div>
-  
                   </div>
                   <div class="row mb-3">
                     <div class="col-4">
-                      <label for="telefono" class="form-label">Telefono: </label>
+                      <label for="telefono" class="form-label"
+                        >Telefono:
+                      </label>
                     </div>
                     <div class="col-8">
-                      <input type="number" min="0" class="form-control" id="telefono" placeholder="Telefono del laboratorio">
+                      <input
+                        type="number"
+                        min="0"
+                        class="form-control"
+                        id="telefono"
+                        placeholder="Telefono del laboratorio"
+                      />
                     </div>
-  
                   </div>
-  
-  
                 </div>
-           
               </div>
             </div>
           </div>
           <div class="modal-footer">
-            
-            <div class="col colNav p-0 " style="height: 25px; " >
-              <button class="buttonNav p-1" style="border-radius: 25px;" data-bs-dismiss="modal" id="guardarCrudLab" onclick="crearLaboratorio()">
+            <div class="col colNav p-0" style="height: 25px">
+              <button
+                class="buttonNav p-1"
+                style="border-radius: 25px"
+                data-bs-dismiss="modal"
+                id="guardarCrudLab"
+                onclick="crearLaboratorio()"
+              >
                 <div class="d-flex justify-content-around w-100">
-                  <span style="font-size: smaller;">Guardar</span>
-                  
+                  <span style="font-size: smaller">Guardar</span>
                 </div>
               </button>
             </div>

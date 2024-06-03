@@ -11,6 +11,9 @@ import {
   crearSede,
   updateLaboratorio,
   updateSede,
+  getEmpresas,
+  updateEmpresa,
+  crearEmpresa,
 } from "../controllers/espejo.controller.js";
 import { getExamenResultados } from "../controllers/examenes.controller.js";
 import {
@@ -36,6 +39,7 @@ router.get("/get-pacientes-dia", verifyCookie, getPacientesDia); //Administrador
 router.get("/get-examen-dia", verifyCookie, getExamenDia); //Administrador y impresion
 router.get("/get-examen-byFecha", verifyCookie, getExamenByFecha); //Administrador y impresion
 router.get("/sedes", verifyCookie, getSedes); //Administrador y impresion
+router.get("/empresas", verifyCookie, getEmpresas); //Administrador y impresion
 router.get("/laboratorios", verifyCookie, getLaboratorios); //Administrador y impresion
 router.get("/get-examen-detalle", verifyCookie, getExamenDetalle); //Administrador y impresion
 router.get("/get-examen-resultado", verifyCookie, getExamenResultados); //Administrador y impresion
@@ -48,6 +52,7 @@ router.post("/guardar-usuario", adminCookie, crearUsuario); //Administrador
 router.post("/guardar-bioanalista", adminCookie, crearBioanalsita); //Administrador
 router.post("/crear-laboratorio", adminCookie, crearLaboratorio); //Administrador
 router.post("/crear-sede", adminCookie, crearSede); //Administrador
+router.post("/crear-empresa", adminCookie, crearEmpresa); //Administrador
 
 //PUT
 
@@ -57,5 +62,6 @@ router.put("/editar-bioanalista", adminCookie, editarBioanalista); //Administrad
 router.put("/editar-status", adminCookie, cambiarStatus); //Administrador
 router.put("/update-laboratorio", adminCookie, updateLaboratorio); //Administrador
 router.put("/update-sede", adminCookie, updateSede); //Administrador
+router.put("/update-empresa", adminCookie, updateEmpresa); //Administrador
 
 export default router;

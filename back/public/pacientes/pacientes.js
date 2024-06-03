@@ -1,20 +1,22 @@
-let pacientesArray=[]
-let examenesArray=[]
-function buscarPaciente(value){
-    let parse= parseInt(value)
-    const tBody = document.getElementById('tBodyPacientesDia')
-    tBody.innerHTML=``
-    let resultado=[]
-    if(isNaN(parse)){
-        resultado = pacientesArray.filter(pc=> pc.nombre.toLowerCase().includes(value.toLowerCase()))
-    }else{
-        resultado = pacientesArray.filter(pc=> pc.cedula.toString().includes(value))
-
-
-    }
-    resultado.forEach(element=>{
-        let edad=calcularEdadNormal(element.fecha_nacimiento.split('T')[0])
-        tBody.innerHTML+=`
+let pacientesArray = [];
+let examenesArray = [];
+function buscarPaciente(value) {
+  let parse = parseInt(value);
+  const tBody = document.getElementById("tBodyPacientesDia");
+  tBody.innerHTML = ``;
+  let resultado = [];
+  if (isNaN(parse)) {
+    resultado = pacientesArray.filter((pc) =>
+      pc.nombre.toLowerCase().includes(value.toLowerCase())
+    );
+  } else {
+    resultado = pacientesArray.filter((pc) =>
+      pc.cedula.toString().includes(value)
+    );
+  }
+  resultado.forEach((element) => {
+    let edad = calcularEdadNormal(element.fecha_nacimiento.split("T")[0]);
+    tBody.innerHTML += `
         <tr>
                             <td scope="col">${element.cedula}</td>
                             <td scope="col">${element.nombre}</td>
@@ -31,26 +33,29 @@ function buscarPaciente(value){
                             </td>
       
                           </tr>
-        `
-    })
-
-
+        `;
+  });
 }
 
-async function detalleExamenesPaciente(id,nombre){  
-    console.log(id)
-    document.getElementById('nombrePaciente').innerText=nombre
-    const res = await axios.get("http://localhost:3000/api/espejo/get-examenes-paciente",{params:{id}})
-    examenesArray=res.data.examenes
-    console.log(res)
-    const tBodyDetalle = document.getElementById(`tBodyDetalle`)
-    tBodyDetalle.innerHTML=''
-    res.data.examenes.forEach(ex=>{
-        tBodyDetalle.innerHTML+=`
+async function detalleExamenesPaciente(id, nombre) {
+  document.getElementById("nombrePaciente").innerText = nombre;
+  try {
+    const res = await axios.get(
+      "http://localhost:3000/api/espejo/get-examenes-paciente",
+      { params: { id } }
+    );
+    examenesArray = res.data.examenes;
+    console.log(res);
+    const tBodyDetalle = document.getElementById(`tBodyDetalle`);
+    tBodyDetalle.innerHTML = "";
+    res.data.examenes.forEach((ex) => {
+      tBodyDetalle.innerHTML += `
         <tr>
                         <td scope="col">${ex.examen}</td>
                         <td scope="col">${ex.bioanalista}</td>
-                        <td scope="col">${ex.fecha.split('T')[0]}  ${ex.fecha.split('T')[1].split('.')[0]}</td>
+                        <td scope="col">${ex.fecha.split("T")[0]}  ${
+        ex.fecha.split("T")[1].split(".")[0]
+      }</td>
                         <td scope="col"><svg
                         xmlns="http://www.w3.org/2000/svg"
                         width="25"
@@ -58,7 +63,11 @@ async function detalleExamenesPaciente(id,nombre){
                         fill="green"
                         class="bi bi-eye"
                         viewBox="0 0 16 16"
-                        data-bs-toggle="collapse" href="#collapseEx${ex.id}" role="button" aria-expanded="false" aria-controls="collapseEx${ex.id}" onclick="detalleExamen('${ex.id}')"
+                        data-bs-toggle="collapse" href="#collapseEx${
+                          ex.id
+                        }" role="button" aria-expanded="false" aria-controls="collapseEx${
+        ex.id
+      }" onclick="detalleExamen('${ex.id}')"
                       >
                         <path
                           d="M16 8s-3-5.5-8-5.5S0 8 0 8s3 5.5 8 5.5S16 8 16 8M1.173 8a13 13 0 0 1 1.66-2.043C4.12 4.668 5.88 3.5 8 3.5s3.879 1.168 5.168 2.457A13 13 0 0 1 14.828 8q-.086.13-.195.288c-.335.48-.83 1.12-1.465 1.755C11.879 11.332 10.119 12.5 8 12.5s-3.879-1.168-5.168-2.457A13 13 0 0 1 1.172 8z"
@@ -90,67 +99,75 @@ async function detalleExamenesPaciente(id,nombre){
                       
                     </tr>
                       
-        `
-    })
-
-
+        `;
+    });
+  } catch (error) {
+    console.log("🚀 ~ detalleExamenesPaciente ~ error:", error);
+    alert(error);
+  }
 }
 
 const calcularEdadNormal = (fecha) => {
-    const mes = moment(fecha).format("MM");
-    const ano = moment(fecha).format("YYYY");
-    const dia = moment(fecha).format("DD");
-    
-    const mesAc = moment().format("MM");
-    const anoAc = moment().format("YYYY");
-    const diaAc = moment().format("DD");
-  
-    let mesR = mesAc - mes;
-    let diaR = diaAc - dia;
-    let anoR = anoAc - ano;
-  
-    if (mesR < 0) {
-      mesR = mesR + 12;
-      anoR--;
-    }
-    if (diaR < 0) {
-      mesR--;
-    }
-  
-    return `${anoR} años;  ${mesR} meses`;
-  };
+  const mes = moment(fecha).format("MM");
+  const ano = moment(fecha).format("YYYY");
+  const dia = moment(fecha).format("DD");
 
+  const mesAc = moment().format("MM");
+  const anoAc = moment().format("YYYY");
+  const diaAc = moment().format("DD");
 
-function detalleExamen(id){
+  let mesR = mesAc - mes;
+  let diaR = diaAc - dia;
+  let anoR = anoAc - ano;
 
-    const examen = examenesArray.find(e=> e.id ==id)
-    console.log(examen)
-    const collapse = document.getElementById(`tBodyEx${id}`)
-    collapse.innerHTML='';
-    examen.caracteristicas.forEach(ct=>{
-        collapse.innerHTML+=`
+  if (mesR < 0) {
+    mesR = mesR + 12;
+    anoR--;
+  }
+  if (diaR < 0) {
+    mesR--;
+  }
+
+  return `${anoR} años;  ${mesR} meses`;
+};
+
+function detalleExamen(id) {
+  const examen = examenesArray.find((e) => e.id == id);
+  console.log(examen);
+  const collapse = document.getElementById(`tBodyEx${id}`);
+  collapse.innerHTML = "";
+  examen.caracteristicas.forEach((ct) => {
+    collapse.innerHTML += `
         <tr>
                                 <td scope="col">${ct.nombre}</td>
                                 <td scope="col">${ct.resultado}</td>
                                 <td scope="col">${ct.inferior} - ${ct.superior}</td>
                               </tr>
-        `
-    })
-
-
+        `;
+  });
 }
 
-async function traerPacientesDia(){
-    const res = await axios.get("http://localhost:3000/api/espejo/get-pacientes-dia")
-    console.log(res)
+async function traerPacientesDia() {
+  try {
+    const res = await axios.get(
+      "http://localhost:3000/api/espejo/get-pacientes-dia"
+    );
+    console.log(res);
 
-    pacientesArray= res.data.pacientesTabla
-    const tBody = document.getElementById('tBodyPacientesDia')
-    tBody.innerHTML=''
-    res.data.pacientes.forEach(element => {
-        let edad=calcularEdadNormal(element.fecha_nacimiento.split('T')[0])
+    pacientesArray = res.data.pacientesTabla;
+    const tBody = document.getElementById("tBodyPacientesDia");
+    tBody.innerHTML = "";
+    if (res.data.pacientes.length == 0) {
+      tBody.innerHTML = `
+      <tr>
+      <td scope="col" colspan="8">"<h5>No se han encontrado pacientes que se hayan hecho examenes el dia de hoy</h5></td>
+    </tr>
+      `;
+    } else {
+      res.data.pacientes.forEach((element) => {
+        let edad = calcularEdadNormal(element.fecha_nacimiento.split("T")[0]);
 
-        tBody.innerHTML+=`
+        tBody.innerHTML += `
         <tr>
                             <td scope="col">${element.cedula}</td>
                             <td scope="col">${element.nombre}</td>
@@ -167,7 +184,11 @@ async function traerPacientesDia(){
                             </td>
       
                           </tr>
-        `
-    });
+        `;
+      });
+    }
+  } catch (error) {
+    console.log(error);
+    alert(error);
+  }
 }
-

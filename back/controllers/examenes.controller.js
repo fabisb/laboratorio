@@ -63,14 +63,17 @@ export const getExamenReimpresion = async (req, res) => {
           subCaracteristicas,
         });
       }
-      const [titulos]= await pool.execute(`SELECT * FROM titulos where id_ex=?`,[examen[0].id_ex])
-      titulos.map(e=>{
-        caracteristicas.push(e)
-      })
+      const [titulos] = await pool.execute(
+        `SELECT * FROM titulos where id_ex=?`,
+        [examen[0].id_ex]
+      );
+      titulos.map((e) => {
+        caracteristicas.push(e);
+      });
       bioanalista[0].foto_firma = `${Buffer.from(
         bioanalista[0].foto_firma,
         "base64"
-      )}`
+      )}`;
       caracteristicas = caracteristicas.sort(function (a, b) {
         if (a.posicion > b.posicion) {
           return 1;
@@ -100,7 +103,10 @@ export const getExamenReimpresion = async (req, res) => {
 export const crearExamenPendiente = async (req, res) => {
   const { examenPac, idPac } = req.body;
   try {
-    const [examen] = await pool.execute(`INSERT INTO examenes_pendientes (id_ex,id_pac) VALUES (?, ?)`,[examenPac.examenId,idPac])
+    const [examen] = await pool.execute(
+      `INSERT INTO examenes_pendientes (id_ex,id_pac) VALUES (?, ?)`,
+      [examenPac.examenId, idPac]
+    );
 
     for await (const dt of examenPac.detallesExamenPd) {
       const [detalle] = await pool.execute(
@@ -185,7 +191,7 @@ export const getPendienteExamen = async (req, res) => {
         unidad: caracteristica[0].unidad,
       });
     }
-    titulos.map(e=>detallesExamenPc.push(e))
+    titulos.map((e) => detallesExamenPc.push(e));
 
     console.log(pendiente);
 
@@ -264,6 +270,36 @@ export const updateSubCaracteristicaCar = async (req, res) => {
     return await res.status(500).json({ mensaje: "ERROR DE SERVIDOR" });
   }
 };
+export const getExamenResultadosExterno = async (req,res)=>{
+  const {id} = req.query;
+  try {
+    
+    const [examenExterno] = await pool.execute('SELECT PDF FROM examenes_externos WHERE id = ?',[id]);
+    if (examenExterno.length == 0) {
+      return await res
+      .status(404)
+      .json({mensaje:'No se ha encontrado examenes externos con el id #'+id});
+
+    }else{
+      if (examenExterno[0].PDF == null) {
+        
+        return await res
+          .status(400)
+          .json({mensaje:'El examen no tiene un PDF asociado'});
+      }else{
+
+        return await res
+          .status(200)
+          .json(examenExterno[0].PDF);
+      }
+
+    }
+  } catch (error) {
+    console.log("🚀 ~ getExamenResultadosExterno ~ error:", error)
+    return await res.status(500).json({ mensaje: "ERROR DE SERVIDOR" });
+    
+  }
+}
 export const getExamenResultados = async (req, res) => {
   try {
     const { id } = req.query;
@@ -348,13 +384,15 @@ export const getExamenResultados = async (req, res) => {
       });
     }
 
-    const [titulos]= await pool.execute(`select * from titulos where id_ex=?`,[detalles[0].id_ex])
-   console.log(titulos)
-    titulos.map(e=>{
-      detalleResultados.push(e)
-    })
-    return await res.status(200).json(detalleResultados)
-
+    const [titulos] = await pool.execute(
+      `select * from titulos where id_ex=?`,
+      [detalles[0].id_ex]
+    );
+    console.log(titulos);
+    titulos.map((e) => {
+      detalleResultados.push(e);
+    });
+    return await res.status(200).json(detalleResultados);
   } catch (error) {
     console.log(error);
     return await res
@@ -383,11 +421,16 @@ export const modificarResultadoExamen = async (req, res) => {
 };
 
 export const crearExamenExterno = async (req, res) => {
-  const { idEx, idLab, nota, bioanalista, idPac, PDF } = req.body;
+  const { idEx, idLab, nota, bioanalista, idPac, PDF, orden } = req.body;
   if (bioanalista == "") {
     return await res
       .status(400)
       .json({ mensaje: "El bioanalista no puede estar vacio" });
+  }
+  if (orden == "" || orden == 0) {
+    return await res
+      .status(400)
+      .json({ mensaje: "Hay un error en la orden ingresada" });
   }
   if (idLab == 0 || idEx == 0 || idPac == 0) {
     return await res
@@ -397,8 +440,8 @@ export const crearExamenExterno = async (req, res) => {
 
   try {
     const [r] = await pool.execute(
-      `INSERT INTO examenes_externos(id_ex,bioanalista,nota,id_lab ,id_pac, PDF) VALUES (?,?,?,?,?,?)`,
-      [idEx, bioanalista, nota, idLab, idPac, PDF]
+      `INSERT INTO examenes_externos(id_ex, bioanalista, nota, id_lab, id_pac, PDF, id_orden, id_usuario) VALUES (?,?,?,?,?,?,?,?)`,
+      [idEx, bioanalista, nota, idLab, idPac, PDF, orden, req.user.id]
     );
     return await res
       .status(200)
@@ -411,7 +454,7 @@ export const crearExamenExterno = async (req, res) => {
   }
 };
 export const modificarExamenExterno = async (req, res) => {
-  const { idLab, nota, idExt, bioanalista } = req.body;
+  const { idLab, nota, idExt, bioanalista, PDF, orden } = req.body;
   if (bioanalista == "") {
     return await res
       .status(400)
@@ -422,11 +465,15 @@ export const modificarExamenExterno = async (req, res) => {
       .status(400)
       .json({ mensaje: "Hay un error en la consulta" });
   }
-
+  if (orden == "" || orden == 0) {
+    return await res
+      .status(400)
+      .json({ mensaje: "Hay un error en la orden ingresada" });
+  }
   try {
     const [r] = await pool.execute(
-      `UPDATE examenes_externos set bioanalista= ?, nota= ?, id_lab = ? where id = ?`,
-      [bioanalista, nota, idLab, idExt]
+      `UPDATE examenes_externos set bioanalista= ?, nota= ?, id_lab = ?, PDF = ?, id_orden = ? WHERE id = ?`,
+      [bioanalista, nota, idLab, PDF, orden, idExt]
     );
     return await res
       .status(200)
@@ -646,7 +693,9 @@ export const crearExamen = async (req, res) => {
       let cadenaRangos = "";
 
       const [consulta] = await pool.execute(
-        `INSERT INTO detalles_examen(id_ex, nombre, posicion, unidad, impsiempre, resultados) VALUES('${examenInsert.insertId}','${nombre.toUpperCase()}','${posicion}','${unidad}','','${resultados.toUpperCase()}')`
+        `INSERT INTO detalles_examen(id_ex, nombre, posicion, unidad, impsiempre, resultados) VALUES('${
+          examenInsert.insertId
+        }','${nombre.toUpperCase()}','${posicion}','${unidad}','','${resultados.toUpperCase()}')`
       );
       console.log("🚀 ~ forawait ~ consulta:", consulta);
       rangos.forEach(async (rg) => {
@@ -662,7 +711,11 @@ export const crearExamen = async (req, res) => {
 
     const valores = detalle
       .map((dato) => {
-        return `('${examenInsert.insertId}','${dato.nombre.toUpperCase()}','${dato.posicion}','${dato.unidad}','${dato.impsiempre}','${dato.resultados.toUpperCase()}')`;
+        return `('${examenInsert.insertId}','${dato.nombre.toUpperCase()}','${
+          dato.posicion
+        }','${dato.unidad}','${
+          dato.impsiempre
+        }','${dato.resultados.toUpperCase()}')`;
       })
       .join(", ");
     //const consulta = `INSERT INTO detalles_examen(id_ex, nombre, posicion, unidad, impsiempre, resultados) VALUES ${valores}`;
@@ -729,20 +782,18 @@ export const crearOrden = async (req, res) => {
       console.log(ex);
       const [examenBdd] = await pool.execute(`
       INSERT INTO examenes_paciente(id_orden, id_ex, id_pac, id_bio,id_sede,id_usuario) VALUES ('${ordenId}','${ex.id_ex}','${ex.idPac}','${orden.id_bio}','${sedeVar}','${user}')
-      `)
-      for await (const dt of ex.detallesExamen){
-        if(dt.status!='titulo'){
+      `);
+      for await (const dt of ex.detallesExamen) {
+        if (dt.status != "titulo") {
           const [detalleBdd] = await pool.execute(`
         INSERT INTO detalles_examenes_paciente(id_dt, id_ex, id_ex_pac, id_rango,superior,inferior, resultado, nota) VALUES ('${dt.id_dt}','${ex.id_ex}','${examenBdd.insertId}','${dt.id_rango}','${dt.superior}','${dt.inferior}','${dt.resultado}','${dt.nota}')
-        `)
-        for await (const sb of dt.subCaracteristicasDt){
-          const [subCaracteristicaBdd] = await pool.execute(`
+        `);
+          for await (const sb of dt.subCaracteristicasDt) {
+            const [subCaracteristicaBdd] = await pool.execute(`
           INSERT INTO detalle_subcaracteristica_paciente(id_det_ex, id_detalle_sub, resultado, nota) VALUES ('${detalleBdd.insertId}','${sb.id_detalle_sub}','${sb.resultado}','${sb.nota}')
           `);
+          }
         }
-        }
-        
-        
       }
     }
 
@@ -844,17 +895,18 @@ export const getExamenesPaciente = async (req, res) => {
       let examenesData = [];
 
       for await (const ex of examenes) {
-        const [examen] = await pool.execute(`SELECT * FROM examenes where id=${ex.id_ex}`)
-        if(examen.length>0){
+        const [examen] = await pool.execute(
+          `SELECT * FROM examenes where id=${ex.id_ex}`
+        );
+        if (examen.length > 0) {
           examenesData.push({
-            id:ex.id,
-            id_bio:ex.id_bio,
-            nombreEx:examen[0].nombre,
-            id_ex:ex.id_ex,
-            fecha:ex.fecha
-          })
+            id: ex.id,
+            id_bio: ex.id_bio,
+            nombreEx: examen[0].nombre,
+            id_ex: ex.id_ex,
+            fecha: ex.fecha,
+          });
         }
-        
       }
       return await res.status(200).json({ examenesData });
     } else {
@@ -911,6 +963,7 @@ export const getExamenesExternos = async (req, res) => {
           nota: ex.nota,
           laboratorio: lab[0].razon_social,
           idLab: ex.id_lab,
+          id_orden: ex.id_orden,
         });
       }
       return await res.status(200).json({ examenesData });
@@ -1114,8 +1167,7 @@ export const getHijosController = async (req, res) => {
 export const statusExamenes = async (req, res) => {
   console.log("statusExamenesController");
   const { status, col, id } = req.body;
-  if (col != 'status_imp' || 'status_ws' || 'status_correo') {
-    
+  if (col != "status_imp" || "status_ws" || "status_correo") {
   }
   try {
     const [statusEx] = await pool.execute(

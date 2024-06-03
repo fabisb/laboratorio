@@ -41,7 +41,7 @@ contextBridge.exposeInMainWorld("login", {
 
 contextBridge.exposeInMainWorld("examenVar", {
   store: async (examen) => {
-    console.log("🚀 ~ store: ~ examen:", examen)
+    console.log("🚀 ~ store: ~ examen:", examen);
     await ipcRenderer.send("examen", examen);
     return;
   },
@@ -93,4 +93,8 @@ contextBridge.exposeInMainWorld(
   "wsPDF",
   async (numero) => await ipcRenderer.send("ws", JSON.stringify(numero))
 );
-
+/* contextBridge.exposeInMainWorld(
+  "pdfExterno",
+  async (id) => await ipcRenderer.send("pdfExterno", id)
+);
+ */

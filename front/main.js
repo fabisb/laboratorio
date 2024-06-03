@@ -4,7 +4,8 @@ const Store = require("electron-store");
 const os = require("os");
 const path = require("path");
 const fs = require("fs").promises;
-var moment = require("moment"); // require
+var moment = require("moment");
+const fileDownload = require("js-file-download");
 const axios = require("axios");
 //RECARGA AUTOMATICA
 
@@ -142,7 +143,7 @@ function estadisticasWindow() {
         //devTools:false
       },
     });
-    estadisticasWindowVar.maximize()
+    estadisticasWindowVar.maximize();
     estadisticasWindowVar.loadFile("app/screens/estadisticas.html");
     estadisticasWindowVar.on("closed", () => (estadisticasWindowVar = null));
   } else {
@@ -653,6 +654,42 @@ ipcMain.on("ws", async (event, numeroArg) => {
 
   // When the page finishes loading, generate the PDF
 });
+
+/* ipcMain.on("pdfExterno", async (event, idArg) => {
+  console.log("🚀 ~ ipcMain.on ~ idArg:", idArg)
+  try {
+    const { token } = await store.get("token");
+
+    const { data } = await axios.get(
+      urlsv + "/api/examenes/resultados-examen-externo",
+      {
+        params: {
+          id:idArg,
+        },
+        responseType: "blob",
+        headers: { token },
+      }
+    );
+    await fileDownload(data, `Examen-externo-${idArg}.pdf`);
+    return;
+  } catch (error) {
+    console.log("🚀 ~ ipcMain.on ~ error:", error);
+    const currentWindow = event.sender.getOwnerBrowserWindow();
+    if (error?.response?.data?.mensaje) {
+      const result = dialog.showErrorBox(
+        "ERROR",
+        error?.response?.data?.mensaje
+      );
+      return result;
+    } else {
+      const result = dialog.showErrorBox(
+        "ERROR",
+        "Ha ocurrido descargando el examen externo"
+      );
+      return result;
+    }
+  }
+}); */
 
 app.whenReady().then(() => {
   createWindow();

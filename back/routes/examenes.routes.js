@@ -24,6 +24,7 @@ import {
   getExamenResultados,
   updateSubCaracteristicaCar,
   statusExamenes,
+  getExamenResultadosExterno,
 } from "../controllers/examenes.controller.js";
 var router = express.Router();
 
@@ -38,6 +39,7 @@ router.get("/get-paciente-externo", verifyToken,getExamenesExternos);//TODOS
 router.get("/get-examenesPaciente", verifyToken,getExamenesPaciente);//TODOS
 router.get("/get-caracteristicasExamenPaciente", verifyToken,getCaracteristicasExamenPaciente);//TODOS
 router.get("/resultados-examen", verifyToken, getExamenResultados);//TODOS
+router.get("/resultados-examen-externo", verifyToken, getExamenResultadosExterno);//TODOS
 
 //POST
 router.post("/get-examen",verifyToken,getExamen);//TODOS
