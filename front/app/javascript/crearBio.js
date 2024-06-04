@@ -387,7 +387,7 @@ const buscarUsuarios = async () => {
     users = data.usuarios;
     const tBody = document.getElementById(`tBodyUsuarios`);
     tBody.innerHTML = "";
-
+    console.log(data)
     data.usuarios.forEach((user) => {
       let bioanalista = usuariosArray.bioanalistas.filter(
         (e) => e.cedula == user.cedula

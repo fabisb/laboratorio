@@ -48,6 +48,12 @@ app.use(
   express.static(path.join(__dirname, "public/usuarios"))
 );
 
+app.use(
+  "/reportes",
+  verifyCookie,
+  express.static(path.join(__dirname, "public/reportes"))
+);
+
 app.use("/api/", indexRouter);
 app.use("/api/creacion", creacionRouter);
 app.use("/api/examenes", examenesRouter);

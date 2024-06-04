@@ -3,17 +3,7 @@ let total = 0
 let objetos=[]
 
 
-async function tok() {
-  let token = await login.getToken();
-  nivelUser = token.nivel;
-  cedulaUser = token.cedula;
 
-  const elementsNivel = document.getElementsByClassName("user" + nivelUser);
-  console.log(elementsNivel);
-  for (const e of elementsNivel) {
-    e.removeAttribute("hidden", "true");
-  }
-}
 function validarSelectSeccion(value,tipo,id){
     if(value=='todos'){
       examenes=examenesArray
@@ -26,6 +16,7 @@ function validarSelectSeccion(value,tipo,id){
     buscarExamen(tipo,id)
   }
 
+  const urlsv= `http://localhost:3000`
 
 
 
@@ -73,11 +64,10 @@ function buscarPacienteInput(value){
 }
 
 async function render() {
-  var { token } = await login.getToken();
+  
   try {
     let { data: pacientes } = await axios.get(
-        urlsv + "/api/estadisticas/get-pacientes",
-        { headers: { token } }
+        urlsv + "/api/espejo/get-pacientes",
       );
     pacientesArray=pacientes.sort(function (a, b) {
         if (a.nombre > b.nombre) {
@@ -96,8 +86,7 @@ async function render() {
 
   try {
     let { data: bioanalistas } = await axios.get(
-      urlsv + "/api/examenes/get-bioanalistas",
-      { headers: { token } }
+      urlsv + "/api/espejo/get-bioanalistas",
     );
 
     bioArray = bioanalistas;
@@ -116,10 +105,9 @@ async function render() {
     }
 
     var secciones = await axios.get(
-      urlsv + "/api/modulo-examenes/secciones",
-      { headers: { token } }
+      urlsv + "/api/espejo/secciones"
     );
-    const selectSeccion = document.getElementById("seccionExamenSelect");
+    const selectSeccion = document.getElementById("selectSeccionExamen");
     selectSeccion.innerHTML = `
     <option value="todos">Filtrar por seccion</option>
     
@@ -134,8 +122,7 @@ async function render() {
     });
 
     const { data: examenesGet } = await axios.get(
-      urlsv + "/api/examenes/get-examenes",
-      { headers: { token } }
+      urlsv + "/api/espejo/get-examenes"
     );
     examenesArray = examenesGet;
     examenes= examenesGet
@@ -146,8 +133,7 @@ async function render() {
   }
   try {
     let { data: usuarios } = await axios.get(
-      urlsv + "/api/estadisticas/get-users",
-      { headers: { token } }
+      urlsv + "/api/espejo/get-users"
     );
 
     usuarioArray = usuarios;
@@ -170,8 +156,7 @@ async function render() {
   }
   try {
     const { data: laboratorios } = await axios.get(
-      urlsv + "/api/modulo-examenes/laboratorios",
-      { headers: { token } }
+      urlsv + "/api/espejo/laboratorios"
     );
     console.log(laboratorios);
     laboratoriosArray = laboratorios;
@@ -209,8 +194,7 @@ async function render() {
   }
   try {
     const categorias = await axios.get(
-      urlsv + "/api/modulo-examenes/categorias",
-      { headers: { token } }
+      urlsv + "/api/espejo/categorias"
     );
     console.log(categorias);
     categoriasArray = categorias.data;
@@ -569,13 +553,11 @@ async function busquedaorden(){
   bodyReport.innerHTML=''
 
   try {
-    let token = await login.getToken();
-    console.log(token)
+
 
     const res = await axios.post(
-      urlsv + "/api/estadisticas/get-orden-reportes",
-      { filtrosValue,desde:desdeFecha,hasta:hastaFecha },
-      { headers: { token:token.token } }
+      urlsv + "/api/espejo/get-orden-reportes",
+      { filtrosValue,desde:desdeFecha,hasta:hastaFecha }
     );
 
     Data=res.data.ordenes
@@ -601,7 +583,7 @@ async function busquedaorden(){
       <tr style="font-size:medium">
                             <td scope="col">${e.id}</td>
                             <td scope="col">${e.orden}</td>
-                            <td scope="col">${e.clave == 'orden' ? `<img src="../imgs/la-milagrosa-logo.png"   width="20" alt="" srcset="">` :''}${ e.clave =='clave' ? `<img src="../imgs/salud-vital-logo.png"  width="20" alt="" srcset="">`: ''}${ e.clave=='no'? `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"  fill="green" class="bi bi-person-lines-fill" viewBox="0 0 16 16">
+                            <td scope="col">${e.clave == 'orden' ? `<img src="../assets/img/la-milagrosa-logo.png"   width="20" alt="" srcset="">` :''}${ e.clave =='clave' ? `<img src="../assets/img/salud-vital-logo.png"  width="20" alt="" srcset="">`: ''}${ e.clave=='no'? `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"  fill="green" class="bi bi-person-lines-fill" viewBox="0 0 16 16">
                             <path d="M6 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6m-5 6s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1zM11 3.5a.5.5 0 0 1 .5-.5h4a.5.5 0 0 1 0 1h-4a.5.5 0 0 1-.5-.5m.5 2.5a.5.5 0 0 0 0 1h4a.5.5 0 0 0 0-1zm2 3a.5.5 0 0 0 0 1h2a.5.5 0 0 0 0-1zm0 3a.5.5 0 0 0 0 1h2a.5.5 0 0 0 0-1z"/>
                           </svg>` : ''}</td>
                             <td scope="col">${e.sede}</td>
@@ -675,13 +657,12 @@ async function busquedabioanalista(){
   bodyReport.innerHTML=''
 
   try {
-    let token = await login.getToken();
-    console.log(token)
+
 
     const res = await axios.post(
-      urlsv + "/api/estadisticas/get-bioanalistas-reportes",
+      urlsv + "/api/espejo/get-bioanalistas-reportes",
       { filtrosValue,desde:desdeFecha,hasta:hastaFecha },
-      { headers: { token:token.token } }
+
     );
     Data=res.data.bioanalistas
 
@@ -797,13 +778,10 @@ async function busquedaexamen(){
   bodyReport.innerHTML=''
 
   try {
-    let token = await login.getToken();
-    console.log(token)
 
     const res = await axios.post(
-      urlsv + "/api/estadisticas/get-examenes-reportes",
-      { filtrosValue,desde:desdeFecha,hasta:hastaFecha },
-      { headers: { token:token.token } }
+      urlsv + "/api/espejo/get-examenes-reportes",
+      { filtrosValue,desde:desdeFecha,hasta:hastaFecha }
     );
     Data=res.data.examenes
 
@@ -833,7 +811,7 @@ async function busquedaexamen(){
                             <td scope="col">${e.seccion}</td>
                             <td scope="col">${e.paciente}</td>
                             <td scope="col">${e.bioanalista}</td>
-                            <td scope="col">${e.clave == 'orden' ? `<img src="../imgs/la-milagrosa-logo.png"   width="20" alt="" srcset="">` :''}${ e.clave =='clave' ? `<img src="../imgs/salud-vital-logo.png"  width="20" alt="" srcset="">`: ''}${ e.clave=='no'? `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"  fill="green" class="bi bi-person-lines-fill" viewBox="0 0 16 16">
+                            <td scope="col">${e.clave == 'orden' ? `<img src="../assets/img/la-milagrosa-logo.png"   width="20" alt="" srcset="">` :''}${ e.clave =='clave' ? `<img src="../assets/img/salud-vital-logo.png"  width="20" alt="" srcset="">`: ''}${ e.clave=='no'? `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"  fill="green" class="bi bi-person-lines-fill" viewBox="0 0 16 16">
                             <path d="M6 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6m-5 6s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1zM11 3.5a.5.5 0 0 1 .5-.5h4a.5.5 0 0 1 0 1h-4a.5.5 0 0 1-.5-.5m.5 2.5a.5.5 0 0 0 0 1h4a.5.5 0 0 0 0-1zm2 3a.5.5 0 0 0 0 1h2a.5.5 0 0 0 0-1zm0 3a.5.5 0 0 0 0 1h2a.5.5 0 0 0 0-1z"/>
                           </svg>` : ''}  - ${e.orden}</td>
                             <td scope="col">${e.sede}</td>
@@ -909,13 +887,10 @@ async function busquedaexterno(){
   bodyReport.innerHTML=''
 
   try {
-    let token = await login.getToken();
-    console.log(token)
 
     const res = await axios.post(
-      urlsv + "/api/estadisticas/get-externos-reportes",
-      { filtrosValue,desde:desdeFecha,hasta:hastaFecha },
-      { headers: { token:token.token } }
+      urlsv + "/api/espejo/get-externos-reportes",
+      { filtrosValue,desde:desdeFecha,hasta:hastaFecha }
     );
     Data=res.data.examenes
 
@@ -1019,11 +994,9 @@ const calcularEdadNormal = (fecha) => {
 
 
 const abrirResultadosModal = async (examen, idPac, idRes) => {
-  const { token } = await login.getToken();
   let pacienteObj
   try {
-    const res = await axios.get(urlsv+'/api/estadisticas/get-paciente',{
-      headers: { token }, params: { idPac } 
+    const res = await axios.get(urlsv+'/api/espejo/get-paciente',{ params: { idPac } 
     })
     pacienteObj = res.data
     console.log(res)
@@ -1044,15 +1017,13 @@ const abrirResultadosModal = async (examen, idPac, idRes) => {
   new bootstrap.Modal("#resultadosModal").toggle();
 
   try {
-    const { token } = await login.getToken();
-    
+
     let { data: resultados} = await axios.get(
-      urlsv + "/api/examenes/resultados-examen",
+      urlsv + "/api/espejo/resultados-examen",
       {
         params: {
           id: idRes,
-        },
-        headers: { token },
+        }
       }
     );
     console.log(resultados)
@@ -1266,15 +1237,12 @@ async function busquedaOrdenDetallado(){
   bodyReport.innerHTML=''
 
   try {
-    let token = await login.getToken();
-    console.log(token)
 
     const res = await axios.post(
-      urlsv + "/api/estadisticas/get-orden-reportes",
-      { filtrosValue,desde:'',hasta:'' },
-      { headers: { token:token.token } }
-    );
-    console.log(res.data)
+      urlsv + "/api/espejo/get-orden-reportes",
+      { filtrosValue,desde:'',hasta:'' }    );
+   
+      
 
     res.data.columnas.forEach(c=>{
       headReport.innerHTML+=`
@@ -1298,7 +1266,7 @@ async function busquedaOrdenDetallado(){
       <tr style="font-size:medium">
                             <td scope="col">${e.id}</td>
                             <td scope="col">${e.orden}</td>
-                            <td scope="col">${e.clave == 'orden' ? `<img src="../imgs/la-milagrosa-logo.png"   width="20" alt="" srcset="">` :''}${ e.clave =='clave' ? `<img src="../imgs/salud-vital-logo.png"  width="20" alt="" srcset="">`: ''}${ e.clave=='no'? `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"  fill="green" class="bi bi-person-lines-fill" viewBox="0 0 16 16">
+                            <td scope="col">${e.clave == 'orden' ? `<img src="../assets/img/la-milagrosa-logo.png"   width="20" alt="" srcset="">` :''}${ e.clave =='clave' ? `<img src="../assets/img/salud-vital-logo.png"  width="20" alt="" srcset="">`: ''}${ e.clave=='no'? `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"  fill="green" class="bi bi-person-lines-fill" viewBox="0 0 16 16">
                             <path d="M6 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6m-5 6s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1zM11 3.5a.5.5 0 0 1 .5-.5h4a.5.5 0 0 1 0 1h-4a.5.5 0 0 1-.5-.5m.5 2.5a.5.5 0 0 0 0 1h4a.5.5 0 0 0 0-1zm2 3a.5.5 0 0 0 0 1h2a.5.5 0 0 0 0-1zm0 3a.5.5 0 0 0 0 1h2a.5.5 0 0 0 0-1z"/>
                           </svg>` : ''}</td>
                             <td scope="col">${e.sede}</td>
@@ -1339,15 +1307,12 @@ async function busquedaBioanalistaDetallado(){
   bodyReport.innerHTML=''
 
   try {
-    let token = await login.getToken();
-    console.log(token)
 
     const res = await axios.post(
-      urlsv + "/api/estadisticas/get-bioanalistas-reportes",
-      { filtrosValue,desde:'',hasta:'' },
-      { headers: { token:token.token } }
+      urlsv + "/api/espejo/get-bioanalistas-reportes",
+      { filtrosValue,desde:'',hasta:'' }
     );
-    console.log(res.data)
+   
 
     res.data.columnas.forEach(c=>{
       headReport.innerHTML+=`
@@ -1404,14 +1369,9 @@ async function busquedaExamenDetallado(){
   bodyReport.innerHTML=''
 
   try {
-    let token = await login.getToken();
-    console.log(token)
-
     const res = await axios.post(
-      urlsv + "/api/estadisticas/get-examenes-reportes",
-      { filtrosValue,desde:'',hasta:'' },
-      { headers: { token:token.token } }
-    );
+      urlsv + "/api/espejo/get-examenes-reportes",
+      { filtrosValue,desde:'',hasta:'' }    );
     console.log(res.data)
 
     res.data.columnas.forEach(c=>{
@@ -1439,7 +1399,7 @@ async function busquedaExamenDetallado(){
                             <td scope="col">${e.seccion}</td>
                             <td scope="col">${e.paciente}</td>
                             <td scope="col">${e.bioanalista}</td>
-                            <td scope="col">${e.clave == 'orden' ? `<img src="../imgs/la-milagrosa-logo.png"   width="20" alt="" srcset="">` :''}${ e.clave =='clave' ? `<img src="../imgs/salud-vital-logo.png"  width="20" alt="" srcset="">`: ''}${ e.clave=='no'? `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"  fill="green" class="bi bi-person-lines-fill" viewBox="0 0 16 16">
+                            <td scope="col">${e.clave == 'orden' ? `<img src="../assets/img/la-milagrosa-logo.png"   width="20" alt="" srcset="">` :''}${ e.clave =='clave' ? `<img src="../assets/img/salud-vital-logo.png"  width="20" alt="" srcset="">`: ''}${ e.clave=='no'? `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"  fill="green" class="bi bi-person-lines-fill" viewBox="0 0 16 16">
                             <path d="M6 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6m-5 6s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1zM11 3.5a.5.5 0 0 1 .5-.5h4a.5.5 0 0 1 0 1h-4a.5.5 0 0 1-.5-.5m.5 2.5a.5.5 0 0 0 0 1h4a.5.5 0 0 0 0-1zm2 3a.5.5 0 0 0 0 1h2a.5.5 0 0 0 0-1zm0 3a.5.5 0 0 0 0 1h2a.5.5 0 0 0 0-1z"/>
                           </svg>` : ''}  - ${e.orden}</td>
                             <td scope="col">${e.sede}</td>
@@ -1480,14 +1440,10 @@ async function busquedaPacienteDetallado(){
   headReport.innerHTML=''
   bodyReport.innerHTML=''
   try {
-    let token = await login.getToken();
-    console.log(token)
-
     const res = await axios.post(
-      urlsv + "/api/estadisticas/get-pacientes-reportes",
-      { filtrosValue,desde:'',hasta:''},
-      { headers: { token:token.token } }
-    );
+      urlsv + "/api/espejo/get-pacientes-reportes",
+      { filtrosValue,desde:'',hasta:''}
+        );
     console.log(res.data)
 
     res.data.columnas.forEach(c=>{
@@ -1553,13 +1509,10 @@ async function examenesOrdenPaciente(tipo,id){
   bodyReport.innerHTML=''
 
   try {
-    let token = await login.getToken();
-    console.log(token)
 
     const res = await axios.post(
-      urlsv + "/api/estadisticas/get-examenes-reportes",
-      { filtrosValue,desde:desdeFecha,hasta:hastaFecha },
-      { headers: { token:token.token } }
+      urlsv + "/api/espejo/get-examenes-reportes",
+      { filtrosValue,desde:desdeFecha,hasta:hastaFecha }
     );
     console.log(res.data)
 
@@ -1588,7 +1541,7 @@ async function examenesOrdenPaciente(tipo,id){
                             <td scope="col">${e.seccion}</td>
                             <td scope="col">${e.paciente}</td>
                             <td scope="col">${e.bioanalista}</td>
-                            <td scope="col">${e.clave == 'orden' ? `<img src="../imgs/la-milagrosa-logo.png"   width="20" alt="" srcset="">` :''}${ e.clave =='clave' ? `<img src="../imgs/salud-vital-logo.png"  width="20" alt="" srcset="">`: ''}${ e.clave=='no'? `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"  fill="green" class="bi bi-person-lines-fill" viewBox="0 0 16 16">
+                            <td scope="col">${e.clave == 'orden' ? `<img src="../assets/img/la-milagrosa-logo.png"   width="20" alt="" srcset="">` :''}${ e.clave =='clave' ? `<img src="../assets/img/salud-vital-logo.png"  width="20" alt="" srcset="">`: ''}${ e.clave=='no'? `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"  fill="green" class="bi bi-person-lines-fill" viewBox="0 0 16 16">
                             <path d="M6 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6m-5 6s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1zM11 3.5a.5.5 0 0 1 .5-.5h4a.5.5 0 0 1 0 1h-4a.5.5 0 0 1-.5-.5m.5 2.5a.5.5 0 0 0 0 1h4a.5.5 0 0 0 0-1zm2 3a.5.5 0 0 0 0 1h2a.5.5 0 0 0 0-1zm0 3a.5.5 0 0 0 0 1h2a.5.5 0 0 0 0-1z"/>
                           </svg>` : ''}  - ${e.orden}</td>
                             <td scope="col">${e.sede}</td>
@@ -1681,13 +1634,11 @@ async function busquedapaciente(){
   headReport.innerHTML=''
   bodyReport.innerHTML=''
   try {
-    let token = await login.getToken();
-    console.log(token)
+   
 
     const res = await axios.post(
-      urlsv + "/api/estadisticas/get-pacientes-reportes",
-      { filtrosValue,desde:desdeFecha,hasta:hastaFecha },
-      { headers: { token:token.token } }
+      urlsv + "/api/espejo/get-pacientes-reportes",
+      { filtrosValue,desde:desdeFecha,hasta:hastaFecha }
     );
     Data=res.data.pacientes
 

@@ -11,6 +11,7 @@
     />
     <link rel="stylesheet" href="../styles/estadisticas.css">
 
+
   </head>
   <body
     class="fs-5"
@@ -550,6 +551,7 @@
                         <tbody id="tBodyReport">
                           
                         </tbody>
+            
                       </table>
                     </div>
                 </div>
@@ -606,6 +608,92 @@
       </div>
     </div>
   </div>
+
+  <div
+  class="modal fade"
+  id="modalTotales"
+  tabindex="-1"
+  aria-labelledby="modalTotalesLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content" style="border: 5px solid #68c0c3;">
+      <div class="modal-header">
+        <h1 class="fs-3" id="ExamenesLabel">
+          Totales y Graficos
+        </h1>
+        <img src="../imgs/la-milagrosa-logo.png" width="70" alt="" />
+
+        
+      </div>
+      <div class="modal-body container" >
+        <h1 class="display-6 text-center" id="h1ModalTotales">
+          Pacientes
+        </h1>
+
+        <table class="table table-sm table-hover text-center">
+          <thead>
+            <tr>
+              <th scope="col">Fila</th>
+              <th scope="col">Cuenta</th>
+              <th scope="col">%</th>           
+            </tr>
+          </thead>
+          <tbody id="tBodyTotales">
+            <tr>
+              <td>Mark</td>
+              <td>3</td>
+              <td>40%</td>
+            </tr>
+            <tr>
+              
+              <td>Mark</td>
+              <td>3</td>
+              <td>40%</td>
+            </tr>
+            <tr>
+              
+              <td>Mark</td>
+              <td>3</td>
+              <td>40%</td>
+            </tr>
+            <tr>
+              
+              <td>Total</td>
+              <td>12</td>
+              <td>100%</td>
+            </tr>
+            
+          </tbody>
+        </table>
+
+        <div class="row">
+          <div class="col" id="barDivTotales">
+            
+            <canvas id="myChart" width="300" height="300"></canvas>
+          </div>
+          <div class="col" id="donaDivTotales"></div>
+
+        </div>
+        
+      </div>
+      <div class="modal-footer">
+        
+          
+          <button
+            type="button"
+            class="btn btn-secondary"
+            data-bs-dismiss="modal"
+          >
+            Cerrar
+          </button>
+       
+        
+        
+      </div>
+    </div>
+  </div>
+</div>
 
   <div
   class="modal fade"
@@ -717,6 +805,7 @@
   </div>
 </div>
     </body>
+    
     <script src="../modules/axios.min.js"></script>
     <script src="../../bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
     <script src="../../bower_components/moment/moment.js"></script>
