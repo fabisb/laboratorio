@@ -15,7 +15,11 @@ import {
   updateEmpresa,
   crearEmpresa,
 } from "../controllers/espejo.controller.js";
-import { getExamenResultados,getBioanalistas, getExamenes } from "../controllers/examenes.controller.js";
+import {
+  getExamenResultados,
+  getBioanalistas,
+  getExamenes,
+} from "../controllers/examenes.controller.js";
 import {
   crearBioanalsita,
   crearUsuario,
@@ -32,8 +36,20 @@ import {
   editarUsuario,
 } from "../controllers/creacion.controller.js";
 
-import { getBioanalistasReportes, getExamenesReportes, getExternosReportes, getOrdenesReportes, getPaciente, getPacientes, getPacientesReportes, getUsers } from "../controllers/estadisticas.controller.js";
-import { getCategorias, getSecciones } from "../controllers/examenesModulo.controller.js";
+import {
+  getBioanalistasReportes,
+  getExamenesReportes,
+  getExternosReportes,
+  getOrdenesReportes,
+  getPaciente,
+  getPacientes,
+  getPacientesReportes,
+  getUsers,
+} from "../controllers/estadisticas.controller.js";
+import {
+  getCategorias,
+  getSecciones,
+} from "../controllers/examenesModulo.controller.js";
 var router = express.Router();
 
 //GET
@@ -46,24 +62,16 @@ router.get("/empresas", verifyCookie, getEmpresas); //Administrador y impresion
 router.get("/laboratorios", verifyCookie, getLaboratorios); //Administrador y impresion
 router.get("/get-examen-detalle", verifyCookie, getExamenDetalle); //Administrador y impresion
 router.get("/get-examen-resultado", verifyCookie, getExamenResultados); //Administrador y impresion
-router.get("/get-pacientes", adminCookie, getPacientes); //Administrador y impresion
-router.get("/get-bioanalistas", adminCookie, getBioanalistas); //Administrador y impresion
-router.get("/secciones", adminCookie, getSecciones); //Administrador y impresion
-router.get("/get-examenes", adminCookie, getExamenes); //Administrador y impresion
-router.get("/get-users", adminCookie, getUsers); //Administrador y impresion
-router.get("/laboratorios", adminCookie, getLaboratorios); //Administrador y impresion
-router.get("/categorias", adminCookie, getCategorias); //Administrador y impresion
-router.get("/sedes", adminCookie, getSedes); //Administrador y impresion
-router.get("/get-paciente", adminCookie, getPaciente);//TODOS
-router.get("/resultados-examen", adminCookie,getExamenResultados);//TODOS
-
-
-
-
-
-
-
-
+router.get("/get-pacientes", verifyCookie, getPacientes); //Administrador y impresion
+router.get("/get-bioanalistas", verifyCookie, getBioanalistas); //Administrador y impresion
+router.get("/secciones", verifyCookie, getSecciones); //Administrador y impresion
+router.get("/get-examenes", verifyCookie, getExamenes); //Administrador y impresion
+router.get("/get-users", verifyCookie, getUsers); //Administrador y impresion
+router.get("/laboratorios", verifyCookie, getLaboratorios); //Administrador y impresion
+router.get("/categorias", verifyCookie, getCategorias); //Administrador y impresion
+router.get("/sedes", verifyCookie, getSedes); //Administrador y impresion
+router.get("/get-paciente", verifyCookie, getPaciente); //TODOS
+router.get("/resultados-examen", verifyCookie, getExamenResultados); //TODOS
 
 //GET USUARIOS
 router.get("/get-usuarios", adminCookie, getAllUsers); //Administrador
@@ -74,14 +82,11 @@ router.post("/guardar-bioanalista", adminCookie, crearBioanalsita); //Administra
 router.post("/crear-laboratorio", adminCookie, crearLaboratorio); //Administrador
 router.post("/crear-sede", adminCookie, crearSede); //Administrador
 router.post("/crear-empresa", adminCookie, crearEmpresa); //Administrador
-router.post("/get-orden-reportes", adminCookie,getOrdenesReportes); //Administrador
-router.post("/get-bioanalistas-reportes", adminCookie,getBioanalistasReportes); //Administrador
-router.post("/get-pacientes-reportes", adminCookie,getPacientesReportes); //Administrador
-router.post("/get-examenes-reportes", adminCookie,getExamenesReportes); //Administrador
-router.post("/get-externos-reportes", adminCookie,getExternosReportes); //Administrador
-
-
-
+router.post("/get-orden-reportes", adminCookie, getOrdenesReportes); //Administrador
+router.post("/get-bioanalistas-reportes", adminCookie, getBioanalistasReportes); //Administrador
+router.post("/get-pacientes-reportes", adminCookie, getPacientesReportes); //Administrador
+router.post("/get-examenes-reportes", adminCookie, getExamenesReportes); //Administrador
+router.post("/get-externos-reportes", adminCookie, getExternosReportes); //Administrador
 
 //PUT
 

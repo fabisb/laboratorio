@@ -326,17 +326,16 @@ const render = async () => {
         { headers: { token } }
       );
 
+      const selectEmpresa = document.getElementById("selectEmpresa");
 
-      const selectEmpresa= document.getElementById('selectEmpresa')
-
-      empresas.forEach(e=>{
-        selectEmpresa.innerHTML+=`
+      empresas.forEach((e) => {
+        selectEmpresa.innerHTML += `
         <option value="${e.id}">${e.nombre}</option>
         
-        `
-      })
+        `;
+      });
     } catch (error) {
-      console.log(error)
+      console.log(error);
     }
 
     const { data: examenesGet } = await axios.get(
@@ -356,24 +355,24 @@ const render = async () => {
 
     try {
       let { data: pacientes } = await axios.get(
-          urlsv + "/api/estadisticas/get-pacientes",
-          { headers: { token } }
-        );
+        urlsv + "/api/estadisticas/get-pacientes",
+        { headers: { token } }
+      );
 
-      pacientesArray=pacientes.sort(function (a, b) {
-          if (a.nombre > b.nombre) {
-            return 1;
-          }
-          if (a.nombre < b.nombre) {
-            return -1;
-          }
-          // a must be equal to b
-          return 0;
+      pacientesArray = pacientes.sort(function (a, b) {
+        if (a.nombre > b.nombre) {
+          return 1;
+        }
+        if (a.nombre < b.nombre) {
+          return -1;
+        }
+        // a must be equal to b
+        return 0;
       });
-      const menu=document.getElementById('menuPacientesUl')
-    menu.innerHTML=''
-    pacientesArray.forEach(e=>{
-        menu.innerHTML+=`
+      const menu = document.getElementById("menuPacientesUl");
+      menu.innerHTML = "";
+      pacientesArray.forEach((e) => {
+        menu.innerHTML += `
         <li class="list-group-item list-group-item-light list-group-item-action" >
           <div class="row">
             <div class="col-3">
@@ -385,7 +384,9 @@ const render = async () => {
 
             </div>
             <div class="col-3 d-flex justify-content-end align-content-center">
-            <svg xmlns="http://www.w3.org/2000/svg" style="cursor:pointer" width="24" height="24" data-bs-dismiss="modal" fill="green" onclick="setInputCedula(${e.cedula})" class="bi bi-check-circle" viewBox="0 0 16 16">
+            <svg xmlns="http://www.w3.org/2000/svg" style="cursor:pointer" width="24" height="24" data-bs-dismiss="modal" fill="green" onclick="setInputCedula(${
+              e.cedula
+            })" class="bi bi-check-circle" viewBox="0 0 16 16">
               <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
               <path d="m10.97 4.97-.02.022-3.473 4.425-2.093-2.094a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-1.071-1.05"/>
             </svg>
@@ -393,14 +394,13 @@ const render = async () => {
 
           </div>
         </li> 
-        `
-    })
-      
+        `;
+      });
     } catch (error) {
-      console.log(error)
+      console.log(error);
     }
-    
-    examenes= examenesGet
+
+    examenes = examenesGet;
     const selectBio = document.getElementById("selectBioAnalista");
 
     if (nivelUser == 3) {
@@ -482,32 +482,29 @@ const render = async () => {
     }
   }
 };
-function setInputCedula(ci){
-  document.getElementById('ciInput').value=ci
+function setInputCedula(ci) {
+  document.getElementById("ciInput").value = ci;
 }
 
+function buscarPacienteInput(value) {
+  let pac = [];
 
-function buscarPacienteInput(value){
-  let pac = []
-
-  if(isNaN(value)){
-    pac = pacientesArray.filter(e=>e.nombre.toLowerCase().includes(value.toLowerCase()))
-  }else{
-    if(value==''){
-      pac=pacientesArray
-    }else{
-      pac = pacientesArray.filter(e=>e.cedula.toString().includes(value))
-
+  if (isNaN(value)) {
+    pac = pacientesArray.filter((e) =>
+      e.nombre.toLowerCase().includes(value.toLowerCase())
+    );
+  } else {
+    if (value == "") {
+      pac = pacientesArray;
+    } else {
+      pac = pacientesArray.filter((e) => e.cedula.toString().includes(value));
     }
-
   }
 
- 
-
-  const menu=document.getElementById('menuPacientesUl')
-  menu.innerHTML=''
-  pac.forEach(e=>{
-      menu.innerHTML+=`
+  const menu = document.getElementById("menuPacientesUl");
+  menu.innerHTML = "";
+  pac.forEach((e) => {
+    menu.innerHTML += `
       <li class="list-group-item list-group-item-light list-group-item-action" >
         <div class="row">
           <div class="col-3">
@@ -519,14 +516,17 @@ function buscarPacienteInput(value){
 
           </div>
           <div class="col-3 d-flex justify-content-end align-content-center">
-          <svg xmlns="http://www.w3.org/2000/svg" data-bs-dismiss="modal" style="cursor:pointer" width="24" height="24" fill="green" onclick="setInputCedula(${e.cedula})" class="bi bi-check-circle" viewBox="0 0 16 16">
+          <svg xmlns="http://www.w3.org/2000/svg" data-bs-dismiss="modal" style="cursor:pointer" width="24" height="24" fill="green" onclick="setInputCedula(${
+            e.cedula
+          })" class="bi bi-check-circle" viewBox="0 0 16 16">
             <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
             <path d="m10.97 4.97-.02.022-3.473 4.425-2.093-2.094a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-1.071-1.05"/>
           </svg>
           </div>
 
         </div>
-      </li`})
+      </li`;
+  });
 }
 
 async function eliminarPendiente(id) {
@@ -1334,21 +1334,18 @@ function validarSelectOrden(value) {
   const inputOrden = document.getElementById("inputOrden");
   if (value == "no") {
     inputOrden.setAttribute("disabled", "true");
-    document.getElementById('selectEmpresa').setAttribute('disabled','true')
-
+    document.getElementById("selectEmpresa").setAttribute("disabled", "true");
   } else {
     try {
       inputOrden.removeAttribute("disabled");
     } catch (error) {}
   }
 
-  if(value=='clave'){
-    document.getElementById('selectEmpresa').removeAttribute('disabled')
-
+  if (value == "clave") {
+    document.getElementById("selectEmpresa").removeAttribute("disabled");
   }
-  if(value=='orden'){
-    document.getElementById('selectEmpresa').setAttribute('disabled','true')
-
+  if (value == "orden") {
+    document.getElementById("selectEmpresa").setAttribute("disabled", "true");
   }
 
   document
@@ -2135,10 +2132,10 @@ const abrirResultadosModal = async (examen, idEx, n) => {
                       <td> <select class="form-select form-select-sm selectRs${
                         ct.nombre
                       } inputExDetallePacCar" rango='${rango.id}' inferior='${
-            rango.inferior
-          }' superior='${rango.superior}' id='inputRs${
-            ct.id
-          }' aria-label="Small select example">
+              rango.inferior
+            }' superior='${rango.superior}' id='inputRs${
+              ct.id
+            }' aria-label="Small select example">
           <option value="" selected>
           
           </option>
@@ -2246,7 +2243,6 @@ const abrirResultadosModal = async (examen, idEx, n) => {
   }
 };
 
-
 async function previewPdf(tipo, ordenId) {
   const checksH = document.getElementsByName(`checksOrden`);
   const checks = [...checksH];
@@ -2327,9 +2323,6 @@ async function previewPdf(tipo, ordenId) {
   abrirPDFWindow();
 }
 
-
-
-
 async function guardarOrden(tipo) {
   const sedeVar2 = await sedeVar.get();
 
@@ -2389,7 +2382,7 @@ async function guardarOrden(tipo) {
     clave: tipo,
     id_bio: selectBioAnalista.value,
     expediente: inputExpediente.value,
-    empresa:selectEmpresa.value,
+    empresa: selectEmpresa.value,
     examenes,
   };
   try {
@@ -2502,7 +2495,6 @@ async function pedirCaracteristicas(id) {
 
 async function descargarPdfExterno(id) {
   try {
-    //await pdfExterno(id)
     const { token } = await login.getToken();
 
     const { data } = await axios.get(
@@ -2511,22 +2503,13 @@ async function descargarPdfExterno(id) {
         params: {
           id,
         },
-        //responseType: "blob",
         headers: { token },
       }
     );
     console.log("🚀 ~ descargarPdfExterno ~ data:", data);
-    document.getElementById('pdfExternoModalEmbed').src = data;
-    const myModal = new bootstrap.Modal('#pdfExternoModal')
+    document.getElementById("pdfExternoModalEmbed").src = data;
+    const myModal = new bootstrap.Modal("#pdfExternoModal");
     myModal.show();
-    /* 
-    const link = document.createElement("a");
-    link.href = href;
-    link.setAttribute("download", `examen-externo-${id}.pdf`); //or any other extension
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link); 
-    */
 
     return;
   } catch (error) {

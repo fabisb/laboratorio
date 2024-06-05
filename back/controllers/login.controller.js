@@ -65,8 +65,8 @@ export const loginController = async (req, res, next) => {
   }
   try {
     const [id] = await pool.execute(
-      "SELECT id, nivel, password, nombre, cedula FROM users WHERE cedula = ?",
-      [user]
+      "SELECT id, nivel, password, nombre, cedula FROM users WHERE cedula = ? AND status = ?",
+      [user, "activo"]
     );
 
     if (id.length > 0) {
@@ -102,7 +102,7 @@ export const loginController = async (req, res, next) => {
       }
     } else {
       return await res.status(404).json({
-        mensaje: "No se ha encontrado usuario con esa cedula",
+        mensaje: "No se ha encontrado usuario con esa cedula, o esta inactivo",
       });
     }
   } catch (error) {
@@ -234,7 +234,7 @@ export const adminBioToken = async (req, res, next) => {
     var decoded = await jwt.verify(token, "secret");
     if (decoded) {
       req.user = decoded;
-      if (decoded.nivel == 1 || decoded.nivel == 3 ) {
+      if (decoded.nivel == 1 || decoded.nivel == 3) {
         await next();
       } else {
         return await res.status(401).json({
@@ -257,7 +257,7 @@ export const noAuxToken = async (req, res, next) => {
     var decoded = await jwt.verify(token, "secret");
     if (decoded) {
       req.user = decoded;
-      if (decoded.nivel == 2 ) {
+      if (decoded.nivel == 2) {
         return await res.status(401).json({
           mensaje: "Su nivel de usuario no esta autorizado para esta peticion",
         });
@@ -282,7 +282,7 @@ export async function verifyCookie(req, res, next) {
     var decoded = await jwt.verify(token, "secret");
     if (decoded) {
       req.user = decoded;
-      if (decoded.nivel == 4 || decoded.nivel == 2 || decoded.nivel == 3) {
+      if (decoded.nivel == 2 || decoded.nivel == 3) {
         res.status(401).sendFile(path.join(publics, "/401.html"));
       } else {
         await next();
@@ -302,7 +302,7 @@ export async function adminCookie(req, res, next) {
     var decoded = await jwt.verify(token, "secret");
     if (decoded) {
       req.user = decoded;
-      if (decoded.nivel == 1 ) {
+      if (decoded.nivel == 1) {
         await next();
       } else {
         res.status(401).sendFile(path.join(publics, "/401.html"));
@@ -349,13 +349,17 @@ export async function loginEspejo(req, res) {
   }
   try {
     const [id] = await pool.execute(
-      "SELECT id, nivel, password, nombre, cedula FROM users WHERE cedula = ?",
-      [user]
+      "SELECT id, nivel, password, nombre, cedula FROM users WHERE cedula = ? AND status = ?",
+      [user, "activo"]
     );
 
     if (id.length > 0) {
       const comparacionClave = await bcrypt.compare(pass, id[0].password);
-
+      if (id[0].nivel != "1" && id[0].nivel != "4") {
+        return await res.status(404).json({
+          mensaje: "El nivel de usuario no es valido",
+        });
+      }
       if (comparacionClave) {
         var token = await jwt.sign(
           { id: id[0].id, user, nivel: id[0].nivel, cedula: id[0].cedula },
@@ -388,7 +392,7 @@ export async function loginEspejo(req, res) {
       }
     } else {
       return await res.status(404).json({
-        mensaje: "No se ha encontrado usuario con esa cedula",
+        mensaje: "No se ha encontrado usuario con esa cedula, o esta inactivo",
       });
     }
   } catch (error) {
@@ -400,5 +404,3 @@ export async function loginEspejo(req, res) {
 }
 
 //COOKIES CONTROLLER
-
-
