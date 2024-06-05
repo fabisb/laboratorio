@@ -848,6 +848,7 @@ body {
         
     }
     
+    
 
   }
   @media (max-width: 800px) {
@@ -862,6 +863,11 @@ body {
      #navSecundario{
         display: none;
     }
+    #liNavSec{
+      display: none;
+    }
+    
+    
     #h1User{
         display: none;
     }
