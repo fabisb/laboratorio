@@ -1370,8 +1370,6 @@ async function reimprimirExamenes() {
       paciente: pacienteObj,
       examenes: res.data.examenes,
     };
-    console.log(res.data.examen);
-    console.log("🚀 ~ previewPdf ~ examen:", examen);
     await examenVar.store(examen);
     abrirPDFWindow();
   } catch (error) {}

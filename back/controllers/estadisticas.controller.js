@@ -142,7 +142,7 @@ export const getUsers = async (req, res) => {
 
 
 
-      res.status(200).json({examenes,columnas:['Id','Nombre','Seccion','Paciente','Bioanalista','Orden','Sede','Categoria','Fecha','Detalle']})
+      await  res.status(200).json({examenes,columnas:['Id','Nombre','Seccion','Paciente','Bioanalista','Orden','Sede','Categoria','Fecha','Detalle']})
     } catch (error) {
       console.log(error);
       return await res
@@ -157,24 +157,25 @@ export const getUsers = async (req, res) => {
       const [paciente] = await pool.execute(`SELECT * FROM pacientes where id='${req.query.idPac}'`)
 
       if(paciente.length>0){
-        res.status(200).json(paciente[0])
+        await res.status(200).json(paciente[0])
 
       }else{
-        res.status(400).json({mensaje:'No se encontro el paciente'})
+        await res.status(400).json({mensaje:'No se encontro el paciente'})
       }
 
       
 
     } catch (error) {
       console.log(error)
-      res.status(500).json({mensaje:'Error de Servidor'})
+      await res.status(500).json({mensaje:'Error de Servidor'})
     }
   }
+
   export const getExternosReportes = async (req, res) => {
     try {
      
 
-      let query = `SELECT DISTINCT e.id as 'id', ex.nombre as 'examen' , p.nombre as 'paciente', lb.razon_social as 'laboratorio', e.bioanalista as 'bioanalista', c.nombre as 'categoria', s.nombre as 'seccion', u.nombre as 'usuario', e.fecha as 'fecha' FROM laboratorio.examenes_externos e INNER JOIN laboratorio.examenes ex ON e.id_ex = ex.id INNER JOIN laboratorio.laboratorios_externos lb ON e.id_lab = lb.id INNER JOIN laboratorio.seccion_examen s ON ex.id_seccion = s.id INNER JOIN laboratorio.categoria_examen c ON c.id = ex.id_categoria INNER JOIN users u ON u.id=e.id_usuario INNER JOIN laboratorio.pacientes p ON e.id_pac = p.id WHERE `
+      let query = `SELECT DISTINCT e.id as 'id', ex.nombre as 'examen' , p.nombre as 'paciente', lb.razon_social as 'laboratorio',e.id_orden as 'orden', e.bioanalista as 'bioanalista', c.nombre as 'categoria', s.nombre as 'seccion', u.nombre as 'usuario', e.fecha as 'fecha' FROM laboratorio.examenes_externos e INNER JOIN laboratorio.examenes ex ON e.id_ex = ex.id INNER JOIN laboratorio.laboratorios_externos lb ON e.id_lab = lb.id INNER JOIN laboratorio.seccion_examen s ON ex.id_seccion = s.id INNER JOIN laboratorio.categoria_examen c ON c.id = ex.id_categoria INNER JOIN users u ON u.id=e.id_usuario INNER JOIN laboratorio.pacientes p ON e.id_pac = p.id WHERE `
       const {filtrosValue, desde, hasta}=req.body
 
 

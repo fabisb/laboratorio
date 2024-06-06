@@ -53,6 +53,11 @@ app.use(
   verifyCookie,
   express.static(path.join(__dirname, "public/reportes"))
 );
+app.use(
+  "/externos",
+  verifyCookie,
+  express.static(path.join(__dirname, "public/externos"))
+);
 
 app.use("/api/", indexRouter);
 app.use("/api/creacion", creacionRouter);
