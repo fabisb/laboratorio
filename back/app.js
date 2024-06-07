@@ -53,6 +53,21 @@ app.use(
   verifyCookie,
   express.static(path.join(__dirname, "public/reportes"))
 );
+app.use(
+  "/externos",
+  verifyCookie,
+  express.static(path.join(__dirname, "public/externos"))
+);
+app.use(
+  "/reimprimir-examen",
+  verifyCookie,
+  express.static(path.join(__dirname, "public/reimprimir_examen"))
+);
+app.use(
+  "/reimprimir-orden",
+  verifyCookie,
+  express.static(path.join(__dirname, "public/reimprimir_orden"))
+);
 
 app.use("/api/", indexRouter);
 app.use("/api/creacion", creacionRouter);

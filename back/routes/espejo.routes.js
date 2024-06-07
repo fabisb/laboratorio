@@ -19,6 +19,8 @@ import {
   getExamenResultados,
   getBioanalistas,
   getExamenes,
+  getExamenResultadosExterno,
+  getExamenReimpresion,
 } from "../controllers/examenes.controller.js";
 import {
   crearBioanalsita,
@@ -72,6 +74,11 @@ router.get("/categorias", verifyCookie, getCategorias); //Administrador y impres
 router.get("/sedes", verifyCookie, getSedes); //Administrador y impresion
 router.get("/get-paciente", verifyCookie, getPaciente); //TODOS
 router.get("/resultados-examen", verifyCookie, getExamenResultados); //TODOS
+
+//GET REIMPRESION
+router.get("/reimpresion-examen", verifyCookie, getExamenReimpresion); //Administrador y impresion
+router.get("/reimpresion-orden", verifyCookie, getExamenReimpresion); //Administrador y impresion
+router.get("/get-externos-pdf", verifyCookie, getExamenResultadosExterno); ////Administrador y impresion
 
 //GET USUARIOS
 router.get("/get-usuarios", adminCookie, getAllUsers); //Administrador

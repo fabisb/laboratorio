@@ -148,7 +148,7 @@ export const getUsers = async (req, res) => {
 
 
 
-      res.status(200).json({examenes,columnas:['Id','Nombre','Seccion','Paciente','Bioanalista','Orden','Sede','Categoria','Fecha','Detalle']})
+      await  res.status(200).json({examenes,columnas:['Id','Nombre','Seccion','Paciente','Bioanalista','Orden','Sede','Categoria','Fecha','Detalle']})
     } catch (error) {
       console.log(error);
       return await res
@@ -163,19 +163,20 @@ export const getUsers = async (req, res) => {
       const [paciente] = await pool.execute(`SELECT * FROM pacientes where id='${req.query.idPac}'`)
 
       if(paciente.length>0){
-        res.status(200).json(paciente[0])
+        await res.status(200).json(paciente[0])
 
       }else{
-        res.status(400).json({mensaje:'No se encontro el paciente'})
+        await res.status(400).json({mensaje:'No se encontro el paciente'})
       }
 
       
 
     } catch (error) {
       console.log(error)
-      res.status(500).json({mensaje:'Error de Servidor'})
+      await res.status(500).json({mensaje:'Error de Servidor'})
     }
   }
+
   export const getExternosReportes = async (req, res) => {
     try {
      

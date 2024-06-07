@@ -287,6 +287,7 @@ ipcMain.handle("errorWindow", async (event, arg) => {
 
 let examenPDFVar;
 function examenPDFWindow() {
+  examenPDFVar = null;
   if (!examenPDFVar) {
     examenPDFVar = new BrowserWindow({
       width: 1024,
@@ -653,8 +654,6 @@ ipcMain.on("ws", async (event, numeroArg) => {
 
   // When the page finishes loading, generate the PDF
 });
-
-
 
 app.whenReady().then(() => {
   createWindow();
