@@ -833,7 +833,7 @@ export const getBioanalistas = async (req, res) => {
 export const getEmpresas = async (req, res) => {
   try {
     const [empresas] = await pool.execute(
-      'SELECT * FROM empresas'
+      'SELECT * FROM empresas WHERE status="activo"'
     );
     if (empresas.length > 0) {
       return await res.status(200).json(empresas);
@@ -909,10 +909,10 @@ export const getExamenesPaciente = async (req, res) => {
       const [examenes] =
         fecha == "no"
           ? await pool.execute(
-              `SELECT * FROM examenes_paciente where id_pac ='${paciente[0].id}'`
+              `SELECT * FROM examenes_paciente where id_pac ='${paciente[0].id}' AND status="activo"`
             )
           : await pool.execute(
-              `SELECT * FROM examenes_paciente where id_pac ='${paciente[0].id}' AND fecha between "${fecha} 00:00:00" AND "${fecha} 23:59:00"`
+              `SELECT * FROM examenes_paciente where id_pac ='${paciente[0].id}' AND fecha between "${fecha} 00:00:00" AND "${fecha} 23:59:00"  AND status="activo"`
             );
       let examenesData = [];
 
@@ -961,7 +961,7 @@ export const getExamenesExternos = async (req, res) => {
       const [examenes] =
         fecha == "no"
           ? await pool.execute(
-              `SELECT * FROM examenes_externos where id_pac ='${paciente[0].id}'`
+              `SELECT * FROM examenes_externos where id_pac ='${paciente[0].id}'  AND status="activo"`
             )
           : await pool.execute(
               `SELECT * FROM examenes_externos where id_pac ='${paciente[0].id}' AND fecha between "${fecha} 00:00:00" AND "${fecha} 23:59:00"`
@@ -1140,7 +1140,7 @@ export const getPacienteHijo = async (req, res) => {
 
 export const getExamenes = async (req, res) => {
   try {
-    const [examenes] = await pool.execute("SELECT * FROM examenes");
+    const [examenes] = await pool.execute("SELECT * FROM examenes WHERE status='activo'");
     if (examenes.length > 0) {
       return await res.status(200).json(examenes);
     } else {
@@ -1202,5 +1202,71 @@ export const statusExamenes = async (req, res) => {
   } catch (error) {
     console.log(error);
     return await res.status(500).json({ mensaje: "ERROR DE SERVIDOR" });
+  }
+};
+
+export const deleteExamenPaciente= async (req, res) => {
+  const { id} = req.body
+  if (!id || id < 0 || isNaN(id)) {
+    return await res
+      .status(400)
+      .json({ mensaje: "El id del examen no es valido" });
+  }
+  try {
+    const [existente] = await pool.execute(
+      "SELECT * FROM examenes_paciente WHERE id = ?",
+      [id]
+    );
+    if (existente.length > 0) {
+      const [CaNulo] = await pool.execute(
+        "UPDATE `examenes_paciente` SET `status` = ? WHERE id = ?",
+        ["nulo", id]
+      );
+      return await res.status(200).json({
+        mensaje: "Examen anulado correctamente"
+      });
+    } else {
+      return await res
+        .status(400)
+        .json({ mensaje: "El examen que intenta eliminar no existe" });
+    }
+  } catch (error) {
+    console.log("🚀 ~ deleteExamenPaciente ~ error:", error);
+    return await res
+      .status(500)
+      .json({ mensaje: "Ha ocurrido un error en el servidor" });
+  }
+};
+
+export const deleteExamenExterno= async (req, res) => {
+  const { id} = req.body
+  if (!id || id < 0 || isNaN(id)) {
+    return await res
+      .status(400)
+      .json({ mensaje: "El id del examen no es valido" });
+  }
+  try {
+    const [existente] = await pool.execute(
+      "SELECT * FROM examenes_externos WHERE id = ?",
+      [id]
+    );
+    if (existente.length > 0) {
+      const [CaNulo] = await pool.execute(
+        "UPDATE `examenes_externos` SET `status` = ? WHERE id = ?",
+        ["nulo", id]
+      );
+      return await res.status(200).json({
+        mensaje: "Examen anulado correctamente"
+      });
+    } else {
+      return await res
+        .status(400)
+        .json({ mensaje: "El examen que intenta eliminar no existe" });
+    }
+  } catch (error) {
+    console.log("🚀 ~ deleteExamenExternos ~ error:", error);
+    return await res
+      .status(500)
+      .json({ mensaje: "Ha ocurrido un error en el servidor" });
   }
 };

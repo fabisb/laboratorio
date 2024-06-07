@@ -13,6 +13,11 @@ import {
   deleteResultado,
   deleteSubCaracteristica,
   getCaracteristicasById,
+  deleteEmpresa,
+  deleteExamen,
+  deleteSede,
+  deleteLaboratorio,
+  deleteCategoria,
   getExamenById,
   getExamenByNombre,
   getExamenBySeccion,
@@ -39,7 +44,8 @@ import {
   updateLaboratorio,
   updateSede,
   updateTitulo,
-  crearSede
+  crearSede,
+  deleteSeccion
 } from "../controllers/examenesModulo.controller.js";
 var router = express.Router();
 //ADMINISTRADOR SOLAMENTE
@@ -80,6 +86,14 @@ router.put("/update-caracteristica", administradorToken, updateCaracteristica);
 router.put("/update-subcaracteristica", administradorToken, updateSubCaracteristica);
 router.put("/update-rango", administradorToken, updateRango);
 router.put("/update-resultado", administradorToken, updateResultados);
+router.put("/delete-empresa",administradorToken, deleteEmpresa);
+router.put("/delete-examen",administradorToken, deleteExamen);
+router.put("/delete-sede",administradorToken, deleteSede);
+router.put("/delete-laboratorio",administradorToken, deleteLaboratorio);
+router.put("/delete-categoria",administradorToken, deleteCategoria);
+router.put("/delete-Seccion",administradorToken, deleteSeccion);
+
+
 
 //INSERT
 router.post("/insert-caracteristica", administradorToken, insertCaracteristica);

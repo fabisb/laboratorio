@@ -75,6 +75,8 @@ router.get("/resultados-examen", verifyCookie, getExamenResultados); //TODOS
 
 //GET USUARIOS
 router.get("/get-usuarios", adminCookie, getAllUsers); //Administrador
+router.get("/get-asegurados", adminCookie, getEmpresas); //Administrador
+
 
 //POST
 router.post("/guardar-usuario", adminCookie, crearUsuario); //Administrador

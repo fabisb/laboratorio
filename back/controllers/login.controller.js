@@ -43,7 +43,7 @@ const publics = path.join(__dirname, "../public");
 }; */
 export const getSedes = async (req, res) => {
   try {
-    const [sedes] = await pool.execute("SELECT * FROM sede");
+    const [sedes] = await pool.execute("SELECT * FROM sede WHERE status='activo'");
     if (sedes.length == 0) {
       return await res.status(404).json({ mensaje: "No se encuentran sedes" });
     } else {

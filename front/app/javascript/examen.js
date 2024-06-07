@@ -783,6 +783,7 @@ async function detalleExamen(id) {
   const tBody = document.getElementById(`tBody${id}`);
 
   caracteristicas.forEach((c) => {
+    if(c.nombre){
     if (c.status == "titulo") {
       tBody.innerHTML += `
       <tr>
@@ -794,11 +795,12 @@ async function detalleExamen(id) {
       tBody.innerHTML += `
       <tr>
         <td scope="col">${c.nombre}</td>
-        <td scope="col">${c.unidad}</td>
+        <td scope="col">${c.unidad?c.unidad:''}</td>
         <td scope="col">${c.posicion}</td>
         <td scope="col">${c.impsiempre == 1 ? "SI" : "NO"}</td>
       </tr>
       `;
+    }
     }
   });
 }
@@ -893,7 +895,6 @@ const cedulaPaciente = async () => {
           );
           activarInputs("crearPaciente()");
         } else {
-          console.log(botonModificar);
           desactivarInputs();
 
           const { data: pendientes } = await axios.get(
@@ -980,7 +981,8 @@ const desactivarInputs = () => {
       inp.id != "inputBioanalistaExterno" &&
       inp.id != "inputNotaExterno" &&
       inp.id != "inputPdfExterno" &&
-      inp.id != "inputOrdenExterno"
+      inp.id != "inputOrdenExterno" && 
+      inp.id != "pacienteDiagnosticoInput"
     ) {
       inp.setAttribute("readonly", "true");
     }
@@ -997,6 +999,7 @@ const activarInputs = async (click) => {
     toggle: false,
   });
   bsCollapse.show();
+  document.getElementById(pacienteObj.genero).setAttribute('checked','true')
 
   inputs.map((inp) => {
     inp.removeAttribute("readonly");
@@ -1062,7 +1065,7 @@ async function modificarPaciente() {
         { headers: { token } }
       );
       console.log("PACIENTE INGRESADO");
-      const modal = new bootstrap.Modal("#confirmacion-modal-pacienteM");
+      const modal = new bootstrap.Modal("#confirmacion-modal-paciente");
       modal.show();
       desactivarInputs();
       cedulaPaciente();
@@ -1642,6 +1645,9 @@ const modificarExamenPacienteBDD = async (examen, idEx, idExPc) => {
     });
 
     resultados.forEach((ct) => {
+      if(ct.nombre==null){
+        ct.nombre=''
+      }
       if (ct.status == "titulo") {
         tBodyDiagnosticos.innerHTML += `
             <tr>
@@ -1843,7 +1849,20 @@ const modificarExamenPacienteBDD = async (examen, idEx, idExPc) => {
                       </tr>
             `;
             }
+
           }
+        }
+      }
+      if(ct.nombre==''){
+      
+        try {
+        document.getElementById(`inputRs${ct.id}`).setAttribute('hidden',true)
+        document.getElementById(`modificarResSvg${ct.id}`).setAttribute('hidden',true)
+        document.getElementById(`inputNt${ct.id}`).setAttribute('hidden',true)
+  
+          
+        } catch (error) {
+          
         }
       }
     });
@@ -1937,6 +1956,7 @@ function desactivarInputsRes(id) {
   document.getElementById(`inputNt${id}`).setAttribute("disabled", "true");
   document.getElementById(`inputRs${id}`).setAttribute("disabled", "true");
 }
+let contador=0
 
 const abrirModalExamenes = () => new bootstrap.Modal("#examenes-list").toggle();
 const abrirModalExamenesCrud = () =>
@@ -1977,6 +1997,7 @@ const abrirResultadosModal = async (examen, idEx, n) => {
     urlsv + "/api/modulo-examenes/examen-id",
     { headers: { token }, params: { idExamen: idEx } }
   );
+  
   console.log(examenData);
 
   let caracteristicas = [...examenData.detalles, ...examenData.titulos];
@@ -1995,6 +2016,12 @@ const abrirResultadosModal = async (examen, idEx, n) => {
   let edad = parseInt(pacienteObj.edad.split(";")[0].split(" ")[0]);
   let generoPc = pacienteObj.genero == "Hombre" ? "masculino" : "femenino";
   caracteristicas.forEach((ct) => {
+    let name=ct.nombre
+    if(ct.nombre==null){
+      ct.nombre=`${contador}-EMPTY-0023`
+      contador+=1
+    }
+
     if (ct.status == "titulo") {
       tBodyDiagnosticos.innerHTML += `
       <tr>
@@ -2077,7 +2104,7 @@ const abrirResultadosModal = async (examen, idEx, n) => {
       if (subDt.length > 0) {
         tBodyDiagnosticos.innerHTML += `
       <tr >
-              <th scope="row" colspan="2">${ct.nombre}</th>
+              <th scope="row" colspan="2">${name==null?``:name}</th>
               <th> SubCaracteristica </th>
               <th>Resultado</th>
               <td></td>
@@ -2128,7 +2155,7 @@ const abrirResultadosModal = async (examen, idEx, n) => {
           if (resultadosDt.length > 0) {
             tBodyDiagnosticos.innerHTML += `
           <tr>
-                      <th scope="row" colspan="2">${ct.nombre}</th>
+                      <th scope="row" colspan="2">${name==null?'':name}</th>
                       <td> <select class="form-select form-select-sm selectRs${
                         ct.nombre
                       } inputExDetallePacCar" rango='${rango.id}' inferior='${
@@ -2140,7 +2167,7 @@ const abrirResultadosModal = async (examen, idEx, n) => {
           
           </option>
                     </select></td>
-                      <td>${ct.unidad}</td>
+                      <td>${ct.unidad?ct.unidad : ''}</td>
                       <td>${
                         rango.inferior % 1 == 0
                           ? rango.inferior.split(".")[0]
@@ -2170,7 +2197,7 @@ const abrirResultadosModal = async (examen, idEx, n) => {
           } else {
             tBodyDiagnosticos.innerHTML += `
           <tr>
-                      <th scope="row" colspan="2">${ct.nombre}</th>
+                      <th scope="row" colspan="2">${name==null?'':name}</th>
                       <td>  <input class="form-control form-control-sm inputExDetallePacCar" rango='${
                         rango.id
                       }' inferior='${rango.inferior}' superior='${
@@ -2178,7 +2205,7 @@ const abrirResultadosModal = async (examen, idEx, n) => {
             }' name='rs-${ct.id}' type="text" id='inputRs${
               ct.id
             }' placeholder="Ingrese Resultado" aria-label=".form-control-sm example">              </td>
-                      <td>${ct.unidad}</td>
+                      <td>${ct.unidad?ct.unidad:''}</td>
                       <td>${
                         rango.inferior % 1 == 0
                           ? rango.inferior.split(".")[0]
@@ -2201,13 +2228,13 @@ const abrirResultadosModal = async (examen, idEx, n) => {
           if (resultadosDt.length > 0) {
             tBodyDiagnosticos.innerHTML += `
           <tr>
-                      <th scope="row" colspan="2">${ct.nombre}</th>
+                      <th scope="row" colspan="2">${name==null?'':name}</th>
                       <td> <select class="form-select form-select-sm selectRs${ct.nombre} inputExDetallePacCar" rango='no' inferior='no' superior='no' id='inputRs${ct.id}' aria-label="Small select example">
                       <option value="" selected>
           
           </option>
                     </select></td>
-                      <td>${ct.unidad}</td>
+                      <td>${ct.unidad?ct.unidad:''}</td>
                       <td> - </td>
                       <td>  <input class="form-control form-control-sm inputExDetallePacNota" name='nt-${ct.id}' type="text" id='inputNt${ct.id}' placeholder="Nota" aria-label=".form-control-sm example">              </td>
         
@@ -2225,9 +2252,9 @@ const abrirResultadosModal = async (examen, idEx, n) => {
           } else {
             tBodyDiagnosticos.innerHTML += `
           <tr>
-                      <th scope="row" colspan="2">${ct.nombre}</th>
+                      <th scope="row" colspan="2">${name==null?'':name}</th>
                       <td>  <input class="form-control form-control-sm inputExDetallePacCar" name='rs-${ct.id}' rango='no' inferior='no' superior='no' type="text" id='inputRs${ct.id}' placeholder="Ingrese Resultado" aria-label=".form-control-sm example">              </td>
-                      <td>${ct.unidad}</td>
+                      <td>${ct.unidad?ct.unidad:''}</td>
                       <td> - </td>
                       <td>  <input class="form-control form-control-sm inputExDetallePacNota" name='nt-${ct.id}' type="text" id='inputNt${ct.id}' placeholder="Nota" aria-label=".form-control-sm example">              </td>
         
@@ -2235,6 +2262,17 @@ const abrirResultadosModal = async (examen, idEx, n) => {
           `;
           }
         }
+      }
+    }
+    if(name==null){
+      
+      try {
+      document.getElementById(`inputRs${ct.id}`).setAttribute('hidden',true)
+      document.getElementById(`inputNt${ct.id}`).setAttribute('hidden',true)
+
+        
+      } catch (error) {
+        
       }
     }
   });
@@ -2269,25 +2307,20 @@ async function previewPdf(tipo, ordenId) {
 
   examenesChecked.forEach((e) => {
     const caracteristicas = [];
+    console.log(e.detallesExamenPc)
 
     e.detallesExamenPc.forEach((el, i) => {
-      let subCa = e.subCaracteristicasExPc.filter((sb) => sb.idCar == el.idCar);
-      if (el.imprimir == 1) {
+      if(el.status=='titulo'){
         caracteristicas.push({
-          nombre: el.nombreCar,
-          resultado: el.resultado,
-          inferior: el.inferior,
-          superior: el.superior,
-          unidad: el.unidad,
-          nota: el.nota,
-          imprimir: el.imprimir,
-          subCaracteristicas: subCa,
-          //AQUI HAY QUE PONER EL STATUS DEL TITULO
-          //status: i == 1 ? 'titulo':''
-          //AQUI HAY QUE PONER EL STATUS DEL TITULO
+          nombre: el.nombre,
+          posicion:el.posicion,
+          status:'titulo'
+          
+         
         });
-      } else {
-        if (el.resultado != "") {
+      }else{
+        let subCa = e.subCaracteristicasExPc.filter((sb) => sb.idCar == el.idCar);
+        if (el.imprimir == 1) {
           caracteristicas.push({
             nombre: el.nombreCar,
             resultado: el.resultado,
@@ -2301,7 +2334,24 @@ async function previewPdf(tipo, ordenId) {
             //status: i == 1 ? 'titulo':''
             //AQUI HAY QUE PONER EL STATUS DEL TITULO
           });
+        } else {
+          if (el.resultado != "") {
+            caracteristicas.push({
+              nombre: el.nombreCar,
+              resultado: el.resultado,
+              inferior: el.inferior,
+              superior: el.superior,
+              unidad: el.unidad,
+              nota: el.nota,
+              imprimir: el.imprimir,
+              subCaracteristicas: subCa,
+              //AQUI HAY QUE PONER EL STATUS DEL TITULO
+              //status: i == 1 ? 'titulo':''
+              //AQUI HAY QUE PONER EL STATUS DEL TITULO
+            });
+          }
         }
+  
       }
     });
     examenesPreview.push({
@@ -2601,9 +2651,8 @@ async function buscarExamenesPaciente() {
                 <path d="M8 5.5a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5M4.5 8a3.5 3.5 0 1 1 7 0 3.5 3.5 0 0 1-7 0"/>
                 </svg>
                 ${
-                  nivelUser == 2
-                    ? ""
-                    : `
+                  nivelUser == 1
+                    ? `
                 <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="25"
@@ -2621,7 +2670,7 @@ async function buscarExamenesPaciente() {
                   d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z"
                 />
               </svg>
-                `
+                `:''
                 }
                 
               ${
@@ -2633,7 +2682,7 @@ async function buscarExamenesPaciente() {
                 fill="red"
                 class="bi bi-x-lg my-1 svgButton"
                 viewBox="0 0 20 20"
-                onclick=""
+                onclick="borrarExamenPaciente('${ex.id}')"
               >
                 <path
                   d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8z"
@@ -2693,16 +2742,17 @@ async function buscarExamenesPaciente() {
               </div>
              
               <div class="col-3 d-flex justify-content-end">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="red" class="bi bi-file-earmark-pdf-fill my-1 svgButton" onclick="descargarPdfExterno('${ex.id}')" viewBox="0 0 16 16">
+  <path d="M5.523 12.424q.21-.124.459-.238a8 8 0 0 1-.45.606c-.28.337-.498.516-.635.572l-.035.012a.3.3 0 0 1-.026-.044c-.056-.11-.054-.216.04-.36.106-.165.319-.354.647-.548m2.455-1.647q-.178.037-.356.078a21 21 0 0 0 .5-1.05 12 12 0 0 0 .51.858q-.326.048-.654.114m2.525.939a4 4 0 0 1-.435-.41q.344.007.612.054c.317.057.466.147.518.209a.1.1 0 0 1 .026.064.44.44 0 0 1-.06.2.3.3 0 0 1-.094.124.1.1 0 0 1-.069.015c-.09-.003-.258-.066-.498-.256M8.278 6.97c-.04.244-.108.524-.2.829a5 5 0 0 1-.089-.346c-.076-.353-.087-.63-.046-.822.038-.177.11-.248.196-.283a.5.5 0 0 1 .145-.04c.013.03.028.092.032.198q.008.183-.038.465z"/>
+  <path fill-rule="evenodd" d="M4 0h5.293A1 1 0 0 1 10 .293L13.707 4a1 1 0 0 1 .293.707V14a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2m5.5 1.5v2a1 1 0 0 0 1 1h2zM4.165 13.668c.09.18.23.343.438.419.207.075.412.04.58-.03.318-.13.635-.436.926-.786.333-.401.683-.927 1.021-1.51a11.7 11.7 0 0 1 1.997-.406c.3.383.61.713.91.95.28.22.603.403.934.417a.86.86 0 0 0 .51-.138c.155-.101.27-.247.354-.416.09-.181.145-.37.138-.563a.84.84 0 0 0-.2-.518c-.226-.27-.596-.4-.96-.465a5.8 5.8 0 0 0-1.335-.05 11 11 0 0 1-.98-1.686c.25-.66.437-1.284.52-1.794.036-.218.055-.426.048-.614a1.24 1.24 0 0 0-.127-.538.7.7 0 0 0-.477-.365c-.202-.043-.41 0-.601.077-.377.15-.576.47-.651.823-.073.34-.04.736.046 1.136.088.406.238.848.43 1.295a20 20 0 0 1-1.062 2.227 7.7 7.7 0 0 0-1.482.645c-.37.22-.699.48-.897.787-.21.326-.275.714-.08 1.103"/>
+</svg>
                
                 
                 ${
                   nivelUser == 2 || nivelUser == 3
                     ? ""
                     : `
-                    <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="red" class="bi bi-file-earmark-pdf-fill mx-4 my-1 svgButton" onclick="descargarPdfExterno('${ex.id}')" viewBox="0 0 16 16">
-  <path d="M5.523 12.424q.21-.124.459-.238a8 8 0 0 1-.45.606c-.28.337-.498.516-.635.572l-.035.012a.3.3 0 0 1-.026-.044c-.056-.11-.054-.216.04-.36.106-.165.319-.354.647-.548m2.455-1.647q-.178.037-.356.078a21 21 0 0 0 .5-1.05 12 12 0 0 0 .51.858q-.326.048-.654.114m2.525.939a4 4 0 0 1-.435-.41q.344.007.612.054c.317.057.466.147.518.209a.1.1 0 0 1 .026.064.44.44 0 0 1-.06.2.3.3 0 0 1-.094.124.1.1 0 0 1-.069.015c-.09-.003-.258-.066-.498-.256M8.278 6.97c-.04.244-.108.524-.2.829a5 5 0 0 1-.089-.346c-.076-.353-.087-.63-.046-.822.038-.177.11-.248.196-.283a.5.5 0 0 1 .145-.04c.013.03.028.092.032.198q.008.183-.038.465z"/>
-  <path fill-rule="evenodd" d="M4 0h5.293A1 1 0 0 1 10 .293L13.707 4a1 1 0 0 1 .293.707V14a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2m5.5 1.5v2a1 1 0 0 0 1 1h2zM4.165 13.668c.09.18.23.343.438.419.207.075.412.04.58-.03.318-.13.635-.436.926-.786.333-.401.683-.927 1.021-1.51a11.7 11.7 0 0 1 1.997-.406c.3.383.61.713.91.95.28.22.603.403.934.417a.86.86 0 0 0 .51-.138c.155-.101.27-.247.354-.416.09-.181.145-.37.138-.563a.84.84 0 0 0-.2-.518c-.226-.27-.596-.4-.96-.465a5.8 5.8 0 0 0-1.335-.05 11 11 0 0 1-.98-1.686c.25-.66.437-1.284.52-1.794.036-.218.055-.426.048-.614a1.24 1.24 0 0 0-.127-.538.7.7 0 0 0-.477-.365c-.202-.043-.41 0-.601.077-.377.15-.576.47-.651.823-.073.34-.04.736.046 1.136.088.406.238.848.43 1.295a20 20 0 0 1-1.062 2.227 7.7 7.7 0 0 0-1.482.645c-.37.22-.699.48-.897.787-.21.326-.275.714-.08 1.103"/>
-</svg>
+                    
                 <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="25"
@@ -2734,7 +2784,7 @@ async function buscarExamenesPaciente() {
                 fill="red"
                 class="bi bi-x-lg my-1 svgButton"
                 viewBox="0 0 20 20"
-                onclick=""
+                onclick="borrarExamenExterno('${ex.id}')"
               >
                 <path
                   d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8z"
@@ -2761,6 +2811,54 @@ async function buscarExamenesPaciente() {
   } catch (error) {
     console.log(error);
   }
+} 
+
+async function borrarExamenExterno(id){
+  
+  try {
+    const { token } = await login.getToken();
+    const { data } = await axios.put(
+      urlsv + "/api/examenes/delete-examen-externo",
+      {
+        id
+      },
+      {
+        headers: { token },
+      }
+    );
+
+    console.log(data)
+    cedulaPaciente()
+    
+  } catch (error) {
+    console.log(error)
+  }
+  
+
+}
+
+
+async function borrarExamenPaciente(id){
+  
+    try {
+      const { token } = await login.getToken();
+      const { data } = await axios.put(
+        urlsv + "/api/examenes/delete-examen-paciente",
+        {
+          id
+        },
+        {
+          headers: { token },
+        }
+      );
+  
+      cedulaPaciente()
+      
+    } catch (error) {
+      console.log(error)
+    }
+    
+  
 }
 
 function guardarResultadosExamen() {
@@ -2775,6 +2873,10 @@ function guardarResultadosExamen() {
     reimpresionButton.setAttribute("hidden", "true");
     console.log(nota, res);
     if (examenesDelPaciente.length == 0) {
+      if(e.nombre.includes('-EMPTY-0023')){
+        e.nombre=''
+      }
+
       document.getElementById("tBodyLgEx").innerHTML = `
       <a href="#" class="list-group-item list-group-item-action fw-semibold liTableExPac">
                 <div class="container" id="tHeadLgEx">
@@ -2820,7 +2922,12 @@ function guardarResultadosExamen() {
   });
 
   examenDataPc.titulos.map((e) => {
-    detallesExamenPc.push(e);
+    detallesExamenPc.push({
+      nombre:e.titulo,
+      posicion:e.posicion,
+      status:e.status,
+      id:e.id
+    });
   });
   const subCaracteristicas = examenDataPc.subCa.map((e) => {
     const res = document.getElementById("Rs-" + e.id);

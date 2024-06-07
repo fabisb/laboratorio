@@ -838,6 +838,9 @@ body {
   }
   @media (max-width: 800px) {
     /* … */ 
+    #door{
+      display: none;
+    }
     
     #navPrincipal{
         background: rgb(28,132,132);

@@ -838,7 +838,9 @@ body {
   }
   @media (max-width: 800px) {
     /* … */ 
-    
+    #door{
+      display: none;
+    }
     #navPrincipal{
         background: rgb(28,132,132);
         background: linear-gradient(87deg, rgba(28,132,132,1) 30%, rgba(104,192,195,1) 72%, rgba(227,247,246,1) 92%);                       color: white;

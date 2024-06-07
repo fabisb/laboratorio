@@ -21,6 +21,7 @@ const {data: examen} = await axios.get(
   { headers: { token }, params: { idSeccion } }
 ); 
 */
+let contador=0
 var examenesArray = [];
 var titulosArray =[];
 function formularioSeccion() {
@@ -272,10 +273,10 @@ const render = async () => {
                 </svg>
 
               
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="red" class="bi bi-x-circle " viewBox="0 0 16 16">
-                  <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
-                  <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708"/>
-                </svg>
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="red" style='cursor:pointer' data-bs-dismiss="modal" onclick="borrarExamenBdd('${ex.id}')" class="bi bi-x-circle" viewBox="0 0 16 16">
+                <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
+                <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708"/>
+              </svg>
                 </div>
   
               </div>
@@ -298,7 +299,12 @@ const render = async () => {
   }
 };
 function añadirAcordionItemEx(nombre1, idEx) {
+  if (nombre1 == "") {
+    nombre1=`${contador}-EMPTY0023`
+    contador+=1
+  }
   nombre1 = nombre1.trim();
+  
   const nombre = nombre1
     .replaceAll(" ", "-")
     .replaceAll("(", "-")
@@ -741,6 +747,9 @@ async function crearCaracteristicaBdd(nombre, idEx) {
     resultados,
     idEx,
   });
+  if(caracteristica[0].valor.includes('-EMPTY0023')){
+    caracteristica[0].valor=''
+  }
   const caracteristicas = [
     {
       caracteristica,
@@ -1047,155 +1056,26 @@ async function modificarExamen(id) {
     seccionSelect.value = examen.examen.id_seccion;
     categoriaSelect.value = examen.examen.id_categoria;
     accordionDiv.innerHTML = "";
-    examen.titulos.forEach(t=>{
- 
-
-      const posicion=t.posicion
-      const nombre1=t.titulo
-  const nombre = t.titulo
-    .replaceAll(" ", "-")
-    .replaceAll("(", "-")
-    .replaceAll(")", "-")
-    .replaceAll(".", "-")
-    .replaceAll("+", "-")
-    .replaceAll("/", "-");
-
-  const accordionCaracteristicas = document.getElementById(
-    "accordionCaracteristicas"
-  );
-  
-  caracteristicasCreadas.add(nombre);
-  
-
-  const divItem = document.createElement("div");
-  divItem.className = `accordion-item acordionItemCaracteristica`;
-  divItem.id = `accordionItemCaracteristica${nombre}`;
-
-  divItem.innerHTML = `
-  
-  
-  <h2 class="accordion-header headerCaracteristica"  >
-    <button class="accordion-button collapsed" id="collapseTitulo${nombre}" type="button" data-bs-toggle="collapse" data-bs-target="#collapseCaracteristica${nombre}" aria-expanded="false" aria-controls="collapseCaracteristica${nombre}">
-     ${nombre1}  --- TITULO
-    </button>
-    
-  </h2>
-  <div id="collapseCaracteristica${nombre}" class="accordion-collapse collapse" data-bs-parent="#accordionItemCaracteristica">
-    <div class="accordion-body m-0 p-0 text-center" id="accordionBodyCaracteristica${nombre}">
-    
-      <div class="row my-3" style="font-size:medium">
-      <div class='col-2'>
-        <label
-        for="inputTitulo${nombre}"
-        name="titulo"
-        class="form-label formCaracteristica "
-        >Titulo</label
-      > 
-        </div>
-        
-        <div class="col-2">
-        
-          <input
-            type="text"
-            class="form-control form-control-sm"
-            id="inputTitulo${nombre}"
-            placeholder="Titulo"
-            disabled
-            value="${nombre1}"
-          />
-        </div>
-        <div class="col-2">
-        <label
-    for="inputPosicion${nombre}"
-    name="posicion"
-    class="form-label formCaracteristica"
-    >Posicion</label>
-  
-        </div>
-        <div class='col-2'>
-        <input
-    type="number"
-    min='0'
-    step='1'
-    value="${posicion}"
-    class="form-control form-control-sm"
-    id="inputPosicion${nombre}"
-    placeholder="Posicion"
-    disabled
-  />
-        </div>
-        <div class='col-4'>
-          <div class='row'>
-            <div class='col'>
-            <button class='button${nombre} btnIcon'>
-            
-            <svg
-            xmlns="http://www.w3.org/2000/svg"
-            style="cursor: pointer"
-            width="40"
-            height="40"
-            fill="#FACD0B"
-            class="bi bi-pencil-square botonModificarTitulo${nombre}"
-            viewBox="0 0 20 20"
-            id="botonModificarTitulo${nombre}"
-            onclick="modificarTitulo('${nombre}','${nombre1}')"
-          >
-            <path
-              d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"
-            />
-            <path
-              fill-rule="evenodd"
-              d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z"
-            />
-          </svg>
-          </button>
-          </div>
-            <div class='col'><button class='button${nombre} btnIcon' id="botonBorrarTitulo${nombre}" onclick="deleteTituloBdd('${t.id}')">
-            <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="red" class="bi bi-x-circle" viewBox="0 0 16 16">
-            <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
-            <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708"/>
-            </svg>
-            </button></div>
-            <div class='col'>
-              <button class='button${nombre} btnIcon'id="botonGuardarTitulo${nombre}" onclick="guardarTituloBdd('${nombre}','${t.id}')" hidden>
-                <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="blue" class="bi bi-save" viewBox="0 0 16 16">
-                <path d="M2 1a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H9.5a1 1 0 0 0-1 1v7.293l2.646-2.647a.5.5 0 0 1 .708.708l-3.5 3.5a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L7.5 9.293V2a2 2 0 0 1 2-2H14a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2h2.5a.5.5 0 0 1 0 1z"/>
-                </svg>
-              </button>
-            </div>
-
-
-          </div>
-
-        
-
-
-
-
-
-        </div>
-        
-      </div>
+    examen.detalles=examen.detalles.sort((a, b) => {
+      console.log(a,b)
       
-    
-  
-      </div>
-
-  </div>
-
-
-  `;
-
-  accordionCaracteristicas.appendChild(divItem);
-  titulosArray.push({
-    titulo:nombre1,
-    posicion
-  })
-    })
+      if (a.posicion > b.posicion) {
+        return 1;
+      }
+      if (a.posicion < b.posicion) {
+        return -1;
+      }
+      return 0;
+    });
 
     examen.detalles.forEach((dt) => {
       const divItem = document.createElement("div");
+      if (dt.nombre == null) {
+        dt.nombre=`${contador}-EMPTY0023`
+        contador+=1
+      }
       nombre1 = dt.nombre.trim();
+      
       const nombre = nombre1
         .replaceAll(" ", "-")
         .replaceAll("(", "-")
@@ -1757,6 +1637,152 @@ onclick="modificarSubCaForm('${sb.id}','${nombre}')"
         tBodyResultados.appendChild(tr);
       });
     });
+
+    examen.titulos.forEach(t=>{
+ 
+
+      const posicion=t.posicion
+      const nombre1=t.titulo
+  const nombre = t.titulo
+    .replaceAll(" ", "-")
+    .replaceAll("(", "-")
+    .replaceAll(")", "-")
+    .replaceAll(".", "-")
+    .replaceAll("+", "-")
+    .replaceAll("/", "-");
+
+  const accordionCaracteristicas = document.getElementById(
+    "accordionCaracteristicas"
+  );
+  
+  caracteristicasCreadas.add(nombre);
+  
+
+  const divItem = document.createElement("div");
+  divItem.className = `accordion-item acordionItemCaracteristica`;
+  divItem.id = `accordionItemCaracteristica${nombre}`;
+
+  divItem.innerHTML = `
+  
+  
+  <h2 class="accordion-header headerCaracteristica"  >
+    <button class="accordion-button collapsed" id="collapseTitulo${nombre}" type="button" data-bs-toggle="collapse" data-bs-target="#collapseCaracteristica${nombre}" aria-expanded="false" aria-controls="collapseCaracteristica${nombre}">
+     ${nombre1}  --- TITULO
+    </button>
+    
+  </h2>
+  <div id="collapseCaracteristica${nombre}" class="accordion-collapse collapse" data-bs-parent="#accordionItemCaracteristica">
+    <div class="accordion-body m-0 p-0 text-center" id="accordionBodyCaracteristica${nombre}">
+    
+      <div class="row my-3" style="font-size:medium">
+      <div class='col-2'>
+        <label
+        for="inputTitulo${nombre}"
+        name="titulo"
+        class="form-label formCaracteristica "
+        >Titulo</label
+      > 
+        </div>
+        
+        <div class="col-2">
+        
+          <input
+            type="text"
+            class="form-control form-control-sm"
+            id="inputTitulo${nombre}"
+            placeholder="Titulo"
+            disabled
+            value="${nombre1}"
+          />
+        </div>
+        <div class="col-2">
+        <label
+    for="inputPosicion${nombre}"
+    name="posicion"
+    class="form-label formCaracteristica"
+    >Posicion</label>
+  
+        </div>
+        <div class='col-2'>
+        <input
+    type="number"
+    min='0'
+    step='1'
+    value="${posicion}"
+    class="form-control form-control-sm"
+    id="inputPosicion${nombre}"
+    placeholder="Posicion"
+    disabled
+  />
+        </div>
+        <div class='col-4'>
+          <div class='row'>
+            <div class='col'>
+            <button class='button${nombre} btnIcon'>
+            
+            <svg
+            xmlns="http://www.w3.org/2000/svg"
+            style="cursor: pointer"
+            width="40"
+            height="40"
+            fill="#FACD0B"
+            class="bi bi-pencil-square botonModificarTitulo${nombre}"
+            viewBox="0 0 20 20"
+            id="botonModificarTitulo${nombre}"
+            onclick="modificarTitulo('${nombre}','${nombre1}')"
+          >
+            <path
+              d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"
+            />
+            <path
+              fill-rule="evenodd"
+              d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z"
+            />
+          </svg>
+          </button>
+          </div>
+            <div class='col'><button class='button${nombre} btnIcon' id="botonBorrarTitulo${nombre}" onclick="deleteTituloBdd('${t.id}')">
+            <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="red" class="bi bi-x-circle" viewBox="0 0 16 16">
+            <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
+            <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708"/>
+            </svg>
+            </button></div>
+            <div class='col'>
+              <button class='button${nombre} btnIcon'id="botonGuardarTitulo${nombre}" onclick="guardarTituloBdd('${nombre}','${t.id}')" hidden>
+                <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="blue" class="bi bi-save" viewBox="0 0 16 16">
+                <path d="M2 1a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H9.5a1 1 0 0 0-1 1v7.293l2.646-2.647a.5.5 0 0 1 .708.708l-3.5 3.5a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L7.5 9.293V2a2 2 0 0 1 2-2H14a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2h2.5a.5.5 0 0 1 0 1z"/>
+                </svg>
+              </button>
+            </div>
+
+
+          </div>
+
+        
+
+
+
+
+
+        </div>
+        
+      </div>
+      
+    
+  
+      </div>
+
+  </div>
+
+
+  `;
+
+  accordionCaracteristicas.appendChild(divItem);
+  titulosArray.push({
+    titulo:nombre1,
+    posicion
+  })
+    })
     document.getElementById('botonModalTitulo').setAttribute('onclick',`añadirTituloBdd(${id})`)
     document.getElementById("busquedaModalCloseBtn").click();
   } catch (error) {
@@ -3050,7 +3076,7 @@ function buscarSeccion() {
 
               
               
-              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="red" class="bi bi-x-circle " viewBox="0 0 16 16">
+              <svg xmlns="http://www.w3.org/2000/svg" onclick="borrarSeccionBdd('${sc.id}')" style="cursor:pointer" data-bs-dismisss="modal" width="24" height="24" fill="red" class="bi bi-x-circle " viewBox="0 0 16 16">
                 <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
                 <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708"/>
               </svg>
@@ -3067,6 +3093,30 @@ function buscarSeccion() {
     `;
   });
 }
+
+async function borrarSeccionBdd(id){
+  try {
+    const { token } = await login.getToken();
+    const { data } = await axios.put(
+      urlsv + "/api/modulo-examenes/delete-seccion",
+      {
+        id
+      },
+      {
+        headers: { token },
+      }
+    );
+
+    return examenesAlerta("Seccion Anulada con exito!", "success")
+    
+  } catch (error) {
+    console.log(error)
+  }
+  
+}
+
+
+
 function buscarSede() {
   input = document.getElementById("inputDescripcionBusqueda");
   filtro = sedesData.filter((sc) =>
@@ -3108,7 +3158,7 @@ function buscarSede() {
 
               
               
-              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="red" class="bi bi-x-circle " viewBox="0 0 16 16">
+              <svg xmlns="http://www.w3.org/2000/svg" onclick='borrarSedeBdd("${sc.id}")' data-bs-dismiss="modal" style='cursor:pointer' width="24" height="24" fill="red" class="bi bi-x-circle " viewBox="0 0 16 16">
                 <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
                 <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708"/>
               </svg>
@@ -3122,6 +3172,28 @@ function buscarSede() {
     `;
   });
 }
+
+async function borrarSedeBdd(id){
+  try {
+    const { token } = await login.getToken();
+    const { data } = await axios.put(
+      urlsv + "/api/modulo-examenes/delete-sede",
+      {
+        id
+      },
+      {
+        headers: { token },
+      }
+    );
+
+    return examenesAlerta("Sede Anulada con exito!", "success")
+    
+  } catch (error) {
+    console.log(error)
+  }
+  
+}
+
 
 function buscarCategoria() {
   input = document.getElementById("inputDescripcionBusqueda");
@@ -3167,7 +3239,7 @@ function buscarCategoria() {
 
               
               
-              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="red" class="bi bi-x-circle " viewBox="0 0 16 16">
+              <svg xmlns="http://www.w3.org/2000/svg" onclick="borrarCategoriaBdd('${sc.id}')" style="cursor:pointer" data-bs-dismiss="modal" width="24" height="24" fill="red" class="bi bi-x-circle " viewBox="0 0 16 16">
                 <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
                 <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708"/>
               </svg>
@@ -3184,6 +3256,28 @@ function buscarCategoria() {
     `;
   });
 }
+
+async function borrarCategoriaBdd(id){
+  try {
+    const { token } = await login.getToken();
+    const { data } = await axios.put(
+      urlsv + "/api/modulo-examenes/delete-categoria",
+      {
+        id
+      },
+      {
+        headers: { token },
+      }
+    );
+
+    return examenesAlerta("Categoria Anulada con exito!", "success")
+    
+  } catch (error) {
+    console.log(error)
+  }
+  
+}
+
 function buscarLaboratorio() {
   input = document.getElementById("inputDescripcionBusqueda");
   filtro = laboratoriosData.filter((sc) =>
@@ -3224,7 +3318,7 @@ function buscarLaboratorio() {
 
               
               
-              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="red" class="bi bi-x-circle " viewBox="0 0 16 16">
+              <svg xmlns="http://www.w3.org/2000/svg" data-bs-dismiss="modal" onclick="borrarLaboratorioBdd('${sc.id}')" style="cursor:pointer" width="24" height="24" fill="red" class="bi bi-x-circle " viewBox="0 0 16 16">
                 <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
                 <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708"/>
               </svg>
@@ -3233,13 +3327,35 @@ function buscarLaboratorio() {
             </div>
           </li> 
           
-\          </div>
+          </div>
           </div> 
 
 
     `;
   });
 }
+
+async function borrarLaboratorioBdd(id){
+  try {
+    const { token } = await login.getToken();
+    const { data } = await axios.put(
+      urlsv + "/api/modulo-examenes/delete-laboratorio",
+      {
+        id
+      },
+      {
+        headers: { token },
+      }
+    );
+
+    return examenesAlerta("Laboratorio Anulado con exito!", "success")
+    
+  } catch (error) {
+    console.log(error)
+  }
+  
+}
+
 function buscarExamen() {
   input = document.getElementById("inputDescripcionBusqueda");
   filtro = examenes.filter((ex) =>
@@ -3281,7 +3397,7 @@ function buscarExamen() {
                 d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z"
               /></svg>
               
-              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="red" class="bi bi-x-circle" viewBox="0 0 16 16">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="red" style='cursor:pointer' data-bs-dismiss="modal" onclick="borrarExamenBdd('${ex.id}')" class="bi bi-x-circle" viewBox="0 0 16 16">
                 <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
                 <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708"/>
               </svg>
@@ -3297,6 +3413,27 @@ function buscarExamen() {
 
     `;
   });
+}
+
+async function borrarExamenBdd(id){
+  try {
+    const { token } = await login.getToken();
+    const { data } = await axios.put(
+      urlsv + "/api/modulo-examenes/delete-examen",
+      {
+        id
+      },
+      {
+        headers: { token },
+      }
+    );
+
+    return examenesAlerta("Examen Anulado con exito!", "success")
+    
+  } catch (error) {
+    console.log(error)
+  }
+  
 }
 
 function buscarEmpresa() {
@@ -3336,7 +3473,7 @@ function buscarEmpresa() {
                 d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z"
               /></svg>
               
-              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="red" class="bi bi-x-circle" viewBox="0 0 16 16">
+              <svg xmlns="http://www.w3.org/2000/svg" data-bs-dismiss="modal" style="cursor:pointer" onclick="borrarEmpresaBdd('${ex.id}')" width="24" height="24" fill="red" class="bi bi-x-circle" viewBox="0 0 16 16">
                 <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
                 <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708"/>
               </svg>
@@ -3353,6 +3490,29 @@ function buscarEmpresa() {
     `;
   });
 }
+
+
+async function borrarEmpresaBdd(id){
+  try {
+    const { token } = await login.getToken();
+    const { data } = await axios.put(
+      urlsv + "/api/modulo-examenes/delete-empresa",
+      {
+        id
+      },
+      {
+        headers: { token },
+      }
+    );
+
+    return examenesAlerta("Empresa Anulada con exito!", "success")
+    
+  } catch (error) {
+    console.log(error)
+  }
+  
+}
+
 function disabledButton(id) {
   document.getElementById(id).setAttribute("disabled", "true");
 }
@@ -3502,11 +3662,11 @@ function guardarTitulo(nombre2){
 function añadirAcordionItemTitulo(idEx) {
   let nombreInp = document.getElementById("inputTitulo")
   let posicionInp = document.getElementById("inputPosicion")
-  nombreInp.value=''
-  posicionInp.value=''
+  
   let posicion=posicionInp.value;
   let nombre1= nombreInp.value;
-  nombre1 = nombre1.value.trim();
+  console.log(nombreInp,nombre1)
+  nombre1 = nombre1.trim();
   if (nombre1 == "") {
     return alerta.alert("Error", "El nombre no puede estar vacio");
   }
@@ -3522,7 +3682,9 @@ function añadirAcordionItemTitulo(idEx) {
     "accordionCaracteristicas"
   );
   if (caracteristicasCreadas.has(nombre)) {
-    return alerta.alert("Error", "Ya existe una caracteristica con ese nombre");
+    if(nombre!=""){
+      return alerta.alert("Error", "Ya existe una caracteristica con ese nombre");
+    }
   } else {
     caracteristicasCreadas.add(nombre);
   }
@@ -3651,13 +3813,16 @@ function añadirAcordionItemTitulo(idEx) {
     titulo:nombre1,
     posicion
   })
+
+  nombreInp.value=''
+  posicionInp.value=''
 }
 
 async function añadirTituloBdd(idEx){
   let nombre1 = document.getElementById("inputTitulo").value;
   let posicion = document.getElementById("inputPosicion").value;
   if (nombre1 == "") {
-    return alerta.alert("Error", "El nombre no puede estar vacio");
+    nombre1=`${idEx}-${caracteristicasCreadas.length}-Vacio`
   }
   const nombre = nombre1
     .replaceAll(" ", "-")
@@ -4196,6 +4361,7 @@ function crearCaracteristica(nombre) {
     }
   });
 
+
   const subCaracteristica = document.querySelectorAll(
     `.trSubCaracteristica${nombre}`
   );
@@ -4319,6 +4485,10 @@ function crearCaracteristica(nombre) {
     return rs.children[0].children[0].children[0].value.slice(0, 60);
   });
 
+  if(caracteristica[0].valor.includes('-EMPTY0023')){
+    caracteristica[0].valor=''
+  }
+
   caracteristicas.push({
     caracteristica,
     subCaracteristicas,
@@ -4341,7 +4511,8 @@ var caracteristicasCreadas = new Set();
 function añadirAcordionItem(nombre1) {
   nombre1 = nombre1.trim();
   if (nombre1 == "") {
-    return alerta.alert("Error", "El nombre no puede estar vacio");
+    nombre1=`${contador}-EMPTY0023`
+    contador+=1
   }
   const nombre = nombre1
     .replaceAll(" ", "-")
