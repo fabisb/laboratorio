@@ -15,7 +15,6 @@ const imprimir = async () => {
 const reimprimirExamen = async () => {
   const examen = await examenVar.get();
   console.log("🚀 ~ pintarExamen ~ examen:", examen);
-  const { token } = await login.getToken();
 
   document.getElementsByName("firmaBioanalista")[0].innerHTML = "";
 
@@ -23,32 +22,7 @@ const reimprimirExamen = async () => {
   examen.examenes.forEach((ex) => {
     bioSet.add(ex.bioanalista.id);
   });
-  /* 
-  document.getElementsByName("direccion")[0].innerText =
-    examen.paciente.direccion;
-  document.getElementsByName("correo")[0].innerText =
-    "Email: " + examen.paciente.correo;
-  document.getElementsByName("cabecera")[0].innerHTML = `
-  <div class="col" style="font-size: small;">
-  <div class="card-body">
-    <ul class="list-group list-group-flush">
-      <li class="list-group-item"><span class="fw-bold">Paciente:</span> <br> ${examen.paciente.nombre}</li>
-      <li class="list-group-item"><span class="fw-bold">Cedula:</span><br> ${examen.paciente.pre_cedula}-${examen.paciente.cedula}</li>
-      <li class="list-group-item"><span class="fw-bold">Factura: </span><br> ${examen.orden}</li>
-    </ul>
-  </div>
-</div>
-<div class="col" style="font-size: small;">
-  <div class="card-body">
-    <ul class="list-group list-group-flush">
-      <li class="list-group-item"><span class="fw-bold">Fecha Nacimiento:</span><br> ${examen.paciente.fecha_nacimiento}</li>
-      <li class="list-group-item"><span class="fw-bold">Edad:</span><br> ${examen.paciente.edad}</li>
-      <li class="list-group-item"><span class="fw-bold">Emision:</span><br> ${moment().format('DD-MM-YYYY')}</li>
-    </ul>
-  </div>
-</div>
-  `;
- */
+
   document.getElementsByName("examenContainer")[0].innerHTML = "";
   for (let index = 0; index < [...bioSet].length; index++) {
     const bio = [...bioSet][index];
@@ -109,7 +83,7 @@ const reimprimirExamen = async () => {
                   if (c?.status == "titulo") {
                     return `
                     <tr>
-                    <th colspan="5" scope="row">${c.nombre}</th>
+                    <th colspan="5" scope="row">${c.titulo}</th>
                   </tr>
                     `;
                   } else {
@@ -122,7 +96,7 @@ const reimprimirExamen = async () => {
                         : ""
                     } 
                 </td>
-                <td>${c.unidad}</td>
+                <td>${c.unidad ? c.unidad : ''}</td>
                 <td>${c.inferior}</td>
                 <td>${c.superior}</td>
               </tr>
@@ -299,7 +273,7 @@ const pintarExamen = async () => {
                       : ""
                   } 
           </td>
-              <td>${c.unidad}</td>
+              <td>${c.unidad ? c.unidad : ''}</td>
               <td>${c.inferior}</td>
               <td>${c.superior}</td>
             </tr>

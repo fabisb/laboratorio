@@ -53,7 +53,6 @@ export const getExamenReimpresion = async (req, res) => {
             tipo: subCaInfo[0].tipo,
           });
         }
-
         caracteristicas.push({
           nombre: detalleInfo[0].nombre,
           resultado: dt.resultado,
@@ -66,7 +65,7 @@ export const getExamenReimpresion = async (req, res) => {
         });
       }
       const [titulos] = await pool.execute(
-        `SELECT * FROM titulos where id_ex=?`,
+        `SELECT * FROM titulos where id_ex = ?`,
         [examen[0].id_ex]
       );
       titulos.map((e) => {
@@ -87,12 +86,23 @@ export const getExamenReimpresion = async (req, res) => {
         return 0;
       });
 
+      const [orden] = await pool.execute(
+        `SELECT * FROM ordenes where id = ?`,
+        [examen[0].id_orden]
+      );
+      const [paciente] = await pool.execute(
+        `SELECT * FROM pacientes where id = ?`,
+        [orden[0].id_paciente]
+      );
+
       examenes.push({
         examen: infoExamen[0].nombre,
         nombreSeccion: seccion[0].nombre,
         bioanalista: bioanalista[0],
         ordenId: examen[0].id_orden,
         caracteristicas,
+        orden: orden[0],
+        paciente:paciente[0]
       });
     }
     return await res.status(200).json({ examenes });
