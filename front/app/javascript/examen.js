@@ -987,7 +987,7 @@ const desactivarInputs = () => {
       inp.setAttribute("readonly", "true");
     }
 
-    if (inp.name == "genero") {
+    if (inp.name == "genero" || inp.name == 'fecha_nacimiento') {
       inp.setAttribute("disabled", "true");
     }
   });
@@ -2522,15 +2522,16 @@ async function pedirCaracteristicas(id) {
     );
     console.log(caracteristicas);
     caracteristicas.caracteristicasData.forEach((ct) => {
+      
       tBody.innerHTML += `
       <tr>
-                  <td scope="col">${ct.nombre}</td>
+                  <td scope="col">${ct.nombre?ct.nombre:''}</td>
                   <td scope="col">${ct.resultado}</td>
                   <td scope="col">${ct.unidad}</td>
                   <td scope="col">${
                     ct.rango
                       ? ct.rango.inferior + " - " + ct.rango.superior
-                      : "no"
+                      : ""
                   }</td>
                   <td scope="col">${ct.nota}</td>
                 </tr>

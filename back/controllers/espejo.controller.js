@@ -32,35 +32,40 @@ export const getExamenesPacientes = async (req, res) => {
         const [detalleInfo] = await pool.execute(
           `SELECT * FROM detalles_examen WHERE id = '${dt.id_dt}'`
         );
-        console.log(detalleInfo);
-        const [subCar] = await pool.execute(
-          `SELECT * FROM detalle_subcaracteristica_paciente where id_det_ex = '${dt.id}'`
-        );
-        let subCaracteristicas = [];
-        for await (const sb of subCar) {
-          const [subCaInfo] = await pool.execute(
-            `SELECT * FROM subcaracteristicas_detalle WHERE id=${sb.id_detalle_sub}`
+        if(detalleInfo.length==0){
+          
+        }else{
+          const [subCar] = await pool.execute(
+            `SELECT * FROM detalle_subcaracteristica_paciente where id_det_ex = '${dt.id}'`
           );
-          subCaracteristicas.push({
-            idSub: subCaInfo[0].id,
-            nombreSub: subCaInfo[0].nombre,
-            resultado: sb.resultado,
-            idCar: dt.id_dt,
-            nota: sb.nota,
-            tipo: subCaInfo[0].tipo,
+          let subCaracteristicas = [];
+          for await (const sb of subCar) {
+            const [subCaInfo] = await pool.execute(
+              `SELECT * FROM subcaracteristicas_detalle WHERE id=${sb.id_detalle_sub}`
+            );
+            subCaracteristicas.push({
+              idSub: subCaInfo[0].id,
+              nombreSub: subCaInfo[0].nombre,
+              resultado: sb.resultado,
+              idCar: dt.id_dt,
+              nota: sb.nota,
+              tipo: subCaInfo[0].tipo,
+            });
+          }
+  
+          caracteristicas.push({
+            nombre: detalleInfo[0].nombre,
+            resultado: dt.resultado,
+            nota: dt.nota,
+            unidad: detalleInfo[0].unidad,
+            inferior: dt.inferior,
+            superior: dt.superior,
+            imprimir: detalleInfo[0].impsiempre,
+            subCaracteristicas,
           });
         }
-
-        caracteristicas.push({
-          nombre: detalleInfo[0].nombre,
-          resultado: dt.resultado,
-          nota: dt.nota,
-          unidad: detalleInfo[0].unidad,
-          inferior: dt.inferior,
-          superior: dt.superior,
-          imprimir: detalleInfo[0].impsiempre,
-          subCaracteristicas,
-        });
+        
+        
       }
 
       examenes.push({
@@ -75,7 +80,9 @@ export const getExamenesPacientes = async (req, res) => {
 
     res.status(200).json({ examenes });
   } catch (error) {
+    console.log(error)
     res.status(500).json({ error });
+
   }
 };
 

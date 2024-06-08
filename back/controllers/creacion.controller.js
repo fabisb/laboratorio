@@ -174,7 +174,7 @@ export const editarUsuario = async (req, res) => {
         .status(400)
         .json({ mensaje: "El id ingresado no es correcto" });
     }
-    if (nombre == "" || telefono == "" || nivel == "" || password == "") {
+    if (nombre == "" || telefono == "" || nivel == "") {
       return await res.status(400).json({ mensaje: "Algun dato no es valido" });
     }
 
@@ -184,16 +184,30 @@ export const editarUsuario = async (req, res) => {
         .status(404)
         .json({ mensaje: "El usuario que intenta editar no existe" });
     }
-    let claveEncriptada = "";
-    claveEncriptada = await bcrypt.hash(password, 2);
+    if(password!=''){
+      let claveEncriptada = "";
+      claveEncriptada = await bcrypt.hash(password, 2);
+  
+      const [userUpdate] = await pool.execute(
+        "UPDATE users SET password = ?, nombre = ?, correo = ?, telefono = ?, direccion = ?, nivel = ? WHERE id = ?",
+        [claveEncriptada, nombre, correo, telefono, direccion, nivel, id]
+      );
+      return await res
+        .status(200)
+        .json({ mensaje: "Usuario modificado correctamente" });
+    }else{
+      
 
     const [userUpdate] = await pool.execute(
-      "UPDATE users SET password = ?, nombre = ?, correo = ?, telefono = ?, direccion = ?, nivel = ? WHERE id = ?",
-      [claveEncriptada, nombre, correo, telefono, direccion, nivel, id]
+      "UPDATE users SET nombre = ?, correo = ?, telefono = ?, direccion = ?, nivel = ? WHERE id = ?",
+      [nombre, correo, telefono, direccion, nivel, id]
     );
     return await res
       .status(200)
       .json({ mensaje: "Usuario modificado correctamente" });
+    }
+    
+    
   } catch (error) {
     console.log(error);
     return await res.status(500).json({ mensaje: "ERROR DE SERVIDOR" });

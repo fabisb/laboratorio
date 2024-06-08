@@ -1133,7 +1133,7 @@ const modificarBio = async (id, idBio) => {
     return usuariosAlerta("El ID de BIOANALISTA no es valido", "danger");
   }
 
-  const nombre = document.getElementById("nombre").value;
+  let nombre = document.getElementById("nombre").value;
   const telefono = document.getElementById("telefono").value;
   const colegio = document.getElementById("colegio").value;
   const ministerio = document.getElementById("ministerio").value;
@@ -1141,6 +1141,7 @@ const modificarBio = async (id, idBio) => {
   const correo = document.getElementById("correo").value;
   const password = document.getElementById("clave").value;
   const pre_nombre = document.getElementById("pre_nombre").value;
+  nombre = nombre.replaceAll('Lcdo ','').replaceAll('Lcda ','')
 
   if (nombre == "" || telefono == "" || colegio == "" || ministerio == "") {
     //ALERTAS PARA VALIDACION
