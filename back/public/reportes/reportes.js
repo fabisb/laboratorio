@@ -63,6 +63,17 @@ function buscarPacienteInput(value){
       </li`})
 }
 
+
+function validarAsegurada(status){
+  const selectAse=document.getElementById('aseguradosSelectExamen')
+
+  if(status=='si'){
+    selectAse.removeAttribute('disabled')
+  }else{
+    selectAse.setAttribute('disabled','true')
+
+  }
+}
 async function render() {
   
   try {
@@ -131,6 +142,23 @@ async function render() {
   } catch (error) {
     console.log(error);
   }
+
+  try {
+    let {data:asegurados} =  await axios.get(
+      urlsv + "/api/espejo/get-asegurados"
+    );
+    const selectAse=document.getElementById('aseguradosSelectExamen')
+    asegurados.forEach(e=>{
+      selectAse.innerHTML+=`
+      <option value='${e.id}'xa>${e.nombre}</option>  
+      `
+    })
+
+    console.log(asegurados)
+  } catch (error) {
+    
+  }
+  
   try {
     let { data: usuarios } = await axios.get(
       urlsv + "/api/espejo/get-users"
@@ -719,6 +747,9 @@ async function busquedaexamen(){
   const hasta = document.getElementById("inputHastaExamen").value;
   const desdeFecha = document.getElementById('fechaDesdeInput').value;
   const hastaFecha = document.getElementById('fechaHastaInput').value
+  const asegurado=document.getElementById('aseguradosSelectExamen').value;
+
+
   if(hastaFecha=='' || desdeFecha==''){
     document.getElementById('alertFiltro').innerHTML='Por Favor seleccione la fecha a filtrar'
     document.getElementById('alertFiltro').removeAttribute('hidden')
@@ -738,6 +769,9 @@ async function busquedaexamen(){
     },
     {
       columna:'paciente',valor:paciente 
+    },
+    {
+      columna:'asegurado',valor:asegurado 
     },
     {
       columna:'orden',valor:orden 

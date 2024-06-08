@@ -915,6 +915,7 @@ async function traerExamenesByFecha(value) {
                         <td scope="col">${ex.bioanalista}</td>
                         <td scope="col">${ex.hora}</td>
                         <td scope="col">
+                        ${ex.status!='externo'?`
                           <svg
                             xmlns="http://www.w3.org/2000/svg"
                             width="25"
@@ -931,7 +932,8 @@ async function traerExamenesByFecha(value) {
                             <path
                               d="M8 5.5a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5M4.5 8a3.5 3.5 0 1 1 7 0 3.5 3.5 0 0 1-7 0"
                             />
-                          </svg>
+                          </svg>`:'EXT'
+                          }
                         </td>
 
                           <td scope="col">
@@ -1023,7 +1025,7 @@ async function traerExamenesDia() {
                         <td scope="col">${ex.examen}</td>
                         <td scope="col">${ex.bioanalista}</td>
                         <td scope="col">${ex.hora}</td>
-                        <td scope="col">
+                        <td scope="col">${ex.status!='externo'?`
                           <svg
                             xmlns="http://www.w3.org/2000/svg"
                             width="25"
@@ -1040,7 +1042,8 @@ async function traerExamenesDia() {
                             <path
                               d="M8 5.5a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5M4.5 8a3.5 3.5 0 1 1 7 0 3.5 3.5 0 0 1-7 0"
                             />
-                          </svg>
+                          </svg>`:'EXT'
+                          }
                         </td>
 
                         <td scope="col">
@@ -1096,7 +1099,7 @@ async function detalleExamen(id, examen) {
   const tHead = document.getElementById("headTableDetalle");
   tBody.innerHTML = "";
   try {
-    const { data: resultados } = await axios.get(
+    let { data: resultados } = await axios.get(
       "http://localhost:3000/api/espejo/get-examen-resultado",
       {
         params: {
@@ -1106,26 +1109,51 @@ async function detalleExamen(id, examen) {
     );
     console.log(resultados);
     tHead.innerText = `RESULTADOS ${examen} #${id}`;
+
+    resultados = resultados.sort(function (a, b) {
+      if (a.posicion > b.posicion) {
+        return 1;
+      }
+      if (a.posicion < b.posicion) {
+        return -1;
+      }
+      // a must be equal to b
+      return 0;
+    });
     resultados.forEach((e) => {
-      if (e.rango) {
+      if(e.status=='titulo'){
         tBody.innerHTML += `
           <tr>
-                      <td scope="col">${e.nombre}</td>
-                      <td scope="col">${e.resultado}</td>
-                      <td scope="col">${e.nota}</td>
-                      <td scope="col">${e.rango.inferior} - ${e.rango.superior}</td>
+                      <td scope="col" colspan='4'>${e.titulo}</td>
+                      
                     </tr>
           `;
-      } else {
-        tBody.innerHTML += `
-        <tr>
-                    <td scope="col">${e.nombre}</td>
-                    <td scope="col">${e.resultado}</td>
-                    <td scope="col">${e.nota}</td>
-                    <td scope="col"> - </td>
-                  </tr>
-        `;
+      }else{
+        if(e.nombre){
+          if (e.rango) {
+            tBody.innerHTML += `
+              <tr>
+                          <td scope="col">${e.nombre}</td>
+                          <td scope="col">${e.resultado}</td>
+                          <td scope="col">${e.nota}</td>
+                          <td scope="col">${e.rango.inferior} - ${e.rango.superior}</td>
+                        </tr>
+              `;
+          } else {
+            tBody.innerHTML += `
+            <tr>
+                        <td scope="col">${e.nombre}</td>
+                        <td scope="col">${e.resultado}</td>
+                        <td scope="col">${e.nota}</td>
+                        <td scope="col"> - </td>
+                      </tr>
+            `;
+          }
+        }
+        
       }
+
+     
     });
   } catch (error) {
     console.log(error);

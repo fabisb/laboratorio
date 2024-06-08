@@ -82,6 +82,8 @@ router.get("/get-externos-pdf", verifyCookie, getExamenResultadosExterno); ////A
 
 //GET USUARIOS
 router.get("/get-usuarios", adminCookie, getAllUsers); //Administrador
+router.get("/get-asegurados", adminCookie, getEmpresas); //Administrador
+
 
 //POST
 router.post("/guardar-usuario", adminCookie, crearUsuario); //Administrador

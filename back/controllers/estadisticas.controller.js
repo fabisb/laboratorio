@@ -38,18 +38,20 @@ export const getUsers = async (req, res) => {
   export const getExamenesReportes = async (req, res) => {
     try {
      
-      let query = `SELECT DISTINCT e.id_pac as 'id_pac',ex.id as 'id_ex',e.id,ex.nombre AS 'nombre',s.nombre AS 'seccion', b.nombre as 'bioanalista', sd.nombre as 'sede', p.nombre as 'paciente', ct.nombre as 'categoria', e.fecha as 'fecha', o.orden as 'orden', o.clave as 'clave' FROM laboratorio.pacientes p INNER JOIN laboratorio.examenes_paciente e ON e.id_pac = p.id INNER JOIN laboratorio.examenes ex ON ex.id = e.id_ex INNER JOIN laboratorio.ordenes o ON e.id_orden=o.id INNER JOIN laboratorio.seccion_examen s ON ex.id_seccion = s.id INNER JOIN laboratorio.bioanalistas b ON b.id = e.id_bio INNER JOIN laboratorio.sede sd ON e.id_sede = sd.id INNER JOIN laboratorio.categoria_examen ct ON ct.id=ex.id_categoria WHERE `
+      let query = `SELECT DISTINCT e.id_pac as 'id_pac',ex.id as 'id_ex',e.id,ex.nombre AS 'nombre',s.nombre AS 'seccion', b.nombre as 'bioanalista', sd.nombre as 'sede', p.nombre as 'paciente', ct.nombre as 'categoria', e.fecha as 'fecha', o.orden as 'orden', o.clave as 'clave' FROM laboratorio.pacientes p INNER JOIN laboratorio.examenes_paciente e ON e.id_pac = p.id INNER JOIN laboratorio.examenes ex ON ex.id = e.id_ex INNER JOIN laboratorio.ordenes o ON e.id_orden=o.id INNER JOIN laboratorio.seccion_examen s ON ex.id_seccion = s.id INNER JOIN laboratorio.bioanalistas b ON b.id = e.id_bio INNER JOIN laboratorio.sede sd ON e.id_sede = sd.id INNER JOIN laboratorio.categoria_examen ct ON ct.id=ex.id_categoria WHERE e.status='activo' AND `
       const {filtrosValue, desde, hasta}=req.body
 
       const examenA= filtrosValue.find(e=>e.columna=='examen')
       if(examenA){
-        const [examenes]= await pool.execute(`SELECT e.id,ex.nombre AS 'nombre',s.nombre AS 'seccion', b.nombre as 'bioanalista', sd.nombre as 'sede', p.nombre as 'paciente', ct.nombre as 'categoria', e.fecha as 'fecha', o.orden as 'orden', o.clave as 'clave' FROM laboratorio.pacientes p INNER JOIN laboratorio.examenes_paciente e ON e.id_pac = p.id INNER JOIN laboratorio.examenes ex ON ex.id = e.id_ex INNER JOIN laboratorio.ordenes o ON e.id_orden=o.id INNER JOIN laboratorio.seccion_examen s ON ex.id_seccion = s.id INNER JOIN laboratorio.bioanalistas b ON b.id = e.id_bio INNER JOIN laboratorio.sede sd ON e.id_sede = sd.id INNER JOIN laboratorio.categoria_examen ct ON ct.id=ex.id_categoria WHERE e.id='${examenA.valor}'`)
+        const [examenes]= await pool.execute(`SELECT e.id,ex.nombre AS 'nombre',s.nombre AS 'seccion', b.nombre as 'bioanalista', sd.nombre as 'sede', p.nombre as 'paciente', ct.nombre as 'categoria', e.fecha as 'fecha', o.orden as 'orden', o.clave as 'clave' FROM laboratorio.pacientes p INNER JOIN laboratorio.examenes_paciente e ON e.id_pac = p.id INNER JOIN laboratorio.examenes ex ON ex.id = e.id_ex INNER JOIN laboratorio.ordenes o ON e.id_orden=o.id INNER JOIN laboratorio.seccion_examen s ON ex.id_seccion = s.id INNER JOIN laboratorio.bioanalistas b ON b.id = e.id_bio INNER JOIN laboratorio.sede sd ON e.id_sede = sd.id INNER JOIN laboratorio.categoria_examen ct ON ct.id=ex.id_categoria WHERE e.id='${examenA.valor}' AND e.status='activo' AND `)
 
         res.status(200).json({examenes,columnas:['Id','Nombre','Seccion','Paciente','Bioanalista','Orden','Sede','Categoria','Fecha','Detalle']})
         return
       }
 
       const empresa= filtrosValue.find(e=>e.columna=='empresa')
+
+      const asegurado= filtrosValue.find(e=>e.columna=='asegurado')
 
       const paciente= filtrosValue.find(e=>e.columna=='paciente')
 
@@ -88,6 +90,7 @@ export const getUsers = async (req, res) => {
         
 
       }
+      console.log(asegurado)
 
       if(empresa){
         query+=`o.clave= '${empresa.valor}' AND `
@@ -106,6 +109,9 @@ export const getUsers = async (req, res) => {
       }
       if(examen){
         query+=`e.id_ex = '${examen.valor}' AND `
+      }
+      if(asegurado){
+        query+=`o.id_empresa = '${asegurado.valor}' AND `
       }
       if(seccion){
         query+=`e.id_ex IN (SELECT id FROM examenes WHERE id_seccion = '${seccion.valor}' ${categoria ? `AND id_categoria = '${categoria.valor}'` : ``}) AND `
@@ -175,7 +181,7 @@ export const getUsers = async (req, res) => {
     try {
      
 
-      let query = `SELECT DISTINCT e.id as 'id', ex.nombre as 'examen' , p.nombre as 'paciente', lb.razon_social as 'laboratorio',e.id_orden as 'orden', e.bioanalista as 'bioanalista', c.nombre as 'categoria', s.nombre as 'seccion', u.nombre as 'usuario', e.fecha as 'fecha' FROM laboratorio.examenes_externos e INNER JOIN laboratorio.examenes ex ON e.id_ex = ex.id INNER JOIN laboratorio.laboratorios_externos lb ON e.id_lab = lb.id INNER JOIN laboratorio.seccion_examen s ON ex.id_seccion = s.id INNER JOIN laboratorio.categoria_examen c ON c.id = ex.id_categoria INNER JOIN users u ON u.id=e.id_usuario INNER JOIN laboratorio.pacientes p ON e.id_pac = p.id WHERE `
+      let query = `SELECT DISTINCT e.id as 'id', ex.nombre as 'examen' , p.nombre as 'paciente', lb.razon_social as 'laboratorio', e.bioanalista as 'bioanalista', c.nombre as 'categoria', s.nombre as 'seccion', u.nombre as 'usuario', e.fecha as 'fecha' FROM laboratorio.examenes_externos e INNER JOIN laboratorio.examenes ex ON e.id_ex = ex.id INNER JOIN laboratorio.laboratorios_externos lb ON e.id_lab = lb.id INNER JOIN laboratorio.seccion_examen s ON ex.id_seccion = s.id INNER JOIN laboratorio.categoria_examen c ON c.id = ex.id_categoria INNER JOIN users u ON u.id=e.id_usuario INNER JOIN laboratorio.pacientes p ON e.id_pac = p.id WHERE e.status='activo' AND `
       const {filtrosValue, desde, hasta}=req.body
 
 
@@ -260,7 +266,7 @@ export const getUsers = async (req, res) => {
      
       let queryExterno = `SELECT e.id,ex.nombre,s.nombre, e.bioanalista, lb.razon_social, sd.nombre, p.nombre, ct.nombre, e.fecha FROM laboratorio.pacientes p INNER JOIN laboratorio.laboratorios_externos lb ON e.id_lab=lb.id INNER JOIN laboratorio.examenes_externos e ON e.id_pac = o.id_paciente INNER JOIN laboratorio.examenes ex ON ex.id = e.id_ex INNER JOIN laboratorio.seccion_examen s ON ex.id_seccion = s.id INNER JOIN laboratorio.sede sd ON e.id_sede = sd.id INNER JOIN laboratorio.categoria_examen ct ON ct.id=ex.id_categoria WHERE `
 
-      let query=`SELECT DISTINCT b.nombre, b.id,b.colegio, b.ministerio,b.telefono,b.direccion FROM laboratorio.bioanalistas b INNER JOIN laboratorio.examenes_paciente e ON e.id_bio = b.id INNER JOIN laboratorio.pacientes p ON p.id = e.id_pac INNER JOIN laboratorio.examenes ex ON ex.id = e.id_ex INNER JOIN laboratorio.seccion_examen s ON s.id= ex.id_seccion INNER JOIN laboratorio.categoria_examen ct ON ct.id = ex.id_categoria WHERE `
+      let query=`SELECT DISTINCT b.nombre, b.id,b.colegio, b.ministerio,b.telefono,b.direccion FROM laboratorio.bioanalistas b INNER JOIN laboratorio.examenes_paciente e ON e.id_bio = b.id INNER JOIN laboratorio.pacientes p ON p.id = e.id_pac INNER JOIN laboratorio.examenes ex ON ex.id = e.id_ex INNER JOIN laboratorio.seccion_examen s ON s.id= ex.id_seccion INNER JOIN laboratorio.categoria_examen ct ON ct.id = ex.id_categoria WHERE e.status='activo' AND `
 
       const {filtrosValue, desde, hasta}=req.body
 
@@ -350,7 +356,7 @@ export const getUsers = async (req, res) => {
     try {
      
 
-      let query = `SELECT DISTINCT o.id as 'id', o.orden as 'orden', o.clave as 'clave', sd.nombre as 'sede',p.nombre as 'paciente',b.nombre as 'bioanalista',o.fecha as 'fecha' ,o.expediente as 'expediente' FROM laboratorio.ordenes o INNER JOIN laboratorio.pacientes p ON o.id_paciente = p.id INNER JOIN laboratorio.examenes_paciente e ON o.id = e.id_orden INNER JOIN laboratorio.sede sd ON sd.id=e.id_sede INNER JOIN laboratorio.bioanalistas b ON e.id_bio = b.id WHERE  `
+      let query = `SELECT DISTINCT o.id as 'id', o.orden as 'orden', o.clave as 'clave', sd.nombre as 'sede',p.nombre as 'paciente',b.nombre as 'bioanalista',o.fecha as 'fecha' ,o.expediente as 'expediente' FROM laboratorio.ordenes o INNER JOIN laboratorio.pacientes p ON o.id_paciente = p.id INNER JOIN laboratorio.examenes_paciente e ON o.id = e.id_orden INNER JOIN laboratorio.sede sd ON sd.id=e.id_sede INNER JOIN laboratorio.bioanalistas b ON e.id_bio = b.id WHERE e.status='activo' AND `
       const {filtrosValue, desde, hasta}=req.body
       
       const orden = filtrosValue.find(e=>e.columna=='orden')
@@ -459,7 +465,7 @@ export const getUsers = async (req, res) => {
      
 
 
-      let query = `SELECT DISTINCT p.id,p.cedula,p.nombre,p.telefono,p.genero,p.fecha_nacimiento,p.direccion FROM laboratorio.pacientes p INNER JOIN laboratorio.ordenes o ON p.id=o.id_paciente INNER JOIN laboratorio.examenes_paciente e ON e.id_pac = o.id_paciente WHERE `
+      let query = `SELECT DISTINCT p.id,p.cedula,p.nombre,p.telefono,p.genero,p.fecha_nacimiento,p.direccion FROM laboratorio.pacientes p INNER JOIN laboratorio.ordenes o ON p.id=o.id_paciente INNER JOIN laboratorio.examenes_paciente e ON e.id_pac = o.id_paciente WHERE e.status='activo' AND `
       const {filtrosValue, desde, hasta}=req.body
    
 

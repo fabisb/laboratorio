@@ -835,47 +835,46 @@ button:hover {
   ) !important;
 }
 
-@media (min-width: 800px) {
-  /* … */
-  #navUl {
-    display: none;
-  }
-}
-@media (max-width: 800px) {
-  /* … */
+  @media (min-width: 800px) {
+    /* … */ 
+    #navUl{
+        display: none;
+        
+    }
+    
 
-  #navPrincipal {
-    background: rgb(28, 132, 132);
-    background: linear-gradient(
-      87deg,
-      rgba(28, 132, 132, 1) 30%,
-      rgba(104, 192, 195, 1) 72%,
-      rgba(227, 247, 246, 1) 92%
-    );
-    color: white;
   }
-  a {
-    color: white !important;
+  @media (max-width: 800px) {
+    /* … */ 
+    #door{
+      display: none;
+    }
+    #navPrincipal{
+        background: rgb(28,132,132);
+        background: linear-gradient(87deg, rgba(28,132,132,1) 30%, rgba(104,192,195,1) 72%, rgba(227,247,246,1) 92%);                       color: white;
+    
+     }
+     a { color:  white !important;}
+     #navSecundario{
+        display: none;
+    }
+    #h1User{
+        display: none;
+    }
+    #tableExamenes{
+        font-size: 10px;
+    }
+    #tablePreliminar{
+        font-size: 10px;
+    }
+    svg{
+        width: 15px;
+    }
+    #h1Filtro{
+      display: none;
+    }
+
   }
-  #navSecundario {
-    display: none;
-  }
-  #h1User {
-    display: none;
-  }
-  #tableExamenes {
-    font-size: 10px;
-  }
-  #tablePreliminar {
-    font-size: 10px;
-  }
-  svg {
-    width: 15px;
-  }
-  #h1Filtro {
-    display: none;
-  }
-}
 
 #reportes {
   background: rgba(104, 192, 195, 1);

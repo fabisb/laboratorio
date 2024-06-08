@@ -1,7 +1,7 @@
 import { pool } from "../database/db.js";
 export const getSecciones = async (req, res) => {
   try {
-    const [secciones] = await pool.execute("SELECT * FROM seccion_examen");
+    const [secciones] = await pool.execute("SELECT * FROM seccion_examen WHERE status='activo'");
     if (secciones.length == 0) {
       return await res
         .status(404)
@@ -18,7 +18,7 @@ export const getSecciones = async (req, res) => {
 };
 export const getEmpresas = async (req, res) => {
   try {
-    const [empresas] = await pool.execute("SELECT * FROM empresas");
+    const [empresas] = await pool.execute("SELECT * FROM empresas WHERE status='activo'");
     if (empresas.length == 0) {
       return await res
         .status(404)
@@ -35,9 +35,11 @@ export const getEmpresas = async (req, res) => {
 };
 
 
+
+
 export const getSedes = async (req, res) => {
   try {
-    const [sedes] = await pool.execute("SELECT * FROM sede");
+    const [sedes] = await pool.execute("SELECT * FROM sede WHERE status='activo'");
     if (sedes.length == 0) {
       return await res.status(404).json({ mensaje: "No se encuentran sedes" });
     } else {
@@ -52,7 +54,7 @@ export const getSedes = async (req, res) => {
 };
 export const getCategorias = async (req, res) => {
   try {
-    const [categorias] = await pool.execute("SELECT * FROM categoria_examen");
+    const [categorias] = await pool.execute("SELECT * FROM categoria_examen WHERE status='activo'");
     if (categorias.length == 0) {
       return await res
         .status(404)
@@ -71,7 +73,7 @@ export const getCategorias = async (req, res) => {
 export const getLaboratorios = async (req, res) => {
   try {
     const [laboratorios] = await pool.execute(
-      "SELECT * FROM laboratorios_externos"
+      "SELECT * FROM laboratorios_externos WHERE status='activo'"
     );
     if (laboratorios.length == 0) {
       return await res
@@ -162,7 +164,7 @@ export const getExamenByNombre = async (req, res) => {
 };
 export const getExamenes = async (req, res) => {
   try {
-    const [examenes] = await pool.execute("SELECT * FROM examenes");
+    const [examenes] = await pool.execute("SELECT * FROM examenes WHERE status='activo'");
     if (examenes.length == 0) {
       return await res
         .status(404)
@@ -327,10 +329,8 @@ export const crearExamen = async (req, res) => {
               mensaje: "Ingrese un nombre de caracteristica valido",
             });
           }
-          if (dato.nombre == "nombre" && !dato.valor) {
-            return await res.status(400).json({
-              mensaje: "Ingrese un nombre valido para la caracteristica",
-            });
+          if (dato.nombre == "posicion" && dato.valor <=0) {
+           dato.valor=500
           }
           if (
             dato.nombre == "impsiempre" &&
@@ -528,11 +528,6 @@ export const insertCaracteristica = async (req, res) => {
           if (dato.nombre == "" || !dato.nombre) {
             return await res.status(400).json({
               mensaje: "Ingrese un nombre de caracteristica valido",
-            });
-          }
-          if (dato.nombre == "nombre" && !dato.valor) {
-            return await res.status(400).json({
-              mensaje: "Ingrese un nombre valido para la caracteristica",
             });
           }
           if (
@@ -1299,7 +1294,7 @@ export const updateCaracteristica = async (req, res) => {
       const valores = caracteristica
         .map((dato) => {
           if (dato.nombre == "posicion" && dato.valor <= 0) {
-            throw new Error(`La posición debe ser mayor a cero`);
+            dato.valor=500
           }
           return `${dato.nombre} = ?`;
         })
@@ -1816,3 +1811,207 @@ export const deleteCaracteristica = async (req, res) => {
       .json({ mensaje: "Ha ocurrido un error en el servidor" });
   }
 };
+
+export const deleteExamen= async (req, res) => {
+  const { id} = req.body
+  if (!id || id < 0 || isNaN(id)) {
+    return await res
+      .status(400)
+      .json({ mensaje: "El id del examen no es valido" });
+  }
+  try {
+    const [existente] = await pool.execute(
+      "SELECT * FROM examenes WHERE id = ?",
+      [id]
+    );
+    if (existente.length > 0) {
+      const [CaNulo] = await pool.execute(
+        "UPDATE `examenes` SET `status` = ? WHERE id = ?",
+        ["nulo", id]
+      );
+      return await res.status(200).json({
+        mensaje: "Examen anulado correctamente"
+      });
+    } else {
+      return await res
+        .status(400)
+        .json({ mensaje: "El examen que intenta eliminar no existe" });
+    }
+  } catch (error) {
+    console.log("🚀 ~ deleteExamen ~ error:", error);
+    return await res
+      .status(500)
+      .json({ mensaje: "Ha ocurrido un error en el servidor" });
+  }
+};
+
+export const deleteEmpresa= async (req, res) => {
+  const { id} = req.body
+  if (!id || id < 0 || isNaN(id)) {
+    return await res
+      .status(400)
+      .json({ mensaje: "El id de la empresa no es valido" });
+  }
+  try {
+    const [existente] = await pool.execute(
+      "SELECT * FROM empresas WHERE id = ?",
+      [id]
+    );
+    if (existente.length > 0) {
+      const [CaNulo] = await pool.execute(
+        "UPDATE `empresas` SET `status` = ? WHERE id = ?",
+        ["nulo", id]
+      );
+      return await res.status(200).json({
+        mensaje: "Empresa anulada correctamente"
+      });
+    } else {
+      return await res
+        .status(400)
+        .json({ mensaje: "La empresa que intenta eliminar no existe" });
+    }
+  } catch (error) {
+    console.log("🚀 ~ deleteEmpresa ~ error:", error);
+    return await res
+      .status(500)
+      .json({ mensaje: "Ha ocurrido un error en el servidor" });
+  }
+};
+
+export const deleteSede= async (req, res) => {
+  const { id} = req.body
+  if (!id || id < 0 || isNaN(id)) {
+    return await res
+      .status(400)
+      .json({ mensaje: "El id de la sede no es valido" });
+  }
+  try {
+    const [existente] = await pool.execute(
+      "SELECT * FROM sede WHERE id = ?",
+      [id]
+    );
+    if (existente.length > 0) {
+      const [CaNulo] = await pool.execute(
+        "UPDATE `sede` SET `status` = ? WHERE id = ?",
+        ["nulo", id]
+      );
+      return await res.status(200).json({
+        mensaje: "Sede anulada correctamente"
+      });
+    } else {
+      return await res
+        .status(400)
+        .json({ mensaje: "La Sede que intenta eliminar no existe" });
+    }
+  } catch (error) {
+    console.log("🚀 ~ deleteSede ~ error:", error);
+    return await res
+      .status(500)
+      .json({ mensaje: "Ha ocurrido un error en el servidor" });
+  }
+};
+
+
+
+
+export const deleteCategoria= async (req, res) => {
+  const { id} = req.body
+  if (!id || id < 0 || isNaN(id)) {
+    return await res
+      .status(400)
+      .json({ mensaje: "El id de la categoria no es valido" });
+  }
+  try {
+    const [existente] = await pool.execute(
+      "SELECT * FROM categoria_examen WHERE id = ?",
+      [id]
+    );
+    if (existente.length > 0) {
+      const [CaNulo] = await pool.execute(
+        "UPDATE `categoria_examen` SET `status` = ? WHERE id = ?",
+        ["nulo", id]
+      );
+      return await res.status(200).json({
+        mensaje: "Categoria anulada correctamente"
+      });
+    } else {
+      return await res
+        .status(400)
+        .json({ mensaje: "La Categoria que intenta eliminar no existe" });
+    }
+  } catch (error) {
+    console.log("🚀 ~ deleteCategoria ~ error:", error);
+    return await res
+      .status(500)
+      .json({ mensaje: "Ha ocurrido un error en el servidor" });
+  }
+};
+
+export const deleteSeccion= async (req, res) => {
+  const { id} = req.body
+  if (!id || id < 0 || isNaN(id)) {
+    return await res
+      .status(400)
+      .json({ mensaje: "El id de la seccion no es valido" });
+  }
+  try {
+    const [existente] = await pool.execute(
+      "SELECT * FROM seccion_examen WHERE id = ?",
+      [id]
+    );
+    if (existente.length > 0) {
+      const [CaNulo] = await pool.execute(
+        "UPDATE `seccion_examen` SET `status` = ? WHERE id = ?",
+        ["nulo", id]
+      );
+      return await res.status(200).json({
+        mensaje: "Seccion anulada correctamente"
+      });
+    } else {
+      return await res
+        .status(400)
+        .json({ mensaje: "La Seccion que intenta eliminar no existe" });
+    }
+  } catch (error) {
+    console.log("🚀 ~ deleteSeccion ~ error:", error);
+    return await res
+      .status(500)
+      .json({ mensaje: "Ha ocurrido un error en el servidor" });
+  }
+};
+
+
+export const deleteLaboratorio= async (req, res) => {
+  const { id} = req.body
+  if (!id || id < 0 || isNaN(id)) {
+    return await res
+      .status(400)
+      .json({ mensaje: "El id del Laboratorio no es valido" });
+  }
+  try {
+    const [existente] = await pool.execute(
+      "SELECT * FROM laboratorios_externos WHERE id = ?",
+      [id]
+    );
+    if (existente.length > 0) {
+      const [CaNulo] = await pool.execute(
+        "UPDATE `laboratorios_externos` SET `status` = ? WHERE id = ?",
+        ["nulo", id]
+      );
+      return await res.status(200).json({
+        mensaje: "Laboratorio anulado correctamente"
+      });
+    } else {
+      return await res
+        .status(400)
+        .json({ mensaje: "El Laboratorio que intenta eliminar no existe" });
+    }
+  } catch (error) {
+    console.log("🚀 ~ deleteLaboratorio ~ error:", error);
+    return await res
+      .status(500)
+      .json({ mensaje: "Ha ocurrido un error en el servidor" });
+  }
+};
+
+

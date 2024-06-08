@@ -5,7 +5,9 @@ import {
   modificarExamenExterno,
   modificarLaboratorio,
   deletePendientesPaciente,
+  deleteExamenPaciente,
   getPendientesPaciente,
+  deleteExamenExterno,
   getPendienteExamen,
   getExamenReimpresion,
   getExamenesExternos,
@@ -25,7 +27,7 @@ import {
   updateSubCaracteristicaCar,
   statusExamenes,
   getExamenResultadosExterno,
-  getEmpresas
+  getEmpresas,
 } from "../controllers/examenes.controller.js";
 var router = express.Router();
 
@@ -52,11 +54,16 @@ router.post("/crear-examen-pendiente", verifyToken,crearExamenPendiente);//TODOS
 router.post("/reimpresion-examen", verifyToken, getExamenReimpresion);//TODOS
 
 //PUT
+
 router.put("/modificar-examenExterno", administradorToken,modificarExamenExterno);//ADMIN
 router.put("/modificar-examen", adminBioToken,modificarExamen);//ADMIN Y BIO SOLO ANTES DE 48HRS
 router.put("/modificar-laboratorio", administradorToken,modificarLaboratorio);//ADMIN
 router.put("/modificar-resultado-examen", adminBioToken,modificarResultadoExamen);//ADMIN Y BIO SOLO ANTES DE 48HRS
 router.put("/update-subCaracteristicasCar", adminBioToken, updateSubCaracteristicaCar);//ADMIN Y BIO SOLO ANTES DE 48HRS
+router.put("/delete-examen-paciente", adminBioToken, deleteExamenPaciente);//ADMIN Y BIO SOLO ANTES DE 48HRS
+router.put("/delete-examen-externo", adminBioToken, deleteExamenExterno);//ADMIN Y BIO SOLO ANTES DE 48HRS
+
+
 
 router.put("/status-examen", verifyToken, statusExamenes);
 

@@ -117,7 +117,10 @@ export const getExamenDia = async (req, res) => {
 
     let examenDia = [];
     const [examenes] = await pool.execute(
-      `SELECT * FROM examenes_paciente WHERE fecha between '${fecha} 00:00:01' AND '${fecha} 23:59:59'`
+      `SELECT * FROM examenes_paciente WHERE fecha between '${fecha} 00:00:01' AND '${fecha} 23:59:59' AND status='activo'`
+    );
+    const [examenesExt] = await pool.execute(
+      `SELECT * FROM examenes_externos WHERE fecha between '${fecha} 00:00:01' AND '${fecha} 23:59:59' AND status='activo'`
     );
     for await (const ex of examenes) {
       const [examen] = await pool.execute(
@@ -149,6 +152,30 @@ export const getExamenDia = async (req, res) => {
         hora,
       });
     }
+    for await (const ex of examenesExt) {
+      const [examen] = await pool.execute(
+        `SELECT * FROM examenes where id = ?`,
+        [ex.id_ex]
+      );
+      const [paciente] = await pool.execute(
+        `SELECT * FROM pacientes WHERE id = ?`,
+        [ex.id_pac]
+      );
+      
+      let hora = ex.fecha.toJSON().split("T")[1].split(".")[0];
+      examenDia.push({
+        id: ex.id,
+        cedula: paciente[0].cedula,
+        paciente: paciente[0].nombre,
+        bioanalista: ex.bioanalista,
+        examen: examen[0].nombre,
+        status_ws: 0,
+        status_imp: 0,
+        status_correo: 0,
+        status:'externo',
+        hora,
+      });
+    } 
     res.status(200).json({ examenes: examenDia });
   } catch (error) {
     res.status(500).json({ error });
@@ -452,7 +479,10 @@ export const getExamenByFecha = async (req, res) => {
 
     let examenDia = [];
     const [examenes] = await pool.execute(
-      `SELECT * FROM examenes_paciente WHERE fecha between '${fecha} 00:00:01' AND '${fecha} 23:59:59'`
+      `SELECT * FROM examenes_paciente WHERE fecha between '${fecha} 00:00:01' AND '${fecha} 23:59:59' AND status='activo'`
+    );
+    const [examenesExt] = await pool.execute(
+      `SELECT * FROM examenes_externos WHERE fecha between '${fecha} 00:00:01' AND '${fecha} 23:59:59' AND status='activo'`
     );
     for await (const ex of examenes) {
       const [examen] = await pool.execute(
@@ -481,6 +511,30 @@ export const getExamenByFecha = async (req, res) => {
         hora,
       });
     }
+    for await (const ex of examenesExt) {
+      const [examen] = await pool.execute(
+        `SELECT * FROM examenes where id = ?`,
+        [ex.id_ex]
+      );
+      const [paciente] = await pool.execute(
+        `SELECT * FROM pacientes WHERE id = ?`,
+        [ex.id_pac]
+      );
+      
+      let hora = ex.fecha.toJSON().split("T")[1].split(".")[0];
+      examenDia.push({
+        id: ex.id,
+        cedula: paciente[0].cedula,
+        paciente: paciente[0].nombre,
+        bioanalista: ex.bioanalista,
+        examen: examen[0].nombre,
+        status_ws: 0,
+        status_imp: 0,
+        status_correo: 0,
+        status:'externo',
+        hora,
+      });
+    } 
     res.status(200).json({ examenes: examenDia });
   } catch (error) {
     res.status(500).json({ error });

@@ -93,6 +93,23 @@ async function render() {
   } catch (error) {
     console.log(error)
   }
+  try {
+    let {data:asegurados} =  await axios.get(
+      urlsv + "/api/examenes/get-empresas",
+      { headers: { token } }
+    );
+    const selectAse=document.getElementById('aseguradosSelectExamen')
+    asegurados.forEach(e=>{
+      selectAse.innerHTML+=`
+      <option value='${e.id}'xa>${e.nombre}</option>  
+      `
+    })
+
+    console.log(asegurados)
+  } catch (error) {
+    
+  }
+  
 
   try {
     let { data: bioanalistas } = await axios.get(
@@ -114,6 +131,8 @@ async function render() {
             `;
       });
     }
+
+    
 
     var secciones = await axios.get(
       urlsv + "/api/modulo-examenes/secciones",
@@ -250,6 +269,18 @@ async function render() {
     }
   } catch (error) {
     console.log(error);
+  }
+}
+
+
+function validarAsegurada(status){
+  const selectAse=document.getElementById('aseguradosSelectExamen')
+
+  if(status=='si'){
+    selectAse.removeAttribute('disabled')
+  }else{
+    selectAse.setAttribute('disabled','true')
+
   }
 }
 
@@ -737,7 +768,10 @@ async function busquedaexamen(){
   const desde = document.getElementById("inputDesdeExamen").value;
   const hasta = document.getElementById("inputHastaExamen").value;
   const desdeFecha = document.getElementById('fechaDesdeInput').value;
-  const hastaFecha = document.getElementById('fechaHastaInput').value
+  const hastaFecha = document.getElementById('fechaHastaInput').value;
+  const asegurado=document.getElementById('aseguradosSelectExamen').value;
+
+
   if(hastaFecha=='' || desdeFecha==''){
     document.getElementById('alertFiltro').innerHTML='Por Favor seleccione la fecha a filtrar'
     document.getElementById('alertFiltro').removeAttribute('hidden')
@@ -751,6 +785,9 @@ async function busquedaexamen(){
   let filtros=[
     {
     columna:'empresa',valor:empresa
+    },
+    {
+      columna:'asegurado',valor:asegurado 
     },
     {
       columna:'examen',valor:examen 
