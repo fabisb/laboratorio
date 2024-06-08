@@ -287,7 +287,7 @@ const pintarExamen = async () => {
                     if (c?.status == "titulo") {
                       return `
                       <tr>
-                      <th colspan="5" scope="row">${c.nombre}</th>
+                      <th colspan="5" scope="row">${c.titulo}</th>
                     </tr>
                       `;
                     } else {
@@ -299,7 +299,7 @@ const pintarExamen = async () => {
                           : ""
                         } 
                   </td>
-                  <td>${c.unidad}</td>
+                  <td>${c.unidad ? c.unidad : ''}</td>
                   <td>${c.inferior}</td>
                   <td>${c.superior}</td>
                 </tr>
