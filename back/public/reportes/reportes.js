@@ -1219,19 +1219,12 @@ const abrirResultadosModal = async (examen, idPac, idRes) => {
     }
     });
     document.getElementById('reimprimirModalBtn').setAttribute('onclick',`reimprimirExamen(${idRes})`)  
-    document.getElementById('reimprimirOrdenModalBtn').setAttribute('onclick',`reimprimirOrden(${idRes})`)  
   } catch (error) {
     console.log(error);
   }
   
 };
- function reimprimirOrden(id) {
-  console.log(`reimprimirOrden-${id}`);
-if (isNaN(id) || id == '') {
-  return alert('Error: envie un id de examen valido')
-  }
-window.open(`/reimprmir-orden?id=${id}`);
-}
+
  function reimprimirExamen(id) {
   console.log(`reimprimirExamen-${id}`);
   if (isNaN(id) || id == '') {

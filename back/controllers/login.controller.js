@@ -369,18 +369,18 @@ export async function loginEspejo(req, res) {
           }
         );
         res.cookie("token", token, {
-          maxAge: 60000 * 60 * 2,
+          maxAge: 60000 * 60 * 12,
           httpOnly: true,
           secure: true,
           sameSite: true,
         });
         res.cookie("username", id[0].nombre, {
-          maxAge: 60000 * 60 * 2,
+          maxAge: 60000 * 60 * 12,
           secure: true,
           sameSite: true,
         });
         res.cookie("nivel", id[0].nivel, {
-          maxAge: 60000 * 60 * 2,
+          maxAge: 60000 * 60 * 12,
           secure: true,
           sameSite: true,
         });

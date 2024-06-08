@@ -15,7 +15,6 @@ const imprimir = async () => {
 const reimprimirExamen = async () => {
   const examen = await examenVar.get();
   console.log("🚀 ~ pintarExamen ~ examen:", examen);
-  const { token } = await login.getToken();
 
   document.getElementsByName("firmaBioanalista")[0].innerHTML = "";
 
