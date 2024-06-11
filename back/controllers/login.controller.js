@@ -211,8 +211,8 @@ export const administradorToken = async (req, res, next) => {
   try {
     var decoded = await jwt.verify(token, "secret");
     if (decoded) {
-      req.user = decoded;
       if (decoded.nivel == 1) {
+        req.user = decoded;
         await next();
       } else {
         return await res.status(401).json({

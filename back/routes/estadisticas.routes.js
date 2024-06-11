@@ -25,7 +25,7 @@ router.post("/get-externos-reportes", verifyToken, getExternosReportes);//TODOS
 
 //REIMPRESION
 router.get("/get-externos-pdf", verifyToken, getExamenResultadosExterno);//TODOS
-router.get("/reimpresion-examen", verifyToken, getExamenReimpresion);//TODOS
+router.post("/reimpresion-examen", verifyToken, getExamenReimpresion);//TODOS
 
 
 

@@ -181,7 +181,7 @@ export const getUsers = async (req, res) => {
     try {
      
 
-      let query = `SELECT DISTINCT e.id as 'id', ex.nombre as 'examen' , p.nombre as 'paciente', lb.razon_social as 'laboratorio', e.bioanalista as 'bioanalista', c.nombre as 'categoria', s.nombre as 'seccion', u.nombre as 'usuario', e.fecha as 'fecha' FROM laboratorio.examenes_externos e INNER JOIN laboratorio.examenes ex ON e.id_ex = ex.id INNER JOIN laboratorio.laboratorios_externos lb ON e.id_lab = lb.id INNER JOIN laboratorio.seccion_examen s ON ex.id_seccion = s.id INNER JOIN laboratorio.categoria_examen c ON c.id = ex.id_categoria INNER JOIN users u ON u.id=e.id_usuario INNER JOIN laboratorio.pacientes p ON e.id_pac = p.id WHERE e.status='activo' AND `
+      let query = `SELECT DISTINCT e.id as 'id', ex.nombre as 'examen' , p.nombre as 'paciente', lb.razon_social as 'laboratorio', e.bioanalista as 'bioanalista', e.id_orden as 'orden', c.nombre as 'categoria', s.nombre as 'seccion', u.nombre as 'usuario', e.fecha as 'fecha' FROM laboratorio.examenes_externos e INNER JOIN laboratorio.examenes ex ON e.id_ex = ex.id INNER JOIN laboratorio.laboratorios_externos lb ON e.id_lab = lb.id INNER JOIN laboratorio.seccion_examen s ON ex.id_seccion = s.id INNER JOIN laboratorio.categoria_examen c ON c.id = ex.id_categoria INNER JOIN users u ON u.id=e.id_usuario INNER JOIN laboratorio.pacientes p ON e.id_pac = p.id WHERE e.status='activo' AND `
       const {filtrosValue, desde, hasta}=req.body
 
 

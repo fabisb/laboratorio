@@ -484,6 +484,7 @@ const render = async () => {
 };
 function setInputCedula(ci) {
   document.getElementById("ciInput").value = ci;
+  document.getElementById('buscarPacienteButton').click();
 }
 
 function buscarPacienteInput(value) {
@@ -999,7 +1000,7 @@ const activarInputs = async (click) => {
     toggle: false,
   });
   bsCollapse.show();
-  document.getElementById(pacienteObj.genero).setAttribute('checked','true')
+  //document.getElementById(pacienteObj.genero).setAttribute('checked','true')
 
   inputs.map((inp) => {
     inp.removeAttribute("readonly");
