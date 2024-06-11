@@ -43,6 +43,15 @@ ipcMain.handle("getSede", (event, arg) => {
   return sede;
 });
 
+ipcMain.on("reimpresion", async (event, id) => {
+  store.delete("reimpresion");
+  await store.set("reimpresion", id);
+});
+ipcMain.handle("getReimpresion", (event, arg) => {
+  const reimpresion = store.get("reimpresion");
+  return reimpresion;
+});
+
 ipcMain.on("examen", async (event, examen) => {
   store.delete("examen");
   await store.set("examen", examen);
@@ -249,6 +258,31 @@ function menuExamenesWindow() {
   }
 }
 ipcMain.handle("menuExamenesWindow", () => menuExamenesWindow());
+
+let reimpresionesVar;
+function reimpresionesWindow() {
+  reimpresionesVar = null;
+  const reimpresion = store.get("reimpresion");
+
+  if (!reimpresionesVar) {
+    reimpresionesVar = new BrowserWindow({
+      width: 1024,
+      icon: path.join(__dirname, "app/imgs/icons/app-logo.ico"),
+      height: 768,
+      title: "Examenes - Reimpresion",
+      webPreferences: {
+        preload: path.join(__dirname, "app/preloads/preload.js"),
+        //devTools:false
+      },
+    });
+    const file = reimpresion.tipo
+    reimpresionesVar.loadFile(`app/screens/${file}.html`);
+    reimpresionesVar.on("closed", () => (reimpresionesVar = null));
+  } else {
+    reimpresionesVar.focus();
+  }
+}
+ipcMain.handle("reimpresionesWindow", () => reimpresionesWindow());
 
 //handlers
 

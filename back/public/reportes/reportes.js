@@ -1265,8 +1265,8 @@ const abrirResultadosModal = async (examen, idPac, idRes) => {
     return alert('Error: envie un id de examen valido')
   }
  window.open(`/reimprimir-examen?id=${id}`);
-
 }
+
 async function busquedaOrdenDetallado(){
   const orden = document.getElementById('inputOrdenDet').value
   if(orden==''){

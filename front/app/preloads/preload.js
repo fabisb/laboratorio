@@ -23,6 +23,7 @@ contextBridge.exposeInMainWorld("ventanas", {
     await ipcRenderer.invoke("menuExamenesWindow"),
   loginWindow: async () => await ipcRenderer.invoke("loginWindow"),
   PDFWindow: async () => await ipcRenderer.invoke("examenPDFWindow"),
+  reimprimirWindow: async () => await ipcRenderer.invoke("reimpresionesWindow"),
 });
 
 contextBridge.exposeInMainWorld("urlsv", "http://localhost:3000");
@@ -54,6 +55,14 @@ contextBridge.exposeInMainWorld("sedeVar", {
     return;
   },
   get: async () => await ipcRenderer.invoke("getSede"),
+});
+
+contextBridge.exposeInMainWorld("reimpresionVar", {
+  store: async (sede) => {
+    await ipcRenderer.send("reimpresion", sede);
+    return;
+  },
+  get: async () => await ipcRenderer.invoke("getReimpresion"),
 });
 
 contextBridge.exposeInMainWorld("ticket", {

@@ -7,3 +7,4 @@ const abrirExWindow = () => ventanas.creacionExWindow();
 const abrirMenuExamenesWindow = () => ventanas.menuExamenesWindow();
 const abrirLoginWindow = () => ventanas.loginWindow();
 const abrirPDFWindow = () => ventanas.PDFWindow();
+const abrirReimprimirWindow = () => ventanas.reimprimirWindow();
