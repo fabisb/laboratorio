@@ -102,7 +102,7 @@ export const getExamenReimpresion = async (req, res) => {
         ordenId: examen[0].id_orden,
         caracteristicas,
         orden: orden[0],
-        paciente:paciente[0]
+        paciente: paciente[0]
       });
     }
     return await res.status(200).json({ examenes });
@@ -282,33 +282,33 @@ export const updateSubCaracteristicaCar = async (req, res) => {
     return await res.status(500).json({ mensaje: "ERROR DE SERVIDOR" });
   }
 };
-export const getExamenResultadosExterno = async (req,res)=>{
-  const {id} = req.query;
+export const getExamenResultadosExterno = async (req, res) => {
+  const { id } = req.query;
   try {
-    
-    const [examenExterno] = await pool.execute('SELECT PDF FROM examenes_externos WHERE id = ?',[id]);
+
+    const [examenExterno] = await pool.execute('SELECT PDF FROM examenes_externos WHERE id = ?', [id]);
     if (examenExterno.length == 0) {
       return await res
-      .status(404)
-      .json({mensaje:'No se ha encontrado examenes externos con el id #'+id});
+        .status(404)
+        .json({ mensaje: 'No se ha encontrado examenes externos con el id #' + id });
 
-    }else{
+    } else {
       if (examenExterno[0].PDF == null) {
-        
+
         return await res
           .status(400)
-          .json({mensaje:'El examen no tiene un PDF asociado'});
-      }else{
+          .json({ mensaje: 'El examen no tiene un PDF asociado' });
+      } else {
 
-      
-          return await res.status(200).setHeader('Content-Type', 'application/pdf').send(examenExterno[0].PDF);
+
+        return await res.status(200).setHeader('Content-Type', 'application/pdf').send(examenExterno[0].PDF);
       }
 
     }
   } catch (error) {
     console.log("🚀 ~ getExamenResultadosExterno ~ error:", error)
     return await res.status(500).json({ mensaje: "ERROR DE SERVIDOR" });
-    
+
   }
 }
 export const getExamenResultados = async (req, res) => {
@@ -705,8 +705,7 @@ export const crearExamen = async (req, res) => {
       let cadenaRangos = "";
 
       const [consulta] = await pool.execute(
-        `INSERT INTO detalles_examen(id_ex, nombre, posicion, unidad, impsiempre, resultados) VALUES('${
-          examenInsert.insertId
+        `INSERT INTO detalles_examen(id_ex, nombre, posicion, unidad, impsiempre, resultados) VALUES('${examenInsert.insertId
         }','${nombre.toUpperCase()}','${posicion}','${unidad}','','${resultados.toUpperCase()}')`
       );
       console.log("🚀 ~ forawait ~ consulta:", consulta);
@@ -723,11 +722,9 @@ export const crearExamen = async (req, res) => {
 
     const valores = detalle
       .map((dato) => {
-        return `('${examenInsert.insertId}','${dato.nombre.toUpperCase()}','${
-          dato.posicion
-        }','${dato.unidad}','${
-          dato.impsiempre
-        }','${dato.resultados.toUpperCase()}')`;
+        return `('${examenInsert.insertId}','${dato.nombre.toUpperCase()}','${dato.posicion
+          }','${dato.unidad}','${dato.impsiempre
+          }','${dato.resultados.toUpperCase()}')`;
       })
       .join(", ");
     //const consulta = `INSERT INTO detalles_examen(id_ex, nombre, posicion, unidad, impsiempre, resultados) VALUES ${valores}`;
@@ -919,11 +916,11 @@ export const getExamenesPaciente = async (req, res) => {
       const [examenes] =
         fecha == "no"
           ? await pool.execute(
-              `SELECT * FROM examenes_paciente where id_pac ='${paciente[0].id}' AND status="activo"`
-            )
+            `SELECT * FROM examenes_paciente where id_pac ='${paciente[0].id}' AND status="activo"`
+          )
           : await pool.execute(
-              `SELECT * FROM examenes_paciente where id_pac ='${paciente[0].id}' AND fecha between "${fecha} 00:00:00" AND "${fecha} 23:59:00"  AND status="activo"`
-            );
+            `SELECT * FROM examenes_paciente where id_pac ='${paciente[0].id}' AND fecha between "${fecha} 00:00:00" AND "${fecha} 23:59:00"  AND status="activo"`
+          );
       let examenesData = [];
 
       for await (const ex of examenes) {
@@ -971,11 +968,11 @@ export const getExamenesExternos = async (req, res) => {
       const [examenes] =
         fecha == "no"
           ? await pool.execute(
-              `SELECT * FROM examenes_externos where id_pac ='${paciente[0].id}'  AND status="activo"`
-            )
+            `SELECT * FROM examenes_externos where id_pac ='${paciente[0].id}'  AND status="activo"`
+          )
           : await pool.execute(
-              `SELECT * FROM examenes_externos where id_pac ='${paciente[0].id}' AND fecha between "${fecha} 00:00:00" AND "${fecha} 23:59:00"`
-            );
+            `SELECT * FROM examenes_externos where id_pac ='${paciente[0].id}' AND fecha between "${fecha} 00:00:00" AND "${fecha} 23:59:00"`
+          );
       let examenesData = [];
 
       for await (const ex of examenes) {
@@ -1215,8 +1212,8 @@ export const statusExamenes = async (req, res) => {
   }
 };
 
-export const deleteExamenPaciente= async (req, res) => {
-  const { id} = req.body
+export const deleteExamenPaciente = async (req, res) => {
+  const { id } = req.body
   if (!id || id < 0 || isNaN(id)) {
     return await res
       .status(400)
@@ -1248,8 +1245,8 @@ export const deleteExamenPaciente= async (req, res) => {
   }
 };
 
-export const deleteExamenExterno= async (req, res) => {
-  const { id} = req.body
+export const deleteExamenExterno = async (req, res) => {
+  const { id } = req.body
   if (!id || id < 0 || isNaN(id)) {
     return await res
       .status(400)
@@ -1280,3 +1277,4 @@ export const deleteExamenExterno= async (req, res) => {
       .json({ mensaje: "Ha ocurrido un error en el servidor" });
   }
 };
+

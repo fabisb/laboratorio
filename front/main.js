@@ -688,6 +688,178 @@ ipcMain.on("ws", async (event, numeroArg) => {
 
   // When the page finishes loading, generate the PDF
 });
+ipcMain.on("email", async (event, email) => {
+  if (!examenPDFVar) {
+    return;
+  } else {
+    const examen = store.get("examen");
+    const ccsData = await fs.readFile("app/modules/bootstrap.min.css", "utf8");
+    const imgData =
+      `data:image/png;base64,` +
+      (await fs.readFile("app/imgs/la-milagrosa-logo.png", "base64"));
+
+    examenPDFVar.webContents
+      .printToPDF({
+        pageSize: "A4",
+        displayHeaderFooter: true,
+        printBackground: true,
+        headerTemplate: `
+        <style>
+        ${ccsData}
+        </style>
+        <main class="container my-6 mx-12 fs-2">
+        <div class="container text-center">
+        <div class="row">
+      <div class="col my-1">
+        <div class="card">
+          <div class="row m-0">
+            <div class=" col-2 mx-auto my-auto">
+              <img
+                width="60px"
+                src=${imgData}
+                class="img-fluid"
+                alt="La milagrosa logo"
+              />
+            </div>
+            <div class="col-9 p-0">
+              <div class="card-body text-start">
+                <h5 class="card-title fs-1">
+                  LA MILAGROSA INSTITUTO PRESTADOR DE SERVICIOS DE SALUD
+                </h5>
+                <p class="card-text m-0">R.I.F.: J-501761426 / N.I.T.:</p>
+                <p class="card-text">
+                  <small name="direccion" class="text-body-secondary"
+                    >Calle 79 Casa Nro 78 - 179 Sector La Macandona, Maracaibo,
+                    Edo. Zulia. Zona Postal 4005</small
+                  >
+                  <br />
+                </p>
+              </div>
+            </div>
+            <div class="col-1 p-0">
+              <div class="card-body text-start">
+                <p class="card-text m-0"><span class=pageNumber></span>/<span class=totalPages></span></p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col my-1">
+        <div class="card">
+          <div class="row">
+            <div class="col-9 my-auto mx-auto">
+              <div class="card border border-0">
+                <div class="container text-center">
+                  <div name="cabecera" class="row align-items-center">
+                    <div class="col">
+                      <div class="card-body">
+                        <ul class="list-group list-group-flush">
+                        <li class="list-group-item"><span class="fw-bold">Paciente:</span> <br> ${
+                          examen.paciente.nombre
+                        }</li>
+                        <li class="list-group-item"><span class="fw-bold">Cedula:</span><br> ${
+                          examen.paciente.pre_cedula
+                        }-${examen.paciente.cedula}</li>
+                        <li class="list-group-item"><span class="fw-bold">Factura: </span><br> ${
+                          examen.orden
+                        }</li>
+                        </ul>
+                      </div>
+                    </div>
+                    <div class="col">
+                      <div class="card-body">
+                        <ul class="list-group list-group-flush">
+                        <li class="list-group-item"><span class="fw-bold">Fecha Nacimiento:</span><br> ${
+                          examen.paciente.fecha_nacimiento
+                        }</li>
+                        <li class="list-group-item"><span class="fw-bold">Edad:</span><br> ${
+                          examen.paciente.edad
+                        }</li>
+                        <li class="list-group-item"><span class="fw-bold">Emision:</span><br> ${moment().format(
+                          "DD-MM-YYYY h:mm:ss a"
+                        )}</li>
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-3 my-auto mx-auto">
+              <div class="card-body">
+                <h6 class="fs-1 card-title">
+                  RESULTADOS DE EXAMENES DE LABORATORIO
+                </h6>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    </div>
+    </main>
+    `,
+        marginType: 0,
+      })
+      .then(async (data) => {
+       
+
+        const texto = `${examen.paciente.pre_cedula}-${examen.paciente.cedula} ${examen.orden}`;
+        const correo = (JSON.parse(email)).email;
+        console.log("🚀 ~ .then ~ correo:", correo)
+       try {
+        const { token } = await store.get("token");
+
+        await axios.post(
+          urlsv + "/api/examenes/enviar-correo",
+          { texto, correo, data},
+          { headers: { token } }
+        );
+      
+        if (examen.orden != "Reimpresion") {
+          try {
+            await axios.put(
+              urlsv + "/api/examenes/status-examen",
+              { col: "status_correo", status: 1, id: examen?.ordenId },
+              { headers: { token } }
+            );
+          } catch (error) {
+            console.log("🚀 ~ .then ~ error):", error);
+            const currentWindow = event.sender.getOwnerBrowserWindow();
+            const result = await dialog.showErrorBox(
+              "ERROR",
+              "Ha ocurrido un error confirmando el status de Correo electronico"
+            );
+            return result;
+          }
+        }
+      } catch (error) {
+        console.log("🚀 ~ .then ~ error:", error)
+        const currentWindow = event.sender.getOwnerBrowserWindow();
+        const result = await dialog.showErrorBox(
+          "ERROR",
+          "Ha ocurrido un error enviando el examen por correo electronico"
+        );
+        return result;
+       }
+  
+      })
+      .catch(async (error) => {
+        console.error("Error generating PDF:", error);
+        const currentWindow = event.sender.getOwnerBrowserWindow();
+        const result = await dialog.showErrorBox(
+          "ERROR",
+          "Ha ocurrido un generando el PDF y enviandolo por Correo"
+        );
+        return result;
+      });
+  }
+
+  // When the page finishes loading, generate the PDF
+});
 
 app.whenReady().then(() => {
   createWindow();

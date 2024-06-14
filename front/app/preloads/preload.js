@@ -94,12 +94,19 @@ contextBridge.exposeInMainWorld("alerta", {
   },
 });
 
+//EXAMENES PDF
 contextBridge.exposeInMainWorld(
   "imprimirPDF",
   async () => await ipcRenderer.send("print", JSON.stringify())
 );
+
 contextBridge.exposeInMainWorld(
   "wsPDF",
   async (numero) => await ipcRenderer.send("ws", JSON.stringify(numero))
+);
+
+contextBridge.exposeInMainWorld(
+  "emailPDF",
+  async (email) => await ipcRenderer.send("email", JSON.stringify(email))
 );
 

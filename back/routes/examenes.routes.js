@@ -29,6 +29,7 @@ import {
   getExamenResultadosExterno,
   getEmpresas,
 } from "../controllers/examenes.controller.js";
+import { enviarCorreo } from "../controllers/emailSender.controller.js";
 var router = express.Router();
 
 //GET
@@ -53,6 +54,7 @@ router.post("/crear-orden", noAuxToken,crearOrden);//TODOS EXCEPTO AUXILIAR
 router.post("/crear-examen-pendiente", verifyToken,crearExamenPendiente);//TODOS
 router.post("/reimpresion-examen", verifyToken, getExamenReimpresion);//TODOS
 
+router.post("/enviar-correo", noAuxToken,enviarCorreo);//TODOS EXCEPTO AUXILIAR
 //PUT
 
 router.put("/modificar-examenExterno", administradorToken,modificarExamenExterno);//ADMIN

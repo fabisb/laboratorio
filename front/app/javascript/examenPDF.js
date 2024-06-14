@@ -61,9 +61,8 @@ const reimprimirExamen = async () => {
           return `
       <div class="card">
       <div class="card-header text-start fw-bolder fs-6">${s}</div>
-      ${
-        ex.nombreSeccion == s
-          ? ` 
+      ${ex.nombreSeccion == s
+              ? ` 
           <div class="card">
           ${nombreExamen}
           <div class="card-body">
@@ -90,19 +89,17 @@ const reimprimirExamen = async () => {
                     return `
                 <tr>
                 <th scope="row">${c.nombre}</th>
-                <td>${c.resultado} ${
-                      c.nota != ""
+                <td>${c.resultado} ${c.nota != ""
                         ? `<p class="m-0 fst-italic">(${c.nota})</p>`
                         : ""
-                    } 
+                      } 
                 </td>
                 <td>${c.unidad ? c.unidad : ''}</td>
-                <td>${c.inferior}</td>
-                <td>${c.superior}</td>
+                <td>${c.inferior == 'no' ? '-' : c.inferior}</td>
+                <td>${c.superior == 'no' ? '-' : c.superior}</td>
               </tr>
-              ${
-                c.subCaracteristicas.length > 0
-                  ? `
+              ${c.subCaracteristicas.length > 0
+                        ? `
               <tr>
               <th scope="row"></th>
               <td>-</td>
@@ -111,8 +108,8 @@ const reimprimirExamen = async () => {
               <td><span class="fw-bold">RESULTADO</span></td>
             </tr>
             ${c.subCaracteristicas
-              .map((sc) => {
-                return `
+                          .map((sc) => {
+                            return `
             <tr>
               <th scope="row"></th>
               <td>${sc.nombreSub}</td>
@@ -121,11 +118,11 @@ const reimprimirExamen = async () => {
               <td>${sc.resultado}</td>
             </tr>
             `;
-              })
-              .join("")}
+                          })
+                          .join("")}
             `
-                  : ""
-              }
+                        : ""
+                      }
                 `;
                   }
                 })
@@ -135,8 +132,8 @@ const reimprimirExamen = async () => {
           </div>
         </div>
          `
-          : ""
-      }
+              : ""
+            }
         
     </div>`;
         })
@@ -144,17 +141,15 @@ const reimprimirExamen = async () => {
     });
 
     document.getElementsByName("examenContainer")[0].innerHTML += `
-    <div  ${
-      index + 1 == [...bioSet].length
+    <div  ${index + 1 == [...bioSet].length
         ? 'style="page-break-before:avoid"'
         : 'style="page-break-after:always"'
-    } class="d-flex justify-content-center">
+      } class="d-flex justify-content-center">
     <div class="card-body my-auto text-start">
       <h5>Lcd. ${bioanalistaInfo?.nombre}</h5>
       <h6>BIOANALISTA</h6>
-      <h6>C.I.: ${bioanalistaInfo?.cedula} - COBIOZUL: ${
-      bioanalistaInfo?.colegio
-    } - MSDS: ${bioanalistaInfo?.ministerio} </h6>
+      <h6>C.I.: ${bioanalistaInfo?.cedula} - COBIOZUL: ${bioanalistaInfo?.colegio
+      } - MSDS: ${bioanalistaInfo?.ministerio} </h6>
     </div>
   <img id='bioanalistaFirma${bio}' style="width: 150px;" class="card-img-top mx-auto my-auto" alt="firma Ej">
   </div>
@@ -206,8 +201,7 @@ const pintarExamen = async () => {
   console.log("🚀 ~ pintarExamen ~ seccionesSet:", seccionesSet);
   document.getElementsByName("firmaBioanalista")[0].innerHTML = `
   
-  ${
-    reimpresion == true
+  ${reimpresion == true
       ? `<div class="card-body text-center">
   <h4>REIMPRESION</h4>
 </div>`
@@ -219,7 +213,7 @@ const pintarExamen = async () => {
       </div>
       <img id='bioanalistaFirma' style="width: 150px;" class="card-img-top mx-auto my-auto" alt="firma Ej">
     `
-  }  
+    }  
   `;
 
   reimpresion == false
@@ -231,16 +225,16 @@ const pintarExamen = async () => {
     <div class="card">
     <div class="card-header text-start fw-bolder fs-6">${s}</div>
     ${examen.examenes
-      .map((e) => {
-        let nombreExamen = `<div class="card-header" id="headerExamen">${e.examen}</div>`;
-        if (e.nombreSeccion == s) {
-          if (e.caracteristicas.length == 1) {
-            if (e.examen == e.caracteristicas[0].nombre) {
-              //nombreExamen = e.caracteristicas[0].nombre;
-              nombreExamen = "";
-            }
-          }
-          return ` 
+          .map((e) => {
+            let nombreExamen = `<div class="card-header" id="headerExamen">${e.examen}</div>`;
+            if (e.nombreSeccion == s) {
+              if (e.caracteristicas.length == 1) {
+                if (e.examen == e.caracteristicas[0].nombre) {
+                  //nombreExamen = e.caracteristicas[0].nombre;
+                  nombreExamen = "";
+                }
+              }
+              return ` 
         <div class="card">
         ${nombreExamen}
         <div class="card-body">
@@ -256,30 +250,28 @@ const pintarExamen = async () => {
             </thead>
             <tbody>
             ${e.caracteristicas
-              .map((c) => {
-                if (c?.status == "titulo") {
-                  return `
+                  .map((c) => {
+                    if (c?.status == "titulo") {
+                      return `
                   <tr>
                   <th colspan="5" scope="row">${c.nombre}</th>
                 </tr>
                   `;
-                } else {
-                  return `
+                    } else {
+                      return `
               <tr>
               <th scope="row">${c.nombre}</th>
-              <td>${c.resultado} ${
-                    c.nota != ""
-                      ? `<p class="m-0 fst-italic">(${c.nota})</p>`
-                      : ""
-                  } 
+              <td>${c.resultado} ${c.nota != ""
+                          ? `<p class="m-0 fst-italic">(${c.nota})</p>`
+                          : ""
+                        } 
           </td>
               <td>${c.unidad ? c.unidad : ''}</td>
-              <td>${c.inferior}</td>
-              <td>${c.superior}</td>
+              <td>${c.inferior == 'no' ? '-' : c.inferior}</td>
+              <td>${c.superior == 'no' ? '-' : c.superior}</td>
             </tr>
-            ${
-              c.subCaracteristicas.length > 0
-                ? `
+            ${c.subCaracteristicas.length > 0
+                          ? `
             <tr>
             <th scope="row"></th>
             <td>-</td>
@@ -288,8 +280,8 @@ const pintarExamen = async () => {
             <td><span class="fw-bold">RESULTADO</span></td>
           </tr>
           ${c.subCaracteristicas
-            .map((sc) => {
-              return `
+                            .map((sc) => {
+                              return `
           <tr>
             <th scope="row"></th>
             <td>${sc.nombreSub}</td>
@@ -298,23 +290,23 @@ const pintarExamen = async () => {
             <td>${sc.resultado}</td>
           </tr>
           `;
-            })
-            .join("")}
+                            })
+                            .join("")}
           `
-                : ""
-            }
+                          : ""
+                        }
               `;
-                }
-              })
-              .join("")}
+                    }
+                  })
+                  .join("")}
             </tbody>
           </table>
         </div>
       </div>
        `;
-        }
-      })
-      .join("")}
+            }
+          })
+          .join("")}
   </div>`;
     })
     .join("");
@@ -340,6 +332,28 @@ const whatsapp = async () => {
     await document.getElementById("wsModalBtnClose").click();
     botones.hidden = true;
     await wsPDF({ numero, code });
+    setTimeout(() => {
+      botones.hidden = false;
+    }, 3000);
+  } catch (error) {
+    console.log("🚀 ~ imprimir ~ error:", error);
+    botones.hidden = false;
+  }
+};
+
+const email = async () => {
+  const email = document.getElementById("emailInput").value;
+  if (email == "") {
+    return whatsappAlerta("Ingrese un correo electronico valido", "warning");
+  }
+  const botones = document.getElementsByName("botones")[0];
+  try {
+    botones.hidden = true;
+    await emailPDF({ email });
+    whatsappAlerta("Correo electronico enviado", "success");
+    setTimeout(() => {
+      document.getElementById("emailModalBtnClose").click();
+    }, 1000);
     setTimeout(() => {
       botones.hidden = false;
     }, 3000);
