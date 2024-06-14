@@ -143,18 +143,33 @@ export const editarBioanalista = async (req, res) => {
         .status(404)
         .json({ mensaje: "El usuario que intenta editar no existe" });
     } else {
-      const [bioUpdate] = await pool.execute(
-        "UPDATE bioanalistas SET nombre = ?, telefono = ?, direccion = ?, colegio = ?, ministerio = ?, foto_firma = ? WHERE id = ?",
-        [
-          nombre,
-          telefono,
-          direccion,
-          colegio,
-          ministerio,
-          firma !== "" ? firma : null,
-          id,
-        ]
-      );
+      if (firma != '') {
+        
+        const [bioUpdate] = await pool.execute(
+          "UPDATE bioanalistas SET nombre = ?, telefono = ?, direccion = ?, colegio = ?, ministerio = ?, foto_firma = ? WHERE id = ?",
+          [
+            nombre,
+            telefono,
+            direccion,
+            colegio,
+            ministerio,
+            firma !== "" ? firma : null,
+            id,
+          ]
+        );
+      }else{
+        const [bioUpdate] = await pool.execute(
+          "UPDATE bioanalistas SET nombre = ?, telefono = ?, direccion = ?, colegio = ?, ministerio = ? WHERE id = ?",
+          [
+            nombre,
+            telefono,
+            direccion,
+            colegio,
+            ministerio,
+            id,
+          ]
+        );
+      }
       return await res
         .status(200)
         .json({ mensaje: "Bioanalista modificado correctamente" });

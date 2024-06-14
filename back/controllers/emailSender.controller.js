@@ -11,14 +11,13 @@ const transporter = nodemailer.createTransport({
 export const enviarCorreo = async (req, res) => {
     try {
         const { texto, correo, data } = req.body;
-        console.log("🚀 ~ enviarCorreo ~ req.body:", req.body);
         //HACER VALIDACIONES DE CORREO
         if (
-            texto == ''||
+            texto == '' ||
             correo == ''
-            ||!data
+            || !data
         ) {
-            
+            return await res.status(400).json({ mensaje: 'Envie datos validos para el correo electronico' });
         }
         const email = {
             from: '"Fabian Silva Bravo" <silvabravofabian@gmail.com>', // sender address
@@ -34,9 +33,6 @@ export const enviarCorreo = async (req, res) => {
         }
         // send mail with defined transport object
         const info = await transporter.sendMail(email);
-        console.log("🚀 ~ enviarCorreo ~ info:", info)
-        console.log("Message sent: %s", info.messageId);
-        // Message sent: <d786aa62-4e0a-070a-47ed-0b0666549519@ethereal.email>
         //NO DETECTA CUANDO EL CORREO ELECTRONICO ES INVALIDO
         return await res.status(200).json({ mensaje: "Message sent: " + info.messageId });
     } catch (error) {

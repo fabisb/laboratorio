@@ -173,6 +173,8 @@ const pintarExamen = async () => {
   var bioanalista;
   var reimpresion = false;
   document.getElementById("numeroTlf").value = examen.paciente.telefono;
+  document.getElementById("emailInput").value = examen.paciente.correo || '';
+
   if (examen.orden == "Reimpresion") return reimprimirExamen();
   if (reimpresion == false) {
     const { data } = await axios.get(urlsv + "/api/users/firma", {
@@ -348,12 +350,9 @@ const email = async () => {
   }
   const botones = document.getElementsByName("botones")[0];
   try {
+    await document.getElementById("emailModalBtnClose").click();
     botones.hidden = true;
     await emailPDF({ email });
-    whatsappAlerta("Correo electronico enviado", "success");
-    setTimeout(() => {
-      document.getElementById("emailModalBtnClose").click();
-    }, 1000);
     setTimeout(() => {
       botones.hidden = false;
     }, 3000);

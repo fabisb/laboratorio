@@ -277,6 +277,7 @@ const modificarBio = async (id, idBio) => {
   const correo = document.getElementById("correo").value;
   const password = document.getElementById("clave").value;
   const nivel = document.getElementById("tipo").value;
+  const pre_nombre = document.getElementById("pre_nombre").value;
 
   if (
     nombre == "" ||
@@ -284,8 +285,8 @@ const modificarBio = async (id, idBio) => {
     colegio == "" ||
     ministerio == "" ||
     ingreso == "" ||
-    password ==''||
-    nivel == ''
+    nivel == '' ||
+    pre_nombre == ''
   ) {
     //ALERTAS PARA VALIDACION
     return usuariosAlerta("Algun dato no es valido", "danger");
@@ -304,7 +305,7 @@ const modificarBio = async (id, idBio) => {
     });
     await axios.put("/api/espejo/editar-bioanalista", {
       id:idBio,
-      nombre,
+      nombre: pre_nombre + " " + nombre,
       telefono,
       colegio,
       ministerio,
@@ -336,7 +337,7 @@ const modificarUsuario = async (id) => {
     //ALERTAS PARA VALIDACION
     return usuariosAlerta("El ID del usuario no es valido", "danger");
   }
-  if (nombre == "" || telefono == "" || nivel == "" || password == "") {
+  if (nombre == "" || telefono == "" || nivel == "" ) {
     return usuariosAlerta("Algun dato no es valido", "danger");
     //ALERTAS PARA VALIDACION
   }
@@ -397,6 +398,7 @@ const guardarUsuario = async () => {
     if (tipo == "3") {
       const ministerio = document.getElementById("ministerio").value;
       const colegio = document.getElementById("colegio").value;
+      const pre_nombre = document.getElementById("pre_nombre").value;
       const ingreso = moment(document.getElementById("ingreso").value).format(
         "YYYY-MM-DD"
       );
@@ -409,11 +411,14 @@ const guardarUsuario = async () => {
       if (ingreso == "") {
         return usuariosAlerta("Ingrese un ingreso valido", "warning");
       }
+      if (pre_nombre == "") {
+        return usuariosAlerta("Ingrese un pre nombre valido", "warning");
+      }
       const firma = await subirImagen();
       const res = await axios.post("/api/espejo/guardar-bioanalista", {
         pre_cedula,
         cedula,
-        nombre,
+        nombre: pre_nombre + " " + nombre,
         telefono,
         direccion,
         ingreso,

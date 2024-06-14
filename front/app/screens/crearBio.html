@@ -26,51 +26,64 @@
       );
       overflow-x: hidden;
       height: 100%;
-      
     "
   >
-  <nav class="navbar navbar bg-transparent">
-    <div class="container-fluid d-flex justify-content-center">
-      <a class="navbar-brand" href="#">
-        <img class="" style="margin-left: 55px;" src="../imgs/la-milagrosa-logo.png" width="70" alt="" />
-        
+    <nav class="navbar navbar bg-transparent">
+      <div class="container-fluid d-flex justify-content-center">
+        <a class="navbar-brand" href="#">
+          <img
+            class=""
+            style="margin-left: 55px"
+            src="../imgs/la-milagrosa-logo.png"
+            width="70"
+            alt=""
+          />
+        </a>
+        <h1 class="display-4 mt-3">Usuarios</h1>
+      </div>
+    </nav>
 
-      </a>
-      <h1 class="display-4 mt-3">Usuarios</h1>    
-     
-    </div>
-  </nav>
-
-  <hr style="border-top: solid 3px #1c8c9b">
+    <hr style="border-top: solid 3px #1c8c9b" />
     <main>
-
-
       <div class="row mx-3">
-        
-        <br><br><br>
+        <br /><br /><br />
         <div class="col-5">
-          <h1 class="display-6 text-center" style="font-weight: 100;">Filtros de Busqueda</h1>
-          <br>
-          <div class="row g-3 align-items-center justify-content-center" style="border: none;">
+          <h1 class="display-6 text-center" style="font-weight: 100">
+            Filtros de Busqueda
+          </h1>
+          <br />
+          <div
+            class="row g-3 align-items-center justify-content-center"
+            style="border: none"
+          >
             <div class="col-auto">
               <div class="">
-                <select class="form-select" onchange="buscarUserTipo(value)" aria-label="Default select example">
+                <select
+                  class="form-select"
+                  onchange="buscarUserTipo(value)"
+                  aria-label="Default select example"
+                >
                   <option selected value="todos">Todos</option>
                   <option value="1">Administrador</option>
                   <option value="2">Auxiliar</option>
                   <option value="3">Bioanalista</option>
                 </select>
               </div>
-              </div>
-            <div class="col-auto">
-              <input type="text" id="inputFiltro" oninput="buscarUserFiltro(value)" class="form-control" aria-describedby="passwordHelpInline">
             </div>
-            
+            <div class="col-auto">
+              <input
+                type="text"
+                id="inputFiltro"
+                oninput="buscarUserFiltro(value)"
+                class="form-control"
+                aria-describedby="passwordHelpInline"
+              />
+            </div>
           </div>
 
-          <hr style="border-top: solid 3px #1c8c9b; margin-top: 12.5px;">
-          
-          <div class="row">
+          <hr style="border-top: solid 3px #1c8c9b; margin-top: 12.5px" />
+
+          <div class="row" style="overflow-y: auto; height: 500px">
             <table class="table text-center table-hover">
               <thead>
                 <tr class="table-success">
@@ -79,33 +92,33 @@
                   <th scope="col">Tipo</th>
                   <th scope="col">Status</th>
                   <th scope="col">Accion</th>
-
                 </tr>
               </thead>
-              <tbody id="tBodyUsuarios">
-  
-              </tbody>
+              <tbody id="tBodyUsuarios"></tbody>
             </table>
           </div>
         </div>
         <div class="col-7">
           <div class="row">
-          <h1 class="display-6 text-center" style="font-weight: 100;">Registro de Usuarios  </h1>
+            <h1 class="display-6 text-center" style="font-weight: 100">
+              Registro de Usuarios
+            </h1>
 
             <section class="radio-section">
               <div class="radio-list row row-cols-3">
-                
-                <div class="radio-item col" style="margin-top: 15px;">
+                <div class="radio-item col" style="margin-top: 15px">
                   <input
                     value="1"
                     name="radio"
                     id="radio1"
                     type="radio"
-                  /><label onclick="formularioCreacion('1')" for="radio1">ADMINISTRADOR</label>
+                  /><label onclick="formularioCreacion('1')" for="radio1"
+                    >ADMINISTRADOR</label
+                  >
                 </div>
                 <div class="radio-item col">
                   <input
-                  value="3"
+                    value="3"
                     onclick="formularioCreacion('3')"
                     name="radio"
                     id="radio4"
@@ -114,7 +127,7 @@
                 </div>
                 <div class="radio-item col">
                   <input
-                  value="2"
+                    value="2"
                     onclick="formularioCreacion('2')"
                     name="radio"
                     id="radio3"
@@ -125,214 +138,213 @@
             </section>
             <div id="creacionUsuarioAlerta"></div>
 
-            <hr style="border-top: solid 3px #1c8c9b">
+            <hr style="border-top: solid 3px #1c8c9b" />
 
             <div class="d-flex justify-content-center">
               <div
-              class="w-75 p-5"
-              style="border: solid 2px rgba(28, 132, 132, 1); border-radius: 25px;"
-            >
-              <div class="">
-                <div class="row mb-3">
-                  <div class="col-4">
+                class="w-75 p-5"
+                style="
+                  border: solid 2px rgba(28, 132, 132, 1);
+                  border-radius: 25px;
+                "
+              >
+                <div class="">
+                  <div class="row mb-3">
+                    <div class="col-4">
+                      <label for="cedula" class="form-label formulario"
+                        >Cedula:
+                      </label>
+                    </div>
+                    <div class="col-3">
+                      <select
+                        onchange=""
+                        disabled
+                        id="precedula"
+                        class="form-select formulario"
+                        aria-label="Default select example"
+                      >
+                        <option value="V">V</option>
+                        <option value="E">E</option>
+                      </select>
+                    </div>
+                    <div class="col-5">
+                      <input
+                        type="number"
+                        min="0"
+                        step="1"
+                        disabled
+                        class="form-control formulario"
+                        id="cedula"
+                        placeholder="Ingrese la Cedula del Usuario"
+                      />
+                    </div>
+                  </div>
+                  <div class="row mb-3">
+                    <div class="col-4">
+                      <label for="nombre" class="form-label">Nombre: </label>
+                    </div>
+                    <div class="col-8">
+                      <select
+                        disabled
+                        id="pre_nombre"
+                        hidden
+                        class="form-select formulario bioanalistaDiv"
+                        aria-label="Default select example"
+                      >
+                        <option selected value="Lcda">Lcda</option>
+                        <option value="Lcdo">Lcdo</option>
+                      </select>
+                      <input
+                        type="text"
+                        disabled
+                        class="form-control formulario"
+                        id="nombre"
+                        placeholder="Ingrese el Nombre del Usuario"
+                      />
+                    </div>
+                  </div>
+                  <div class="row mb-3">
+                    <div class="col-4">
+                      <label for="clave" class="form-label">Contraseña: </label>
+                    </div>
+                    <div class="col-8">
+                      <input
+                        type="password"
+                        disabled
+                        class="form-control formulario"
+                        id="clave"
+                        placeholder="Ingrese la Contraseña"
+                      />
+                    </div>
+                  </div>
+                  <div class="row mb-3">
+                    <div class="col-4">
+                      <label for="direccion" class="form-label"
+                        >Direccion:
+                      </label>
+                    </div>
+                    <div class="col-8">
+                      <input
+                        type="text"
+                        disabled
+                        class="form-control formulario"
+                        id="direccion"
+                        placeholder="Ingrese la Direccion"
+                      />
+                    </div>
+                  </div>
+                  <div class="row mb-3">
+                    <div class="col-4">
+                      <label for="direccion" class="form-label"
+                        >Telefono:
+                      </label>
+                    </div>
+                    <div class="col-8">
+                      <input
+                        type="text"
+                        disabled
+                        class="form-control formulario"
+                        id="telefono"
+                        placeholder="Ingrese el Telefono"
+                      />
+                    </div>
+                  </div>
+                  <div class="row mb-3">
+                    <div class="col-4">
+                      <label for="correo" class="form-label">Correo: </label>
+                    </div>
+                    <div class="col-8">
+                      <input
+                        type="mail"
+                        disabled
+                        class="form-control formulario"
+                        id="correo"
+                        placeholder="correo@ejemplo.com"
+                      />
+                    </div>
+                  </div>
 
-                    <label for="cedula" class="form-label formulario">Cedula: </label>
+                  <div class="row mb-3" id="nivelDiv" hidden>
+                    <div class="col-4">
+                      <label for="nivel" class="form-label">Nivel: </label>
+                    </div>
+                    <div class="col-8">
+                      <select
+                        id="nivel"
+                        class="form-select formulario"
+                        aria-label="Default select example"
+                      >
+                        <option value="1">ADMINISTRADOR</option>
+                        <option value="2" selected>AUXILIAR</option>
+                      </select>
+                    </div>
                   </div>
-                  <div class="col-3">
-                    <select
-                    onchange=""
-                    disabled
-                    id="precedula"
-                    class="form-select formulario"
-                    aria-label="Default select example"
-                  >
-                    <option value="V">V</option>
-                    <option value="E">E</option>
-                  </select>
-                </div>
-                  <div class="col-5">
-                    <input
-                      type="number"
-                      min="0"
-                      step="1"
-                      disabled
-                      class="form-control formulario"
-                      id="cedula"
-                      placeholder="Ingrese la Cedula del Usuario"
-                    />
+                  <div class="row mb-3 bioanalistaDiv" hidden>
+                    <div class="col-6">
+                      <input
+                        type="text"
+                        disabled
+                        class="form-control formulario"
+                        id="colegio"
+                        placeholder="Colegio"
+                      />
+                    </div>
+                    <div class="col-6">
+                      <input
+                        type="text"
+                        disabled
+                        class="form-control formulario"
+                        id="ministerio"
+                        placeholder="Ministerio"
+                      />
+                    </div>
                   </div>
-                </div>
-                <div class="row mb-3">
-                  <div class="col-4">
-                    <label for="nombre" class="form-label">Nombre: </label>
+                  <div class="row mb-3 bioanalistaDiv" hidden>
+                    <div class="col-4">
+                      <label for="firma" class="form-label">Firma: </label>
+                    </div>
+                    <div class="col-8">
+                      <input
+                        type="file"
+                        name="firma"
+                        accept="image/jpeg, image/png, image/gif, image/bmp, image/webp"
+                        class="form-control"
+                        id="firma"
+                      />
+                    </div>
                   </div>
-                  <div class="col-8">
-                    <select
-                    disabled
-                    id="pre_nombre"
-                    hidden
-                    class="form-select formulario bioanalistaDiv"
-                    aria-label="Default select example"
-                  >
-                    <option selected value="Lcda">Lcda</option>
-                    <option value="Lcdo">Lcdo</option>
-                  </select>
-                    <input
-                      type="text"
-                      disabled
-                      class="form-control formulario"
-                      id="nombre"
-                      placeholder="Ingrese el Nombre del Usuario"
-                    />
-                  </div>
-                </div>
-                <div class="row mb-3">
-                  <div class="col-4">
-                    <label for="clave" class="form-label">Contraseña: </label>
-                  </div>
-                  <div class="col-8">
-                    <input
-                      type="password"
-                      disabled
-                      class="form-control formulario"
-                      id="clave"
-                      placeholder="Ingrese la Contraseña"
-                    />
-                  </div>
-                </div>
-                <div class="row mb-3">
-                  <div class="col-4">
-                    <label for="direccion" class="form-label"
-                      >Direccion:
-                    </label>
-                  </div>
-                  <div class="col-8">
-                    <input
-                      type="text"
-                      disabled
-                      class="form-control formulario"
-                      id="direccion"
-                      placeholder="Ingrese la Direccion"
-                    />
-                  </div>
-                </div>
-                <div class="row mb-3">
-                  <div class="col-4">
-                    <label for="direccion" class="form-label"
-                      >Telefono:
-                    </label>
-                  </div>
-                  <div class="col-8">
-                    <input
-                      type="text"
-                      disabled
-                      class="form-control formulario"
-                      id="telefono"
-                      placeholder="Ingrese el Telefono"
-                    />
-                  </div>
-                </div>
-                <div class="row mb-3">
-                  <div class="col-4">
-                    <label for="correo" class="form-label">Correo: </label>
-                  </div>
-                  <div class="col-8">
-                    <input
-                      type="mail"
-                      disabled
-                      class="form-control formulario"
-                      id="correo"
-                      placeholder="correo@ejemplo.com"
-                    />
-                  </div>
-                </div>
-                    
-                <div class="row mb-3" id="nivelDiv" hidden >
-                  <div class="col-4">
-                    <label for="nivel" class="form-label">Nivel: </label>
-                  </div>
-                  <div class="col-8">
-                    <select
-                    id="nivel"
-                    class="form-select formulario"
-                    aria-label="Default select example"
-                  >
-                    <option value="1">ADMINISTRADOR</option>
-                    <option value="2" selected>AUXILIAR</option>
-                  </select>
-                  </div>
-                </div>
-                <div class="row mb-3 bioanalistaDiv" hidden>
-                  <div class="col-6">
-                    <input
-                      type="text"
-                      disabled
-                      class="form-control formulario"
-                      id="colegio"
-                      placeholder="Colegio"
-                    />
-                  </div>
-                  <div class="col-6">
-                    <input
-                      type="text"
-                      disabled
-                      class="form-control formulario"
-                      id="ministerio"
-                      placeholder="Ministerio"
-                    />
-                  </div>
-                </div>
-                <div class="row mb-3 bioanalistaDiv" hidden>
-                  <div class="col-4">
-                    <label for="firma" class="form-label">Firma: </label>
-                  </div>
-                  <div class="col-8">
-                    <input
-                      type="file"
-                      name="firma"
-                      accept="image/jpeg, image/png, image/gif, image/bmp, image/webp"
-                      class="form-control"
-                      id="firma"
-                    />
-                  </div>
-                </div>
 
-                <div class="row mt-5 d-flex justify-content-center">
-                  <div class="col-12 " style="width: 40%">
-                    <button
-                      class="btn-success btn"
-                      
-                      onclick=""
-                      id="guardarButton"
-                    >
-                      <div class="">
-                        <span class="mx-2">Guardar</span >
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          width="20"
-                          height="20"
-                          fill="currentColor"
-                          class="bi bi-save-fill"
-                          viewBox="0 0 16 16"
-                        >
-                          <path
-                            d="M8.5 1.5A1.5 1.5 0 0 1 10 0h4a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2h6c-.314.418-.5.937-.5 1.5v7.793L4.854 6.646a.5.5 0 1 0-.708.708l3.5 3.5a.5.5 0 0 0 .708 0l3.5-3.5a.5.5 0 0 0-.708-.708L8.5 9.293z"
-                          />
-                        </svg>
-                      </div>
-                    </button>
+                  <div class="row mt-5 d-flex justify-content-center">
+                    <div class="col-12" style="width: 40%">
+                      <button
+                        class="btn-success btn"
+                        onclick=""
+                        id="guardarButton"
+                      >
+                        <div class="">
+                          <span class="mx-2">Guardar</span>
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            width="20"
+                            height="20"
+                            fill="currentColor"
+                            class="bi bi-save-fill"
+                            viewBox="0 0 16 16"
+                          >
+                            <path
+                              d="M8.5 1.5A1.5 1.5 0 0 1 10 0h4a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2h6c-.314.418-.5.937-.5 1.5v7.793L4.854 6.646a.5.5 0 1 0-.708.708l3.5 3.5a.5.5 0 0 0 .708 0l3.5-3.5a.5.5 0 0 0-.708-.708L8.5 9.293z"
+                            />
+                          </svg>
+                        </div>
+                      </button>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
-            </div>
-            
           </div>
-          
-          
-
         </div>
-      
+
         <!--<div class="row" id="rowMain">
 
           
@@ -358,9 +370,9 @@
                 height="58"
                 viewBox="0 -960 960 960"
                 width="58"
-                >
+              >
                 <path
-                d="M382-240 154-468l57-57 171 171 367-367 57 57-424 424Z"
+                  d="M382-240 154-468l57-57 171 171 367-367 57 57-424 424Z"
                 />
               </svg>
             </div>
@@ -390,95 +402,95 @@
                 viewBox="0 -960 960 960"
                 width="58"
               >
-              <path
-              d="M382-240 154-468l57-57 171 171 367-367 57 57-424 424Z"
-              />
-            </svg>
+                <path
+                  d="M382-240 154-468l57-57 171 171 367-367 57 57-424 424Z"
+                />
+              </svg>
+            </div>
+            <h4 class="modal-title">Agregado!</h4>
           </div>
-          <h4 class="modal-title">Agregado!</h4>
-        </div>
-        <div class="modal-body">
-          <p class="text-center">
-            El bioanalista ha sido agregado correctamente.
-          </p>
-        </div>
-        <div class="modal-footer">
-          <button class="btn btn-success btn-block" data-bs-dismiss="modal">
-            OK
-          </button>
+          <div class="modal-body">
+            <p class="text-center">
+              El bioanalista ha sido agregado correctamente.
+            </p>
+          </div>
+          <div class="modal-footer">
+            <button class="btn btn-success btn-block" data-bs-dismiss="modal">
+              OK
+            </button>
+          </div>
         </div>
       </div>
     </div>
-  </div>
-  <!-- ALERTAS PARA AGREGAR  -->
+    <!-- ALERTAS PARA AGREGAR  -->
 
-  <!-- ALERTAS PARA MODIFICAR -->
-  <div id="confirmacion-modificar-modalPaci" class="modal fade">
-    <div class="modal-dialog modal-confirm">
-      <div class="modal-content">
-        <div class="modal-header">
-          <div class="icon-box">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              height="58"
-              viewBox="0 -960 960 960"
-              width="58"
-            >
-              <path
-                d="M382-240 154-468l57-57 171 171 367-367 57 57-424 424Z"
-              />
-            </svg>
+    <!-- ALERTAS PARA MODIFICAR -->
+    <div id="confirmacion-modificar-modalPaci" class="modal fade">
+      <div class="modal-dialog modal-confirm">
+        <div class="modal-content">
+          <div class="modal-header">
+            <div class="icon-box">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                height="58"
+                viewBox="0 -960 960 960"
+                width="58"
+              >
+                <path
+                  d="M382-240 154-468l57-57 171 171 367-367 57 57-424 424Z"
+                />
+              </svg>
+            </div>
+            <h4 class="modal-title">Modificado!</h4>
           </div>
-          <h4 class="modal-title">Modificado!</h4>
-        </div>
-        <div class="modal-body">
-          <p class="text-center">
-            El usuario ha sido modificado correctamente.
-          </p>
-        </div>
-        <div class="modal-footer">
-          <button class="btn btn-success btn-block" data-bs-dismiss="modal">
-            OK
-          </button>
+          <div class="modal-body">
+            <p class="text-center">
+              El usuario ha sido modificado correctamente.
+            </p>
+          </div>
+          <div class="modal-footer">
+            <button class="btn btn-success btn-block" data-bs-dismiss="modal">
+              OK
+            </button>
+          </div>
         </div>
       </div>
     </div>
-  </div>
-  <div id="confirmacion-modificar-modalBio" class="modal fade">
-    <div class="modal-dialog modal-confirm">
-      <div class="modal-content">
-        <div class="modal-header">
-          <div class="icon-box">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              height="58"
-              viewBox="0 -960 960 960"
-              width="58"
-            >
-              <path
-                d="M382-240 154-468l57-57 171 171 367-367 57 57-424 424Z"
-              />
-            </svg>
+    <div id="confirmacion-modificar-modalBio" class="modal fade">
+      <div class="modal-dialog modal-confirm">
+        <div class="modal-content">
+          <div class="modal-header">
+            <div class="icon-box">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                height="58"
+                viewBox="0 -960 960 960"
+                width="58"
+              >
+                <path
+                  d="M382-240 154-468l57-57 171 171 367-367 57 57-424 424Z"
+                />
+              </svg>
+            </div>
+            <h4 class="modal-title">Modificado!</h4>
           </div>
-          <h4 class="modal-title">Modificado!</h4>
-        </div>
-        <div class="modal-body">
-          <p class="text-center">
-            El bioanalista ha sido modificado correctamente.
-          </p>
-        </div>
-        <div class="modal-footer">
-          <button class="btn btn-success btn-block" data-bs-dismiss="modal">
-            OK
-          </button>
+          <div class="modal-body">
+            <p class="text-center">
+              El bioanalista ha sido modificado correctamente.
+            </p>
+          </div>
+          <div class="modal-footer">
+            <button class="btn btn-success btn-block" data-bs-dismiss="modal">
+              OK
+            </button>
+          </div>
         </div>
       </div>
     </div>
-  </div>
-  <!-- ALERTAS PARA MODIFICAR -->
-  
-  <script src="../javascript/crearBio.js"></script>
-  <script src="../javascript/alertas.js"></script>
+    <!-- ALERTAS PARA MODIFICAR -->
+
+    <script src="../javascript/crearBio.js"></script>
+    <script src="../javascript/alertas.js"></script>
     <script src="../modules/axios.min.js"></script>
     <script src="../../bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
     <script src="../../bower_components/moment/moment.js"></script>

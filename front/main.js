@@ -809,7 +809,6 @@ ipcMain.on("email", async (event, email) => {
 
         const texto = `${examen.paciente.pre_cedula}-${examen.paciente.cedula} ${examen.orden}`;
         const correo = (JSON.parse(email)).email;
-        console.log("🚀 ~ .then ~ correo:", correo)
        try {
         const { token } = await store.get("token");
 
