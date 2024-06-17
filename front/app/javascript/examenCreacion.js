@@ -21,9 +21,9 @@ const {data: examen} = await axios.get(
   { headers: { token }, params: { idSeccion } }
 ); 
 */
-let contador=0
+let contador = 0
 var examenesArray = [];
-var titulosArray =[];
+var titulosArray = [];
 function formularioSeccion() {
   const labDiv = document.getElementById(`formLaboratorio`);
   const sedeDiv = document.getElementById(`formSede`);
@@ -93,10 +93,10 @@ async function crearLaboratorio() {
       { headers: { token } }
     );
     console.log(res);
-    rif.value=''
-    razon.value=''
-    direccion.value=''
-    telefono.value=''
+    rif.value = ''
+    razon.value = ''
+    direccion.value = ''
+    telefono.value = ''
     render();
   } catch (error) {
     console.log(error);
@@ -111,7 +111,7 @@ async function crearLaboratorio() {
 var examenes = [];
 var seccionesData = [];
 var sedesData = [];
-var empresasData=[];
+var empresasData = [];
 var laboratoriosData = [];
 
 function validarSelectSeccionMenu(value) {
@@ -132,7 +132,7 @@ const render = async () => {
       urlsv + "/api/modulo-examenes/empresas",
       { headers: { token } }
     );
-    empresasData=empresas.data
+    empresasData = empresas.data
   } catch (error) {
     console.log(error)
   }
@@ -300,11 +300,11 @@ const render = async () => {
 };
 function añadirAcordionItemEx(nombre1, idEx) {
   if (nombre1 == "") {
-    nombre1=`${contador}-EMPTY0023`
-    contador+=1
+    nombre1 = `${contador}-EMPTY0023`
+    contador += 1
   }
   nombre1 = nombre1.trim();
-  
+
   const nombre = nombre1
     .replaceAll(" ", "-")
     .replaceAll("(", "-")
@@ -673,7 +673,7 @@ async function crearCaracteristicaBdd(nombre, idEx) {
         for (let il = 0; il < subCaracteristica.length; il++) {
           if (
             subCaracteristica[il].childNodes[0].childNodes[1].value !=
-              "texto" &&
+            "texto" &&
             s.childNodes[2].childNodes[1].childNodes[1].value != v &&
             v == subCaracteristica[il].children[1].children[0].children[0].value
           ) {
@@ -717,9 +717,9 @@ async function crearCaracteristicaBdd(nombre, idEx) {
 
     if (
       r.childNodes[1].childNodes[1].childNodes[1].value >
-        r.childNodes[3].childNodes[1].childNodes[1].value ||
+      r.childNodes[3].childNodes[1].childNodes[1].value ||
       r.childNodes[5].childNodes[1].childNodes[1].value >
-        r.childNodes[7].childNodes[1].childNodes[1].value
+      r.childNodes[7].childNodes[1].childNodes[1].value
     ) {
       return undefined;
     }
@@ -747,8 +747,8 @@ async function crearCaracteristicaBdd(nombre, idEx) {
     resultados,
     idEx,
   });
-  if(caracteristica[0].valor.includes('-EMPTY0023')){
-    caracteristica[0].valor=''
+  if (caracteristica[0].valor.includes('-EMPTY0023')) {
+    caracteristica[0].valor = ''
   }
   const caracteristicas = [
     {
@@ -1020,8 +1020,8 @@ async function modificarExamen(id) {
       { headers: { token }, params: { idExamen: id } }
     );
 
-  
-    titulosArray=[];
+
+    titulosArray = [];
     console.log(examen);
     const botonRefrescarFooter = document.getElementById(
       "buttonRefrescarFooter"
@@ -1056,9 +1056,9 @@ async function modificarExamen(id) {
     seccionSelect.value = examen.examen.id_seccion;
     categoriaSelect.value = examen.examen.id_categoria;
     accordionDiv.innerHTML = "";
-    examen.detalles=examen.detalles.sort((a, b) => {
-      console.log(a,b)
-      
+    examen.detalles = examen.detalles.sort((a, b) => {
+      console.log(a, b)
+
       if (a.posicion > b.posicion) {
         return 1;
       }
@@ -1071,11 +1071,11 @@ async function modificarExamen(id) {
     examen.detalles.forEach((dt) => {
       const divItem = document.createElement("div");
       if (dt.nombre == null) {
-        dt.nombre=`${contador}-EMPTY0023`
-        contador+=1
+        dt.nombre = `${contador}-EMPTY0023`
+        contador += 1
       }
       nombre1 = dt.nombre.trim();
-      
+
       const nombre = nombre1
         .replaceAll(" ", "-")
         .replaceAll("(", "-")
@@ -1130,9 +1130,8 @@ async function modificarExamen(id) {
 
                         </td>
                         <td>
-                          <button type="button" class="btn btn-outline-success button${nombre}" onclick="añadirSubCaracteristicaEx(${
-        dt.id
-      },'${nombre}')" id="añadirSubCaButton">
+                          <button type="button" class="btn btn-outline-success button${nombre}" onclick="añadirSubCaracteristicaEx(${dt.id
+        },'${nombre}')" id="añadirSubCaButton">
 
                             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-file-earmark-plus-fill" viewBox="0 0 16 16">
                               <path d="M9.293 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V4.707A1 1 0 0 0 13.707 4L10 .293A1 1 0 0 0 9.293 0M9.5 3.5v-2l3 3h-2a1 1 0 0 1-1-1M8.5 7v1.5H10a.5.5 0 0 1 0 1H8.5V11a.5.5 0 0 1-1 0V9.5H6a.5.5 0 0 1 0-1h1.5V7a.5.5 0 0 1 1 0"/>
@@ -1178,9 +1177,8 @@ async function modificarExamen(id) {
 
                         </td>
                         <td>
-                          <button type="button" class="btn btn-outline-success button${nombre}" onclick="añadirRangoEx(${
-        dt.id
-      },'${nombre}')" id="añadirRangoButton">
+                          <button type="button" class="btn btn-outline-success button${nombre}" onclick="añadirRangoEx(${dt.id
+        },'${nombre}')" id="añadirRangoButton">
 
                             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-file-earmark-plus-fill" viewBox="0 0 16 16">
                               <path d="M9.293 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V4.707A1 1 0 0 0 13.707 4L10 .293A1 1 0 0 0 9.293 0M9.5 3.5v-2l3 3h-2a1 1 0 0 1-1-1M8.5 7v1.5H10a.5.5 0 0 1 0 1H8.5V11a.5.5 0 0 1-1 0V9.5H6a.5.5 0 0 1 0-1h1.5V7a.5.5 0 0 1 1 0"/>
@@ -1216,9 +1214,8 @@ async function modificarExamen(id) {
 
                         </td>
                         <td>
-                          <button type="button" class="btn btn-outline-success button${nombre}" onclick="añadirResultadoEx('${
-        dt.id
-      }','${nombre}')" id="añadirResultadoButton">
+                          <button type="button" class="btn btn-outline-success button${nombre}" onclick="añadirResultadoEx('${dt.id
+        }','${nombre}')" id="añadirResultadoButton">
 
                             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-file-earmark-plus-fill" viewBox="0 0 16 16">
                               <path d="M9.293 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V4.707A1 1 0 0 0 13.707 4L10 .293A1 1 0 0 0 9.293 0M9.5 3.5v-2l3 3h-2a1 1 0 0 1-1-1M8.5 7v1.5H10a.5.5 0 0 1 0 1H8.5V11a.5.5 0 0 1-1 0V9.5H6a.5.5 0 0 1 0-1h1.5V7a.5.5 0 0 1 1 0"/>
@@ -1250,23 +1247,20 @@ async function modificarExamen(id) {
                 </tr>
                 <tr>
                   <th scope="row">Unidad</th>
-                  <td colspan='2'><input type="text" readonly value='${
-                    dt.unidad != null ? dt.unidad : ""
-                  }' class="form-control input${nombre} formCaracteristica${nombre}" name="unidad" placeholder='Unidad'></td>
+                  <td colspan='2'><input type="text" readonly value='${dt.unidad != null ? dt.unidad : ""
+        }' class="form-control input${nombre} formCaracteristica${nombre}" name="unidad" placeholder='Unidad'></td>
                   
                 </tr>
                 <tr>
                   <th scope="row">Posicion</th>
-                  <td colspan='2'><input type="number" readonly value='${
-                    dt.posicion
-                  }' min='0' class="form-control input${nombre} formCaracteristica${nombre}" name="posicion" placeholder='Orden'></td>
+                  <td colspan='2'><input type="number" readonly value='${dt.posicion
+        }' min='0' class="form-control input${nombre} formCaracteristica${nombre}" name="posicion" placeholder='Orden'></td>
                   
                 </tr>
                 <tr>
                   <th scope="row">Imprimir</th>
-                  <td colspan='2'><input type="checkbox" disabled ${
-                    dt.impsiempre == 1 ? "checked" : 'checked="false"'
-                  } class="form-check-input select${nombre} formCaracteristica${nombre}" checked name="imp" ></td>
+                  <td colspan='2'><input type="checkbox" disabled ${dt.impsiempre == 1 ? "checked" : 'checked="false"'
+        } class="form-check-input select${nombre} formCaracteristica${nombre}" checked name="imp" ></td>
 
                   
                 </tr>
@@ -1294,9 +1288,8 @@ async function modificarExamen(id) {
                   </th>
                   <td >
                     
-                    <button onclick="borrarCaracteristicaForm('${nombre}','${
-        dt.id
-      }')" class='button${nombre} btnIcon' >
+                    <button onclick="borrarCaracteristicaForm('${nombre}','${dt.id
+        }')" class='button${nombre} btnIcon' >
                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="red" class="bi bi-x-circle" viewBox="0 0 16 16">
                       <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
                       <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708"/>
@@ -1304,9 +1297,8 @@ async function modificarExamen(id) {
                     </button>
                   </td>
                   <td style="cursor:pointer">
-                  <button hidden class='button${nombre} btnIcon' id='botonGuardarCaracteristica${nombre}' onclick="guardarCambioCaracteristicaBdd('${
-        dt.id
-      }','${nombre}')">
+                  <button hidden class='button${nombre} btnIcon' id='botonGuardarCaracteristica${nombre}' onclick="guardarCambioCaracteristicaBdd('${dt.id
+        }','${nombre}')">
                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="blue" class="bi bi-save" viewBox="0 0 16 16">
                       <path d="M2 1a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H9.5a1 1 0 0 0-1 1v7.293l2.646-2.647a.5.5 0 0 1 .708.708l-3.5 3.5a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L7.5 9.293V2a2 2 0 0 1 2-2H14a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2h2.5a.5.5 0 0 1 0 1z"/>
                     </svg>
@@ -1342,20 +1334,15 @@ async function modificarExamen(id) {
         const tr = document.createElement("tr");
         tr.className = "trSubCaracteristica" + nombre;
         tr.innerHTML = `<th scope="row">
-  <select id="selectSubTipo${
-    sb.id
-  }" onchange="validarSelectSub('${nombre}',event)" value="${
-          sb.tipo
-        }" disabled class="form-select form-control-sm select${nombre} inputSb${
-          sb.id
-        }" name="select"  aria-label="Default select example">
+  <select id="selectSubTipo${sb.id
+          }" onchange="validarSelectSub('${nombre}',event)" value="${sb.tipo
+          }" disabled class="form-select form-control-sm select${nombre} inputSb${sb.id
+          }" name="select"  aria-label="Default select example">
     <option ${sb.tipo == "texto" ? "selected" : ""} value="texto">Texto</option>
-    <option ${
-      sb.tipo == "numero" ? "selected" : ""
-    } value="numero">Numero</option>
-    <option ${
-      sb.tipo == "formula" ? "selected" : ""
-    } value="formula">Formula</option>
+    <option ${sb.tipo == "numero" ? "selected" : ""
+          } value="numero">Numero</option>
+    <option ${sb.tipo == "formula" ? "selected" : ""
+          } value="formula">Formula</option>
   </select>
 </th>
 <td>
@@ -1377,11 +1364,9 @@ async function modificarExamen(id) {
 <td>
   
 <div class="input-group">
-<input type="text" name='valor' id="inputValorSubCa${sb.id}" value="${
-          sb.valor
-        }" onchange="validarInputFormula('${nombre}',event)" readonly class="form-control-sm mx-2 inputSb${
-          sb.id
-        } formSubCaracteristica${nombre}" placeholder="{v} - [+-*/] - ({a}[/]{b})" aria-label="">
+<input type="text" name='valor' id="inputValorSubCa${sb.id}" value="${sb.valor
+          }" onchange="validarInputFormula('${nombre}',event)" readonly class="form-control-sm mx-2 inputSb${sb.id
+          } formSubCaracteristica${nombre}" placeholder="{v} - [+-*/] - ({a}[/]{b})" aria-label="">
 
 </div>
 </td>
@@ -1410,18 +1395,16 @@ onclick="modificarSubCaForm('${sb.id}','${nombre}')"
   </button>
 </td>
 <td style="cursor:pointer">
-                  <button hidden class='button${nombre} btnIcon' id='botonGuardarSubCa${
-          sb.id
-        }' onclick="guardarCambioSubCaBdd('${sb.id}','${nombre}')">
+                  <button hidden class='button${nombre} btnIcon' id='botonGuardarSubCa${sb.id
+          }' onclick="guardarCambioSubCaBdd('${sb.id}','${nombre}')">
                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="blue" class="bi bi-save" viewBox="0 0 16 16">
                       <path d="M2 1a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H9.5a1 1 0 0 0-1 1v7.293l2.646-2.647a.5.5 0 0 1 .708.708l-3.5 3.5a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L7.5 9.293V2a2 2 0 0 1 2-2H14a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2h2.5a.5.5 0 0 1 0 1z"/>
                     </svg>
                   </button>
                   </td>
 <td>
-  <button onclick="borrarSubCaracteristica(event,'${nombre}','','${
-          sb.id
-        }')" class="button${nombre} btnIcon" >
+  <button onclick="borrarSubCaracteristica(event,'${nombre}','','${sb.id
+          }')" class="button${nombre} btnIcon" >
   <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="red"  class="bi bi-x-circle" viewBox="0 0 16 16">
   <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
   <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708"/>
@@ -1507,25 +1490,19 @@ onclick="modificarSubCaForm('${sb.id}','${nombre}')"
   </div>
   </td>
   <th scope="row">
-    <select id='selectRg${r.id}' class="form-select form-control-sm inpRg${
-          r.id
-        } select${nombre} value="${
-          r.genero
-        }" disabled formRango" name="genero" aria-label="Default select example">
-      <option ${
-        r.genero == "todos" ? "selected" : ""
-      } value="todos">Genero</option>
-      <option ${
-        r.genero == "masculino" ? "selected" : ""
-      } value="masculino">Masculino</option>
-      <option ${
-        r.genero == "femenino" ? "selected" : ""
-      } value="femenino">Femenino</option>
+    <select id='selectRg${r.id}' class="form-select form-control-sm inpRg${r.id
+          } select${nombre} value="${r.genero
+          }" disabled formRango" name="genero" aria-label="Default select example">
+      <option ${r.genero == "todos" ? "selected" : ""
+          } value="todos">Genero</option>
+      <option ${r.genero == "masculino" ? "selected" : ""
+          } value="masculino">Masculino</option>
+      <option ${r.genero == "femenino" ? "selected" : ""
+          } value="femenino">Femenino</option>
     </select>
   </th>
-  <th scope="row"><button class="button${nombre} buttonModificarRango${
-          r.id
-        } btnIcon" >
+  <th scope="row"><button class="button${nombre} buttonModificarRango${r.id
+          } btnIcon" >
   <svg
   xmlns="http://www.w3.org/2000/svg"
   style="cursor: pointer"
@@ -1548,9 +1525,8 @@ onclick="modificarSubCaForm('${sb.id}','${nombre}')"
     </button> </th>
 
     <td style="cursor:pointer">
-    <button hidden class='button${nombre} btnIcon' id='botonGuardarRg${
-          r.id
-        }' onclick="guardarCambioRgBdd('${r.id}','${nombre}')">
+    <button hidden class='button${nombre} btnIcon' id='botonGuardarRg${r.id
+          }' onclick="guardarCambioRgBdd('${r.id}','${nombre}')">
       <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="blue" class="bi bi-save" viewBox="0 0 16 16">
         <path d="M2 1a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H9.5a1 1 0 0 0-1 1v7.293l2.646-2.647a.5.5 0 0 1 .708.708l-3.5 3.5a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L7.5 9.293V2a2 2 0 0 1 2-2H14a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2h2.5a.5.5 0 0 1 0 1z"/>
       </svg>
@@ -1559,9 +1535,8 @@ onclick="modificarSubCaForm('${sb.id}','${nombre}')"
 
     
   <td>
-    <button class="button${nombre} btnIcon" onclick="borrarRango(event,'${nombre}','${
-          r.id
-        }')">
+    <button class="button${nombre} btnIcon" onclick="borrarRango(event,'${nombre}','${r.id
+          }')">
     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="red"  class="bi bi-x-circle " viewBox="0 0 16 16">
       <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
       <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708"/>
@@ -1638,31 +1613,31 @@ onclick="modificarSubCaForm('${sb.id}','${nombre}')"
       });
     });
 
-    examen.titulos.forEach(t=>{
- 
+    examen.titulos.forEach(t => {
 
-      const posicion=t.posicion
-      const nombre1=t.titulo
-  const nombre = t.titulo
-    .replaceAll(" ", "-")
-    .replaceAll("(", "-")
-    .replaceAll(")", "-")
-    .replaceAll(".", "-")
-    .replaceAll("+", "-")
-    .replaceAll("/", "-");
 
-  const accordionCaracteristicas = document.getElementById(
-    "accordionCaracteristicas"
-  );
-  
-  caracteristicasCreadas.add(nombre);
-  
+      const posicion = t.posicion
+      const nombre1 = t.titulo
+      const nombre = t.titulo
+        .replaceAll(" ", "-")
+        .replaceAll("(", "-")
+        .replaceAll(")", "-")
+        .replaceAll(".", "-")
+        .replaceAll("+", "-")
+        .replaceAll("/", "-");
 
-  const divItem = document.createElement("div");
-  divItem.className = `accordion-item acordionItemCaracteristica`;
-  divItem.id = `accordionItemCaracteristica${nombre}`;
+      const accordionCaracteristicas = document.getElementById(
+        "accordionCaracteristicas"
+      );
 
-  divItem.innerHTML = `
+      caracteristicasCreadas.add(nombre);
+
+
+      const divItem = document.createElement("div");
+      divItem.className = `accordion-item acordionItemCaracteristica`;
+      divItem.id = `accordionItemCaracteristica${nombre}`;
+
+      divItem.innerHTML = `
   
   
   <h2 class="accordion-header headerCaracteristica"  >
@@ -1777,13 +1752,13 @@ onclick="modificarSubCaForm('${sb.id}','${nombre}')"
 
   `;
 
-  accordionCaracteristicas.appendChild(divItem);
-  titulosArray.push({
-    titulo:nombre1,
-    posicion
-  })
+      accordionCaracteristicas.appendChild(divItem);
+      titulosArray.push({
+        titulo: nombre1,
+        posicion
+      })
     })
-    document.getElementById('botonModalTitulo').setAttribute('onclick',`añadirTituloBdd(${id})`)
+    document.getElementById('botonModalTitulo').setAttribute('onclick', `añadirTituloBdd(${id})`)
     document.getElementById("busquedaModalCloseBtn").click();
   } catch (error) {
     console.log("🚀 ~ modificarExamen ~ error:", error);
@@ -1795,16 +1770,16 @@ onclick="modificarSubCaForm('${sb.id}','${nombre}')"
   }
 }
 
-async function deleteTituloBdd(id){
+async function deleteTituloBdd(id) {
   try {
     const { token } = await login.getToken();
-      const { data } = await axios.delete(
-        urlsv + "/api/modulo-examenes/delete-titulo",
-        {
-          headers: { token },
-          data: { id_titulo: id },
-        }
-      );
+    const { data } = await axios.delete(
+      urlsv + "/api/modulo-examenes/delete-titulo",
+      {
+        headers: { token },
+        data: { id_titulo: id },
+      }
+    );
 
     examenesAlerta("Titulo eliminado con exito!", "danger");
     return modificarExamen(data.examenId);
@@ -1819,18 +1794,18 @@ async function deleteTituloBdd(id){
   }
 }
 
-async function guardarTituloBdd(nombre,id){
-  const tituloInp= document.getElementById(`inputTitulo${nombre}`)
-  const posicionInp= document.getElementById(`inputPosicion${nombre}`)
-  console.log(tituloInp.value,posicionInp.value)
+async function guardarTituloBdd(nombre, id) {
+  const tituloInp = document.getElementById(`inputTitulo${nombre}`)
+  const posicionInp = document.getElementById(`inputPosicion${nombre}`)
+  console.log(tituloInp.value, posicionInp.value)
   try {
     const { token } = await login.getToken();
     const { data } = await axios.put(
       urlsv + "/api/modulo-examenes/update-titulo",
       {
         id_titulo: id,
-        titulo:tituloInp.value,
-        posicion:posicionInp.value
+        titulo: tituloInp.value,
+        posicion: posicionInp.value
       },
       {
         headers: { token },
@@ -2061,9 +2036,9 @@ async function añadirRangoExBdd(id, nombre, event) {
 
     if (
       parseFloat(r.childNodes[1].childNodes[1].childNodes[1].value) >
-        parseFloat(r.childNodes[3].childNodes[1].childNodes[1].value) ||
+      parseFloat(r.childNodes[3].childNodes[1].childNodes[1].value) ||
       parseFloat(r.childNodes[5].childNodes[1].childNodes[1].value) >
-        parseFloat(r.childNodes[7].childNodes[1].childNodes[1].value)
+      parseFloat(r.childNodes[7].childNodes[1].childNodes[1].value)
     ) {
       error = true;
       console.log("3");
@@ -2420,7 +2395,7 @@ async function añadirSubCaBddEx(id, nombre) {
         for (let il = 0; il < subCaracteristica.length; il++) {
           if (
             subCaracteristica[il].childNodes[0].childNodes[1].value !=
-              "texto" &&
+            "texto" &&
             s.childNodes[2].childNodes[1].childNodes[1].value != v &&
             v == subCaracteristica[il].children[1].children[0].children[0].value
           ) {
@@ -2553,7 +2528,7 @@ async function guardarCambioSubCaBdd(id, nombre) {
         for (let il = 0; il < subCaracteristica.length; il++) {
           if (
             subCaracteristica[il].childNodes[0].childNodes[1].value !=
-              "texto" &&
+            "texto" &&
             s.childNodes[2].childNodes[1].childNodes[1].value != v &&
             v == subCaracteristica[il].children[1].children[0].children[0].value
           ) {
@@ -2714,20 +2689,20 @@ async function guardarCambioRgBdd(id, nombre) {
 
     if (
       parseFloat(r.childNodes[1].childNodes[1].childNodes[1].value) >
-        parseFloat(r.childNodes[3].childNodes[1].childNodes[1].value) ||
+      parseFloat(r.childNodes[3].childNodes[1].childNodes[1].value) ||
       parseFloat(r.childNodes[5].childNodes[1].childNodes[1].value) >
-        parseFloat(r.childNodes[7].childNodes[1].childNodes[1].value)
+      parseFloat(r.childNodes[7].childNodes[1].childNodes[1].value)
     ) {
       error = true;
       console.log(
         r.childNodes[1].childNodes[1].childNodes[1].value +
-          ">" +
-          r.childNodes[3].childNodes[1].childNodes[1].value
+        ">" +
+        r.childNodes[3].childNodes[1].childNodes[1].value
       );
       console.log(
         r.childNodes[5].childNodes[1].childNodes[1].value +
-          ">" +
-          r.childNodes[7].childNodes[1].childNodes[1].value
+        ">" +
+        r.childNodes[7].childNodes[1].childNodes[1].value
       );
 
       console.log(3);
@@ -2998,8 +2973,8 @@ async function detalleExamen(id) {
 </table>
   `;
   const tBody = document.getElementById(`tBody${id}`);
-  let caracteristicas2=caracteristicas.sort(function (a, b) {
-    
+  let caracteristicas2 = caracteristicas.sort(function (a, b) {
+
     if (a.posicion > b.posicion) {
       return 1;
     }
@@ -3011,14 +2986,14 @@ async function detalleExamen(id) {
   });
 
   caracteristicas2.forEach((c) => {
-    if(c.status=='titulo'){
+    if (c.status == 'titulo') {
       tBody.innerHTML += `
       <tr>
         <th colspan="4" scope="col">${c.titulo}</th>
         
       </tr>
       `;
-    }else{
+    } else {
       tBody.innerHTML += `
       <tr>
         <td scope="col">${c.nombre}</td>
@@ -3028,7 +3003,7 @@ async function detalleExamen(id) {
       </tr>
       `;
     }
-    
+
   });
 }
 
@@ -3094,7 +3069,7 @@ function buscarSeccion() {
   });
 }
 
-async function borrarSeccionBdd(id){
+async function borrarSeccionBdd(id) {
   try {
     const { token } = await login.getToken();
     const { data } = await axios.put(
@@ -3108,11 +3083,11 @@ async function borrarSeccionBdd(id){
     );
 
     return examenesAlerta("Seccion Anulada con exito!", "success")
-    
+
   } catch (error) {
     console.log(error)
   }
-  
+
 }
 
 
@@ -3173,7 +3148,7 @@ function buscarSede() {
   });
 }
 
-async function borrarSedeBdd(id){
+async function borrarSedeBdd(id) {
   try {
     const { token } = await login.getToken();
     const { data } = await axios.put(
@@ -3187,11 +3162,11 @@ async function borrarSedeBdd(id){
     );
 
     return examenesAlerta("Sede Anulada con exito!", "success")
-    
+
   } catch (error) {
     console.log(error)
   }
-  
+
 }
 
 
@@ -3257,7 +3232,7 @@ function buscarCategoria() {
   });
 }
 
-async function borrarCategoriaBdd(id){
+async function borrarCategoriaBdd(id) {
   try {
     const { token } = await login.getToken();
     const { data } = await axios.put(
@@ -3271,11 +3246,11 @@ async function borrarCategoriaBdd(id){
     );
 
     return examenesAlerta("Categoria Anulada con exito!", "success")
-    
+
   } catch (error) {
     console.log(error)
   }
-  
+
 }
 
 function buscarLaboratorio() {
@@ -3317,11 +3292,15 @@ function buscarLaboratorio() {
               /></svg>
 
               
-              
-              <svg xmlns="http://www.w3.org/2000/svg" data-bs-dismiss="modal" onclick="borrarLaboratorioBdd('${sc.id}')" style="cursor:pointer" width="24" height="24" fill="red" class="bi bi-x-circle " viewBox="0 0 16 16">
+              ${sc.status == 'activo' ? `<svg xmlns="http://www.w3.org/2000/svg" data-bs-dismiss="modal" onclick="borrarLaboratorioBdd('${sc.id}')" style="cursor:pointer" width="24" height="24" fill="red" class="bi bi-x-circle " viewBox="0 0 16 16">
                 <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
                 <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708"/>
-              </svg>
+              </svg>`: ` <svg xmlns="http://www.w3.org/2000/svg" data-bs-dismiss="modal" onclick="borrarLaboratorioBdd('${sc.id}')" style="cursor:pointer" width="24" height="24" fill="green"  class="bi bi-patch-check" viewBox="0 0 16 16">
+  <path fill-rule="evenodd" d="M10.354 6.146a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708 0l-1.5-1.5a.5.5 0 1 1 .708-.708L7 8.793l2.646-2.647a.5.5 0 0 1 .708 0"/>
+  <path d="m10.273 2.513-.921-.944.715-.698.622.637.89-.011a2.89 2.89 0 0 1 2.924 2.924l-.01.89.636.622a2.89 2.89 0 0 1 0 4.134l-.637.622.011.89a2.89 2.89 0 0 1-2.924 2.924l-.89-.01-.622.636a2.89 2.89 0 0 1-4.134 0l-.622-.637-.89.011a2.89 2.89 0 0 1-2.924-2.924l.01-.89-.636-.622a2.89 2.89 0 0 1 0-4.134l.637-.622-.011-.89a2.89 2.89 0 0 1 2.924-2.924l.89.01.622-.636a2.89 2.89 0 0 1 4.134 0l-.715.698a1.89 1.89 0 0 0-2.704 0l-.92.944-1.32-.016a1.89 1.89 0 0 0-1.911 1.912l.016 1.318-.944.921a1.89 1.89 0 0 0 0 2.704l.944.92-.016 1.32a1.89 1.89 0 0 0 1.912 1.911l1.318-.016.921.944a1.89 1.89 0 0 0 2.704 0l.92-.944 1.32.016a1.89 1.89 0 0 0 1.911-1.912l-.016-1.318.944-.921a1.89 1.89 0 0 0 0-2.704l-.944-.92.016-1.32a1.89 1.89 0 0 0-1.912-1.911z"/>
+</svg>`}
+             
+
               </div>
 
             </div>
@@ -3335,7 +3314,7 @@ function buscarLaboratorio() {
   });
 }
 
-async function borrarLaboratorioBdd(id){
+async function borrarLaboratorioBdd(id) {
   try {
     const { token } = await login.getToken();
     const { data } = await axios.put(
@@ -3349,11 +3328,11 @@ async function borrarLaboratorioBdd(id){
     );
 
     return examenesAlerta("Laboratorio Anulado con exito!", "success")
-    
+
   } catch (error) {
     console.log(error)
   }
-  
+
 }
 
 function buscarExamen() {
@@ -3415,7 +3394,7 @@ function buscarExamen() {
   });
 }
 
-async function borrarExamenBdd(id){
+async function borrarExamenBdd(id) {
   try {
     const { token } = await login.getToken();
     const { data } = await axios.put(
@@ -3429,11 +3408,11 @@ async function borrarExamenBdd(id){
     );
 
     return examenesAlerta("Examen Anulado con exito!", "success")
-    
+
   } catch (error) {
     console.log(error)
   }
-  
+
 }
 
 function buscarEmpresa() {
@@ -3492,7 +3471,7 @@ function buscarEmpresa() {
 }
 
 
-async function borrarEmpresaBdd(id){
+async function borrarEmpresaBdd(id) {
   try {
     const { token } = await login.getToken();
     const { data } = await axios.put(
@@ -3506,11 +3485,11 @@ async function borrarEmpresaBdd(id){
     );
 
     return examenesAlerta("Empresa Anulada con exito!", "success")
-    
+
   } catch (error) {
     console.log(error)
   }
-  
+
 }
 
 function disabledButton(id) {
@@ -3573,9 +3552,9 @@ function desactivarSelects(nombre) {
   });
 }
 
-function borrarTitulo(event,nombre,titulo){
+function borrarTitulo(event, nombre, titulo) {
   const accordion = document.getElementById("accordionCaracteristicas");
-  
+
   const accordionCar = document.getElementById(
     `accordionItemCaracteristica${nombre}`
   );
@@ -3583,76 +3562,76 @@ function borrarTitulo(event,nombre,titulo){
   caracteristicasCreadas.delete(nombre);
   accordion.removeChild(accordionCar);
 
-  
 
-  titulosArray=titulosArray.filter(e=>e.titulo!=titulo)
+
+  titulosArray = titulosArray.filter(e => e.titulo != titulo)
 
 }
 
-function modificarTitulo(nombre,titulo){
-  const buttonMod= document.getElementById(`botonModificarTitulo${nombre}`)
-  const buttonGuardar= document.getElementById(`botonGuardarTitulo${nombre}`)
-  const tituloInp= document.getElementById(`inputTitulo${nombre}`)
-  const posicionInp= document.getElementById(`inputPosicion${nombre}`)
+function modificarTitulo(nombre, titulo) {
+  const buttonMod = document.getElementById(`botonModificarTitulo${nombre}`)
+  const buttonGuardar = document.getElementById(`botonGuardarTitulo${nombre}`)
+  const tituloInp = document.getElementById(`inputTitulo${nombre}`)
+  const posicionInp = document.getElementById(`inputPosicion${nombre}`)
   const accordionCar = document.getElementById(
     `accordionItemCaracteristica${nombre}`
   );
-  accordionCar.id='auxiliar'
+  accordionCar.id = 'auxiliar'
 
   tituloInp.removeAttribute('disabled')
   posicionInp.removeAttribute('disabled')
   buttonGuardar.removeAttribute('hidden')
-  buttonMod.setAttribute('hidden','true')
-  titulosArray=titulosArray.filter(e=>e.titulo!=titulo)
+  buttonMod.setAttribute('hidden', 'true')
+  titulosArray = titulosArray.filter(e => e.titulo != titulo)
   caracteristicasCreadas.delete(nombre)
 
 
 }
 
-function guardarTitulo(nombre2){
-  const tituloInp= document.getElementById(`inputTitulo${nombre2}`)
-  const posicionInp= document.getElementById(`inputPosicion${nombre2}`)
-  const buttonMod= document.getElementById(`botonModificarTitulo${nombre2}`)
-  const buttonGuardar= document.getElementById(`botonGuardarTitulo${nombre2}`)
-  const buttonBorrar= document.getElementById(`botonBorrarTitulo${nombre2}`)
+function guardarTitulo(nombre2) {
+  const tituloInp = document.getElementById(`inputTitulo${nombre2}`)
+  const posicionInp = document.getElementById(`inputPosicion${nombre2}`)
+  const buttonMod = document.getElementById(`botonModificarTitulo${nombre2}`)
+  const buttonGuardar = document.getElementById(`botonGuardarTitulo${nombre2}`)
+  const buttonBorrar = document.getElementById(`botonBorrarTitulo${nombre2}`)
   const accordionCar = document.getElementById(
     `auxiliar`
   );
 
-  const collapseTitulo= document.getElementById(`collapseTitulo${nombre2}`)
+  const collapseTitulo = document.getElementById(`collapseTitulo${nombre2}`)
   let nombre1 = tituloInp.value
   let posicion = posicionInp.value
-  
+
   nombre1 = nombre1.trim();
   if (nombre1 == "") {
     return alerta.alert("Error", "El nombre no puede estar vacio");
   }
 
   const nombre = nombre1
-  .replaceAll(" ", "-")
-  .replaceAll("(", "-")
-  .replaceAll(")", "-")
-  .replaceAll(".", "-")
-  .replaceAll("+", "-")
-  .replaceAll("/", "-");
+    .replaceAll(" ", "-")
+    .replaceAll("(", "-")
+    .replaceAll(")", "-")
+    .replaceAll(".", "-")
+    .replaceAll("+", "-")
+    .replaceAll("/", "-");
   if (caracteristicasCreadas.has(nombre)) {
     return alerta.alert("Error", "Ya existe una caracteristica con ese nombre");
   } else {
     caracteristicasCreadas.add(nombre);
   }
-  tituloInp.setAttribute('disabled','true')
-  posicionInp.setAttribute('disabled','true')
-  buttonGuardar.setAttribute('hidden','true')
+  tituloInp.setAttribute('disabled', 'true')
+  posicionInp.setAttribute('disabled', 'true')
+  buttonGuardar.setAttribute('hidden', 'true')
   buttonMod.removeAttribute('hidden')
-  buttonMod.setAttribute('onclick',`modificarTitulo('${nombre}','${nombre1}')`)
-  buttonGuardar.setAttribute('onclick',`guardarTitulo('${nombre}')`)
-  buttonBorrar.setAttribute('onclick',`borrarTitulo(event,'${nombre}','${nombre1}')`)
-  accordionCar.id=`accordionItemCaracteristica${nombre}`
+  buttonMod.setAttribute('onclick', `modificarTitulo('${nombre}','${nombre1}')`)
+  buttonGuardar.setAttribute('onclick', `guardarTitulo('${nombre}')`)
+  buttonBorrar.setAttribute('onclick', `borrarTitulo(event,'${nombre}','${nombre1}')`)
+  accordionCar.id = `accordionItemCaracteristica${nombre}`
 
 
-  collapseTitulo.innerText=`${nombre1}  --- TITULO`
+  collapseTitulo.innerText = `${nombre1}  --- TITULO`
   titulosArray.push({
-    titulo:nombre1,
+    titulo: nombre1,
     posicion
   })
 
@@ -3662,10 +3641,10 @@ function guardarTitulo(nombre2){
 function añadirAcordionItemTitulo(idEx) {
   let nombreInp = document.getElementById("inputTitulo")
   let posicionInp = document.getElementById("inputPosicion")
-  
-  let posicion=posicionInp.value;
-  let nombre1= nombreInp.value;
-  console.log(nombreInp,nombre1)
+
+  let posicion = posicionInp.value;
+  let nombre1 = nombreInp.value;
+  console.log(nombreInp, nombre1)
   nombre1 = nombre1.trim();
   if (nombre1 == "") {
     return alerta.alert("Error", "El nombre no puede estar vacio");
@@ -3682,7 +3661,7 @@ function añadirAcordionItemTitulo(idEx) {
     "accordionCaracteristicas"
   );
   if (caracteristicasCreadas.has(nombre)) {
-    if(nombre!=""){
+    if (nombre != "") {
       return alerta.alert("Error", "Ya existe una caracteristica con ese nombre");
     }
   } else {
@@ -3810,19 +3789,19 @@ function añadirAcordionItemTitulo(idEx) {
 
   accordionCaracteristicas.appendChild(divItem);
   titulosArray.push({
-    titulo:nombre1,
+    titulo: nombre1,
     posicion
   })
 
-  nombreInp.value=''
-  posicionInp.value=''
+  nombreInp.value = ''
+  posicionInp.value = ''
 }
 
-async function añadirTituloBdd(idEx){
+async function añadirTituloBdd(idEx) {
   let nombre1 = document.getElementById("inputTitulo").value;
   let posicion = document.getElementById("inputPosicion").value;
   if (nombre1 == "") {
-    nombre1=`${idEx}-${caracteristicasCreadas.length}-Vacio`
+    nombre1 = `${idEx}-${caracteristicasCreadas.length}-Vacio`
   }
   const nombre = nombre1
     .replaceAll(" ", "-")
@@ -3837,16 +3816,16 @@ async function añadirTituloBdd(idEx){
   );
   if (caracteristicasCreadas.has(nombre)) {
     return alerta.alert("Error", "Ya existe una caracteristica con ese nombre");
-  } 
+  }
 
   try {
     const { token } = await login.getToken();
     const titulo = await axios.post(
       urlsv + `/api/modulo-examenes/crear-titulo`,
       {
-        titulo:nombre1,
+        titulo: nombre1,
         posicion,
-        id_ex:idEx
+        id_ex: idEx
       },
       { headers: { token } }
     );
@@ -3871,7 +3850,7 @@ function validarNombreCaracteristica(mod, idEx) {
   } else {
     añadirAcordionItem(nombre.value);
   }
-  nombre.value=''
+  nombre.value = ''
 }
 function validarSelectSub(nombre, event) {
   if (event.target.value == "formula") {
@@ -3915,7 +3894,7 @@ function añadirChars(char, event) {
 async function borrarSubCaracteristica(event, nombre, ex, id) {
   try {
     enableButton("añadirSubCaButton");
-  } catch (error) {}
+  } catch (error) { }
   try {
     if (id) {
       const { token } = await login.getToken();
@@ -3962,7 +3941,7 @@ async function borrarSubCaracteristica(event, nombre, ex, id) {
 async function borrarResultado(event, nombre, id) {
   try {
     enableButton("añadirResultadoButton");
-  } catch (error) {}
+  } catch (error) { }
 
   try {
     if (id) {
@@ -4002,7 +3981,7 @@ async function borrarResultado(event, nombre, id) {
 async function borrarRango(event, nombre, id) {
   try {
     enableButton("añadirRangoButton");
-  } catch (error) {}
+  } catch (error) { }
   try {
     if (id) {
       const { token } = await login.getToken();
@@ -4261,7 +4240,7 @@ async function crearExamen() {
     const { token } = await login.getToken();
     const { data } = await axios.post(
       urlsv + "/api/modulo-examenes/crear-examen",
-      { nombre, seccion, caracteristicas, categoria,titulos:titulosArray },
+      { nombre, seccion, caracteristicas, categoria, titulos: titulosArray },
       { headers: { token } }
     );
     examenesAlerta(
@@ -4286,7 +4265,7 @@ async function crearSeccion() {
   let value = arrRatio.find((e) => e.checked == true);
 
   const nombreInp = document.getElementById("inputSeccion");
-  const nombre= nombreInp.value
+  const nombre = nombreInp.value
 
   if (nombre == "") {
     return alerta.alert("Error:", "El nombre no puede estar vacio");
@@ -4300,7 +4279,7 @@ async function crearSeccion() {
       },
       { headers: { token } }
     );
-    nombreInp.value=''
+    nombreInp.value = ''
     render();
   } catch (error) {
     console.log(error);
@@ -4314,7 +4293,7 @@ async function crearSeccion() {
 
 async function crearSede() {
   const nombreInp = document.getElementById("nombreSede")
-  const nombre=nombreInp.value
+  const nombre = nombreInp.value
   const clave = document.getElementById("claveSede").value;
 
   if (nombre == "" || isNaN(clave) || clave == "") {
@@ -4330,7 +4309,7 @@ async function crearSede() {
       },
       { headers: { token } }
     );
-    nombreInp.value=''
+    nombreInp.value = ''
     await render();
   } catch (error) {
     console.log(error);
@@ -4461,9 +4440,9 @@ function crearCaracteristica(nombre) {
 
     if (
       parseFloat(r.childNodes[1].childNodes[1].childNodes[1].value) >
-        parseFloat(r.childNodes[3].childNodes[1].childNodes[1].value) ||
+      parseFloat(r.childNodes[3].childNodes[1].childNodes[1].value) ||
       parseFloat(r.childNodes[5].childNodes[1].childNodes[1].value) >
-        parseFloat(r.childNodes[7].childNodes[1].childNodes[1].value)
+      parseFloat(r.childNodes[7].childNodes[1].childNodes[1].value)
     ) {
       return undefined;
     }
@@ -4485,8 +4464,8 @@ function crearCaracteristica(nombre) {
     return rs.children[0].children[0].children[0].value.slice(0, 60);
   });
 
-  if(caracteristica[0].valor.includes('-EMPTY0023')){
-    caracteristica[0].valor=''
+  if (caracteristica[0].valor.includes('-EMPTY0023')) {
+    caracteristica[0].valor = ''
   }
 
   caracteristicas.push({
@@ -4511,8 +4490,8 @@ var caracteristicasCreadas = new Set();
 function añadirAcordionItem(nombre1) {
   nombre1 = nombre1.trim();
   if (nombre1 == "") {
-    nombre1=`${contador}-EMPTY0023`
-    contador+=1
+    nombre1 = `${contador}-EMPTY0023`
+    contador += 1
   }
   const nombre = nombre1
     .replaceAll(" ", "-")
@@ -4765,7 +4744,7 @@ function añadirAcordionItem(nombre1) {
 }
 function borrarCaracteristica(event, nombre) {
   const accordion = document.getElementById("accordionCaracteristicas");
-  
+
   const accordionCar = document.getElementById(
     `accordionItemCaracteristica${nombre}`
   );

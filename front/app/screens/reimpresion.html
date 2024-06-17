@@ -35,8 +35,17 @@
         display: table-footer-group;
       }
     </style>
-
-    <header class="container-fluid" id="headerExamenes"></header>
+    <style>
+      @page {
+        margin-top: 6cm;
+        margin-right: 0.5cm;
+        margin-left: 0.5cm;
+      }
+      th,
+      td {
+        padding: 1px !important;
+      }
+    </style>
     <main class="container-fluid" id="mainExamenes">
       <div class="container-fluid text-center">
         <!--  <div class="row">
@@ -327,7 +336,8 @@
           </svg>
         </button>
         <!-- WHATSAPP trigger modal -->
-        <button type="button" class="btn btn-warning">
+        <button type="button" class="btn btn-warning"     data-bs-toggle="modal"
+        data-bs-target="#emailModal">
           Correo
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -412,6 +422,54 @@
       </div>
     </div>
     <!-- WHATSAPP Modal -->
+     <!-- EMAIL Modal -->
+    <div
+    class="modal fade"
+    id="emailModal"
+    tabindex="-1"
+    aria-labelledby="exampleModalLabel"
+    aria-hidden="true"
+  >
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <form onsubmit="event.preventDefault(), email()">
+          <div class="modal-header">
+            <h1 class="modal-title fs-5" id="exampleModalLabel">
+              Ingrese correo electronico
+            </h1>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              id="emailModalBtnClose"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <div id="PDFAlerta"></div>
+              <input
+                type="email"
+                aria-label="Correo"
+                id="emailInput"
+                required
+                class="form-control"
+              />
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-bs-dismiss="modal"
+            >
+              Cerrar
+            </button>
+            <button type="submit" class="btn btn-success">Enviar</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+  <!-- EMAIL Modal -->
     <embed
       hidden
       id="pdfExternoEmbed"

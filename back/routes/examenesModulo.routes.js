@@ -88,10 +88,11 @@ router.put("/update-rango", administradorToken, updateRango);
 router.put("/update-resultado", administradorToken, updateResultados);
 router.put("/delete-empresa",administradorToken, deleteEmpresa);
 router.put("/delete-examen",administradorToken, deleteExamen);
+router.put("/delete-Seccion",administradorToken, deleteSeccion);
+
 router.put("/delete-sede",administradorToken, deleteSede);
 router.put("/delete-laboratorio",administradorToken, deleteLaboratorio);
 router.put("/delete-categoria",administradorToken, deleteCategoria);
-router.put("/delete-Seccion",administradorToken, deleteSeccion);
 
 
 

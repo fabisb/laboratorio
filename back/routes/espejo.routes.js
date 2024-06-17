@@ -49,6 +49,9 @@ import {
   getUsers,
 } from "../controllers/estadisticas.controller.js";
 import {
+  deleteEmpresa,
+  deleteLaboratorio,
+  deleteSede,
   getCategorias,
   getSecciones,
 } from "../controllers/examenesModulo.controller.js";
@@ -98,6 +101,11 @@ router.post("/get-examenes-reportes", adminCookie, getExamenesReportes); //Admin
 router.post("/get-externos-reportes", adminCookie, getExternosReportes); //Administrador
 
 //PUT
+//PUT LABORATORIOS-SEDES-EMPRESAS
+router.put("/status-laboratorio",adminCookie, deleteLaboratorio);
+router.put("/status-sede",adminCookie, deleteSede);
+router.put("/status-empresa",adminCookie, deleteEmpresa);
+
 
 //PUT USUARIOS
 router.put("/editar-usuario", adminCookie, editarUsuario); //Administrador

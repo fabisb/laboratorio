@@ -5,7 +5,7 @@ async function pdfExterno() {
     const { token } = await login.getToken();
 
     const { data } = await axios.get(
-      urlsv+"/api/estadisticas/get-externos-pdf",
+      urlsv + "/api/estadisticas/get-externos-pdf",
       {
         params: { id: reimpresion?.id }, headers: { token }
       },
@@ -14,7 +14,7 @@ async function pdfExterno() {
     document.getElementById("pdfExternoEmbed").src = data;
 
   } catch (error) {
-  console.log("🚀 ~ pdfExterno ~ error:", error)
+    console.log("🚀 ~ pdfExterno ~ error:", error)
 
   }
 }
@@ -24,9 +24,7 @@ const imprimir = async () => {
   const botones = document.getElementsByName("botones")[0];
   botones.hidden = true;
   try {
-
-    window.print()
-
+    await imprimirPDF();
     setTimeout(() => {
       botones.hidden = false;
     }, 3000);
@@ -34,7 +32,7 @@ const imprimir = async () => {
     console.log("🚀 ~ imprimir ~ error:", error);
     botones.removeAttribute("hidden");
   }
-}
+};
 
 
 const pintarExamen = async () => {
@@ -42,15 +40,18 @@ const pintarExamen = async () => {
     const reimpresion = await reimpresionVar.get();
     console.log("🚀 ~ pintarExamen ~ reimpresion:", reimpresion)
 
-
     const { token } = await login.getToken();
 
     const { data: examen } = await axios.post(
       urlsv + "/api/estadisticas/reimpresion-examen",
       { reimp: [reimpresion?.id] }, { headers: { token } }
     );
-    console.log("🚀 ~ pintarExamen ~ examen:", examen);
+    await examenVar.store(examen.examenes[0]);
 
+    //examen.examenes[0].paciente.cedula
+    console.log("🚀 ~ pintarExamen ~ examen:", examen);
+    document.getElementById("numeroTlf").value = examen.examenes[0].paciente.telefono || '';
+    document.getElementById("emailInput").value = examen.examenes[0].paciente.correo || '';
     document.getElementsByName("firmaBioanalista")[0].innerHTML = "";
 
     const bioSet = new Set();
@@ -58,91 +59,90 @@ const pintarExamen = async () => {
       bioSet.add(ex.bioanalista.id);
     });
 
-    document.getElementById('headerExamenes').innerHTML = `
-          <div class="text-center">
-          <div class="row">
-        <div class="col my-1">
-          <div class="card">
-            <div class="row m-0">
-              <div class=" col-2 mx-auto my-auto">
-                <img
-                  width="60px"
-                  src='../imgs/la-milagrosa-logo.png'
-                  class="img-fluid"
-                  alt="La milagrosa logo"
-                />
-              </div>
-              <div class="col p-0">
-                <div class="card-body text-start">
-                  <h6 class="card-title">
-                    LA MILAGROSA INSTITUTO PRESTADOR DE SERVICIOS DE SALUD
-                  </h6>
-                  <p class="card-text m-0" style="font-size: 12px;">R.I.F.: J-501761426 / N.I.T.:</p>
-                  <p class="card-text">
-                    <small name="direccion" style="font-size: 12px;" class="text-body-secondary"
-                      >Calle 79 Casa Nro 78 - 179 Sector La Macandona, Maracaibo,
-                      Edo. Zulia. Zona Postal 4005</small
-                    >
-                    <br />
-                  </p>
+    /*   document.getElementById('headerExamenes').innerHTML = `
+            <div class="text-center">
+            <div class="row">
+          <div class="col my-1">
+            <div class="card">
+              <div class="row m-0">
+                <div class=" col-2 mx-auto my-auto">
+                  <img
+                    width="60px"
+                    src='../imgs/la-milagrosa-logo.png'
+                    class="img-fluid"
+                    alt="La milagrosa logo"
+                  />
+                </div>
+                <div class="col p-0">
+                  <div class="card-body text-start">
+                    <h6 class="card-title">
+                      LA MILAGROSA INSTITUTO PRESTADOR DE SERVICIOS DE SALUD
+                    </h6>
+                    <p class="card-text m-0" style="font-size: 12px;">R.I.F.: J-501761426 / N.I.T.:</p>
+                    <p class="card-text">
+                      <small name="direccion" style="font-size: 12px;" class="text-body-secondary"
+                        >Calle 79 Casa Nro 78 - 179 Sector La Macandona, Maracaibo,
+                        Edo. Zulia. Zona Postal 4005</small
+                      >
+                      <br />
+                    </p>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
-  
-      <div class="row" style="font-size: 12px;">
-        <div class="col my-1">
-          <div class="card">
-            <div class="row">
-              <div class="col-9 my-auto mx-auto">
-                <div class="card border border-0">
-                  <div class="container p-0  text-center">
-                    <div name="cabecera" class="row p-0 align-items-center">
-                      <div class="col">
-                        <div class="card-body p-0 ">
-                          <ul class="list-group p-0  list-group-flush">
-                          <li class="list-group-item p-0"><span class="fw-bold">Paciente:</span> <br> ${examen.examenes[0].paciente.nombre
-      }</li>
-                          <li class="list-group-item p-0"><span class="fw-bold">Cedula:</span><br> ${examen.examenes[0].paciente.pre_cedula
-      }-${examen.examenes[0].paciente.cedula}</li>
-                          <li class="list-group-item p-0"><span class="fw-bold">Factura: </span><br> ${examen.examenes[0].orden.orden
-      }</li>
-                          </ul>
+    
+        <div class="row" style="font-size: 12px;">
+          <div class="col my-1">
+            <div class="card">
+              <div class="row">
+                <div class="col-9 my-auto mx-auto">
+                  <div class="card border border-0">
+                    <div class="container p-0  text-center">
+                      <div name="cabecera" class="row p-0 align-items-center">
+                        <div class="col">
+                          <div class="card-body p-0 ">
+                            <ul class="list-group p-0  list-group-flush">
+                            <li class="list-group-item p-0"><span class="fw-bold">Paciente:</span> <br> ${examen.examenes[0].paciente.nombre
+        }</li>
+                            <li class="list-group-item p-0"><span class="fw-bold">Cedula:</span><br> ${examen.examenes[0].paciente.pre_cedula
+        }-${examen.examenes[0].paciente.cedula}</li>
+                            <li class="list-group-item p-0"><span class="fw-bold">Factura: </span><br> ${examen.examenes[0].orden.orden
+        }</li>
+                            </ul>
+                          </div>
                         </div>
-                      </div>
-                      <div class="col">
-                        <div class="card-body p-0 ">
-                          <ul class="list-group p-0  list-group-flush">
-                          <li class="list-group-item p-0"><span class="fw-bold">Fecha Nacimiento:</span><br> ${moment(examen.examenes[0].paciente.fecha_nacimiento).format(
-        "DD-MM-YYYY"
-      )} </li>
-                          <li class="list-group-item p-0"><span class="fw-bold">Edad:</span><br> ${moment().diff(moment(examen.examenes[0].paciente.fecha_nacimiento), "years")} </li>
-                          <li class="list-group-item p-0"><span class="fw-bold">Emision:</span><br> ${moment(examen.examenes[0].orden.fecha).format(
-        "DD-MM-YYYY h:mm:ss a"
-      )}</li>
-                          </ul>
+                        <div class="col">
+                          <div class="card-body p-0 ">
+                            <ul class="list-group p-0  list-group-flush">
+                            <li class="list-group-item p-0"><span class="fw-bold">Fecha Nacimiento:</span><br> ${moment(examen.examenes[0].paciente.fecha_nacimiento).format(
+          "DD-MM-YYYY"
+        )} </li>
+                            <li class="list-group-item p-0"><span class="fw-bold">Edad:</span><br> ${moment().diff(moment(examen.examenes[0].paciente.fecha_nacimiento), "years")} </li>
+                            <li class="list-group-item p-0"><span class="fw-bold">Emision:</span><br> ${moment(examen.examenes[0].orden.fecha).format(
+          "DD-MM-YYYY h:mm:ss a"
+        )}</li>
+                            </ul>
+                          </div>
                         </div>
                       </div>
                     </div>
                   </div>
                 </div>
-              </div>
-              <div class="col-3 my-auto mx-auto">
-                <div class="card-body">
-                  <h6 class="card-title">
-                    RESULTADOS DE EXAMENES DE LABORATORIO
-                  </h6>
+                <div class="col-3 my-auto mx-auto">
+                  <div class="card-body">
+                    <h6 class="card-title">
+                      RESULTADOS DE EXAMENES DE LABORATORIO
+                    </h6>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
-      </div>
-          `;
-    document.getElementById("numeroTlf").value = examen.examenes[0].paciente.telefono;
+        </div>
+            `; */
 
     document.getElementsByName("examenContainer")[0].innerHTML = "";
     for (let index = 0; index < [...bioSet].length; index++) {
@@ -310,6 +310,26 @@ const whatsapp = async () => {
     await document.getElementById("wsModalBtnClose").click();
     botones.hidden = true;
     await wsPDF({ numero, code });
+    setTimeout(() => {
+      botones.hidden = false;
+    }, 3000);
+  } catch (error) {
+    console.log("🚀 ~ imprimir ~ error:", error);
+    botones.hidden = false;
+  }
+};
+
+const email = async () => {
+  const email = document.getElementById("emailInput").value;
+  console.log("🚀 ~ email ~ email:", email)
+  if (email == "") {
+    return whatsappAlerta("Ingrese un correo electronico valido", "warning");
+  }
+  const botones = document.getElementsByName("botones")[0];
+  try {
+    await document.getElementById("emailModalBtnClose").click();
+    botones.hidden = true;
+    await emailPDF({ email });
     setTimeout(() => {
       botones.hidden = false;
     }, 3000);

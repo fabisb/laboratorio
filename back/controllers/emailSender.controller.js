@@ -33,6 +33,7 @@ export const enviarCorreo = async (req, res) => {
         }
         // send mail with defined transport object
         const info = await transporter.sendMail(email);
+        console.log("🚀 ~ enviarCorreo ~ info:", info)
         //NO DETECTA CUANDO EL CORREO ELECTRONICO ES INVALIDO
         return await res.status(200).json({ mensaje: "Message sent: " + info.messageId });
     } catch (error) {

@@ -6,6 +6,8 @@ import { fileURLToPath } from "url";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const publics = path.join(__dirname, "../public");
+import config from '../config/config.js';
+
 /* export const loginController2 = async (req, res, next) => {
   const { user, pass } = req.body;
   if (!(user || pass) || user == "" || pass == "") {
@@ -21,7 +23,7 @@ const publics = path.join(__dirname, "../public");
     if (id.length > 0) {
       var token = await jwt.sign(
         { id: id[0].id, user, nivel: id[0].nivel },
-        "secret",
+        config.SECRET,
         {
           expiresIn: "1 days",
         }
@@ -81,7 +83,7 @@ export const loginController = async (req, res, next) => {
             nombre: id[0].nombre,
             cedula: id[0].cedula,
           },
-          "secret",
+          config.SECRET,
           {
             expiresIn: "1 days",
           }
@@ -134,7 +136,7 @@ export const loginController = async (req, res, next) => {
       if (comparacionClave) {
         var token = await jwt.sign(
           { id: idCoordinador[0].id, user, nivel: idCoordinador[0].nivel },
-          "secret",
+          config.SECRET,
           {
             expiresIn: "1 days",
           }
@@ -163,7 +165,7 @@ export const loginController = async (req, res, next) => {
               user,
               nivel: idAdministrador[0].nivel,
             },
-            "secret",
+            config.SECRET,
             {
               expiresIn: "1 days",
             }
@@ -192,7 +194,7 @@ export const loginController = async (req, res, next) => {
 export const verifyToken = async (req, res, next) => {
   const { token } = req.headers;
   try {
-    var decoded = await jwt.verify(token, "secret");
+    var decoded = await jwt.verify(token, config.SECRET);
     if (decoded) {
       req.user = decoded;
       /* return await res.status(401).json({
@@ -209,7 +211,7 @@ export const verifyToken = async (req, res, next) => {
 export const administradorToken = async (req, res, next) => {
   const { token } = req.headers;
   try {
-    var decoded = await jwt.verify(token, "secret");
+    var decoded = await jwt.verify(token, config.SECRET);
     if (decoded) {
       if (decoded.nivel == 1) {
         req.user = decoded;
@@ -231,7 +233,7 @@ export const administradorToken = async (req, res, next) => {
 export const adminBioToken = async (req, res, next) => {
   const { token } = req.headers;
   try {
-    var decoded = await jwt.verify(token, "secret");
+    var decoded = await jwt.verify(token, config.SECRET);
     if (decoded) {
       req.user = decoded;
       if (decoded.nivel == 1 || decoded.nivel == 3) {
@@ -254,7 +256,7 @@ export const adminBioToken = async (req, res, next) => {
 export const noAuxToken = async (req, res, next) => {
   const { token } = req.headers;
   try {
-    var decoded = await jwt.verify(token, "secret");
+    var decoded = await jwt.verify(token, config.SECRET);
     if (decoded) {
       req.user = decoded;
       if (decoded.nivel == 2) {
@@ -279,7 +281,7 @@ export const noAuxToken = async (req, res, next) => {
 export async function verifyCookie(req, res, next) {
   const { token } = req.cookies;
   try {
-    var decoded = await jwt.verify(token, "secret");
+    var decoded = await jwt.verify(token, config.SECRET);
     if (decoded) {
       req.user = decoded;
       if (decoded.nivel == 2 || decoded.nivel == 3) {
@@ -299,7 +301,7 @@ export async function verifyCookie(req, res, next) {
 export async function adminCookie(req, res, next) {
   const { token } = req.cookies;
   try {
-    var decoded = await jwt.verify(token, "secret");
+    var decoded = await jwt.verify(token, config.SECRET);
     if (decoded) {
       req.user = decoded;
       if (decoded.nivel == 1) {
@@ -318,7 +320,7 @@ export async function adminCookie(req, res, next) {
 export async function impresionCookie(req, res, next) {
   const { token } = req.cookies;
   try {
-    var decoded = await jwt.verify(token, "secret");
+    var decoded = await jwt.verify(token, config.SECRET);
     if (decoded) {
       req.user = decoded;
       if (decoded.nivel == 1 || decoded.nivel == 4) {
@@ -363,7 +365,7 @@ export async function loginEspejo(req, res) {
       if (comparacionClave) {
         var token = await jwt.sign(
           { id: id[0].id, user, nivel: id[0].nivel, cedula: id[0].cedula },
-          "secret",
+          config.SECRET,
           {
             expiresIn: "1 days",
           }
