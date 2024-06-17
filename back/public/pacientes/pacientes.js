@@ -39,6 +39,8 @@ function buscarPaciente(value) {
 
 async function detalleExamenesPaciente(id, nombre) {
   document.getElementById("nombrePaciente").innerText = nombre;
+  const tBodyDetalle = document.getElementById(`tBodyDetalle`);
+
   try {
     const res = await axios.get(
       "http://localhost:3000/api/espejo/get-examenes-paciente",
@@ -46,7 +48,6 @@ async function detalleExamenesPaciente(id, nombre) {
     );
     examenesArray = res.data.examenes;
     console.log(res);
-    const tBodyDetalle = document.getElementById(`tBodyDetalle`);
     tBodyDetalle.innerHTML = "";
     res.data.examenes.forEach((ex) => {
       tBodyDetalle.innerHTML += `
@@ -102,8 +103,15 @@ async function detalleExamenesPaciente(id, nombre) {
         `;
     });
   } catch (error) {
-    console.log("🚀 ~ detalleExamenesPaciente ~ error:", error);
-    alert(error);
+    if(error.response.status=='400'){
+      tBodyDetalle.innerHTML=`
+      <tr><td colspan="4"><h1 class='display-2'>El paciente ${nombre} no tiene examenes hechos</h1></tr>
+      `
+    }else{
+      console.log("🚀 ~ detalleExamenesPaciente ~ error:", error);
+      alert(error);
+    }
+    
   }
 }
 

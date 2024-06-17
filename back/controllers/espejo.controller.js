@@ -1,4 +1,4 @@
-import e from "express";
+import e, { json } from "express";
 import { pool } from "../database/db.js";
 
 export const getExamenesPacientes = async (req, res) => {
@@ -9,6 +9,10 @@ export const getExamenesPacientes = async (req, res) => {
     const [examenes2] = await pool.execute(
       `SELECT * FROM examenes_paciente WHERE id_pac = '${id}'`
     );
+
+    if(examenes2.length==0){``
+      return res.status(400).json({mensaje:'Este paciente no tiene examenes'})
+    }
     const [bioanalista] = await pool.execute(
       `SELECT * FROM bioanalistas WHERE id = '${examenes2[0].id_bio}'`
     );
