@@ -4254,6 +4254,11 @@ async function crearExamen() {
   }
   console.log(nombre, seccion, categoria);
   console.log(caracteristicas);
+  caracteristicas.forEach(e=>{
+    if(e.caracteristica[0].valor.includes('-EMPTY0023')){
+      e.caracteristica[0].valor=''
+    }
+  })
   if (nombre == "" || !nombre) {
     return examenesAlerta("Ingrese un nombre de examen valido", "warning");
   }
@@ -4485,9 +4490,7 @@ function crearCaracteristica(nombre) {
     return rs.children[0].children[0].children[0].value.slice(0, 60);
   });
 
-  if(caracteristica[0].valor.includes('-EMPTY0023')){
-    caracteristica[0].valor=''
-  }
+ 
 
   caracteristicas.push({
     caracteristica,
@@ -4718,7 +4721,7 @@ function añadirAcordionItem(nombre1) {
                                       viewBox="0 0 20 20"
                                       id="botonModificarCaracteristica${nombre}"
                                       hidden
-                                      onclick="modificarCrtCreacionFront('${nombre}')"
+                                      onclick="modificarCrtCreacionFront('${nombre}','${nombre1}')"
                                     >
                                       <path
                                         d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"
@@ -4780,13 +4783,14 @@ function borrarCaracteristica(event, nombre) {
   );
 }
 
-function modificarCrtCreacionFront(nombre) {
+function modificarCrtCreacionFront(nombre,nombre1) {
   activarInputs(nombre);
   activarSelects(nombre);
   enableButtonByClass("button" + nombre);
   caracteristicas = caracteristicas.filter(
-    (c) => c.caracteristica[0].valor !== nombre
+    (c) => c.caracteristica[0].valor !== nombre1
   );
+
   caracteristicasCreadas.delete(nombre);
 }
 function validarInputFormula(nombre, event) {
