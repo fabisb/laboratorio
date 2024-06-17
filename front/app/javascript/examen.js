@@ -1001,7 +1001,10 @@ const activarInputs = async (click) => {
     toggle: false,
   });
   bsCollapse.show();
-  //document.getElementById(pacienteObj.genero).setAttribute('checked','true')
+  if(pacienteObj.genero){
+    document.getElementById(pacienteObj.genero).setAttribute('checked','true')
+
+  }
 
   inputs.map((inp) => {
     inp.removeAttribute("readonly");
@@ -2864,6 +2867,7 @@ async function borrarExamenPaciente(id){
 
 function guardarResultadosExamen() {
   const selectLab = document.getElementById("selectLaboratorio");
+  let resStatus=false
 
   const detallesExamenPc = examenDataPc.detalles.map((e) => {
     const res = document.getElementById("inputRs" + e.id);
@@ -2895,6 +2899,9 @@ function guardarResultadosExamen() {
       `;
     }
     if (res) {
+      if(res.value!=''){
+        resStatus=true
+      }
       return {
         rango: res.attributes.rango.value,
         inferior: res.attributes.inferior.value,
@@ -2934,7 +2941,11 @@ function guardarResultadosExamen() {
     const res = document.getElementById("Rs-" + e.id);
     const nota = document.getElementById("Nt-" + e.id);
     console.log(res, nota);
+    if(res.value!=''){
+      resStatus=true
+    }
     return {
+      
       idSub: e.id,
       nombreSub: e.nombre,
       resultado: res.value,
@@ -2951,6 +2962,8 @@ function guardarResultadosExamen() {
     seccionNombre: examenDataPc.seccion[0].nombre,
     subCaracteristicasExPc: subCaracteristicas,
   };
+  if(resStatus==true){
+
 
   examenesDelPaciente.push(examenPac);
 
@@ -2969,6 +2982,10 @@ function guardarResultadosExamen() {
 
   añadirRowTablaExPac(examenPac);
   document.getElementById(`totalizarButton`).removeAttribute("hidden");
+  }else{
+    cedulaAlerta('El examen a evaluar debe tener un resultado como minimo','danger')
+  }
+
 }
 
 async function guardarResultadosExamenPd() {

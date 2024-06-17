@@ -312,8 +312,8 @@ export const crearExamen = async (req, res) => {
     }
 
     const [nombreExistente] = await pool.execute(
-      "SELECT nombre FROM examenes WHERE nombre = ? ",
-      [nombre]
+      "SELECT nombre FROM examenes WHERE nombre = ? AND status= ? ",
+      [nombre,'activo']
     );
     if (nombreExistente.length > 0) {
       return await res.status(400).json({
