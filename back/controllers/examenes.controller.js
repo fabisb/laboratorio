@@ -1,5 +1,5 @@
 import { pool } from "../database/db.js";
-
+import moment from 'moment';
 
 
 export const getExamenReimpresion = async (req, res) => {
@@ -94,14 +94,14 @@ export const getExamenReimpresion = async (req, res) => {
         `SELECT * FROM pacientes where id = ?`,
         [orden[0].id_paciente]
       );
-
+      paciente[0].edad = calcularEdadNormal(paciente[0].fecha_nacimiento);
       examenes.push({
         examen: infoExamen[0].nombre,
         nombreSeccion: seccion[0].nombre,
         bioanalista: bioanalista[0],
         ordenId: examen[0].id_orden,
         caracteristicas,
-        orden: orden[0],
+        orden: orden[0].orden,
         paciente: paciente[0]
       });
     }
@@ -111,7 +111,41 @@ export const getExamenReimpresion = async (req, res) => {
     return res.status(500).json({ error });
   }
 };
+const calcularEdadNormal = (fecha) => {
+  let fechaActual = moment().format("YYYY-MM-DD");
 
+  let fecha2 = (
+    moment(fecha).format("YYYY-MM-DD"));
+  const mes = moment(fecha).format("MM");
+  const ano = moment(fecha).format("YYYY");
+  const dia = moment(fecha).format("DD");
+  if (
+    (mes == 2 && dia > 29) ||
+    moment(fecha2).isAfter(fechaActual) ||
+    ano < 1890
+  ) {
+
+    return "";
+  }
+
+  const mesAc = moment().format("MM");
+  const anoAc = moment().format("YYYY");
+  const diaAc = moment().format("DD");
+
+  let mesR = mesAc - mes;
+  let diaR = diaAc - dia;
+  let anoR = anoAc - ano;
+
+  if (mesR < 0) {
+    mesR = mesR + 12;
+    anoR--;
+  }
+  if (diaR < 0) {
+    mesR--;
+  }
+
+  return `${anoR} años;  ${mesR} meses`;
+};
 export const crearExamenPendiente = async (req, res) => {
   const { examenPac, idPac } = req.body;
   try {

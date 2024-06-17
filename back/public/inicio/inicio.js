@@ -257,6 +257,48 @@ async function crearLaboratorio() {
     alerta.setAttribute("hidden", "true");
   }, 3000);
 }
+async function modificarStatusLaboratorio(id) {
+  try {
+    const { data } = await axios.put(
+      "/api/espejo/status-laboratorio",
+      {
+        id
+      }
+    );
+    await render()
+  } catch (error) {
+    console.log("🚀 ~ modificarStatusLaboratorio ~ error:", error)
+    alert('ERROR EN SERVIDOR')
+  }
+}
+async function modificarStatusSede(id) {
+  try {
+    const { data } = await axios.put(
+      "/api/espejo/status-sede",
+      {
+        id
+      }
+    );
+    await render()
+  } catch (error) {
+    console.log("🚀 ~ modificarStatusLaboratorio ~ error:", error)
+    alert('ERROR EN SERVIDOR')
+  }
+}
+async function modificarStatusEmpresa(id) {
+  try {
+    const { data } = await axios.put(
+      "/api/espejo/status-empresa",
+      {
+        id
+      }
+    );
+    await render()
+  } catch (error) {
+    console.log("🚀 ~ modificarStatusLaboratorio ~ error:", error)
+    alert('ERROR EN SERVIDOR')
+  }
+}
 async function render() {
   const tBody = document.getElementById(`tBodyTabLab`);
   tBody.innerHTML = "";
@@ -286,14 +328,21 @@ async function render() {
     <tr>
                               <td>${e.id}</td>
                               <td>${e.razon_social}</td>
-                              <td><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="orange" onclick="modificarLaboratorio(${e.id},'${e.razon_social}','${e.rif}','${e.direccion}','${e.telefono}')" class="bi bi-pencil-square" viewBox="0 0 16 16">
+                              <td><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="orange" style="cursor:pointer" onclick="modificarLaboratorio(${e.id},'${e.razon_social}','${e.rif}','${e.direccion}','${e.telefono}')" class="bi bi-pencil-square" viewBox="0 0 16 16">
                                 <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
                                 <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z"/>
                               </svg></td>
-                              <td><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="red" class="bi bi-x-circle" viewBox="0 0 16 16">
+                              <td>
+                              ${e.status == 'activo' ? `  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="green" style="cursor:pointer" onclick="modificarStatusLaboratorio('${e.id}')" class="bi bi-patch-check" viewBox="0 0 16 16">
+  <path fill-rule="evenodd" d="M10.354 6.146a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708 0l-1.5-1.5a.5.5 0 1 1 .708-.708L7 8.793l2.646-2.647a.5.5 0 0 1 .708 0"/>
+  <path d="m10.273 2.513-.921-.944.715-.698.622.637.89-.011a2.89 2.89 0 0 1 2.924 2.924l-.01.89.636.622a2.89 2.89 0 0 1 0 4.134l-.637.622.011.89a2.89 2.89 0 0 1-2.924 2.924l-.89-.01-.622.636a2.89 2.89 0 0 1-4.134 0l-.622-.637-.89.011a2.89 2.89 0 0 1-2.924-2.924l.01-.89-.636-.622a2.89 2.89 0 0 1 0-4.134l.637-.622-.011-.89a2.89 2.89 0 0 1 2.924-2.924l.89.01.622-.636a2.89 2.89 0 0 1 4.134 0l-.715.698a1.89 1.89 0 0 0-2.704 0l-.92.944-1.32-.016a1.89 1.89 0 0 0-1.911 1.912l.016 1.318-.944.921a1.89 1.89 0 0 0 0 2.704l.944.92-.016 1.32a1.89 1.89 0 0 0 1.912 1.911l1.318-.016.921.944a1.89 1.89 0 0 0 2.704 0l.92-.944 1.32.016a1.89 1.89 0 0 0 1.911-1.912l-.016-1.318.944-.921a1.89 1.89 0 0 0 0-2.704l-.944-.92.016-1.32a1.89 1.89 0 0 0-1.912-1.911z"/>
+</svg>` : ` <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="red" class="bi bi-x-circle" style="cursor:pointer" onclick="modificarStatusLaboratorio('${e.id}')" viewBox="0 0 16 16">
                                 <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
                                 <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708"/>
-                              </svg></td>
+                              </svg>`}
+                             
+                            
+                              </td>
                             </tr>
     `;
     });
@@ -554,10 +603,13 @@ function buscarSede(value) {
                                 <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
                                 <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z"/>
                               </svg></td>
-                              <td><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="red" class="bi bi-x-circle" viewBox="0 0 16 16">
+                              <td>  ${e.status == 'activo' ? `  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="green" style="cursor:pointer" onclick="modificarStatusSede('${e.id}')" class="bi bi-patch-check" viewBox="0 0 16 16">
+  <path fill-rule="evenodd" d="M10.354 6.146a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708 0l-1.5-1.5a.5.5 0 1 1 .708-.708L7 8.793l2.646-2.647a.5.5 0 0 1 .708 0"/>
+  <path d="m10.273 2.513-.921-.944.715-.698.622.637.89-.011a2.89 2.89 0 0 1 2.924 2.924l-.01.89.636.622a2.89 2.89 0 0 1 0 4.134l-.637.622.011.89a2.89 2.89 0 0 1-2.924 2.924l-.89-.01-.622.636a2.89 2.89 0 0 1-4.134 0l-.622-.637-.89.011a2.89 2.89 0 0 1-2.924-2.924l.01-.89-.636-.622a2.89 2.89 0 0 1 0-4.134l.637-.622-.011-.89a2.89 2.89 0 0 1 2.924-2.924l.89.01.622-.636a2.89 2.89 0 0 1 4.134 0l-.715.698a1.89 1.89 0 0 0-2.704 0l-.92.944-1.32-.016a1.89 1.89 0 0 0-1.911 1.912l.016 1.318-.944.921a1.89 1.89 0 0 0 0 2.704l.944.92-.016 1.32a1.89 1.89 0 0 0 1.912 1.911l1.318-.016.921.944a1.89 1.89 0 0 0 2.704 0l.92-.944 1.32.016a1.89 1.89 0 0 0 1.911-1.912l-.016-1.318.944-.921a1.89 1.89 0 0 0 0-2.704l-.944-.92.016-1.32a1.89 1.89 0 0 0-1.912-1.911z"/>
+</svg>` : ` <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="red" class="bi bi-x-circle" style="cursor:pointer" onclick="modificarStatusSede('${e.id}')" viewBox="0 0 16 16">
                                 <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
                                 <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708"/>
-                              </svg></td>
+                              </svg>`}</td>
                             </tr>
     `;
   });
@@ -587,10 +639,13 @@ function buscarEmpresa(value) {
                                 <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
                                 <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z"/>
                               </svg></td>
-                              <td><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="red" class="bi bi-x-circle" viewBox="0 0 16 16">
+                              <td>  ${e.status == 'activo' ? `  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="green" style="cursor:pointer" onclick="modificarStatusEmpresa('${e.id}')" class="bi bi-patch-check" viewBox="0 0 16 16">
+  <path fill-rule="evenodd" d="M10.354 6.146a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708 0l-1.5-1.5a.5.5 0 1 1 .708-.708L7 8.793l2.646-2.647a.5.5 0 0 1 .708 0"/>
+  <path d="m10.273 2.513-.921-.944.715-.698.622.637.89-.011a2.89 2.89 0 0 1 2.924 2.924l-.01.89.636.622a2.89 2.89 0 0 1 0 4.134l-.637.622.011.89a2.89 2.89 0 0 1-2.924 2.924l-.89-.01-.622.636a2.89 2.89 0 0 1-4.134 0l-.622-.637-.89.011a2.89 2.89 0 0 1-2.924-2.924l.01-.89-.636-.622a2.89 2.89 0 0 1 0-4.134l.637-.622-.011-.89a2.89 2.89 0 0 1 2.924-2.924l.89.01.622-.636a2.89 2.89 0 0 1 4.134 0l-.715.698a1.89 1.89 0 0 0-2.704 0l-.92.944-1.32-.016a1.89 1.89 0 0 0-1.911 1.912l.016 1.318-.944.921a1.89 1.89 0 0 0 0 2.704l.944.92-.016 1.32a1.89 1.89 0 0 0 1.912 1.911l1.318-.016.921.944a1.89 1.89 0 0 0 2.704 0l.92-.944 1.32.016a1.89 1.89 0 0 0 1.911-1.912l-.016-1.318.944-.921a1.89 1.89 0 0 0 0-2.704l-.944-.92.016-1.32a1.89 1.89 0 0 0-1.912-1.911z"/>
+</svg>` : ` <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="red" class="bi bi-x-circle" style="cursor:pointer" onclick="modificarStatusEmpresa('${e.id}')" viewBox="0 0 16 16">
                                 <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
                                 <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708"/>
-                              </svg></td>
+                              </svg>`}</td>
                             </tr>
     `;
   });
@@ -645,9 +700,8 @@ function buscarCedula(value) {
                           </svg>
                         </td>
                         <td scope="col">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="${
-                          ex.status_ws == 1 ? "green" : "gray"
-                        }" class="bi bi-whatsapp" viewBox="0 0 16 16">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="${ex.status_ws == 1 ? "green" : "gray"
+      }" class="bi bi-whatsapp" viewBox="0 0 16 16">
                         <path d="M13.601 2.326A7.85 7.85 0 0 0 7.994 0C3.627 0 .068 3.558.064 7.926c0 1.399.366 2.76 1.057 3.965L0 16l4.204-1.102a7.9 7.9 0 0 0 3.79.965h.004c4.368 0 7.926-3.558 7.93-7.93A7.9 7.9 0 0 0 13.6 2.326zM7.994 14.521a6.6 6.6 0 0 1-3.356-.92l-.24-.144-2.494.654.666-2.433-.156-.251a6.56 6.56 0 0 1-1.007-3.505c0-3.626 2.957-6.584 6.591-6.584a6.56 6.56 0 0 1 4.66 1.931 6.56 6.56 0 0 1 1.928 4.66c-.004 3.639-2.961 6.592-6.592 6.592m3.615-4.934c-.197-.099-1.17-.578-1.353-.646-.182-.065-.315-.099-.445.099-.133.197-.513.646-.627.775-.114.133-.232.148-.43.05-.197-.1-.836-.308-1.592-.985-.59-.525-.985-1.175-1.103-1.372-.114-.198-.011-.304.088-.403.087-.088.197-.232.296-.346.1-.114.133-.198.198-.33.065-.134.034-.248-.015-.347-.05-.099-.445-1.076-.612-1.47-.16-.389-.323-.335-.445-.34-.114-.007-.247-.007-.38-.007a.73.73 0 0 0-.529.247c-.182.198-.691.677-.691 1.654s.71 1.916.81 2.049c.098.133 1.394 2.132 3.383 2.992.47.205.84.326 1.129.418.475.152.904.129 1.246.08.38-.058 1.171-.48 1.338-.943.164-.464.164-.86.114-.943-.049-.084-.182-.133-.38-.232"/>
                       </svg>
                         </td>
@@ -891,22 +945,22 @@ async function traerExamenesByFecha(value) {
   let validar = validarFecha(value);
   if (validar == "true") {
     try {
-      
-   
-    const res = await axios.get(
-      `http://localhost:3000/api/espejo/get-examen-byFecha`,
-      {
-        params: {
-          fecha: value,
-        },
-      }
-    );
-    console.log(res)
-    examenesDia = res.data.examenes;
-    const tBodyExamenesDia = document.getElementById("tBodyExamenesDia");
-    tBodyExamenesDia.innerHTML = "";
-    res.data.examenes.forEach((ex) => {
-      tBodyExamenesDia.innerHTML += `
+
+
+      const res = await axios.get(
+        `http://localhost:3000/api/espejo/get-examen-byFecha`,
+        {
+          params: {
+            fecha: value,
+          },
+        }
+      );
+      console.log(res)
+      examenesDia = res.data.examenes;
+      const tBodyExamenesDia = document.getElementById("tBodyExamenesDia");
+      tBodyExamenesDia.innerHTML = "";
+      res.data.examenes.forEach((ex) => {
+        tBodyExamenesDia.innerHTML += `
             <tr>
                         <td scope="col">${ex.id}</td>
                         <td scope="col">${ex.cedula}</td>
@@ -915,7 +969,7 @@ async function traerExamenesByFecha(value) {
                         <td scope="col">${ex.bioanalista}</td>
                         <td scope="col">${ex.hora}</td>
                         <td scope="col">
-                        ${ex.status!='externo'?`
+                        ${ex.status != 'externo' ? `
                           <svg
                             xmlns="http://www.w3.org/2000/svg"
                             width="25"
@@ -932,8 +986,8 @@ async function traerExamenesByFecha(value) {
                             <path
                               d="M8 5.5a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5M4.5 8a3.5 3.5 0 1 1 7 0 3.5 3.5 0 0 1-7 0"
                             />
-                          </svg>`:'EXT'
-                          }
+                          </svg>`: 'EXT'
+          }
                         </td>
 
                           <td scope="col">
@@ -952,9 +1006,8 @@ async function traerExamenesByFecha(value) {
                           </svg>
                         </td>
                         <td scope="col">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="${
-                          ex.status_ws == 1 ? "green" : "gray"
-                        }" class="bi bi-whatsapp" viewBox="0 0 16 16">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="${ex.status_ws == 1 ? "green" : "gray"
+          }" class="bi bi-whatsapp" viewBox="0 0 16 16">
                         <path d="M13.601 2.326A7.85 7.85 0 0 0 7.994 0C3.627 0 .068 3.558.064 7.926c0 1.399.366 2.76 1.057 3.965L0 16l4.204-1.102a7.9 7.9 0 0 0 3.79.965h.004c4.368 0 7.926-3.558 7.93-7.93A7.9 7.9 0 0 0 13.6 2.326zM7.994 14.521a6.6 6.6 0 0 1-3.356-.92l-.24-.144-2.494.654.666-2.433-.156-.251a6.56 6.56 0 0 1-1.007-3.505c0-3.626 2.957-6.584 6.591-6.584a6.56 6.56 0 0 1 4.66 1.931 6.56 6.56 0 0 1 1.928 4.66c-.004 3.639-2.961 6.592-6.592 6.592m3.615-4.934c-.197-.099-1.17-.578-1.353-.646-.182-.065-.315-.099-.445.099-.133.197-.513.646-.627.775-.114.133-.232.148-.43.05-.197-.1-.836-.308-1.592-.985-.59-.525-.985-1.175-1.103-1.372-.114-.198-.011-.304.088-.403.087-.088.197-.232.296-.346.1-.114.133-.198.198-.33.065-.134.034-.248-.015-.347-.05-.099-.445-1.076-.612-1.47-.16-.389-.323-.335-.445-.34-.114-.007-.247-.007-.38-.007a.73.73 0 0 0-.529.247c-.182.198-.691.677-.691 1.654s.71 1.916.81 2.049c.098.133 1.394 2.132 3.383 2.992.47.205.84.326 1.129.418.475.152.904.129 1.246.08.38-.058 1.171-.48 1.338-.943.164-.464.164-.86.114-.943-.049-.084-.182-.133-.38-.232"/>
                       </svg>
                         </td>
@@ -978,11 +1031,11 @@ async function traerExamenesByFecha(value) {
 
                       </tr>
             `;
-    });
-  } catch (error) {
-    console.log("🚀 ~ traerExamenesByFecha ~ error:", error)
-    
-  }
+      });
+    } catch (error) {
+      console.log("🚀 ~ traerExamenesByFecha ~ error:", error)
+
+    }
   } else {
     return;
   }
@@ -1025,7 +1078,7 @@ async function traerExamenesDia() {
                         <td scope="col">${ex.examen}</td>
                         <td scope="col">${ex.bioanalista}</td>
                         <td scope="col">${ex.hora}</td>
-                        <td scope="col">${ex.status!='externo'?`
+                        <td scope="col">${ex.status != 'externo' ? `
                           <svg
                             xmlns="http://www.w3.org/2000/svg"
                             width="25"
@@ -1042,8 +1095,8 @@ async function traerExamenesDia() {
                             <path
                               d="M8 5.5a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5M4.5 8a3.5 3.5 0 1 1 7 0 3.5 3.5 0 0 1-7 0"
                             />
-                          </svg>`:'EXT'
-                          }
+                          </svg>`: 'EXT'
+        }
                         </td>
 
                         <td scope="col">
@@ -1062,9 +1115,8 @@ async function traerExamenesDia() {
                           </svg>
                         </td>
                         <td scope="col">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="${
-                          ex.status_ws == 1 ? "green" : "gray"
-                        }" class="bi bi-whatsapp" viewBox="0 0 16 16">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="${ex.status_ws == 1 ? "green" : "gray"
+        }" class="bi bi-whatsapp" viewBox="0 0 16 16">
                         <path d="M13.601 2.326A7.85 7.85 0 0 0 7.994 0C3.627 0 .068 3.558.064 7.926c0 1.399.366 2.76 1.057 3.965L0 16l4.204-1.102a7.9 7.9 0 0 0 3.79.965h.004c4.368 0 7.926-3.558 7.93-7.93A7.9 7.9 0 0 0 13.6 2.326zM7.994 14.521a6.6 6.6 0 0 1-3.356-.92l-.24-.144-2.494.654.666-2.433-.156-.251a6.56 6.56 0 0 1-1.007-3.505c0-3.626 2.957-6.584 6.591-6.584a6.56 6.56 0 0 1 4.66 1.931 6.56 6.56 0 0 1 1.928 4.66c-.004 3.639-2.961 6.592-6.592 6.592m3.615-4.934c-.197-.099-1.17-.578-1.353-.646-.182-.065-.315-.099-.445.099-.133.197-.513.646-.627.775-.114.133-.232.148-.43.05-.197-.1-.836-.308-1.592-.985-.59-.525-.985-1.175-1.103-1.372-.114-.198-.011-.304.088-.403.087-.088.197-.232.296-.346.1-.114.133-.198.198-.33.065-.134.034-.248-.015-.347-.05-.099-.445-1.076-.612-1.47-.16-.389-.323-.335-.445-.34-.114-.007-.247-.007-.38-.007a.73.73 0 0 0-.529.247c-.182.198-.691.677-.691 1.654s.71 1.916.81 2.049c.098.133 1.394 2.132 3.383 2.992.47.205.84.326 1.129.418.475.152.904.129 1.246.08.38-.058 1.171-.48 1.338-.943.164-.464.164-.86.114-.943-.049-.084-.182-.133-.38-.232"/>
                       </svg>
                         </td>
@@ -1121,15 +1173,15 @@ async function detalleExamen(id, examen) {
       return 0;
     });
     resultados.forEach((e) => {
-      if(e.status=='titulo'){
+      if (e.status == 'titulo') {
         tBody.innerHTML += `
           <tr>
                       <td scope="col" colspan='4'>${e.titulo}</td>
                       
                     </tr>
           `;
-      }else{
-        if(e.nombre){
+      } else {
+        if (e.nombre) {
           if (e.rango) {
             tBody.innerHTML += `
               <tr>
@@ -1150,10 +1202,10 @@ async function detalleExamen(id, examen) {
             `;
           }
         }
-        
+
       }
 
-     
+
     });
   } catch (error) {
     console.log(error);

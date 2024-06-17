@@ -342,21 +342,21 @@ function examenPDFWindow() {
 ipcMain.handle("examenPDFWindow", () => examenPDFWindow());
 
 ipcMain.on("print", async (event, arg) => {
-  if (!examenPDFVar) {
-    return;
-  } else {
-    const examen = store.get("examen");
-    const ccsData = await fs.readFile("app/modules/bootstrap.min.css", "utf8");
-    const imgData =
-      `data:image/png;base64,` +
-      (await fs.readFile("app/imgs/la-milagrosa-logo.png", "base64"));
+  const currentWindow = event.sender.getOwnerBrowserWindow();
 
-    examenPDFVar.webContents
-      .printToPDF({
-        pageSize: "A4",
-        displayHeaderFooter: true,
-        printBackground: true,
-        headerTemplate: `
+
+  const examen = store.get("examen");
+  const ccsData = await fs.readFile("app/modules/bootstrap.min.css", "utf8");
+  const imgData =
+    `data:image/png;base64,` +
+    (await fs.readFile("app/imgs/la-milagrosa-logo.png", "base64"));
+
+  currentWindow.webContents
+    .printToPDF({
+      pageSize: "A4",
+      displayHeaderFooter: true,
+      printBackground: true,
+      headerTemplate: `
         <style>
         ${ccsData}
         </style>
@@ -410,30 +410,26 @@ ipcMain.on("print", async (event, arg) => {
                     <div class="col">
                       <div class="card-body">
                         <ul class="list-group list-group-flush">
-                        <li class="list-group-item"><span class="fw-bold">Paciente:</span> <br> ${
-                          examen.paciente.nombre
-                        }</li>
-                        <li class="list-group-item"><span class="fw-bold">Cedula:</span><br> ${
-                          examen.paciente.pre_cedula
-                        }-${examen.paciente.cedula}</li>
-                        <li class="list-group-item"><span class="fw-bold">Factura: </span><br> ${
-                          examen.orden
-                        }</li>
+                        <li class="list-group-item"><span class="fw-bold">Paciente:</span> <br> ${examen.paciente.nombre
+        }</li>
+                        <li class="list-group-item"><span class="fw-bold">Cedula:</span><br> ${examen.paciente.pre_cedula
+        }-${examen.paciente.cedula}</li>
+                        <li class="list-group-item"><span class="fw-bold">Factura: </span><br> ${examen.orden ? examen.orden : examen.orden.orden
+        }</li>
                         </ul>
                       </div>
                     </div>
                     <div class="col">
                       <div class="card-body">
                         <ul class="list-group list-group-flush">
-                        <li class="list-group-item"><span class="fw-bold">Fecha Nacimiento:</span><br> ${
-                          examen.paciente.fecha_nacimiento
-                        }</li>
-                        <li class="list-group-item"><span class="fw-bold">Edad:</span><br> ${
-                          examen.paciente.edad
-                        }</li>
+                        <li class="list-group-item"><span class="fw-bold">Fecha Nacimiento:</span><br>  ${moment(examen.paciente.fecha_nacimiento).format(
+          "DD-MM-YYYY"
+        )}</li>
+                        <li class="list-group-item"><span class="fw-bold">Edad:</span><br> ${examen.paciente.edad
+        }</li>
                         <li class="list-group-item"><span class="fw-bold">Emision:</span><br> ${moment().format(
-                          "DD-MM-YYYY h:mm:ss a"
-                        )}</li>
+          "DD-MM-YYYY h:mm:ss a"
+        )}</li>
                         </ul>
                       </div>
                     </div>
@@ -455,61 +451,60 @@ ipcMain.on("print", async (event, arg) => {
     </div>
     </main>
     `,
-        marginType: 0,
-      })
-      .then(async (data) => {
-        // Save the PDF data to a file (you can modify the path)
-        const fs = require("fs");
-        fs.writeFileSync("app/assets/my_generated_pdf.pdf", data);
-        shell.openPath(path.join(__dirname, "app/assets/my_generated_pdf.pdf"));
-        if (examen.orden != "Reimpresion") {
-          const { token } = await store.get("token");
-          try {
-            await axios.put(
-              urlsv + "/api/examenes/status-examen",
-              { col: "status_imp", status: 1, id: examen?.ordenId },
-              { headers: { token } }
-            );
-          } catch (error) {
-            console.log("🚀 ~ .then ~ error):", error);
-            const currentWindow = event.sender.getOwnerBrowserWindow();
-            const result = await dialog.showErrorBox(
-              "ERROR",
-              "Ha ocurrido un error confirmando el status de Impresion"
-            );
-            return result;
-          }
+      marginType: 0,
+    })
+    .then(async (data) => {
+      // Save the PDF data to a file (you can modify the path)
+      const fs = require("fs");
+      fs.writeFileSync("app/assets/my_generated_pdf.pdf", data);
+      shell.openPath(path.join(__dirname, "app/assets/my_generated_pdf.pdf"));
+      if (examen.orden != "Reimpresion") {
+        const { token } = await store.get("token");
+        try {
+          await axios.put(
+            urlsv + "/api/examenes/status-examen",
+            { col: "status_imp", status: 1, id: examen?.ordenId },
+            { headers: { token } }
+          );
+        } catch (error) {
+          console.log("🚀 ~ .then ~ error):", error);
+          const currentWindow = event.sender.getOwnerBrowserWindow();
+          const result = await dialog.showErrorBox(
+            "ERROR",
+            "Ha ocurrido un error confirmando el status de Impresion"
+          );
+          return result;
         }
-      })
-      .catch(async (error) => {
-        console.error("Error generating PDF:", error);
-        const currentWindow = event.sender.getOwnerBrowserWindow();
-        const result = await dialog.showErrorBox(
-          "ERROR",
-          "Ha ocurrido un generando el PDF"
-        );
-        return result;
-      });
-  }
+      }
+    })
+    .catch(async (error) => {
+      console.error("Error generating PDF:", error);
+      const currentWindow = event.sender.getOwnerBrowserWindow();
+      const result = await dialog.showErrorBox(
+        "ERROR",
+        "Ha ocurrido un generando el PDF"
+      );
+      return result;
+    });
+
 
   // When the page finishes loading, generate the PDF
 });
 ipcMain.on("ws", async (event, numeroArg) => {
-  if (!examenPDFVar) {
-    return;
-  } else {
-    const examen = store.get("examen");
-    const ccsData = await fs.readFile("app/modules/bootstrap.min.css", "utf8");
-    const imgData =
-      `data:image/png;base64,` +
-      (await fs.readFile("app/imgs/la-milagrosa-logo.png", "base64"));
+  const currentWindow = event.sender.getOwnerBrowserWindow();
 
-    examenPDFVar.webContents
-      .printToPDF({
-        pageSize: "A4",
-        displayHeaderFooter: true,
-        printBackground: true,
-        headerTemplate: `
+  const examen = store.get("examen");
+  const ccsData = await fs.readFile("app/modules/bootstrap.min.css", "utf8");
+  const imgData =
+    `data:image/png;base64,` +
+    (await fs.readFile("app/imgs/la-milagrosa-logo.png", "base64"));
+
+  currentWindow.webContents
+    .printToPDF({
+      pageSize: "A4",
+      displayHeaderFooter: true,
+      printBackground: true,
+      headerTemplate: `
         <style>
         ${ccsData}
         </style>
@@ -563,30 +558,26 @@ ipcMain.on("ws", async (event, numeroArg) => {
                     <div class="col">
                       <div class="card-body">
                         <ul class="list-group list-group-flush">
-                        <li class="list-group-item"><span class="fw-bold">Paciente:</span> <br> ${
-                          examen.paciente.nombre
-                        }</li>
-                        <li class="list-group-item"><span class="fw-bold">Cedula:</span><br> ${
-                          examen.paciente.pre_cedula
-                        }-${examen.paciente.cedula}</li>
-                        <li class="list-group-item"><span class="fw-bold">Factura: </span><br> ${
-                          examen.orden
-                        }</li>
+                        <li class="list-group-item"><span class="fw-bold">Paciente:</span> <br> ${examen.paciente.nombre
+        }</li>
+                        <li class="list-group-item"><span class="fw-bold">Cedula:</span><br> ${examen.paciente.pre_cedula
+        }-${examen.paciente.cedula}</li>
+                        <li class="list-group-item"><span class="fw-bold">Factura: </span><br> ${examen.orden ? examen.orden : examen.orden.orden
+        }</li>
                         </ul>
                       </div>
                     </div>
                     <div class="col">
                       <div class="card-body">
                         <ul class="list-group list-group-flush">
-                        <li class="list-group-item"><span class="fw-bold">Fecha Nacimiento:</span><br> ${
-                          examen.paciente.fecha_nacimiento
-                        }</li>
-                        <li class="list-group-item"><span class="fw-bold">Edad:</span><br> ${
-                          examen.paciente.edad
-                        }</li>
+                        <li class="list-group-item"><span class="fw-bold">Fecha Nacimiento:</span><br>  ${moment(examen.paciente.fecha_nacimiento).format(
+          "DD-MM-YYYY"
+        )}</li>
+                        <li class="list-group-item"><span class="fw-bold">Edad:</span><br> ${examen.paciente.edad
+        }</li>
                         <li class="list-group-item"><span class="fw-bold">Emision:</span><br> ${moment().format(
-                          "DD-MM-YYYY h:mm:ss a"
-                        )}</li>
+          "DD-MM-YYYY h:mm:ss a"
+        )}</li>
                         </ul>
                       </div>
                     </div>
@@ -608,102 +599,102 @@ ipcMain.on("ws", async (event, numeroArg) => {
     </div>
     </main>
     `,
-        marginType: 0,
-      })
-      .then(async (data) => {
-        const desktopDir = path.join(os.homedir(), "Desktop");
-        const rutaArchivo = path.join(
-          desktopDir,
-          `EXAMENES-LABORATORIO/${examen.paciente.cedula}/${examen.orden}/examen-${examen.orden}-${examen.paciente.cedula}.pdf`
-        );
-        const rutaCarpeta = path.join(desktopDir, `EXAMENES-LABORATORIO`);
-        const rutaPaciente = path.join(
-          desktopDir,
-          `EXAMENES-LABORATORIO/${examen.paciente.cedula}`
-        );
-        const rutaOrden = path.join(
-          desktopDir,
-          `EXAMENES-LABORATORIO/${examen.paciente.cedula}/${examen.orden}`
-        );
-        const fs = require("fs");
+      marginType: 0,
+    })
+    .then(async (data) => {
+      const desktopDir = path.join(os.homedir(), "Desktop");
+      const rutaArchivo = path.join(
+        desktopDir,
+        `EXAMENES-LABORATORIO/${examen.paciente.cedula}/${examen.orden ? examen.orden : examen.orden.orden}/examen-${examen.orden ? examen.orden : examen.orden.orden}-${examen.paciente.cedula}.pdf`
+      );
+      const rutaCarpeta = path.join(desktopDir, `EXAMENES-LABORATORIO`);
+      const rutaPaciente = path.join(
+        desktopDir,
+        `EXAMENES-LABORATORIO/${examen.paciente.cedula}`
+      );
+      const rutaOrden = path.join(
+        desktopDir,
+        `EXAMENES-LABORATORIO/${examen.paciente.cedula}/${examen.orden ? examen.orden : examen.orden.orden}`
+      );
+      const fs = require("fs");
 
+      try {
+        if (!fs.existsSync(rutaCarpeta)) {
+          fs.mkdirSync(rutaCarpeta, { recursive: true });
+        }
+        if (!fs.existsSync(rutaPaciente)) {
+          fs.mkdirSync(rutaPaciente);
+        }
+        if (!fs.existsSync(rutaOrden)) {
+          fs.mkdirSync(rutaOrden);
+        }
+      } catch (err) {
+        console.error(err);
+        const currentWindow = event.sender.getOwnerBrowserWindow();
+        const result = dialog.showErrorBox(
+          "ERROR",
+          "Ha ocurrido un generando la carpeta del paciente"
+        );
+        return result;
+      }
+
+      fs.writeFileSync(rutaArchivo, data);
+      shell.showItemInFolder(rutaArchivo);
+      const texto = `${examen.paciente.pre_cedula}-${examen.paciente.cedula} ${examen.orden ? examen.orden : examen.orden.orden}`;
+      const numero = JSON.parse(numeroArg);
+      const linkWs =
+        `https://wa.me/+${numero.code}${numero.numero}?text=` +
+        encodeURI(texto);
+      shell.openExternal(linkWs);
+
+      if (examen.orden != "Reimpresion") {
+        const { token } = await store.get("token");
         try {
-          if (!fs.existsSync(rutaCarpeta)) {
-            fs.mkdirSync(rutaCarpeta, { recursive: true });
-          }
-          if (!fs.existsSync(rutaPaciente)) {
-            fs.mkdirSync(rutaPaciente);
-          }
-          if (!fs.existsSync(rutaOrden)) {
-            fs.mkdirSync(rutaOrden);
-          }
-        } catch (err) {
-          console.error(err);
+          await axios.put(
+            urlsv + "/api/examenes/status-examen",
+            { col: "status_ws", status: 1, id: examen?.ordenId },
+            { headers: { token } }
+          );
+        } catch (error) {
+          console.log("🚀 ~ .then ~ error):", error);
           const currentWindow = event.sender.getOwnerBrowserWindow();
-          const result = dialog.showErrorBox(
+          const result = await dialog.showErrorBox(
             "ERROR",
-            "Ha ocurrido un generando la carpeta del paciente"
+            "Ha ocurrido un error confirmando el status de WhatsApp"
           );
           return result;
         }
+      }
+    })
+    .catch(async (error) => {
+      console.error("Error generating PDF:", error);
+      const currentWindow = event.sender.getOwnerBrowserWindow();
+      const result = await dialog.showErrorBox(
+        "ERROR",
+        "Ha ocurrido un generando el PDF y enviandolo por WhatsApp"
+      );
+      return result;
+    });
 
-        fs.writeFileSync(rutaArchivo, data);
-        shell.showItemInFolder(rutaArchivo);
-        const texto = `${examen.paciente.pre_cedula}-${examen.paciente.cedula} ${examen.orden}`;
-        const numero = JSON.parse(numeroArg);
-        const linkWs =
-          `https://wa.me/+${numero.code}${numero.numero}?text=` +
-          encodeURI(texto);
-        shell.openExternal(linkWs);
-
-        if (examen.orden != "Reimpresion") {
-          const { token } = await store.get("token");
-          try {
-            await axios.put(
-              urlsv + "/api/examenes/status-examen",
-              { col: "status_ws", status: 1, id: examen?.ordenId },
-              { headers: { token } }
-            );
-          } catch (error) {
-            console.log("🚀 ~ .then ~ error):", error);
-            const currentWindow = event.sender.getOwnerBrowserWindow();
-            const result = await dialog.showErrorBox(
-              "ERROR",
-              "Ha ocurrido un error confirmando el status de WhatsApp"
-            );
-            return result;
-          }
-        }
-      })
-      .catch(async (error) => {
-        console.error("Error generating PDF:", error);
-        const currentWindow = event.sender.getOwnerBrowserWindow();
-        const result = await dialog.showErrorBox(
-          "ERROR",
-          "Ha ocurrido un generando el PDF y enviandolo por WhatsApp"
-        );
-        return result;
-      });
-  }
 
   // When the page finishes loading, generate the PDF
 });
 ipcMain.on("email", async (event, email) => {
-  if (!examenPDFVar) {
-    return;
-  } else {
-    const examen = store.get("examen");
-    const ccsData = await fs.readFile("app/modules/bootstrap.min.css", "utf8");
-    const imgData =
-      `data:image/png;base64,` +
-      (await fs.readFile("app/imgs/la-milagrosa-logo.png", "base64"));
+  const currentWindow = event.sender.getOwnerBrowserWindow();
 
-    examenPDFVar.webContents
-      .printToPDF({
-        pageSize: "A4",
-        displayHeaderFooter: true,
-        printBackground: true,
-        headerTemplate: `
+  const examen = store.get("examen");
+  console.log("🚀 ~ ipcMain.on ~ examen:", examen)
+  const ccsData = await fs.readFile("app/modules/bootstrap.min.css", "utf8");
+  const imgData =
+    `data:image/png;base64,` +
+    (await fs.readFile("app/imgs/la-milagrosa-logo.png", "base64"));
+
+  currentWindow.webContents
+    .printToPDF({
+      pageSize: "A4",
+      displayHeaderFooter: true,
+      printBackground: true,
+      headerTemplate: `
         <style>
         ${ccsData}
         </style>
@@ -757,30 +748,28 @@ ipcMain.on("email", async (event, email) => {
                     <div class="col">
                       <div class="card-body">
                         <ul class="list-group list-group-flush">
-                        <li class="list-group-item"><span class="fw-bold">Paciente:</span> <br> ${
-                          examen.paciente.nombre
-                        }</li>
-                        <li class="list-group-item"><span class="fw-bold">Cedula:</span><br> ${
-                          examen.paciente.pre_cedula
-                        }-${examen.paciente.cedula}</li>
-                        <li class="list-group-item"><span class="fw-bold">Factura: </span><br> ${
-                          examen.orden
-                        }</li>
+                        <li class="list-group-item"><span class="fw-bold">Paciente:</span> <br> ${examen.paciente.nombre
+        }</li>
+                        <li class="list-group-item"><span class="fw-bold">Cedula:</span><br> ${examen.paciente.pre_cedula
+        }-${examen.paciente.cedula}</li>
+                        <li class="list-group-item"><span class="fw-bold">Factura: </span><br> ${examen.orden ? examen.orden : examen.orden.orden
+        }</li>
                         </ul>
                       </div>
                     </div>
                     <div class="col">
                       <div class="card-body">
                         <ul class="list-group list-group-flush">
-                        <li class="list-group-item"><span class="fw-bold">Fecha Nacimiento:</span><br> ${
-                          examen.paciente.fecha_nacimiento
-                        }</li>
-                        <li class="list-group-item"><span class="fw-bold">Edad:</span><br> ${
-                          examen.paciente.edad
-                        }</li>
+                        <li class="list-group-item"><span class="fw-bold">Fecha Nacimiento:</span><br> 
+                          ${moment(examen.paciente.fecha_nacimiento).format(
+          "DD-MM-YYYY"
+        )} 
+                        </li>
+                        <li class="list-group-item"><span class="fw-bold">Edad:</span><br> ${examen.paciente.edad
+        }</li>
                         <li class="list-group-item"><span class="fw-bold">Emision:</span><br> ${moment().format(
-                          "DD-MM-YYYY h:mm:ss a"
-                        )}</li>
+          "DD-MM-YYYY h:mm:ss a"
+        )}</li>
                         </ul>
                       </div>
                     </div>
@@ -802,22 +791,23 @@ ipcMain.on("email", async (event, email) => {
     </div>
     </main>
     `,
-        marginType: 0,
-      })
-      .then(async (data) => {
-       
+      marginType: 0,
+    })
+    .then(async (data) => {
 
-        const texto = `${examen.paciente.pre_cedula}-${examen.paciente.cedula} ${examen.orden}`;
-        const correo = (JSON.parse(email)).email;
-       try {
+
+      const texto = `${examen.paciente.pre_cedula}-${examen.paciente.cedula} ${examen.orden ? examen.orden : examen.orden.orden}`;
+      const correo = (JSON.parse(email)).email;
+      console.log("🚀 ~ .then ~ texto:", texto)
+      try {
         const { token } = await store.get("token");
 
         await axios.post(
           urlsv + "/api/examenes/enviar-correo",
-          { texto, correo, data},
+          { texto, correo, data },
           { headers: { token } }
         );
-      
+
         if (examen.orden != "Reimpresion") {
           try {
             await axios.put(
@@ -843,19 +833,19 @@ ipcMain.on("email", async (event, email) => {
           "Ha ocurrido un error enviando el examen por correo electronico"
         );
         return result;
-       }
-  
-      })
-      .catch(async (error) => {
-        console.error("Error generating PDF:", error);
-        const currentWindow = event.sender.getOwnerBrowserWindow();
-        const result = await dialog.showErrorBox(
-          "ERROR",
-          "Ha ocurrido un generando el PDF y enviandolo por Correo"
-        );
-        return result;
-      });
-  }
+      }
+
+    })
+    .catch(async (error) => {
+      console.error("Error generating PDF:", error);
+      const currentWindow = event.sender.getOwnerBrowserWindow();
+      const result = await dialog.showErrorBox(
+        "ERROR",
+        "Ha ocurrido un generando el PDF y enviandolo por Correo"
+      );
+      return result;
+    });
+
 
   // When the page finishes loading, generate the PDF
 });

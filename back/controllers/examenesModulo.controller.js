@@ -1858,10 +1858,18 @@ export const deleteEmpresa= async (req, res) => {
       [id]
     );
     if (existente.length > 0) {
-      const [CaNulo] = await pool.execute(
-        "UPDATE `empresas` SET `status` = ? WHERE id = ?",
-        ["nulo", id]
-      );
+      if(existente[0].status == 'activo'){
+        const [CaNulo] = await pool.execute(
+          "UPDATE `empresas` SET `status` = ? WHERE id = ?",
+          ["nulo", id]
+        );
+      }else{
+
+        const [CaNulo] = await pool.execute(
+          "UPDATE `empresas` SET `status` = ? WHERE id = ?",
+          ["activo", id]
+        );
+      }
       return await res.status(200).json({
         mensaje: "Empresa anulada correctamente"
       });
@@ -1891,10 +1899,18 @@ export const deleteSede= async (req, res) => {
       [id]
     );
     if (existente.length > 0) {
-      const [CaNulo] = await pool.execute(
-        "UPDATE `sede` SET `status` = ? WHERE id = ?",
-        ["nulo", id]
-      );
+      if(existente[0].status == 'activo'){
+      
+        const [CaNulo] = await pool.execute(
+          "UPDATE `sede` SET `status` = ? WHERE id = ?",
+          ["nulo", id]
+        );
+      }else{
+        const [CaNulo] = await pool.execute(
+          "UPDATE `sede` SET `status` = ? WHERE id = ?",
+          ["activo", id]
+        );
+      }
       return await res.status(200).json({
         mensaje: "Sede anulada correctamente"
       });
@@ -1994,17 +2010,25 @@ export const deleteLaboratorio= async (req, res) => {
       [id]
     );
     if (existente.length > 0) {
-      const [CaNulo] = await pool.execute(
-        "UPDATE `laboratorios_externos` SET `status` = ? WHERE id = ?",
-        ["nulo", id]
-      );
+      if(existente[0].status == 'activo'){
+
+        const [CaNulo] = await pool.execute(
+          "UPDATE `laboratorios_externos` SET `status` = ? WHERE id = ?",
+          ["nulo", id]
+        );
+      }else{
+        const [CaActivo] = await pool.execute(
+          "UPDATE `laboratorios_externos` SET `status` = ? WHERE id = ?",
+          ["activo", id]
+        );
+      }
       return await res.status(200).json({
-        mensaje: "Laboratorio anulado correctamente"
+        mensaje: "Status laboratorio modificado correctamente"
       });
     } else {
       return await res
         .status(400)
-        .json({ mensaje: "El Laboratorio que intenta eliminar no existe" });
+        .json({ mensaje: "El Laboratorio que intenta modificar no existe" });
     }
   } catch (error) {
     console.log("🚀 ~ deleteLaboratorio ~ error:", error);
