@@ -4,7 +4,7 @@ const getCookieValue = (name) =>
   document.cookie.match("(^|;)\\s*" + name + "\\s*=\\s*([^;]+)")?.pop() || "";
 
 function redireccion(url) {
-  window.location.href = `http://localhost:3000/${url}`;
+  window.location.href = `/${url}`;
 }
 
 function displayName() {
