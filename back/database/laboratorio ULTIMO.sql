@@ -788,10 +788,10 @@ CREATE TABLE `niveles_usuario` (
 --
 
 INSERT INTO `niveles_usuario` (`id`, `nombre`, `descripcion`) VALUES
-(1, 'Usuario', 'Usuario regular, nivel bajo de usuario'),
-(2, 'Coordinador', 'Nivel medio de usuario'),
-(3, 'Administrador', 'Nivel alto de usuario'),
-(4, 'Superior', 'Nivel mas alto de usuario');
+(1, 'Administrador', 'Usuario de alto nivel, administrador'),
+(2, 'Auxiliar', 'Nivel bajo de usuario, auxiliar de bioanalista'),
+(3, 'Bioanalista', 'Nivel medio de usuario, bioanalista'),
+(4, 'Impresion', 'Nivel Bajo de usuario, solo reimpresiones');
 
 -- --------------------------------------------------------
 

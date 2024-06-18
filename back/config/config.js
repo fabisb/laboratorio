@@ -1,6 +1,6 @@
 export default {
     //SECRET
-    SECRET: process.env.SERCRET || "secret",
+    SECRET: process.env.SECRET || "secret",
 
     //SV PORT
     PORT: process.env.PORT || 3000,
