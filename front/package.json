@@ -13,7 +13,8 @@
     "appId": "com.coditados.MedLab",
     "productName": "MedLab",
     "win": {
-      "target": "nsis"
+      "target": "nsis",
+      "icon":"build/icon.png"
     },
     "directories": {
       "output": "dist"
