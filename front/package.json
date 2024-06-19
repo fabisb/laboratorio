@@ -1,16 +1,35 @@
 {
-  "name": "laboratorio-milagrosa",
+  "name": "medlab-front",
   "version": "0.1.0",
-  "description": "Proyecto de tesis de laboratorio clinico 'La Milagrosa' Fabian Silva V-28146771",
+  "description": "MedLab-Suite, Proyecto de tesis de laboratorio clinico 'La Milagrosa' Fabian Silva V-28146771",
   "main": "main.js",
   "scripts": {
-    "start": "electron ."
+    "start": "electron .",
+    "dist": "electron-builder --ia32 --x64",
+    "obf": "javascript-obfuscator ./app/javascript --output ../encriptadoFront/app/javascript"
   },
   "postinstall": "bower install",
+  "build": {
+    "appId": "com.coditados.MedLab",
+    "productName": "MedLab",
+    "win": {
+      "target": "nsis"
+    },
+    "directories": {
+      "output": "dist"
+    }
+  },
+  "repository": "https://github.com/fabisb/MedLab",
+  "publish": {
+    "provider": "github",
+    "releaseType": "release"
+  },
   "author": "Fabian",
   "devDependencies": {
     "electron": "^26.6.5",
-    "electron-reload": "^2.0.0-alpha.1"
+    "electron-builder": "^24.13.3",
+    "electron-reload": "^2.0.0-alpha.1",
+    "javascript-obfuscator": "^4.1.1"
   },
   "dependencies": {
     "axios": "^1.7.2",
@@ -19,6 +38,7 @@
     "bower": "^1.8.14",
     "chart.js": "^4.4.3",
     "electron-store": "^8.1.0",
+    "electron-updater": "^6.2.1",
     "moment": "^2.30.1"
   }
 }

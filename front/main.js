@@ -15,9 +15,62 @@ if (env === "development") {
     electron: path.join(__dirname, "node_modules", ".bin", "electron"),
     hardResetMethod: "exit",
     ignored: /main\.js/,
-  });
-}  */
+    });
+    }  */
 //RECARGA AUTOMATICA
+
+//AUTO UPDATER
+const { autoUpdater } = require("electron-updater");
+//Basic flags for auto-updater
+autoUpdater.autoDownload = false;
+autoUpdater.autoInstallOnAppQuit = true;
+let validacionActualizacion = false;
+
+/*New Update Available*/
+autoUpdater.checkForUpdates();
+
+let downloadWindow;
+autoUpdater.on("update-available", (info) => {
+  validacionActualizacion = true;
+
+  downloadWindow = new BrowserWindow({
+    title: "Actualizacion",
+    parent: mainWindow,
+    webPreferences: {
+      nodeIntegration: true,
+      contextIsolation: false,
+      devTools: false,
+    },
+  });
+  downloadWindow.loadFile("app/screens/download.html");
+  //downloadWindow.webContents.openDevTools();
+  downloadWindow.setMenuBarVisibility(false);
+});
+
+ipcMain.on("comenzar-descarga", (e, arg) => {
+  autoUpdater.downloadUpdate();
+  downloadWindow.webContents.send("conf", "comenzando");
+});
+
+autoUpdater.on("update-downloaded", (info) => {
+  downloadWindow.webContents.send("descarga-finalizada", {
+    mensaje: "descarga finalizada",
+    info,
+  });
+  autoUpdater.quitAndInstall();
+});
+
+autoUpdater.on("update-not-available", (info) => {
+  validacionActualizacion = false;
+});
+
+autoUpdater.on("error", (info) => {
+  downloadWindow.webContents.send("updater-error", {
+    mensaje: "error al descargar",
+    info,
+  });
+});
+//AUTO UPDATER
 
 //URL DE SEVIDOR
 const urlsv = "http://localhost:3000";
