@@ -1,12 +1,14 @@
 {
-  "name": "sistema-facturacion-back",
+  "name": "medlab-back",
   "version": "0.1.0",
+  "description": "MedLab-Suite, Proyecto de tesis de laboratorio clinico 'La Milagrosa' Fabian Silva V-28146771",
   "type": "module",
   "main": "index.js",
   "postinstall": "npm i -g nodemon",
   "scripts": {
     "start": "node index.js",
-    "dev": "nodemon index.js"
+    "dev": "nodemon index.js",
+    "obf": "javascript-obfuscator ./public --output ../Public-encriptado/public"
   },
   "dependencies": {
     "bcrypt": "^5.1.1",
@@ -21,5 +23,8 @@
     "mysql2": "^3.7.0",
     "nodemailer": "^6.9.13",
     "nodemon": "^3.0.3"
+  },
+  "devDependencies": {
+    "javascript-obfuscator": "^4.1.1"
   }
 }

@@ -59,7 +59,7 @@ async function guardarModLaboratorio(id) {
   } else {
     try {
       const { data } = await axios.put(
-        "http://localhost:3000/api/espejo/update-laboratorio",
+        "/api/espejo/update-laboratorio",
         {
           id_laboratorio: id,
           razon: razon.value,
@@ -115,7 +115,7 @@ async function guardarModSede(id) {
   } else {
     try {
       const { data: res } = await axios.put(
-        "http://localhost:3000/api/espejo/update-sede",
+        "/api/espejo/update-sede",
         {
           id_sede: id,
           nombre: sede,
@@ -159,7 +159,7 @@ async function guardarModEmpresa(id) {
   } else {
     try {
       const { data: res } = await axios.put(
-        "http://localhost:3000/api/espejo/update-empresa",
+        "/api/espejo/update-empresa",
         {
           id,
           nombre: empresa,
@@ -217,7 +217,7 @@ async function crearLaboratorio() {
   } else {
     try {
       const res = await axios.post(
-        "http://localhost:3000/api/espejo/crear-laboratorio",
+        "/api/espejo/crear-laboratorio",
         {
           rif: rif.value,
           razon: razon.value,
@@ -304,7 +304,7 @@ async function render() {
   tBody.innerHTML = "";
   try {
     const { data: sedes } = await axios.get(
-      "http://localhost:3000/api/espejo/sedes"
+      "/api/espejo/sedes"
     );
     sedesArray = sedes;
   } catch (error) {
@@ -312,7 +312,7 @@ async function render() {
   }
   try {
     const { data: empresas } = await axios.get(
-      "http://localhost:3000/api/espejo/empresas"
+      "/api/espejo/empresas"
     );
     empresasArray = empresas;
   } catch (error) {
@@ -320,7 +320,7 @@ async function render() {
   }
   try {
     const { data: laboratorios } = await axios.get(
-      "http://localhost:3000/api/espejo/laboratorios"
+      "/api/espejo/laboratorios"
     );
     laboratoriosArray = laboratorios;
     laboratorios.forEach((e) => {
@@ -378,7 +378,7 @@ async function crearSede() {
   } else {
     try {
       const { data: res } = await axios.post(
-        `http://localhost:3000/api/espejo/crear-sede`,
+        `/api/espejo/crear-sede`,
         {
           nombre: sede,
           clave,
@@ -465,7 +465,7 @@ async function crearEmpresa() {
   } else {
     try {
       const { data: res } = await axios.post(
-        `http://localhost:3000/api/espejo/crear-empresa`,
+        `/api/espejo/crear-empresa`,
         {
           nombre: empresa,
         }
@@ -948,7 +948,7 @@ async function traerExamenesByFecha(value) {
 
 
       const res = await axios.get(
-        `http://localhost:3000/api/espejo/get-examen-byFecha`,
+        `/api/espejo/get-examen-byFecha`,
         {
           params: {
             fecha: value,
@@ -1152,7 +1152,7 @@ async function detalleExamen(id, examen) {
   tBody.innerHTML = "";
   try {
     let { data: resultados } = await axios.get(
-      "http://localhost:3000/api/espejo/get-examen-resultado",
+      "/api/espejo/get-examen-resultado",
       {
         params: {
           id,

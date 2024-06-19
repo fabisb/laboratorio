@@ -285,7 +285,7 @@ export async function verifyCookie(req, res, next) {
     if (decoded) {
       req.user = decoded;
       if (decoded.nivel == 2 || decoded.nivel == 3) {
-        res.status(401).sendFile(path.join(publics, "/401.html"));
+        return await res.status(401).sendFile(path.join(publics, "/401.html"));
       } else {
         await next();
       }
@@ -307,7 +307,7 @@ export async function adminCookie(req, res, next) {
       if (decoded.nivel == 1) {
         await next();
       } else {
-        res.status(401).sendFile(path.join(publics, "/401.html"));
+        return await res.status(401).sendFile(path.join(publics, "/401.html"));
       }
     }
   } catch (err) {
@@ -326,7 +326,7 @@ export async function impresionCookie(req, res, next) {
       if (decoded.nivel == 1 || decoded.nivel == 4) {
         await next();
       } else {
-        res.status(401).sendFile(path.join(publics, "/401.html"));
+        return await res.status(401).sendFile(path.join(publics, "/401.html"));
       }
     }
   } catch (err) {
@@ -337,10 +337,10 @@ export async function impresionCookie(req, res, next) {
   }
 }
 export async function clearCookie(req, res, next) {
-  res.clearCookie("token");
-  res.clearCookie("username");
-  res.clearCookie("nivel");
-  next();
+  await res.clearCookie("token");
+  await res.clearCookie("username");
+  await res.clearCookie("nivel");
+  await next();
 }
 export async function loginEspejo(req, res) {
   const { user, pass } = req.body;
@@ -370,18 +370,18 @@ export async function loginEspejo(req, res) {
             expiresIn: "1 days",
           }
         );
-        res.cookie("token", token, {
+        await res.cookie("token", token, {
           maxAge: 60000 * 60 * 12,
           httpOnly: true,
           secure: true,
           sameSite: true,
         });
-        res.cookie("username", id[0].nombre, {
+        await res.cookie("username", id[0].nombre, {
           maxAge: 60000 * 60 * 12,
           secure: true,
           sameSite: true,
         });
-        res.cookie("nivel", id[0].nivel, {
+        await res.cookie("nivel", id[0].nivel, {
           maxAge: 60000 * 60 * 12,
           secure: true,
           sameSite: true,

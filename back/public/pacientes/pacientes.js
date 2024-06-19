@@ -43,7 +43,7 @@ async function detalleExamenesPaciente(id, nombre) {
 
   try {
     const res = await axios.get(
-      "http://localhost:3000/api/espejo/get-examenes-paciente",
+      "/api/espejo/get-examenes-paciente",
       { params: { id } }
     );
     examenesArray = res.data.examenes;
@@ -158,7 +158,7 @@ function detalleExamen(id) {
 async function traerPacientesDia() {
   try {
     const res = await axios.get(
-      "http://localhost:3000/api/espejo/get-pacientes-dia"
+      "/api/espejo/get-pacientes-dia"
     );
     console.log(res);
 
@@ -168,7 +168,7 @@ async function traerPacientesDia() {
     if (res.data.pacientes.length == 0) {
       tBody.innerHTML = `
       <tr>
-      <td scope="col" colspan="8">"<h5>No se han encontrado pacientes que se hayan hecho examenes el dia de hoy</h5></td>
+      <td scope="col" colspan="8"><h5>No se han encontrado pacientes que se hayan hecho examenes el dia de hoy</h5></td>
     </tr>
       `;
     } else {

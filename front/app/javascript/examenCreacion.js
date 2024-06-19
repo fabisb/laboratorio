@@ -231,10 +231,22 @@ const render = async () => {
   }
 
   try {
-    const { data: examenesGet } = await axios.get(
+    let { data: examenesGet } = await axios.get(
       urlsv + "/api/examenes/get-examenes",
       { headers: { token } }
     );
+    examenesGet=examenesGet.sort(function(a,b){
+      
+
+        if (a.nombre > b.nombre) {
+          return 1;
+        }
+        if (a.nombre < b.nombre) {
+          return -1;
+        }
+        // a must be equal to b
+        return 0;
+    })
     examenesArray = examenesGet;
     examenes = examenesGet;
 
@@ -2986,7 +2998,8 @@ async function detalleExamen(id) {
   });
 
   caracteristicas2.forEach((c) => {
-    if (c.status == 'titulo') {
+    if(c.nombre){
+    if (c.status == "titulo") {
       tBody.innerHTML += `
       <tr>
         <th colspan="4" scope="col">${c.titulo}</th>
@@ -2997,13 +3010,13 @@ async function detalleExamen(id) {
       tBody.innerHTML += `
       <tr>
         <td scope="col">${c.nombre}</td>
-        <td scope="col">${c.unidad}</td>
+        <td scope="col">${c.unidad?c.unidad:''}</td>
         <td scope="col">${c.posicion}</td>
         <td scope="col">${c.impsiempre == 1 ? "SI" : "NO"}</td>
       </tr>
       `;
     }
-
+    }
   });
 }
 

@@ -1,0 +1,53 @@
+body,
+html {
+  height: 100%;
+  overflow: hidden;
+}
+body {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  background: linear-gradient(to bottom, #e2fbf8 0%, #b4d2d9 100%);
+}
+.bloques {
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  width: 10em;
+  height: 10em;
+  transform: rotate(45deg);
+  margin: 2em;
+  float: left;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.05) 0%, rgba(0, 0, 0, 0.05) 100%);
+}
+
+.mensaje-actualizacion {
+    font-size: 24px;
+    font-family: Arial, sans-serif;
+    color: #333;
+    margin-bottom: 20px; /* Ajuste del espacio entre el mensaje y el botón */
+  }
+
+  
+
+
+.contenedor-mensaje {
+    margin-bottom: 20px; /* Ajuste del espacio entre el mensaje y el botón */
+    padding: 20px;
+    background-color: #ffc107;
+    border-radius: 5px;
+    font-family: Arial, sans-serif;
+    font-size: 24px;
+    color: #333;
+    display: inline-block;
+  }
+  
+
+  .boton-descargar {
+    display: inline-block;
+    padding: 10px 20px;
+    color: #fff;
+    border-radius: 5px;
+    font-family: Arial, sans-serif;
+    font-size: 16px;
+    text-decoration: none;
+    margin-top: 20px; /* Ajuste del espacio entre el botón y otros elementos */
+  }

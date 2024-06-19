@@ -338,11 +338,22 @@ const render = async () => {
       console.log(error);
     }
 
-    const { data: examenesGet } = await axios.get(
+    let { data: examenesGet } = await axios.get(
       urlsv + "/api/examenes/get-examenes",
       { headers: { token } }
     );
+    examenesGet=examenesGet.sort(function(a,b){
+      
 
+      if (a.nombre > b.nombre) {
+        return 1;
+      }
+      if (a.nombre < b.nombre) {
+        return -1;
+      }
+      // a must be equal to b
+      return 0;
+  })
     const { data: laboratorios } = await axios.get(
       urlsv + "/api/modulo-examenes/laboratorios",
       { headers: { token } }
@@ -359,7 +370,7 @@ const render = async () => {
         { headers: { token } }
       );
 
-      pacientesArray = pacientes.sort(function (a, b) {
+      pacientes= pacientes.sort(function (a, b) {
         if (a.nombre > b.nombre) {
           return 1;
         }
@@ -369,6 +380,7 @@ const render = async () => {
         // a must be equal to b
         return 0;
       });
+      pacientesArray=pacientes
       const menu = document.getElementById("menuPacientesUl");
       menu.innerHTML = "";
       pacientesArray.forEach((e) => {
@@ -1031,6 +1043,14 @@ const activarInputs = async (click) => {
     `;
   }
 };
+
+function validarChars(value){
+  let value2=value.toUpperCase()
+  if((value2.charCodeAt(value.length-1)<65 || value2.charCodeAt(value.length-1)>90) && value2.charCodeAt(value.length-1)!=209){
+    value= value.replaceAll(value2[value.length-1].toLowerCase(),'').replaceAll(value2[value.length-1],'')
+  }
+  document.getElementById('nombreInputPaci').value=value
+}
 
 async function modificarPaciente() {
   const generoRadio = document.getElementsByName("genero");
