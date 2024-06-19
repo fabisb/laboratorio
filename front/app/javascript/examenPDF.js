@@ -146,7 +146,7 @@ const reimprimirExamen = async () => {
         : 'style="page-break-after:always"'
       } class="d-flex justify-content-center">
     <div class="card-body my-auto text-start">
-      <h5>Lcd. ${bioanalistaInfo?.nombre}</h5>
+      <h5>${bioanalistaInfo?.nombre}</h5>
       <h6>BIOANALISTA</h6>
       <h6>C.I.: ${bioanalistaInfo?.cedula} - COBIOZUL: ${bioanalistaInfo?.colegio
       } - MSDS: ${bioanalistaInfo?.ministerio} </h6>
@@ -209,7 +209,7 @@ const pintarExamen = async () => {
 </div>`
       : `
       <div class="card-body my-auto text-start">
-        <h5>Lcd. ${bioanalista?.nombre}</h5>
+        <h5>${bioanalista?.nombre}</h5>
         <h6>BIOANALISTA</h6>
         <h6>C.I.: ${bioanalista?.cedula} - COBIOZUL: ${bioanalista?.colegio} - MSDS: ${bioanalista?.ministerio} </h6>
       </div>
