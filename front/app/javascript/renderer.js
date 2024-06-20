@@ -7,14 +7,28 @@
  */
 var sedesVar = [];
 async function renderer() {
-  const { data: sedes } = await axios.get(urlsv + "/api/users/sedes");
-  sedesVar = sedes;
-  const select = document.getElementById("selectSede");
-  sedes.forEach((element) => {
-    select.innerHTML += `
-    <option value="${element.id}">${element.nombre}</option> 
-    `;
-  });
+  try {
+    
+    const { data: sedes } = await axios.get(urlsv + "/api/users/sedes");
+    sedesVar = sedes;
+    const select = document.getElementById("selectSede");
+    sedes.forEach((element) => {
+      select.innerHTML += `
+      <option value="${element.id}">${element.nombre}</option> 
+      `;
+    });
+  } catch (error) {
+    console.log("🚀 ~ renderer ~ error:", error)
+    if (error.response?.data?.mensaje) {
+      const res = await alerta.alert(
+        "Error al iniciar sesion",
+        error.response.data.mensaje
+      );
+      return res;
+    } else {
+      return await alerta.error();
+    }
+  }
 }
 const inputClave = () => {
   if (document.getElementById("selectSede").value == "") {
@@ -70,7 +84,7 @@ async function loguear(e) {
     await sedeVar.store(sedeSlct);
   } catch (error) {
     console.log(error);
-    if (error.response.data.mensaje) {
+    if (error.response?.data?.mensaje) {
       const res = await alerta.alert(
         "Error al iniciar sesion",
         error.response.data.mensaje
