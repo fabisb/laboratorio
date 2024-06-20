@@ -7,7 +7,6 @@ const fs = require("fs").promises;
 var moment = require("moment");
 const axios = require("axios");
 //RECARGA AUTOMATICA
-
 /* const electronReload = require("electron-reload");
 const env = process.env.NODE_ENV || "development";
 if (env === "development") {
@@ -18,7 +17,7 @@ if (env === "development") {
     });
     }  */
 //RECARGA AUTOMATICA
-
+const devTools = false;
 //AUTO UPDATER
 const { autoUpdater } = require("electron-updater");
 //Basic flags for auto-updater
@@ -32,14 +31,13 @@ autoUpdater.checkForUpdates();
 let downloadWindow;
 autoUpdater.on("update-available", (info) => {
   validacionActualizacion = true;
-
   downloadWindow = new BrowserWindow({
     title: "Actualizacion",
     parent: mainWindow,
     webPreferences: {
       nodeIntegration: true,
       contextIsolation: false,
-      devTools: false,
+      devTools: devTools,
     },
   });
   downloadWindow.loadFile("app/screens/download.html");
@@ -125,8 +123,10 @@ function createWindow() {
     show: false,
     webPreferences: {
       preload: path.join(__dirname, "app/preloads/preload.js"),
+      devTools: devTools
     },
   });
+  mainWindow.setMenuBarVisibility(false)
 
   // and load the index.html of the app.
   mainWindow.loadFile("app/screens/index.html");
@@ -145,7 +145,7 @@ function createWindow() {
     title: "Facturar",
     webPreferences: {
       preload: path.join(__dirname, "app/preloads/preload.js"),
-      //devTools:false
+      devTools: devTools
     },
   });
   facturarWindow.loadFile("app/screens/facturar.html");
@@ -162,9 +162,11 @@ function menuWindow() {
     title: "Menu",
     webPreferences: {
       preload: path.join(__dirname, "app/preloads/preload.js"),
-      //devTools:false
+      devTools: devTools
     },
   });
+  menuWindow.setMenuBarVisibility(false)
+
   menuWindow.loadFile("app/screens/menu.html");
   menuWindow.on("closed", () => (menuWindow = null));
 }
@@ -180,9 +182,11 @@ function creacionPaciWindow() {
       title: "Creacion - Paciente",
       webPreferences: {
         preload: path.join(__dirname, "app/preloads/preload.js"),
-        //devTools:false
+        devTools: devTools
       },
     });
+    creacionPaciWindowVar.setMenuBarVisibility(false)
+
     creacionPaciWindowVar.loadFile("app/screens/crearPaci.html");
     creacionPaciWindowVar.on("closed", () => (creacionPaciWindowVar = null));
   } else {
@@ -201,10 +205,12 @@ function estadisticasWindow() {
       title: "Estadisticas",
       webPreferences: {
         preload: path.join(__dirname, "app/preloads/preload.js"),
-        //devTools:false
+        devTools: devTools
       },
     });
     estadisticasWindowVar.maximize();
+    estadisticasWindowVar.setMenuBarVisibility(false)
+
     estadisticasWindowVar.loadFile("app/screens/estadisticas.html");
     estadisticasWindowVar.on("closed", () => (estadisticasWindowVar = null));
   } else {
@@ -228,9 +234,11 @@ function creacionBioWindow() {
 
       webPreferences: {
         preload: path.join(__dirname, "app/preloads/preload.js"),
-        //devTools:false
+        devTools: devTools
       },
     });
+    creacionBioWindowVar.setMenuBarVisibility(false)
+
     creacionBioWindowVar.loadFile("app/screens/crearBio.html");
     creacionBioWindowVar.on("closed", () => (creacionBioWindowVar = null));
   } else {
@@ -241,26 +249,30 @@ ipcMain.handle("creacionBioWindow", () => creacionBioWindow());
 
 let crearExamenWindowVar;
 function creacionExamenWindow() {
-  if (!crearExamenWindowVar) {
-    crearExamenWindowVar = new BrowserWindow({
-      width: 1368,
-      icon: path.join(__dirname, "app/imgs/icons/app-logo.ico"),
-      height: 960,
-      title: "Diagnosticos",
-      webPreferences: {
-        preload: path.join(__dirname, "app/preloads/preload.js"),
-        //devTools:false
-      },
-    });
-    crearExamenWindowVar.maximize();
+  if (!validacionActualizacion) {
 
-    crearExamenWindowVar.loadFile("app/screens/examen.html");
-    crearExamenWindowVar.on("closed", () => (crearExamenWindowVar = null));
-    if (mainWindow) {
-      mainWindow.close();
+    if (!crearExamenWindowVar) {
+      crearExamenWindowVar = new BrowserWindow({
+        width: 1368,
+        icon: path.join(__dirname, "app/imgs/icons/app-logo.ico"),
+        height: 960,
+        title: "Diagnosticos",
+        webPreferences: {
+          preload: path.join(__dirname, "app/preloads/preload.js"),
+          devTools: devTools
+        },
+      });
+      crearExamenWindowVar.maximize();
+      crearExamenWindowVar.setMenuBarVisibility(false)
+
+      crearExamenWindowVar.loadFile("app/screens/examen.html");
+      crearExamenWindowVar.on("closed", () => (crearExamenWindowVar = null));
+      if (mainWindow) {
+        mainWindow.close();
+      }
+    } else {
+      crearExamenWindowVar.focus();
     }
-  } else {
-    crearExamenWindowVar.focus();
   }
 }
 ipcMain.handle("creacionExamenWindow", () => creacionExamenWindow());
@@ -275,10 +287,11 @@ function creacionExWindow() {
       title: "Creacion - Examen",
       webPreferences: {
         preload: path.join(__dirname, "app/preloads/preload.js"),
-        //devTools:false
+        devTools: devTools
       },
     });
     crearExWindowVar.maximize();
+    crearExWindowVar.setMenuBarVisibility(false)
 
     crearExWindowVar.loadFile("app/screens/examenCreacion.html");
     crearExWindowVar.on("closed", () => (crearExWindowVar = null));
@@ -301,9 +314,11 @@ function menuExamenesWindow() {
       title: "Menu - Examenes",
       webPreferences: {
         preload: path.join(__dirname, "app/preloads/preload.js"),
-        //devTools:false
+        devTools: devTools
       },
     });
+    menuExamenesVar.setMenuBarVisibility(false)
+
     menuExamenesVar.loadFile("app/screens/menuExamenes.html");
     menuExamenesVar.on("closed", () => (menuExamenesVar = null));
   } else {
@@ -325,10 +340,12 @@ function reimpresionesWindow() {
       title: "Examenes - Reimpresion",
       webPreferences: {
         preload: path.join(__dirname, "app/preloads/preload.js"),
-        //devTools:false
+        devTools: devTools
       },
     });
-    const file = reimpresion.tipo
+    const file = reimpresion.tipo;
+    reimpresionesVar.setMenuBarVisibility(false)
+
     reimpresionesVar.loadFile(`app/screens/${file}.html`);
     reimpresionesVar.on("closed", () => (reimpresionesVar = null));
   } else {
@@ -383,9 +400,11 @@ function examenPDFWindow() {
       title: "Menu - Examenes",
       webPreferences: {
         preload: path.join(__dirname, "app/preloads/preload.js"),
-        //devTools:false
+        devTools: devTools
       },
     });
+    examenPDFVar.setMenuBarVisibility(false)
+
     examenPDFVar.loadFile("app/screens/examenPlantilla.html");
     examenPDFVar.on("closed", () => (examenPDFVar = null));
   } else {
