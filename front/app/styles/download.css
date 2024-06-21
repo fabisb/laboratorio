@@ -16,38 +16,134 @@ body {
   transform: rotate(45deg);
   margin: 2em;
   float: left;
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.05) 0%, rgba(0, 0, 0, 0.05) 100%);
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.05) 0%,
+    rgba(0, 0, 0, 0.05) 100%
+  );
 }
 
 .mensaje-actualizacion {
-    font-size: 24px;
-    font-family: Arial, sans-serif;
-    color: #333;
-    margin-bottom: 20px; /* Ajuste del espacio entre el mensaje y el botón */
-  }
-
-  
-
+  font-size: 24px;
+  font-family: Arial, sans-serif;
+  color: #333;
+  margin-bottom: 20px; /* Ajuste del espacio entre el mensaje y el botón */
+}
 
 .contenedor-mensaje {
-    margin-bottom: 20px; /* Ajuste del espacio entre el mensaje y el botón */
-    padding: 20px;
-    background-color: #ffc107;
-    border-radius: 5px;
-    font-family: Arial, sans-serif;
-    font-size: 24px;
-    color: #333;
-    display: inline-block;
-  }
-  
+  margin-bottom: 20px; /* Ajuste del espacio entre el mensaje y el botón */
+  padding: 20px;
+  background-color: #ffc107;
+  border-radius: 5px;
+  font-family: Arial, sans-serif;
+  font-size: 24px;
+  color: #333;
+  display: inline-block;
+}
 
-  .boton-descargar {
-    display: inline-block;
-    padding: 10px 20px;
-    color: #fff;
-    border-radius: 5px;
-    font-family: Arial, sans-serif;
-    font-size: 16px;
-    text-decoration: none;
-    margin-top: 20px; /* Ajuste del espacio entre el botón y otros elementos */
-  }
+.boton-descargar {
+  display: inline-block;
+  padding: 10px 20px;
+  color: #ffffff;
+  border-radius: 5px;
+  font-family: Arial, sans-serif;
+  font-size: 16px;
+  text-decoration: none;
+  margin-top: 20px; /* Ajuste del espacio entre el botón y otros elementos */
+}
+
+.boton-descargar {
+  background-color: #4caf50; /*Color de fondo*/
+  border: none; /*Borde*/
+  color: white; /*Color de texto*/
+  padding: 10px 20px; /*Espaciado interno*/
+  text-align: center; /*Alineación del texto*/
+  text-decoration: none; /*Decoración de texto*/
+  display: inline-block; /*Mostrar como bloque*/
+  font-size: 16px; /*Tamaño de letra*/
+  cursor: pointer; /*Cursor al pasar el mouse*/
+  border-radius: 5px; /*Borde redondeado*/
+  box-shadow: 0 5px 0 #3e8e41; /*Sombra al hacer clic*/
+  transition: background-color 0.2s, box-shadow 0.2s, transform 0.2s; /*Transiciones*/
+  position: relative; /*Posición relativa para el efecto de relieve*/
+  font-family: Arial, sans-serif; /*Fuente*/
+  text-transform: uppercase; /*Transformar a mayúsculas*/
+  letter-spacing: 1px; /*Espaciado entre letras*/
+}
+
+.boton-descargar:hover {
+  background-color: #3e8e41; /*Color de fondo al pasar el mouse*/
+  box-shadow: 0 3px 0 #3e8e41; /*Sombra al pasar el mouse*/
+  transform: translateY(2px); /*Efecto de relieve*/
+}
+.boton-descargar::before,
+.boton-descargar::after {
+  content: ""; /*Contenido vacío para los pseudo-elementos*/
+  position: absolute; /*Posición absoluta*/
+  z-index: -1; /*Z-index negativo para colocar detrás del botón*/
+}
+.boton-descargar::before {
+  top: 2px; /*Posición superior*/
+  left: -2px; /*Posición izquierda*/
+  width: calc(100% + 4px); /*Ancho calculado para cubrir todo el botón*/
+  height: calc(100% + 4px); /*Altura calculada para cubrir todo el botón*/
+  background-color: rgba(
+    255,
+    255,
+    255,
+    0.2
+  ); /*Color de fondo para el efecto de relieve*/
+  border-radius: 5px; /*Borde redondeado*/
+  filter: blur(3px); /*Efecto de desenfoque*/
+}
+.boton-descargar::after {
+  bottom: 2px; /*Posición inferior*/
+  right: -2px; /*Posición derecha*/
+  width: calc(100% + 4px); /*Ancho calculado para cubrir todo el botón*/
+  height: calc(100% + 4px); /*Altura calculada para cubrir todo el botón*/
+  background-color: rgba(
+    0,
+    0,
+    0,
+    0.1
+  ); /*Color de fondo para el efecto de relieve*/
+  border-radius: 5px; /*Borde redondeado*/
+  filter: blur(3px); /*Efecto de desenfoque*/
+}
+
+.boton-descargar span {
+  position: relative; /*Posición relativa para los pseudo-elementos*/
+}
+
+.boton-descargar span::before,
+.boton-descargar span::after {
+  content: ""; /*Contenido vacío para los pseudo-elementos*/
+  position: absolute; /*Posición absoluta*/
+  opacity: 0; /*Transparencia inicial*/
+  transition: opacity 0.2s ease-in-out; /*Transición de opacidad*/
+}
+
+.boton-descargar span::before {
+  top: 50%; /*Posición vertical centrada*/
+  left: 0; /*Posición izquierda*/
+  width: 100%; /*Ancho del pseudo-elemento*/
+  height: 1px; /*Altura del pseudo-elemento*/
+  background-color: white; /*Color de línea*/
+  transform: translateY(-50%) scaleX(0); /*Efecto de línea creciendo de izquierda a derecha*/
+  transform-origin: left; /*Origen de la transformación*/
+}
+
+.boton-descargar span::after {
+  top: 0; /*Posición superior*/
+  right: 0; /*Posición derecha*/
+  width: 1px; /*Ancho del pseudo-elemento*/
+  height: 100%; /*Altura del pseudo-elemento*/
+  background-color: white; /*Color de línea*/
+  transform: translateX(50%) scaleY(0); /*Efecto de línea creciendo de arriba a abajo*/
+  transform-origin: top; /*Origen de la transformación*/
+}
+
+.boton-descargar:hover span::before,
+.boton-descargar:hover span::after {
+  opacity: 1; /*Transparencia completa*/
+}
