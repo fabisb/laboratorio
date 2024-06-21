@@ -8,7 +8,6 @@
 var sedesVar = [];
 async function renderer() {
   try {
-    
     const { data: sedes } = await axios.get(urlsv + "/api/users/sedes");
     sedesVar = sedes;
     const select = document.getElementById("selectSede");
@@ -17,6 +16,7 @@ async function renderer() {
       <option value="${element.id}">${element.nombre}</option> 
       `;
     });
+    document.getElementById('versionApp').innerText = await versionApp()
   } catch (error) {
     console.log("🚀 ~ renderer ~ error:", error)
     if (error.response?.data?.mensaje) {

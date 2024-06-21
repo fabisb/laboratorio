@@ -17,7 +17,7 @@ if (env === "development") {
     });
     }  */
 //RECARGA AUTOMATICA
-const devTools = false;
+const devTools = true;
 //AUTO UPDATER
 const { autoUpdater } = require("electron-updater");
 //Basic flags for auto-updater
@@ -922,6 +922,10 @@ ipcMain.on("email", async (event, email) => {
   // When the page finishes loading, generate the PDF
 });
 
+//APP VERSION
+ipcMain.handle("getAppVersion", async () => app.getVersion());
+
+//
 app.whenReady().then(() => {
   createWindow();
 
