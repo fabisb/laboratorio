@@ -42,11 +42,8 @@ const inputClave = () => {
 async function loguear(e) {
   e.preventDefault();
   const user = document.getElementById("userLog").value;
-  console.log("🚀 ~ file: renderer.js:17 ~ loguear ~ user:", user);
   const pass = document.getElementById("passwordLog").value;
-  console.log("🚀 ~ file: renderer.js:19 ~ loguear ~ pass:", pass);
   const sedeSlct = document.getElementById("selectSede").value;
-  console.log("🚀 ~ loguear ~ sedeSlct :", sedeSlct);
   //VALIDAR CLAVE DE SEDE
   const claveSede = document.getElementById("claveSede").value;
 
@@ -68,7 +65,6 @@ async function loguear(e) {
   const sedeFind = sedesVar.find(
     (e) => e.id == sedeSlct && e.clave == claveSede
   );
-  console.log("🚀 ~ loguear ~ sedeFind:", sedeFind);
   if (!sedeFind) {
     return await alerta.alert(
       "Error de sede",
@@ -101,6 +97,5 @@ async function loguear(e) {
 }
 
 async function facturarWindow() {
-  console.log("facturarWindow");
   await ventanas.facturarWindow();
 }

@@ -3,15 +3,15 @@ import { pool } from "../database/db.js";
 
 export const getExamenesPacientes = async (req, res) => {
   const { id } = req.query;
-  console.log(id);
   let examenes = [];
   try {
     const [examenes2] = await pool.execute(
       `SELECT * FROM examenes_paciente WHERE id_pac = '${id}'`
     );
 
-    if(examenes2.length==0){``
-      return res.status(400).json({mensaje:'Este paciente no tiene examenes'})
+    if (examenes2.length == 0) {
+      ``
+      return res.status(400).json({ mensaje: 'Este paciente no tiene examenes' })
     }
     const [bioanalista] = await pool.execute(
       `SELECT * FROM bioanalistas WHERE id = '${examenes2[0].id_bio}'`
@@ -36,9 +36,9 @@ export const getExamenesPacientes = async (req, res) => {
         const [detalleInfo] = await pool.execute(
           `SELECT * FROM detalles_examen WHERE id = '${dt.id_dt}'`
         );
-        if(detalleInfo.length==0){
-          
-        }else{
+        if (detalleInfo.length == 0) {
+
+        } else {
           const [subCar] = await pool.execute(
             `SELECT * FROM detalle_subcaracteristica_paciente where id_det_ex = '${dt.id}'`
           );
@@ -56,7 +56,7 @@ export const getExamenesPacientes = async (req, res) => {
               tipo: subCaInfo[0].tipo,
             });
           }
-  
+
           caracteristicas.push({
             nombre: detalleInfo[0].nombre,
             resultado: dt.resultado,
@@ -68,8 +68,8 @@ export const getExamenesPacientes = async (req, res) => {
             subCaracteristicas,
           });
         }
-        
-        
+
+
       }
 
       examenes.push({
@@ -93,7 +93,6 @@ export const getExamenesPacientes = async (req, res) => {
 export const getPacientesDia = async (req, res) => {
   try {
     let [fecha1] = await pool.execute(`SELECT CURRENT_DATE`);
-    console.log(fecha1[0].CURRENT_DATE);
     let fecha = fecha1[0].CURRENT_DATE;
     fecha = fecha.toJSON();
     fecha = fecha.split("T")[0];
@@ -121,7 +120,6 @@ export const getPacientesDia = async (req, res) => {
 export const getExamenDia = async (req, res) => {
   try {
     let [fecha1] = await pool.execute(`SELECT CURRENT_DATE`);
-    console.log(fecha1[0].CURRENT_DATE);
     let fecha = fecha1[0].CURRENT_DATE;
     fecha = fecha.toJSON();
     fecha = fecha.split("T")[0];
@@ -149,7 +147,6 @@ export const getExamenDia = async (req, res) => {
       const [orden] = await pool.execute(`SELECT * FROM ordenes WHERE id = ?`, [
         ex.id_orden,
       ]);
-      console.log(ex);
       let hora = ex.fecha.toJSON().split("T")[1].split(".")[0];
       examenDia.push({
         id: ex.id,
@@ -172,7 +169,7 @@ export const getExamenDia = async (req, res) => {
         `SELECT * FROM pacientes WHERE id = ?`,
         [ex.id_pac]
       );
-      
+
       let hora = ex.fecha.toJSON().split("T")[1].split(".")[0];
       examenDia.push({
         id: ex.id,
@@ -183,10 +180,10 @@ export const getExamenDia = async (req, res) => {
         status_ws: 0,
         status_imp: 0,
         status_correo: 0,
-        status:'externo',
+        status: 'externo',
         hora,
       });
-    } 
+    }
     res.status(200).json({ examenes: examenDia });
   } catch (error) {
     res.status(500).json({ error });
@@ -448,7 +445,7 @@ export const getSedes = async (req, res) => {
     const [sedes] = await pool.execute("SELECT * FROM sede");
     return await res.status(200).json(sedes);
 
-   
+
   } catch (error) {
     console.log(error);
     return await res
@@ -460,7 +457,7 @@ export const getEmpresas = async (req, res) => {
   try {
     const [empresas] = await pool.execute("SELECT * FROM empresas");
     return await res.status(200).json(empresas);
-    
+
   } catch (error) {
     console.log(error);
     return await res
@@ -497,18 +494,17 @@ export const getExamenByFecha = async (req, res) => {
     );
     for await (const ex of examenes) {
       const [examen] = await pool.execute(
-        `SELECT * FROM examenes where id = ?`,[ex.id_ex]
+        `SELECT * FROM examenes where id = ?`, [ex.id_ex]
       );
       const [paciente] = await pool.execute(
-        `SELECT * FROM pacientes WHERE id = ?`,[ex.id_pac]
+        `SELECT * FROM pacientes WHERE id = ?`, [ex.id_pac]
       );
       const [bioanalista] = await pool.execute(
-        `SELECT * FROM bioanalistas WHERE id = ?`,[ex.id_bio]
+        `SELECT * FROM bioanalistas WHERE id = ?`, [ex.id_bio]
       );
       const [orden] = await pool.execute(`SELECT * FROM ordenes WHERE id = ?`, [
         ex.id_orden,
       ]);
-      console.log(ex);
       let hora = ex.fecha.toJSON().split("T")[1].split(".")[0];
       examenDia.push({
         id: ex.id,
@@ -531,7 +527,7 @@ export const getExamenByFecha = async (req, res) => {
         `SELECT * FROM pacientes WHERE id = ?`,
         [ex.id_pac]
       );
-      
+
       let hora = ex.fecha.toJSON().split("T")[1].split(".")[0];
       examenDia.push({
         id: ex.id,
@@ -542,10 +538,10 @@ export const getExamenByFecha = async (req, res) => {
         status_ws: 0,
         status_imp: 0,
         status_correo: 0,
-        status:'externo',
+        status: 'externo',
         hora,
       });
-    } 
+    }
     res.status(200).json({ examenes: examenDia });
   } catch (error) {
     res.status(500).json({ error });
@@ -553,5 +549,4 @@ export const getExamenByFecha = async (req, res) => {
 };
 
 export const getExamenDetalle = async (req, res) => {
-  console.log(req.body);
 };

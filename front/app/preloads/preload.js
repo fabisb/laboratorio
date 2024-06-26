@@ -41,7 +41,6 @@ contextBridge.exposeInMainWorld("login", {
 
 contextBridge.exposeInMainWorld("examenVar", {
   store: async (examen) => {
-    console.log("🚀 ~ store: ~ examen:", examen);
     await ipcRenderer.send("examen", examen);
     return;
   },
@@ -67,13 +66,11 @@ contextBridge.exposeInMainWorld("reimpresionVar", {
 contextBridge.exposeInMainWorld("ticket", {
   store: async (producto) => {
     const result = await ipcRenderer.send("setTicketProducto", producto);
-    console.log("🚀 ~ file: preload.js:21 ~ login: ~ result:", result);
     return result;
   },
   getStore: async (key) => await ipcRenderer.invoke("getTicketProducto", key),
   storeExistencia: async (existencia) => {
     const result = await ipcRenderer.send("setExistencia", existencia);
-    console.log("🚀 ~ file: preload.js:21 ~ login: ~ result:", result);
     return result;
   },
   getExistencia: async () => await ipcRenderer.invoke("getExistencia"),
@@ -82,13 +79,11 @@ contextBridge.exposeInMainWorld("ticket", {
 contextBridge.exposeInMainWorld("alerta", {
   alert: async (titulo, body) => {
     const result = await ipcRenderer.invoke("alertWindow", { titulo, body });
-    console.log("🚀 ~ file: preload.js:29 ~ alert: ~ result:", result);
     return result;
   },
 
   error: async () => {
     const result = await ipcRenderer.invoke("errorWindow");
-    console.log("🚀 ~ file: preload.js:44 ~ error: ~ result:", result);
     return result;
   },
 });
@@ -110,4 +105,4 @@ contextBridge.exposeInMainWorld(
 );
 
 //APP VERSION
-  contextBridge.exposeInMainWorld("versionApp",  async () => await ipcRenderer.invoke("getAppVersion"));
+contextBridge.exposeInMainWorld("versionApp", async () => await ipcRenderer.invoke("getAppVersion"));

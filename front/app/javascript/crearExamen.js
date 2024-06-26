@@ -34,7 +34,6 @@ async function modificarExamenBdd(idExamen) {
       { examen, detalle: detallesExamen, idExamen },
       { headers: { token } }
     );
-    console.log("🚀 ~ modificarExamenBdd ~ res:", res);
     const modal = new bootstrap.Modal("#confirmacion-examenM-modal");
     modal.show();
     examenCrud.value = "";
@@ -123,19 +122,16 @@ async function modificarExamen(id) {
       { headers: { token } }
     );
     const { examen, detalle, rangos } = resp.data;
-    console.log(examen, detalle);
-    console.log(rangos)
     document.getElementById("examenNameCrud").value = examen[0].nombre;
     btn.setAttribute("onclick", `modificarExamenBdd('${id}')`);
 
     const tBodyDetalles = document.getElementById("tBodyDetalles");
     const tBodyRangos = document.getElementById("tableRangosBody");
-    tBodyRangos.innerHTML=""
+    tBodyRangos.innerHTML = ""
 
     tBodyDetalles.innerHTML = "";
     detalle.forEach((e) => {
-      let rangosEx = rangos.filter(el=>el.idDetEx ==e.id )
-      console.log(rangosEx[0].rangos)
+      let rangosEx = rangos.filter(el => el.idDetEx == e.id)
       contadorCaracteristica += 1;
       detallesExamen.push({
         id: contadorCaracteristica,
@@ -225,13 +221,11 @@ const pushDetalle = () => {
 
   [...trRango].forEach((e, i) => {
     const inputsE = [...examenRango].filter((f) => f.id.endsWith(i));
-    console.log(inputsE);
     const select = document.getElementById(`selectRango${i}`);
     const superior = inputsE.find((e) => e.name == "rangoSup");
     const inferior = inputsE.find((e) => e.name == "rangoInf");
     const desde = inputsE.find((e) => e.name == "rangoDesde");
     const hasta = inputsE.find((e) => e.name == "rangoHasta");
-    console.log(superior.value, inferior, desde, hasta, select);
     if (i > 0) {
       if (superior.value == "" || inferior.value == "") {
         validacionRango = true;
@@ -466,7 +460,6 @@ var idCaracteristicaBdd = "";
 function modificarCaracteristica(id, idBdd) {
   idCaracteristicaBdd = idBdd;
   const caracteristicaDetalle = detallesExamen.find((e) => e.id == id);
-  console.log(caracteristicaDetalle);
   document.getElementById("nombreDetalleExamenCrud").value =
     caracteristicaDetalle.nombre;
   document.getElementById("unidadExamenCrud").value =
@@ -477,8 +470,6 @@ function modificarCaracteristica(id, idBdd) {
   document.getElementById("tableRangosBody").innerHTML = ``;
 
   caracteristicaDetalle.rangos.forEach((e, i) => {
-    console.log("🚀 ~ caracteristicaDetalle.rangos.forEach ~ e:", e)
-    console.log(caracteristicaDetalle.id);
     document.getElementById("tableRangosBody").innerHTML += `
     <tr class="tr-rango">
   <td scope="row"><input
@@ -533,12 +524,12 @@ function modificarCaracteristica(id, idBdd) {
 </tr>
     `;
   })
-  caracteristicaDetalle.rangos.forEach((e,i) => {
-    
+  caracteristicaDetalle.rangos.forEach((e, i) => {
+
     document.getElementById(`selectRango${i.toString()}`).value = e.genero;
   });
 
-  if(caracteristicaDetalle.resultados!='' && caracteristicaDetalle.resultados!=null){
+  if (caracteristicaDetalle.resultados != '' && caracteristicaDetalle.resultados != null) {
     caracteristicaDetalle.resultados.split("~").forEach((e) => {
       document.getElementById("inputContainerResultados").innerHTML += `
       <input
@@ -550,10 +541,10 @@ function modificarCaracteristica(id, idBdd) {
       aria-label="default input example"
     />
     `;
-    }); 
-  }else{
+    });
+  } else {
 
- 
+
     document.getElementById("inputContainerResultados").innerHTML = `
     <input
     name="resultadoInput"
@@ -643,7 +634,6 @@ const guardarExamen = async (newExamen) => {
       { examen, detalle: detallesExamen },
       { headers: { token } }
     );
-    console.log("🚀 ~ guardarExamen ~ res :", res);
     const modal = new bootstrap.Modal("#confirmacion-examen-modal");
     modal.show();
     examenCrud.value = "";

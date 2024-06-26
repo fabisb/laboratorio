@@ -68,7 +68,6 @@ async function guardarModLaboratorio(id) {
           rif: rif.value,
         }
       );
-      console.log(data);
 
       render();
 
@@ -203,7 +202,6 @@ async function crearLaboratorio() {
   const direccion = document.getElementById("direccion");
   const razon = document.getElementById("razonSocial");
   const telefono = document.getElementById("telefono");
-  console.log(rif.value, razon.value, telefono.value, direccion.value);
   if (rif.value == "" || rif.value < 0) {
     alerta.className = "alert alert-danger row";
     return (alerta.innerHTML = `<span class="text-center">/RIF no ingresado <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" fill="currentColor" class="bi bi-x" viewBox="0 0 16 16">
@@ -225,7 +223,6 @@ async function crearLaboratorio() {
           direccion: direccion.value,
         }
       );
-      console.log(res);
       render();
       rif.value = "";
       razon.value = "";
@@ -384,7 +381,6 @@ async function crearSede() {
           clave,
         }
       );
-      console.log(res);
       alerta.className = "alert alert-success row";
       alerta.innerHTML = `<span class="text-center">Sede insertada correctamente <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-check2-all" viewBox="0 0 16 16">
     <path d="M12.354 4.354a.5.5 0 0 0-.708-.708L5 10.293 1.854 7.146a.5.5 0 1 0-.708.708l3.5 3.5a.5.5 0 0 0 .708 0zm-4.208 7-.896-.897.707-.707.543.543 6.646-6.647a.5.5 0 0 1 .708.708l-7 7a.5.5 0 0 1-.708 0"/>
@@ -470,7 +466,6 @@ async function crearEmpresa() {
           nombre: empresa,
         }
       );
-      console.log(res);
       alerta.className = "alert alert-success row";
       alerta.innerHTML = `<span class="text-center">Empresa insertada correctamente <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-check2-all" viewBox="0 0 16 16">
     <path d="M12.354 4.354a.5.5 0 0 0-.708-.708L5 10.293 1.854 7.146a.5.5 0 1 0-.708.708l3.5 3.5a.5.5 0 0 0 .708 0zm-4.208 7-.896-.897.707-.707.543.543 6.646-6.647a.5.5 0 0 1 .708.708l-7 7a.5.5 0 0 1-.708 0"/>
@@ -549,7 +544,6 @@ function buscarLaboratorio(value) {
     .getElementById("guardarCrudLab")
     .setAttribute("onclick", "crearLaboratorio()");
 
-  console.log(value);
   const tBody = document.getElementById(`tBodyTabLab`);
   tBody.innerHTML = "";
   let labora;
@@ -583,7 +577,6 @@ function buscarSede(value) {
     .getElementById("guardarCrudLab")
     .setAttribute("onclick", "crearSede()");
 
-  console.log(value);
   const tBody = document.getElementById(`tBodyTabLab`);
   tBody.innerHTML = "";
   let labora;
@@ -619,7 +612,6 @@ function buscarEmpresa(value) {
     .getElementById("guardarCrudLab")
     .setAttribute("onclick", "crearEmpresa()");
 
-  console.log(value);
   const tBody = document.getElementById(`tBodyTabLab`);
   tBody.innerHTML = "";
   let labora;
@@ -955,7 +947,6 @@ async function traerExamenesByFecha(value) {
           },
         }
       );
-      console.log(res)
       examenesDia = res.data.examenes;
       const tBodyExamenesDia = document.getElementById("tBodyExamenesDia");
       tBodyExamenesDia.innerHTML = "";
@@ -1044,7 +1035,6 @@ async function traerExamenesByFecha(value) {
 function validarFecha(value) {
   let fecha = value;
   let fechaActual = moment().format("YYYY-MM-DD");
-  console.log(fechaActual);
 
   let fecha2 = (document.getElementById("fecha_filtro").value =
     moment(fecha).format("YYYY-MM-DD"));
@@ -1065,7 +1055,6 @@ function validarFecha(value) {
 async function traerExamenesDia() {
   try {
     const res = await axios.get("/api/espejo/get-examen-dia");
-    console.log(res);
     examenesDia = res.data.examenes;
     const tBodyExamenesDia = document.getElementById("tBodyExamenesDia");
     tBodyExamenesDia.innerHTML = "";
@@ -1159,7 +1148,6 @@ async function detalleExamen(id, examen) {
         },
       }
     );
-    console.log(resultados);
     tHead.innerText = `RESULTADOS ${examen} #${id}`;
 
     resultados = resultados.sort(function (a, b) {

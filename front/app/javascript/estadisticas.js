@@ -1,6 +1,6 @@
-let bioArray, sedeArray, seccionesArray, categoriasArray, laboratoriosArray, examenesArray,seccionesData,examenes,pacientesArray,Data;
+let bioArray, sedeArray, seccionesArray, categoriasArray, laboratoriosArray, examenesArray, seccionesData, examenes, pacientesArray, Data;
 let total = 0
-let objetos=[]
+let objetos = []
 
 
 async function tok() {
@@ -9,48 +9,47 @@ async function tok() {
   cedulaUser = token.cedula;
 
   const elementsNivel = document.getElementsByClassName("user" + nivelUser);
-  console.log(elementsNivel);
   for (const e of elementsNivel) {
     e.removeAttribute("hidden", "true");
   }
 }
-function validarSelectSeccion(value,tipo,id){
-    if(value=='todos'){
-      examenes=examenesArray
-    }else{
-      examenes=examenesArray.filter(ex=>{
-        return ex.id_seccion==value
-      })
-  
-    }
-    buscarExamen(tipo,id)
+function validarSelectSeccion(value, tipo, id) {
+  if (value == 'todos') {
+    examenes = examenesArray
+  } else {
+    examenes = examenesArray.filter(ex => {
+      return ex.id_seccion == value
+    })
+
   }
+  buscarExamen(tipo, id)
+}
 
 
 
 
-function buscarPacienteInput(value){
+function buscarPacienteInput(value) {
   let pac = []
 
-  if(isNaN(value)){
-    pac = pacientesArray.filter(e=>e.nombre.toLowerCase().includes(value.toLowerCase()))
-  }else{
-    if(value==''){
-      pac=pacientesArray
-    }else{
-      pac = pacientesArray.filter(e=>e.cedula.toString().includes(value))
+  if (isNaN(value)) {
+    pac = pacientesArray.filter(e => e.nombre.toLowerCase().includes(value.toLowerCase()))
+  } else {
+    if (value == '') {
+      pac = pacientesArray
+    } else {
+      pac = pacientesArray.filter(e => e.cedula.toString().includes(value))
 
     }
 
   }
 
 
- 
 
-  const menu=document.getElementById('menuPacientesUl')
-  menu.innerHTML=''
-  pac.forEach(e=>{
-      menu.innerHTML+=`
+
+  const menu = document.getElementById('menuPacientesUl')
+  menu.innerHTML = ''
+  pac.forEach(e => {
+    menu.innerHTML += `
       <li class="list-group-item list-group-item-light list-group-item-action" >
         <div class="row">
           <div class="col-3">
@@ -62,7 +61,7 @@ function buscarPacienteInput(value){
 
           </div>
           <div class="col-3 d-flex justify-content-end align-content-center">
-          <svg xmlns="http://www.w3.org/2000/svg" style="cursor:pointer" width="24" data-bs-dismiss="modal" height="24" fill="green" onclick="setInputPaciente(${e.id},'${event.target.tagName=='BUTTON' ? `${event.target.parentNode.children[1].id}` : event.target.tagName=='path' ?  `${event.target.parentNode.parentNode.parentNode.children[1].id}` :  `${event.target.parentNode.parentNode.children[1].id}`}')" class="bi bi-check-circle" viewBox="0 0 16 16">
+          <svg xmlns="http://www.w3.org/2000/svg" style="cursor:pointer" width="24" data-bs-dismiss="modal" height="24" fill="green" onclick="setInputPaciente(${e.id},'${event.target.tagName == 'BUTTON' ? `${event.target.parentNode.children[1].id}` : event.target.tagName == 'path' ? `${event.target.parentNode.parentNode.parentNode.children[1].id}` : `${event.target.parentNode.parentNode.children[1].id}`}')" class="bi bi-check-circle" viewBox="0 0 16 16">
             <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
             <path d="m10.97 4.97-.02.022-3.473 4.425-2.093-2.094a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-1.071-1.05"/>
           </svg>
@@ -76,40 +75,39 @@ async function render() {
   var { token } = await login.getToken();
   try {
     let { data: pacientes } = await axios.get(
-        urlsv + "/api/estadisticas/get-pacientes",
-        { headers: { token } }
-      );
-    pacientesArray=pacientes.sort(function (a, b) {
-        if (a.nombre > b.nombre) {
-          return 1;
-        }
-        if (a.nombre < b.nombre) {
-          return -1;
-        }
-        // a must be equal to b
-        return 0;
+      urlsv + "/api/estadisticas/get-pacientes",
+      { headers: { token } }
+    );
+    pacientesArray = pacientes.sort(function (a, b) {
+      if (a.nombre > b.nombre) {
+        return 1;
+      }
+      if (a.nombre < b.nombre) {
+        return -1;
+      }
+      // a must be equal to b
+      return 0;
     });
-    
+
   } catch (error) {
     console.log(error)
   }
   try {
-    let {data:asegurados} =  await axios.get(
+    let { data: asegurados } = await axios.get(
       urlsv + "/api/examenes/get-empresas",
       { headers: { token } }
     );
-    const selectAse=document.getElementById('aseguradosSelectExamen')
-    asegurados.forEach(e=>{
-      selectAse.innerHTML+=`
+    const selectAse = document.getElementById('aseguradosSelectExamen')
+    asegurados.forEach(e => {
+      selectAse.innerHTML += `
       <option value='${e.id}'xa>${e.nombre}</option>  
       `
     })
 
-    console.log(asegurados)
   } catch (error) {
-    
+
   }
-  
+
 
   try {
     let { data: bioanalistas } = await axios.get(
@@ -132,7 +130,7 @@ async function render() {
       });
     }
 
-    
+
 
     var secciones = await axios.get(
       urlsv + "/api/modulo-examenes/secciones",
@@ -157,9 +155,9 @@ async function render() {
       { headers: { token } }
     );
     examenesArray = examenesGet;
-    examenes= examenesGet
+    examenes = examenesGet
 
-   
+
   } catch (error) {
     console.log(error);
   }
@@ -183,7 +181,6 @@ async function render() {
             `;
       });
     }
-    console.log(usuarios);
   } catch (error) {
     console.log(error);
   }
@@ -192,7 +189,6 @@ async function render() {
       urlsv + "/api/modulo-examenes/laboratorios",
       { headers: { token } }
     );
-    console.log(laboratorios);
     laboratoriosArray = laboratorios;
     const selects = document.getElementsByClassName("laboratorioSelect");
     for (let index = 0; index < selects.length; index++) {
@@ -231,7 +227,6 @@ async function render() {
       urlsv + "/api/modulo-examenes/categorias",
       { headers: { token } }
     );
-    console.log(categorias);
     categoriasArray = categorias.data;
     const selects = document.getElementsByClassName("categoriaSelect");
     for (let index = 0; index < selects.length; index++) {
@@ -251,10 +246,8 @@ async function render() {
   }
   try {
     const { data: sedes } = await axios.get(urlsv + "/api/users/sedes");
-    console.log(sedes);
     sedeArray = sedes;
     const selectsSede = document.getElementsByClassName("sedeSelect");
-    console.log(selectsSede);
     for (let index = 0; index < selectsSede.length; index++) {
       const element = selectsSede[index];
       element.innerHTML = `
@@ -273,29 +266,28 @@ async function render() {
 }
 
 
-function validarAsegurada(status){
-  const selectAse=document.getElementById('aseguradosSelectExamen')
+function validarAsegurada(status) {
+  const selectAse = document.getElementById('aseguradosSelectExamen')
 
-  if(status=='si'){
+  if (status == 'si') {
     selectAse.removeAttribute('disabled')
-  }else{
-    selectAse.setAttribute('disabled','true')
+  } else {
+    selectAse.setAttribute('disabled', 'true')
 
   }
 }
 
 
-function buscarExamen(tipo,id) {
-    input = document.getElementById("examenDiagnosticoInput");
-    console.log(tipo,id)
-    filtro = examenes.filter((ex) =>
-      ex.nombre.toLowerCase().includes(input.value.toLowerCase())
-    );
-    const menuDiagnosticoUl = document.getElementById("menuDiagnosticoUl");
-  
-    menuDiagnosticoUl.innerHTML = "";
-    filtro.map((ex) => {
-      menuDiagnosticoUl.innerHTML += `
+function buscarExamen(tipo, id) {
+  input = document.getElementById("examenDiagnosticoInput");
+  filtro = examenes.filter((ex) =>
+    ex.nombre.toLowerCase().includes(input.value.toLowerCase())
+  );
+  const menuDiagnosticoUl = document.getElementById("menuDiagnosticoUl");
+
+  menuDiagnosticoUl.innerHTML = "";
+  filtro.map((ex) => {
+    menuDiagnosticoUl.innerHTML += `
       <li class="list-group-item list-group-item-light list-group-item-action" >
               <div class="row">
                 <div class="col-9">
@@ -323,8 +315,8 @@ function buscarExamen(tipo,id) {
   
   
       `;
-    });
-  }
+  });
+}
 
 
 function validarInputsExamenPaciente(value) {
@@ -464,7 +456,6 @@ function validarInputExamenEx(value) {
 }
 
 function validarFechas(event, value, tipo) {
-  console.log(event, value);
   let fechaActual = moment().format("YYYY-MM-DD");
   let fechaDesde = document.getElementById("fechaDesdeInput").value;
   fechaDesde = moment(fechaDesde).format("YYYY-MM-DD");
@@ -487,55 +478,54 @@ function validarFechas(event, value, tipo) {
     document.getElementById("fechaHastaInput").value = value;
   }
   if (tipo == "hasta") {
-    console.log(fechaDesde, fechaValue);
     if (moment(fechaDesde).isAfter(fechaValue)) {
       document.getElementById("fechaDesdeInput").value = value;
     }
   }
 }
 
-function setInputExamen(ex,id,tipo){
-    document.getElementById(id).value=ex
-    if(tipo=='paciente'){
-        validarInputsExamenPaciente('examen')
-    }
-    if(tipo=='examen'){
-        validarInputExamenEx('examen')
+function setInputExamen(ex, id, tipo) {
+  document.getElementById(id).value = ex
+  if (tipo == 'paciente') {
+    validarInputsExamenPaciente('examen')
+  }
+  if (tipo == 'examen') {
+    validarInputExamenEx('examen')
 
-    }
-    if(tipo=='bioanalista'){
-        validarInputBio('examen')
-    }
+  }
+  if (tipo == 'bioanalista') {
+    validarInputBio('examen')
+  }
 }
 
-function setInputPaciente(pac,id,tipo){
-    document.getElementById(id).value=pac
-   
+function setInputPaciente(pac, id, tipo) {
+  document.getElementById(id).value = pac
+
 }
-function validarSeleccionBusqueda(){
+function validarSeleccionBusqueda() {
 
   document.getElementById('alertFiltro').removeAttribute('hidden')
 
   setTimeout(() => {
-  document.getElementById('alertFiltro').setAttribute('hidden','true')
-    
+    document.getElementById('alertFiltro').setAttribute('hidden', 'true')
+
   }, 3000);
 }
 
-function setDesdeEdad(tipo,value){
-  document.getElementById(`inputHasta${tipo}`).value=value
+function setDesdeEdad(tipo, value) {
+  document.getElementById(`inputHasta${tipo}`).value = value
 }
-function setHastaEdad(tipo,value){
-  const desde= document.getElementById(`inputDesde${tipo}`)
-  if(parseFloat(desde.value)>parseFloat(value)){
-    desde.value=value
+function setHastaEdad(tipo, value) {
+  const desde = document.getElementById(`inputDesde${tipo}`)
+  if (parseFloat(desde.value) > parseFloat(value)) {
+    desde.value = value
   }
 }
 
 
-async function busquedaorden(){
+async function busquedaorden() {
   const empresaRatios = document.getElementsByName('tipoOrden')
-  const empresa = [...empresaRatios].find(e=>e.checked==true).value 
+  const empresa = [...empresaRatios].find(e => e.checked == true).value
   const examen = document.getElementById("inputExamenOrden").value;
   const paciente = document.getElementById("inputPacienteOrden").value;
   const sede = document.getElementById("selectSedeOrden").value;
@@ -547,77 +537,75 @@ async function busquedaorden(){
   const hasta = document.getElementById("inputHastaOrden").value;
   const desdeFecha = document.getElementById('fechaDesdeInput').value;
   const hastaFecha = document.getElementById('fechaHastaInput').value
-  if(hastaFecha=='' || desdeFecha==''){
-    document.getElementById('alertFiltro').innerHTML='Por Favor seleccione la fecha a filtrar'
+  if (hastaFecha == '' || desdeFecha == '') {
+    document.getElementById('alertFiltro').innerHTML = 'Por Favor seleccione la fecha a filtrar'
     document.getElementById('alertFiltro').removeAttribute('hidden')
 
     setTimeout(() => {
-    document.getElementById('alertFiltro').setAttribute('hidden','true')
-      
+      document.getElementById('alertFiltro').setAttribute('hidden', 'true')
+
     }, 3000);
 
   }
-  let filtros=[
+  let filtros = [
     {
-    columna:'empresa',valor:empresa
+      columna: 'empresa', valor: empresa
     },
     {
-      columna:'examen',valor:examen 
+      columna: 'examen', valor: examen
     },
     {
-      columna:'paciente',valor:paciente 
+      columna: 'paciente', valor: paciente
     },
     {
-      columna:'sede',valor:sede 
+      columna: 'sede', valor: sede
     },
     {
-      columna:'expediente',valor:expediente 
+      columna: 'expediente', valor: expediente
     },
     {
-      columna:'bioanalista',valor:bioanalista 
+      columna: 'bioanalista', valor: bioanalista
     },
     {
-      columna:'desde',valor:desde 
+      columna: 'desde', valor: desde
     },
     {
-      columna:'hasta',valor:hasta 
+      columna: 'hasta', valor: hasta
     },
     {
-      columna:'usuario',valor:usuario 
+      columna: 'usuario', valor: usuario
     },
     {
-      columna:'genero',valor:genero 
+      columna: 'genero', valor: genero
     }
 
 
   ]
 
-  const filtrosValue= filtros.filter(e=>e.valor!='')
-  const headReport=document.getElementById('tHeadReport')
-  const bodyReport=document.getElementById('tBodyReport')
-  console.log(filtrosValue)
-  headReport.innerHTML=''
-  bodyReport.innerHTML=''
+  const filtrosValue = filtros.filter(e => e.valor != '')
+  const headReport = document.getElementById('tHeadReport')
+  const bodyReport = document.getElementById('tBodyReport')
+  headReport.innerHTML = ''
+  bodyReport.innerHTML = ''
 
   try {
     let token = await login.getToken();
-    console.log(token)
 
     const res = await axios.post(
       urlsv + "/api/estadisticas/get-orden-reportes",
-      { filtrosValue,desde:desdeFecha,hasta:hastaFecha },
-      { headers: { token:token.token } }
+      { filtrosValue, desde: desdeFecha, hasta: hastaFecha },
+      { headers: { token: token.token } }
     );
 
-    Data=res.data.ordenes
-    res.data.columnas.forEach(c=>{
-      headReport.innerHTML+=`
+    Data = res.data.ordenes
+    res.data.columnas.forEach(c => {
+      headReport.innerHTML += `
         <th scope="col" onclick="contarOrdenes('${c}')" data-bs-toggle="modal" data-bs-target="#modalTotales">${c}</th>
       `
     })
-    
-    examenesArr=res.data.ordenes.sort(function (a, b) {
-      if (a.id> b.id) {
+
+    examenesArr = res.data.ordenes.sort(function (a, b) {
+      if (a.id > b.id) {
         return 1;
       }
       if (a.id < b.id) {
@@ -626,13 +614,13 @@ async function busquedaorden(){
       // a must be equal to b
       return 0;
     });
-    examenesArr.forEach(e=>{
-      
-      bodyReport.innerHTML+=`
+    examenesArr.forEach(e => {
+
+      bodyReport.innerHTML += `
       <tr style="font-size:medium">
                             <td scope="col">${e.id}</td>
                             <td scope="col">${e.orden}</td>
-                            <td scope="col">${e.clave == 'orden' ? `<img src="../imgs/la-milagrosa-logo.png"   width="20" alt="" srcset="">` :''}${ e.clave =='clave' ? `<img src="../imgs/salud-vital-logo.png"  width="20" alt="" srcset="">`: ''}${ e.clave=='no'? `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"  fill="green" class="bi bi-person-lines-fill" viewBox="0 0 16 16">
+                            <td scope="col">${e.clave == 'orden' ? `<img src="../imgs/la-milagrosa-logo.png"   width="20" alt="" srcset="">` : ''}${e.clave == 'clave' ? `<img src="../imgs/salud-vital-logo.png"  width="20" alt="" srcset="">` : ''}${e.clave == 'no' ? `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"  fill="green" class="bi bi-person-lines-fill" viewBox="0 0 16 16">
                             <path d="M6 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6m-5 6s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1zM11 3.5a.5.5 0 0 1 .5-.5h4a.5.5 0 0 1 0 1h-4a.5.5 0 0 1-.5-.5m.5 2.5a.5.5 0 0 0 0 1h4a.5.5 0 0 0 0-1zm2 3a.5.5 0 0 0 0 1h2a.5.5 0 0 0 0-1zm0 3a.5.5 0 0 0 0 1h2a.5.5 0 0 0 0-1z"/>
                           </svg>` : ''}</td>
                             <td scope="col">${e.sede}</td>
@@ -656,9 +644,9 @@ async function busquedaorden(){
 }
 
 
-async function busquedabioanalista(){
+async function busquedabioanalista() {
   const empresaRatios = document.getElementsByName('tipoOrden')
-  const empresa = [...empresaRatios].find(e=>e.checked==true).value 
+  const empresa = [...empresaRatios].find(e => e.checked == true).value
   const examen = document.getElementById("inputExamenBio").value;
   const paciente = document.getElementById("inputPacienteBio").value;
   const sede = document.getElementById("selectSedeBioanalista").value;
@@ -666,64 +654,63 @@ async function busquedabioanalista(){
   const seccion = document.getElementById("selectSeccionBioanalista").value;
   const desdeFecha = document.getElementById('fechaDesdeInput').value;
   const hastaFecha = document.getElementById('fechaHastaInput').value
-  if(hastaFecha=='' || desdeFecha==''){
-    document.getElementById('alertFiltro').innerHTML='Por Favor seleccione la fecha a filtrar'
+  if (hastaFecha == '' || desdeFecha == '') {
+    document.getElementById('alertFiltro').innerHTML = 'Por Favor seleccione la fecha a filtrar'
     document.getElementById('alertFiltro').removeAttribute('hidden')
 
     setTimeout(() => {
-    document.getElementById('alertFiltro').setAttribute('hidden','true')
-      
+      document.getElementById('alertFiltro').setAttribute('hidden', 'true')
+
     }, 3000);
 
   }
-  let filtros=[
+  let filtros = [
     {
-    columna:'empresa',valor:empresa
+      columna: 'empresa', valor: empresa
     },
     {
-      columna:'examen',valor:examen 
+      columna: 'examen', valor: examen
     },
     {
-      columna:'paciente',valor:paciente 
+      columna: 'paciente', valor: paciente
     },
     {
-      columna:'sede',valor:sede 
+      columna: 'sede', valor: sede
     },
     {
-      columna:'categoria',valor:categoria 
+      columna: 'categoria', valor: categoria
     },
     {
-      columna:'seccion',valor:seccion 
+      columna: 'seccion', valor: seccion
     }
 
 
   ]
 
-  const filtrosValue= filtros.filter(e=>e.valor!='')
-  const headReport=document.getElementById('tHeadReport')
-  const bodyReport=document.getElementById('tBodyReport')
-  headReport.innerHTML=''
-  bodyReport.innerHTML=''
+  const filtrosValue = filtros.filter(e => e.valor != '')
+  const headReport = document.getElementById('tHeadReport')
+  const bodyReport = document.getElementById('tBodyReport')
+  headReport.innerHTML = ''
+  bodyReport.innerHTML = ''
 
   try {
     let token = await login.getToken();
-    console.log(token)
 
     const res = await axios.post(
       urlsv + "/api/estadisticas/get-bioanalistas-reportes",
-      { filtrosValue,desde:desdeFecha,hasta:hastaFecha },
-      { headers: { token:token.token } }
+      { filtrosValue, desde: desdeFecha, hasta: hastaFecha },
+      { headers: { token: token.token } }
     );
-    Data=res.data.bioanalistas
+    Data = res.data.bioanalistas
 
-    res.data.columnas.forEach(c=>{
-      headReport.innerHTML+=`
+    res.data.columnas.forEach(c => {
+      headReport.innerHTML += `
         <th scope="col">${c}</th>
       `
     })
-    
-    examenesArr=res.data.bioanalistas.sort(function (a, b) {
-      if (a.id> b.id) {
+
+    examenesArr = res.data.bioanalistas.sort(function (a, b) {
+      if (a.id > b.id) {
         return 1;
       }
       if (a.id < b.id) {
@@ -732,9 +719,9 @@ async function busquedabioanalista(){
       // a must be equal to b
       return 0;
     });
-    examenesArr.forEach(e=>{
-      
-      bodyReport.innerHTML+=`
+    examenesArr.forEach(e => {
+
+      bodyReport.innerHTML += `
       <tr style="font-size:medium">
                             <td scope="col">${e.id}</td>
                             <td scope="col">${e.nombre}</td>
@@ -753,9 +740,9 @@ async function busquedabioanalista(){
   }
 }
 
-async function busquedaexamen(){
+async function busquedaexamen() {
   const empresaRatios = document.getElementsByName('tipoOrden')
-  const empresa = [...empresaRatios].find(e=>e.checked==true).value
+  const empresa = [...empresaRatios].find(e => e.checked == true).value
   const examen = document.getElementById("inputExamenEx").value;
   const paciente = document.getElementById("inputPacienteEx").value;
   const orden = document.getElementById("inputOrdenEx").value;
@@ -769,90 +756,88 @@ async function busquedaexamen(){
   const hasta = document.getElementById("inputHastaExamen").value;
   const desdeFecha = document.getElementById('fechaDesdeInput').value;
   const hastaFecha = document.getElementById('fechaHastaInput').value;
-  const asegurado=document.getElementById('aseguradosSelectExamen').value;
+  const asegurado = document.getElementById('aseguradosSelectExamen').value;
 
 
-  if(hastaFecha=='' || desdeFecha==''){
-    document.getElementById('alertFiltro').innerHTML='Por Favor seleccione la fecha a filtrar'
+  if (hastaFecha == '' || desdeFecha == '') {
+    document.getElementById('alertFiltro').innerHTML = 'Por Favor seleccione la fecha a filtrar'
     document.getElementById('alertFiltro').removeAttribute('hidden')
 
     setTimeout(() => {
-    document.getElementById('alertFiltro').setAttribute('hidden','true')
-      
+      document.getElementById('alertFiltro').setAttribute('hidden', 'true')
+
     }, 3000);
 
   }
-  let filtros=[
+  let filtros = [
     {
-    columna:'empresa',valor:empresa
+      columna: 'empresa', valor: empresa
     },
     {
-      columna:'asegurado',valor:asegurado 
+      columna: 'asegurado', valor: asegurado
     },
     {
-      columna:'examen',valor:examen 
+      columna: 'examen', valor: examen
     },
     {
-      columna:'paciente',valor:paciente 
+      columna: 'paciente', valor: paciente
     },
     {
-      columna:'orden',valor:orden 
+      columna: 'orden', valor: orden
     },
     {
-      columna:'sede',valor:sede 
+      columna: 'sede', valor: sede
     },
     {
-      columna:'bioanalista',valor:bioanalista 
+      columna: 'bioanalista', valor: bioanalista
     },
     {
-      columna:'categoria',valor:categoria 
+      columna: 'categoria', valor: categoria
     },
     {
-      columna:'seccion',valor:seccion 
+      columna: 'seccion', valor: seccion
     },
     {
-      columna:'desde',valor:desde 
+      columna: 'desde', valor: desde
     },
     {
-      columna:'hasta',valor:hasta 
+      columna: 'hasta', valor: hasta
     },
     {
-      columna:'usuario',valor:usuario 
+      columna: 'usuario', valor: usuario
     },
     {
-      columna:'genero',valor:genero 
+      columna: 'genero', valor: genero
     }
 
 
   ]
 
-  const filtrosValue= filtros.filter(e=>e.valor!='')
-  const headReport=document.getElementById('tHeadReport')
-  const bodyReport=document.getElementById('tBodyReport')
-  console.log(filtrosValue)
-  headReport.innerHTML=''
-  bodyReport.innerHTML=''
+  const filtrosValue = filtros.filter(e => e.valor != '')
+  const headReport = document.getElementById('tHeadReport')
+  const bodyReport = document.getElementById('tBodyReport')
+  headReport.innerHTML = ''
+  bodyReport.innerHTML = ''
 
   try {
     let token = await login.getToken();
-    console.log(token)
 
     const res = await axios.post(
       urlsv + "/api/estadisticas/get-examenes-reportes",
-      { filtrosValue,desde:desdeFecha,hasta:hastaFecha },
-      { headers: { token:token.token } }
+      { filtrosValue, desde: desdeFecha, hasta: hastaFecha },
+      { headers: { token: token.token } }
     );
-    Data=res.data.examenes
+    Data = res.data.examenes
 
 
-    res.data.columnas.forEach(c=>{
-      headReport.innerHTML+=`
+    res.data.columnas.forEach(c => {
+      headReport.innerHTML += `
         <th scope="col" onclick="contarExamenes('${c}')" data-bs-toggle="modal" data-bs-target="#modalTotales" >${c}</th>
       `
     })
-    
-    examenesArr=res.data.examenes.sort(function (a, b) {
-      if (a.id> b.id) {
+
+    examenesArr = res.data.examenes.sort(function (a, b) {
+      if (a.id > b.id) {
         return 1;
       }
       if (a.id < b.id) {
@@ -861,16 +846,16 @@ async function busquedaexamen(){
       // a must be equal to b
       return 0;
     });
-    examenesArr.forEach(e=>{
-      
-      bodyReport.innerHTML+=`
+    examenesArr.forEach(e => {
+
+      bodyReport.innerHTML += `
       <tr style="font-size:medium">
                             <td scope="col">${e.id}</td>
                             <td scope="col">${e.nombre}</td>
                             <td scope="col">${e.seccion}</td>
                             <td scope="col">${e.paciente}</td>
                             <td scope="col">${e.bioanalista}</td>
-                            <td scope="col">${e.clave == 'orden' ? `<img src="../imgs/la-milagrosa-logo.png"   width="20" alt="" srcset="">` :''}${ e.clave =='clave' ? `<img src="../imgs/salud-vital-logo.png"  width="20" alt="" srcset="">`: ''}${ e.clave=='no'? `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"  fill="green" class="bi bi-person-lines-fill" viewBox="0 0 16 16">
+                            <td scope="col">${e.clave == 'orden' ? `<img src="../imgs/la-milagrosa-logo.png"   width="20" alt="" srcset="">` : ''}${e.clave == 'clave' ? `<img src="../imgs/salud-vital-logo.png"  width="20" alt="" srcset="">` : ''}${e.clave == 'no' ? `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"  fill="green" class="bi bi-person-lines-fill" viewBox="0 0 16 16">
                             <path d="M6 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6m-5 6s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1zM11 3.5a.5.5 0 0 1 .5-.5h4a.5.5 0 0 1 0 1h-4a.5.5 0 0 1-.5-.5m.5 2.5a.5.5 0 0 0 0 1h4a.5.5 0 0 0 0-1zm2 3a.5.5 0 0 0 0 1h2a.5.5 0 0 0 0-1zm0 3a.5.5 0 0 0 0 1h2a.5.5 0 0 0 0-1z"/>
                           </svg>` : ''}  - ${e.orden}</td>
                             <td scope="col">${e.sede}</td>
@@ -891,7 +876,7 @@ async function busquedaexamen(){
   }
 }
 
-async function busquedaexterno(){
+async function busquedaexterno() {
 
   const examen = document.getElementById("inputExamenExterno").value;
   const paciente = document.getElementById("inputPacienteExterno").value;
@@ -902,68 +887,67 @@ async function busquedaexterno(){
   const hasta = document.getElementById("inputHastaExterno").value;
   const desdeFecha = document.getElementById('fechaDesdeInput').value;
   const hastaFecha = document.getElementById('fechaHastaInput').value
-  if(hastaFecha=='' || desdeFecha==''){
-    document.getElementById('alertFiltro').innerHTML='Por Favor seleccione la fecha a filtrar'
+  if (hastaFecha == '' || desdeFecha == '') {
+    document.getElementById('alertFiltro').innerHTML = 'Por Favor seleccione la fecha a filtrar'
     document.getElementById('alertFiltro').removeAttribute('hidden')
 
     setTimeout(() => {
-    document.getElementById('alertFiltro').setAttribute('hidden','true')
-      
+      document.getElementById('alertFiltro').setAttribute('hidden', 'true')
+
     }, 3000);
 
   }
-  let filtros=[
+  let filtros = [
     {
-      columna:'examen',valor:examen 
+      columna: 'examen', valor: examen
     },
     {
-      columna:'paciente',valor:paciente 
+      columna: 'paciente', valor: paciente
     },
     {
-      columna:'laboratorio',valor:laboratorio 
+      columna: 'laboratorio', valor: laboratorio
     },
     {
-      columna:'desde',valor:desde 
+      columna: 'desde', valor: desde
     },
     {
-      columna:'hasta',valor:hasta 
+      columna: 'hasta', valor: hasta
     },
     {
-      columna:'usuario',valor:usuario 
+      columna: 'usuario', valor: usuario
     },
     {
-      columna:'genero',valor:genero 
+      columna: 'genero', valor: genero
     }
 
 
   ]
 
-  const filtrosValue= filtros.filter(e=>e.valor!='')
-  const headReport=document.getElementById('tHeadReport')
-  const bodyReport=document.getElementById('tBodyReport')
+  const filtrosValue = filtros.filter(e => e.valor != '')
+  const headReport = document.getElementById('tHeadReport')
+  const bodyReport = document.getElementById('tBodyReport')
 
-  headReport.innerHTML=''
-  bodyReport.innerHTML=''
+  headReport.innerHTML = ''
+  bodyReport.innerHTML = ''
 
   try {
     let token = await login.getToken();
-    console.log(token)
 
     const res = await axios.post(
       urlsv + "/api/estadisticas/get-externos-reportes",
-      { filtrosValue,desde:desdeFecha,hasta:hastaFecha },
-      { headers: { token:token.token } }
+      { filtrosValue, desde: desdeFecha, hasta: hastaFecha },
+      { headers: { token: token.token } }
     );
-    Data=res.data.examenes
+    Data = res.data.examenes
 
-    res.data.columnas.forEach(c=>{
-      headReport.innerHTML+=`
+    res.data.columnas.forEach(c => {
+      headReport.innerHTML += `
         <th scope="col" onclick="contarExternos('${c}')" data-bs-toggle="modal" data-bs-target="#modalTotales">${c}</th>
       `
     })
-    
-    examenesArr=res.data.examenes.sort(function (a, b) {
-      if (a.id> b.id) {
+
+    examenesArr = res.data.examenes.sort(function (a, b) {
+      if (a.id > b.id) {
         return 1;
       }
       if (a.id < b.id) {
@@ -972,9 +956,9 @@ async function busquedaexterno(){
       // a must be equal to b
       return 0;
     });
-    examenesArr.forEach(e=>{
-      
-      bodyReport.innerHTML+=`
+    examenesArr.forEach(e => {
+
+      bodyReport.innerHTML += `
       <tr style="font-size:medium">
                             <td scope="col">${e.id}</td>
                             <td scope="col">${e.examen}</td>
@@ -1005,22 +989,19 @@ async function previewPdfExterno(id) {
   if (isNaN(id) || id == '') {
     return alerta.alert('Error: envie un id de examen valido')
   }
-  await reimpresionVar.store({tipo:'externo',id});
+  await reimpresionVar.store({ tipo: 'externo', id });
   return await abrirReimprimirWindow()
   //window.open(`/externos?id=${id}`);
- 
- }
+
+}
 
 function setInputs(idEx) {
-  console.log(idEx)
 
   examen.detallesExamenPc.forEach((e) => {
-    if(e.status!='titulo'){
-      console.log(`inputRs${e.idCar}`);
+    if (e.status != 'titulo') {
       const res = document.getElementById(`inputRs${e.idCar}`);
       const nota = document.getElementById(`inputNt${e.idCar}`);
-  
-      console.log(res, nota, e);
+
       nota.value = e.nota;
       try {
         res.value = e.resultado;
@@ -1028,7 +1009,7 @@ function setInputs(idEx) {
         console.log(error);
       }
     }
-   
+
   });
   examen.subCaracteristicasExPc.forEach((e) => {
     const res = document.getElementById(`Rs-${e.idSub}`);
@@ -1042,8 +1023,8 @@ const calcularEdadNormal = (fecha) => {
   const mes = moment(fecha).format("MM");
   const ano = moment(fecha).format("YYYY");
   const dia = moment(fecha).format("DD");
- 
-  
+
+
 
   const mesAc = moment().format("MM");
   const anoAc = moment().format("YYYY");
@@ -1069,31 +1050,30 @@ const abrirResultadosModal = async (examen, idPac, idRes) => {
   const { token } = await login.getToken();
   let pacienteObj
   try {
-    const res = await axios.get(urlsv+'/api/estadisticas/get-paciente',{
-      headers: { token }, params: { idPac } 
+    const res = await axios.get(urlsv + '/api/estadisticas/get-paciente', {
+      headers: { token }, params: { idPac }
     })
     pacienteObj = res.data
-    console.log(res)
   } catch (error) {
     console.log(error)
   }
   pacienteObj.edad = calcularEdadNormal(pacienteObj.fecha_nacimiento);
-  
+
 
   const h1Ex = document.getElementById("h1NombreEx");
   const tBodyDiagnosticos = document.getElementById("tBodyDiagnosticos");
   tBodyDiagnosticos.innerHTML = "";
   h1Ex.innerText = `${idRes} - ${examen} - ${pacienteObj.nombre} - ${pacienteObj.edad}`;
-  
 
-  
+
+
 
   new bootstrap.Modal("#resultadosModal").toggle();
 
   try {
     const { token } = await login.getToken();
-    
-    let { data: resultados} = await axios.get(
+
+    let { data: resultados } = await axios.get(
       urlsv + "/api/examenes/resultados-examen",
       {
         params: {
@@ -1102,8 +1082,7 @@ const abrirResultadosModal = async (examen, idPac, idRes) => {
         headers: { token },
       }
     );
-    console.log(resultados)
-    resultados=resultados.sort(function (a, b) {
+    resultados = resultados.sort(function (a, b) {
       if (a.posicion > b.posicion) {
         return 1;
       }
@@ -1116,9 +1095,9 @@ const abrirResultadosModal = async (examen, idPac, idRes) => {
 
 
     resultados.forEach((ct) => {
-      
-  
-      if(ct.status=='titulo'){
+
+
+      if (ct.status == 'titulo') {
         tBodyDiagnosticos.innerHTML += `
             <tr>
                         <th scope="row" colspan="7">${ct.titulo}</th>
@@ -1126,11 +1105,11 @@ const abrirResultadosModal = async (examen, idPac, idRes) => {
           
                       </tr>
             `;
-      }else{
-  
-      
-      if (ct.sub.length > 0) {
-        tBodyDiagnosticos.innerHTML += `
+      } else {
+
+
+        if (ct.sub.length > 0) {
+          tBodyDiagnosticos.innerHTML += `
         <tr >
                 <td scope="row" colspan="2">${ct.nombre}</td>
                 <td> <input disabled class="form-control form-control-sm inputExDetallePacCar" rango='no' name='rs-${ct.id}' type="text" id='inputRs${ct.id}' value="SubCaracteristica"  aria-label=".form-control-sm example"> </td>
@@ -1140,9 +1119,9 @@ const abrirResultadosModal = async (examen, idPac, idRes) => {
                 
               </tr>
         `;
-        ct.sub.forEach((sb) => {
-          if (sb.tipo == "formula") {
-            tBodyDiagnosticos.innerHTML += `
+          ct.sub.forEach((sb) => {
+            if (sb.tipo == "formula") {
+              tBodyDiagnosticos.innerHTML += `
             <tr>
                   <td colspan="2"></td>
                   <td scope="row" colspan="">${sb.nombre}</td>
@@ -1153,9 +1132,9 @@ const abrirResultadosModal = async (examen, idPac, idRes) => {
                   </td>
                 </tr>
             `;
-          } else {
-            if (sb.tipo == "numero") {
-              tBodyDiagnosticos.innerHTML += `
+            } else {
+              if (sb.tipo == "numero") {
+                tBodyDiagnosticos.innerHTML += `
               <tr>
                     <td colspan="2"></td>
                     <td scope="row" colspan="">${sb.nombre}</td>
@@ -1166,8 +1145,8 @@ const abrirResultadosModal = async (examen, idPac, idRes) => {
                     </td>
                   </tr>
               `;
-            } else {
-              tBodyDiagnosticos.innerHTML += `
+              } else {
+                tBodyDiagnosticos.innerHTML += `
               <tr>
                     <td colspan="2"></td>
                     <td scope="row" colspan="">${sb.nombre}</td>
@@ -1178,13 +1157,13 @@ const abrirResultadosModal = async (examen, idPac, idRes) => {
                     </td>
                   </tr>
               `;
+              }
             }
-          }
-        });
-      } else {
-        if (ct.rango) {
-          if (ct.resultados.length > 0) {
-            tBodyDiagnosticos.innerHTML += `
+          });
+        } else {
+          if (ct.rango) {
+            if (ct.resultados.length > 0) {
+              tBodyDiagnosticos.innerHTML += `
             <tr>
                         <td scope="row" colspan="2">${ct.nombre}</td>
                         <td> <select class="form-select form-select-sm selectRs${ct.nombre} inputExDetallePacCar" rango='${rango.id}' id='inputRs${ct.id}' aria-label="Small select example">
@@ -1199,32 +1178,30 @@ const abrirResultadosModal = async (examen, idPac, idRes) => {
           
                       </tr>
             `;
-            ct.resultados.forEach((rs) => {
-              if (ct.resultado == rs.resultado) {
-                document.getElementsByClassName(
-                  `selectRs${ct.nombre}`
-                )[0].innerHTML += `
+              ct.resultados.forEach((rs) => {
+                if (ct.resultado == rs.resultado) {
+                  document.getElementsByClassName(
+                    `selectRs${ct.nombre}`
+                  )[0].innerHTML += `
                 <option selected value="${rs.resultado}">
                 ${rs.resultado}
                 </option>
                 `;
-              } else {
-                document.getElementsByClassName(
-                  `selectRs${ct.nombre}`
-                )[0].innerHTML += `
+                } else {
+                  document.getElementsByClassName(
+                    `selectRs${ct.nombre}`
+                  )[0].innerHTML += `
                 <option value="${rs.resultado}">
                 ${rs.resultado}
                 </option>
                 `;
-              }
-            });
-            console.log(
-              document.getElementsByClassName(`selectRs${ct.nombre}`)[0]
-            );
-            document.getElementsByClassName(`selectRs${ct.nombre}`)[0].value =
-              ct.resultado;
-          } else {
-            tBodyDiagnosticos.innerHTML += `
+                }
+              });
+
+              document.getElementsByClassName(`selectRs${ct.nombre}`)[0].value =
+                ct.resultado;
+            } else {
+              tBodyDiagnosticos.innerHTML += `
             <tr>
                         <td scope="row" colspan="2">${ct.nombre}</td>
                         <td>  <input disabled class="form-control form-control-sm inputExDetallePacCar" rango='${ct.rango.id}' name='rs-${ct.id}' type="text" id='inputRs${ct.id}' value="${ct.resultado}"  aria-label=".form-control-sm example">              </td>
@@ -1235,10 +1212,10 @@ const abrirResultadosModal = async (examen, idPac, idRes) => {
           
                       </tr>
             `;
-          }
-        } else {
-          if (ct.resultados.length > 0) {
-            tBodyDiagnosticos.innerHTML += `
+            }
+          } else {
+            if (ct.resultados.length > 0) {
+              tBodyDiagnosticos.innerHTML += `
             <tr>
                         <td scope="row" colspan="2">${ct.nombre}</td>
                         <td> <select disabled class="form-select form-select-sm selectRs${ct.nombre} inputExDetallePacCar" rango='no' id='inputRs${ct.id}' aria-label="Small select example">
@@ -1253,27 +1230,27 @@ const abrirResultadosModal = async (examen, idPac, idRes) => {
           
                       </tr>
             `;
-            ct.resultados.forEach((rs) => {
-              if (ct.resultado == rs.resultado) {
-                document.getElementsByClassName(
-                  `selectRs${ct.nombre}`
-                )[0].innerHTML += `
+              ct.resultados.forEach((rs) => {
+                if (ct.resultado == rs.resultado) {
+                  document.getElementsByClassName(
+                    `selectRs${ct.nombre}`
+                  )[0].innerHTML += `
                 <option selected value="${rs.resultado}">
                 ${rs.resultado}
                 </option>
                 `;
-              } else {
-                document.getElementsByClassName(
-                  `selectRs${ct.nombre}`
-                )[0].innerHTML += `
+                } else {
+                  document.getElementsByClassName(
+                    `selectRs${ct.nombre}`
+                  )[0].innerHTML += `
                 <option value="${rs.resultado}">
                 ${rs.resultado}
                 </option>
                 `;
-              }
-            });
-          } else {
-            tBodyDiagnosticos.innerHTML += `
+                }
+              });
+            } else {
+              tBodyDiagnosticos.innerHTML += `
             <tr>
                         <td scope="row" colspan="2">${ct.nombre}</td>
                         <td>  <input disabled class="form-control form-control-sm inputExDetallePacCar" name='rs-${ct.id}' rango='no' type="text" id='inputRs${ct.id}' value='${ct.resultado}' aria-label=".form-control-sm example">              </td>
@@ -1284,62 +1261,59 @@ const abrirResultadosModal = async (examen, idPac, idRes) => {
           
                       </tr>
             `;
+            }
           }
         }
       }
-    }
     });
-    document.getElementById('reimprimirModalBtn').setAttribute('onclick',`reimprimirExamen(${idRes})`)  
+    document.getElementById('reimprimirModalBtn').setAttribute('onclick', `reimprimirExamen(${idRes})`)
 
   } catch (error) {
     console.log(error);
   }
-  
+
 };
 async function reimprimirExamen(id) {
   if (isNaN(id) || id == '') {
     return alerta.alert('Error: envie un id de examen valido')
   }
-  await reimpresionVar.store({tipo:'reimpresion',id});
+  await reimpresionVar.store({ tipo: 'reimpresion', id });
   return await abrirReimprimirWindow()
- //window.open(`/reimprimir-examen?id=${id}`);
+  //window.open(`/reimprimir-examen?id=${id}`);
 }
-async function busquedaOrdenDetallado(){
+async function busquedaOrdenDetallado() {
   const orden = document.getElementById('inputOrdenDet').value
-  if(orden==''){
+  if (orden == '') {
     return
   }
-  let filtrosValue=[
+  let filtrosValue = [
     {
-      columna:'orden',valor:orden
+      columna: 'orden', valor: orden
     }
   ]
 
-  const headReport=document.getElementById('tHeadReport')
-  const bodyReport=document.getElementById('tBodyReport')
-  console.log(filtrosValue)
-  headReport.innerHTML=''
-  bodyReport.innerHTML=''
+  const headReport = document.getElementById('tHeadReport')
+  const bodyReport = document.getElementById('tBodyReport')
+  headReport.innerHTML = ''
+  bodyReport.innerHTML = ''
 
   try {
     let token = await login.getToken();
-    console.log(token)
 
     const res = await axios.post(
       urlsv + "/api/estadisticas/get-orden-reportes",
-      { filtrosValue,desde:'',hasta:'' },
-      { headers: { token:token.token } }
+      { filtrosValue, desde: '', hasta: '' },
+      { headers: { token: token.token } }
     );
-    console.log(res.data)
 
-    res.data.columnas.forEach(c=>{
-      headReport.innerHTML+=`
+    res.data.columnas.forEach(c => {
+      headReport.innerHTML += `
         <th scope="col">${c}</th>
       `
     })
-    
-    examenesArr=res.data.ordenes.sort(function (a, b) {
-      if (a.id> b.id) {
+
+    examenesArr = res.data.ordenes.sort(function (a, b) {
+      if (a.id > b.id) {
         return 1;
       }
       if (a.id < b.id) {
@@ -1348,13 +1322,13 @@ async function busquedaOrdenDetallado(){
       // a must be equal to b
       return 0;
     });
-    examenesArr.forEach(e=>{
-      
-      bodyReport.innerHTML+=`
+    examenesArr.forEach(e => {
+
+      bodyReport.innerHTML += `
       <tr style="font-size:medium">
                             <td scope="col">${e.id}</td>
                             <td scope="col">${e.orden}</td>
-                            <td scope="col">${e.clave == 'orden' ? `<img src="../imgs/la-milagrosa-logo.png"   width="20" alt="" srcset="">` :''}${ e.clave =='clave' ? `<img src="../imgs/salud-vital-logo.png"  width="20" alt="" srcset="">`: ''}${ e.clave=='no'? `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"  fill="green" class="bi bi-person-lines-fill" viewBox="0 0 16 16">
+                            <td scope="col">${e.clave == 'orden' ? `<img src="../imgs/la-milagrosa-logo.png"   width="20" alt="" srcset="">` : ''}${e.clave == 'clave' ? `<img src="../imgs/salud-vital-logo.png"  width="20" alt="" srcset="">` : ''}${e.clave == 'no' ? `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"  fill="green" class="bi bi-person-lines-fill" viewBox="0 0 16 16">
                             <path d="M6 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6m-5 6s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1zM11 3.5a.5.5 0 0 1 .5-.5h4a.5.5 0 0 1 0 1h-4a.5.5 0 0 1-.5-.5m.5 2.5a.5.5 0 0 0 0 1h4a.5.5 0 0 0 0-1zm2 3a.5.5 0 0 0 0 1h2a.5.5 0 0 0 0-1zm0 3a.5.5 0 0 0 0 1h2a.5.5 0 0 0 0-1z"/>
                           </svg>` : ''}</td>
                             <td scope="col">${e.sede}</td>
@@ -1377,42 +1351,39 @@ async function busquedaOrdenDetallado(){
   }
 }
 
-async function busquedaBioanalistaDetallado(){
+async function busquedaBioanalistaDetallado() {
   const bioanalista = document.getElementById('selectBioanalistaDet').value
-  if(bioanalista==''){
+  if (bioanalista == '') {
     return
   }
-  let filtrosValue=[
+  let filtrosValue = [
     {
-      columna:'bioanalista',valor:bioanalista
+      columna: 'bioanalista', valor: bioanalista
     }
   ]
 
-  const headReport=document.getElementById('tHeadReport')
-  const bodyReport=document.getElementById('tBodyReport')
-  console.log(filtrosValue)
-  headReport.innerHTML=''
-  bodyReport.innerHTML=''
+  const headReport = document.getElementById('tHeadReport')
+  const bodyReport = document.getElementById('tBodyReport')
+  headReport.innerHTML = ''
+  bodyReport.innerHTML = ''
 
   try {
     let token = await login.getToken();
-    console.log(token)
 
     const res = await axios.post(
       urlsv + "/api/estadisticas/get-bioanalistas-reportes",
-      { filtrosValue,desde:'',hasta:'' },
-      { headers: { token:token.token } }
+      { filtrosValue, desde: '', hasta: '' },
+      { headers: { token: token.token } }
     );
-    console.log(res.data)
 
-    res.data.columnas.forEach(c=>{
-      headReport.innerHTML+=`
+    res.data.columnas.forEach(c => {
+      headReport.innerHTML += `
         <th scope="col">${c}</th>
       `
     })
-    
-    examenesArr=res.data.bioanalistas.sort(function (a, b) {
-      if (a.id> b.id) {
+
+    examenesArr = res.data.bioanalistas.sort(function (a, b) {
+      if (a.id > b.id) {
         return 1;
       }
       if (a.id < b.id) {
@@ -1421,9 +1392,9 @@ async function busquedaBioanalistaDetallado(){
       // a must be equal to b
       return 0;
     });
-    examenesArr.forEach(e=>{
-      
-      bodyReport.innerHTML+=`
+    examenesArr.forEach(e => {
+
+      bodyReport.innerHTML += `
       <tr style="font-size:medium">
                             <td scope="col">${e.id}</td>
                             <td scope="col">${e.nombre}</td>
@@ -1443,41 +1414,39 @@ async function busquedaBioanalistaDetallado(){
 }
 
 
-async function busquedaExamenDetallado(){
+async function busquedaExamenDetallado() {
   const examen = document.getElementById('inputExamenDet').value
-  if(examen==''){
+  if (examen == '') {
     return
   }
-  let filtrosValue=[
+  let filtrosValue = [
     {
-      columna:'examen',valor:examen
+      columna: 'examen', valor: examen
     }
   ]
 
-  const headReport=document.getElementById('tHeadReport')
-  const bodyReport=document.getElementById('tBodyReport')
-  headReport.innerHTML=''
-  bodyReport.innerHTML=''
+  const headReport = document.getElementById('tHeadReport')
+  const bodyReport = document.getElementById('tBodyReport')
+  headReport.innerHTML = ''
+  bodyReport.innerHTML = ''
 
   try {
     let token = await login.getToken();
-    console.log(token)
 
     const res = await axios.post(
       urlsv + "/api/estadisticas/get-examenes-reportes",
-      { filtrosValue,desde:'',hasta:'' },
-      { headers: { token:token.token } }
+      { filtrosValue, desde: '', hasta: '' },
+      { headers: { token: token.token } }
     );
-    console.log(res.data)
 
-    res.data.columnas.forEach(c=>{
-      headReport.innerHTML+=`
+    res.data.columnas.forEach(c => {
+      headReport.innerHTML += `
         <th scope="col">${c}</th>
       `
     })
-    
-    examenesArr=res.data.examenes.sort(function (a, b) {
-      if (a.id> b.id) {
+
+    examenesArr = res.data.examenes.sort(function (a, b) {
+      if (a.id > b.id) {
         return 1;
       }
       if (a.id < b.id) {
@@ -1486,16 +1455,16 @@ async function busquedaExamenDetallado(){
       // a must be equal to b
       return 0;
     });
-    examenesArr.forEach(e=>{
-      
-      bodyReport.innerHTML+=`
+    examenesArr.forEach(e => {
+
+      bodyReport.innerHTML += `
       <tr style="font-size:medium">
                             <td scope="col">${e.id}</td>
                             <td scope="col">${e.nombre}</td>
                             <td scope="col">${e.seccion}</td>
                             <td scope="col">${e.paciente}</td>
                             <td scope="col">${e.bioanalista}</td>
-                            <td scope="col">${e.clave == 'orden' ? `<img src="../imgs/la-milagrosa-logo.png"   width="20" alt="" srcset="">` :''}${ e.clave =='clave' ? `<img src="../imgs/salud-vital-logo.png"  width="20" alt="" srcset="">`: ''}${ e.clave=='no'? `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"  fill="green" class="bi bi-person-lines-fill" viewBox="0 0 16 16">
+                            <td scope="col">${e.clave == 'orden' ? `<img src="../imgs/la-milagrosa-logo.png"   width="20" alt="" srcset="">` : ''}${e.clave == 'clave' ? `<img src="../imgs/salud-vital-logo.png"  width="20" alt="" srcset="">` : ''}${e.clave == 'no' ? `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"  fill="green" class="bi bi-person-lines-fill" viewBox="0 0 16 16">
                             <path d="M6 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6m-5 6s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1zM11 3.5a.5.5 0 0 1 .5-.5h4a.5.5 0 0 1 0 1h-4a.5.5 0 0 1-.5-.5m.5 2.5a.5.5 0 0 0 0 1h4a.5.5 0 0 0 0-1zm2 3a.5.5 0 0 0 0 1h2a.5.5 0 0 0 0-1zm0 3a.5.5 0 0 0 0 1h2a.5.5 0 0 0 0-1z"/>
                           </svg>` : ''}  - ${e.orden}</td>
                             <td scope="col">${e.sede}</td>
@@ -1518,42 +1487,40 @@ async function busquedaExamenDetallado(){
 
 
 
-async function busquedaPacienteDetallado(){
+async function busquedaPacienteDetallado() {
   const paciente = document.getElementById('inputPacienteDet').value
-  if(paciente==''){
+  if (paciente == '') {
     return
   }
-  let filtrosValue=[
+  let filtrosValue = [
     {
-      columna:'paciente',valor:paciente
+      columna: 'paciente', valor: paciente
     }
   ]
 
 
-  const headReport=document.getElementById('tHeadReport')
-  const bodyReport=document.getElementById('tBodyReport')
+  const headReport = document.getElementById('tHeadReport')
+  const bodyReport = document.getElementById('tBodyReport')
 
-  headReport.innerHTML=''
-  bodyReport.innerHTML=''
+  headReport.innerHTML = ''
+  bodyReport.innerHTML = ''
   try {
     let token = await login.getToken();
-    console.log(token)
 
     const res = await axios.post(
       urlsv + "/api/estadisticas/get-pacientes-reportes",
-      { filtrosValue,desde:'',hasta:''},
-      { headers: { token:token.token } }
+      { filtrosValue, desde: '', hasta: '' },
+      { headers: { token: token.token } }
     );
-    console.log(res.data)
 
-    res.data.columnas.forEach(c=>{
-      headReport.innerHTML+=`
+    res.data.columnas.forEach(c => {
+      headReport.innerHTML += `
         <th scope="col">${c}</th>
       `
     })
 
-    res.data.pacientes.forEach(e=>{
-      bodyReport.innerHTML+=`
+    res.data.pacientes.forEach(e => {
+      bodyReport.innerHTML += `
       <tr>
                             <td scope="col">${e.id}</td>
                             <td scope="col">${e.cedula}</td>
@@ -1569,64 +1536,62 @@ async function busquedaPacienteDetallado(){
                           </tr>
       `
     })
-    
- 
 
-    
-    
+
+
+
+
   } catch (error) {
     console.log(error)
   }
 }
 
 
-async function examenesOrdenPaciente(tipo,id){
+async function examenesOrdenPaciente(tipo, id) {
 
-  if(id==''){
+  if (id == '') {
     return
   }
-  let filtrosValue=[
+  let filtrosValue = [
     {
-      columna:tipo,valor:id
+      columna: tipo, valor: id
     }
   ]
   const desdeFecha = document.getElementById('fechaDesdeInput').value;
   const hastaFecha = document.getElementById('fechaHastaInput').value;
-  if(hastaFecha=='' || desdeFecha==''){
-    document.getElementById('alertFiltro').innerHTML='Por Favor seleccione la fecha a filtrar'
+  if (hastaFecha == '' || desdeFecha == '') {
+    document.getElementById('alertFiltro').innerHTML = 'Por Favor seleccione la fecha a filtrar'
     document.getElementById('alertFiltro').removeAttribute('hidden')
-    
+
     setTimeout(() => {
-    document.getElementById('alertFiltro').setAttribute('hidden','true')
-      
+      document.getElementById('alertFiltro').setAttribute('hidden', 'true')
+
     }, 3000);
     return
   }
 
-  const headReport=document.getElementById('tHeadReport')
-  const bodyReport=document.getElementById('tBodyReport')
-  headReport.innerHTML=''
-  bodyReport.innerHTML=''
+  const headReport = document.getElementById('tHeadReport')
+  const bodyReport = document.getElementById('tBodyReport')
+  headReport.innerHTML = ''
+  bodyReport.innerHTML = ''
 
   try {
     let token = await login.getToken();
-    console.log(token)
 
     const res = await axios.post(
       urlsv + "/api/estadisticas/get-examenes-reportes",
-      { filtrosValue,desde:desdeFecha,hasta:hastaFecha },
-      { headers: { token:token.token } }
+      { filtrosValue, desde: desdeFecha, hasta: hastaFecha },
+      { headers: { token: token.token } }
     );
-    console.log(res.data)
 
-    res.data.columnas.forEach(c=>{
-      headReport.innerHTML+=`
+    res.data.columnas.forEach(c => {
+      headReport.innerHTML += `
         <th scope="col">${c}</th>
       `
     })
-    
-    examenesArr=res.data.examenes.sort(function (a, b) {
-      if (a.id> b.id) {
+
+    examenesArr = res.data.examenes.sort(function (a, b) {
+      if (a.id > b.id) {
         return 1;
       }
       if (a.id < b.id) {
@@ -1635,16 +1600,16 @@ async function examenesOrdenPaciente(tipo,id){
       // a must be equal to b
       return 0;
     });
-    examenesArr.forEach(e=>{
-      
-      bodyReport.innerHTML+=`
+    examenesArr.forEach(e => {
+
+      bodyReport.innerHTML += `
       <tr style="font-size:medium">
                             <td scope="col">${e.id}</td>
                             <td scope="col">${e.nombre}</td>
                             <td scope="col">${e.seccion}</td>
                             <td scope="col">${e.paciente}</td>
                             <td scope="col">${e.bioanalista}</td>
-                            <td scope="col">${e.clave == 'orden' ? `<img src="../imgs/la-milagrosa-logo.png"   width="20" alt="" srcset="">` :''}${ e.clave =='clave' ? `<img src="../imgs/salud-vital-logo.png"  width="20" alt="" srcset="">`: ''}${ e.clave=='no'? `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"  fill="green" class="bi bi-person-lines-fill" viewBox="0 0 16 16">
+                            <td scope="col">${e.clave == 'orden' ? `<img src="../imgs/la-milagrosa-logo.png"   width="20" alt="" srcset="">` : ''}${e.clave == 'clave' ? `<img src="../imgs/salud-vital-logo.png"  width="20" alt="" srcset="">` : ''}${e.clave == 'no' ? `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"  fill="green" class="bi bi-person-lines-fill" viewBox="0 0 16 16">
                             <path d="M6 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6m-5 6s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1zM11 3.5a.5.5 0 0 1 .5-.5h4a.5.5 0 0 1 0 1h-4a.5.5 0 0 1-.5-.5m.5 2.5a.5.5 0 0 0 0 1h4a.5.5 0 0 0 0-1zm2 3a.5.5 0 0 0 0 1h2a.5.5 0 0 0 0-1zm0 3a.5.5 0 0 0 0 1h2a.5.5 0 0 0 0-1z"/>
                           </svg>` : ''}  - ${e.orden}</td>
                             <td scope="col">${e.sede}</td>
@@ -1669,9 +1634,9 @@ async function examenesOrdenPaciente(tipo,id){
 
 
 
-async function busquedapaciente(){
+async function busquedapaciente() {
   const empresaRatios = document.getElementsByName('tipoOrden')
-  const empresa = [...empresaRatios].find(e=>e.checked==true).value
+  const empresa = [...empresaRatios].find(e => e.checked == true).value
   const examen = document.getElementById("examenInputPaciente").value;
   const sede = document.getElementById("selectSedePaciente").value;
   const bioanalista = document.getElementById("selectBioanalistaPaciente").value;
@@ -1684,77 +1649,76 @@ async function busquedapaciente(){
   const desdeFecha = document.getElementById('fechaDesdeInput').value;
   const hastaFecha = document.getElementById('fechaHastaInput').value;
 
-  if(hastaFecha=='' || desdeFecha==''){
-    document.getElementById('alertFiltro').innerHTML='Por Favor seleccione la fecha a filtrar'
+  if (hastaFecha == '' || desdeFecha == '') {
+    document.getElementById('alertFiltro').innerHTML = 'Por Favor seleccione la fecha a filtrar'
     document.getElementById('alertFiltro').removeAttribute('hidden')
 
     setTimeout(() => {
-    document.getElementById('alertFiltro').setAttribute('hidden','true')
-      
+      document.getElementById('alertFiltro').setAttribute('hidden', 'true')
+
     }, 3000);
 
   }
 
-  let filtros=[
+  let filtros = [
     {
-    columna:'empresa',valor:empresa
+      columna: 'empresa', valor: empresa
     },
     {
-      columna:'examen',valor:examen 
+      columna: 'examen', valor: examen
     },
     {
-      columna:'sede',valor:sede 
+      columna: 'sede', valor: sede
     },
     {
-      columna:'bioanalista',valor:bioanalista 
+      columna: 'bioanalista', valor: bioanalista
     },
     {
-      columna:'categoria',valor:categoria 
+      columna: 'categoria', valor: categoria
     },
     {
-      columna:'seccion',valor:seccion 
+      columna: 'seccion', valor: seccion
     },
     {
-      columna:'desde',valor:desde 
+      columna: 'desde', valor: desde
     },
     {
-      columna:'hasta',valor:hasta 
+      columna: 'hasta', valor: hasta
     },
     {
-      columna:'usuario',valor:usuario 
+      columna: 'usuario', valor: usuario
     },
     {
-      columna:'genero',valor:genero 
+      columna: 'genero', valor: genero
     }
 
 
   ]
- 
-  const filtrosValue= filtros.filter(e=>e.valor!='')
-  const headReport=document.getElementById('tHeadReport')
-  const bodyReport=document.getElementById('tBodyReport')
 
-  headReport.innerHTML=''
-  bodyReport.innerHTML=''
+  const filtrosValue = filtros.filter(e => e.valor != '')
+  const headReport = document.getElementById('tHeadReport')
+  const bodyReport = document.getElementById('tBodyReport')
+
+  headReport.innerHTML = ''
+  bodyReport.innerHTML = ''
   try {
     let token = await login.getToken();
-    console.log(token)
 
     const res = await axios.post(
       urlsv + "/api/estadisticas/get-pacientes-reportes",
-      { filtrosValue,desde:desdeFecha,hasta:hastaFecha },
-      { headers: { token:token.token } }
+      { filtrosValue, desde: desdeFecha, hasta: hastaFecha },
+      { headers: { token: token.token } }
     );
-    Data=res.data.pacientes
+    Data = res.data.pacientes
 
-    res.data.columnas.forEach(c=>{
-      headReport.innerHTML+=`
+    res.data.columnas.forEach(c => {
+      headReport.innerHTML += `
         <th scope="col" data-bs-toggle="modal" data-bs-target="#modalTotales" onclick="contarPacientes('${c}')">${c}</th>
       `
     })
 
-    res.data.pacientes.forEach(e=>{
-      bodyReport.innerHTML+=`
+    res.data.pacientes.forEach(e => {
+      bodyReport.innerHTML += `
       <tr>
                             <td scope="col">${e.id}</td>
                             <td scope="col">${e.cedula}</td>
@@ -1770,25 +1734,25 @@ async function busquedapaciente(){
                           </tr>
       `
     })
-   
 
 
 
-    
-    
+
+
+
   } catch (error) {
     console.log(error)
   }
-  
 
-  
+
+
 }
 
-function calcularEdad(fecha){  
+function calcularEdad(fecha) {
   const mes = moment(fecha).format("MM");
   const ano = moment(fecha).format("YYYY");
   const dia = moment(fecha).format("DD");
-  
+
   const mesAc = moment().format("MM");
   const anoAc = moment().format("YYYY");
   const diaAc = moment().format("DD");
@@ -1810,15 +1774,15 @@ function calcularEdad(fecha){
 
 
 const abrirModalPacientes = (event) => {
- 
+
 
 
 
   new bootstrap.Modal("#pacientes-list").toggle();
-  const menu=document.getElementById('menuPacientesUl')
-    menu.innerHTML=''
-    pacientesArray.forEach(e=>{
-        menu.innerHTML+=`
+  const menu = document.getElementById('menuPacientesUl')
+  menu.innerHTML = ''
+  pacientesArray.forEach(e => {
+    menu.innerHTML += `
         <li class="list-group-item list-group-item-light list-group-item-action" >
           <div class="row">
             <div class="col-3">
@@ -1830,7 +1794,7 @@ const abrirModalPacientes = (event) => {
 
             </div>
             <div class="col-3 d-flex justify-content-end align-content-center">
-            <svg xmlns="http://www.w3.org/2000/svg" data-bs-dismiss="modal" style="cursor:pointer" width="24" height="24" fill="green" onclick="setInputPaciente(${e.id},'${event.target.tagName=='BUTTON' ? `${event.target.parentNode.children[1].id}` : event.target.tagName=='path' ?  `${event.target.parentNode.parentNode.parentNode.children[1].id}` :  `${event.target.parentNode.parentNode.children[1].id}`}')" class="bi bi-check-circle" viewBox="0 0 16 16">
+            <svg xmlns="http://www.w3.org/2000/svg" data-bs-dismiss="modal" style="cursor:pointer" width="24" height="24" fill="green" onclick="setInputPaciente(${e.id},'${event.target.tagName == 'BUTTON' ? `${event.target.parentNode.children[1].id}` : event.target.tagName == 'path' ? `${event.target.parentNode.parentNode.parentNode.children[1].id}` : `${event.target.parentNode.parentNode.children[1].id}`}')" class="bi bi-check-circle" viewBox="0 0 16 16">
               <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
               <path d="m10.97 4.97-.02.022-3.473 4.425-2.093-2.094a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-1.071-1.05"/>
             </svg>
@@ -1839,69 +1803,69 @@ const abrirModalPacientes = (event) => {
           </div>
         </li> 
         `
-    })
+  })
 
 }
 
-function contarPacientes(col){
-  const tBody=document.getElementById('tBodyTotales')
+function contarPacientes(col) {
+  const tBody = document.getElementById('tBodyTotales')
 
   total = Data.length
-  objetos=[]
-  let setOp=new Set()
+  objetos = []
+  let setOp = new Set()
 
-  switch(col){
+  switch (col) {
     case 'Cedula':
-    Data.forEach(e=>setOp.add(e.cedula))
-    setOp.forEach(s=>{
-      objetos.push({
-        nombre:s,
-        cuenta: Data.filter(e=>e.cedula==s).length
+      Data.forEach(e => setOp.add(e.cedula))
+      setOp.forEach(s => {
+        objetos.push({
+          nombre: s,
+          cuenta: Data.filter(e => e.cedula == s).length
+        })
+
       })
-  
-    })
-    break;
+      break;
     case 'Nombre':
-      Data.forEach(e=>setOp.add(e.nombre))
-      setOp.forEach(s=>{
+      Data.forEach(e => setOp.add(e.nombre))
+      setOp.forEach(s => {
         objetos.push({
-          nombre:s,
-          cuenta: Data.filter(e=>e.nombre==s).length
+          nombre: s,
+          cuenta: Data.filter(e => e.nombre == s).length
         })
-    
+
       })
-    break;
+      break;
     case 'Genero':
-      Data.forEach(e=>setOp.add(e.genero))
-      setOp.forEach(s=>{
+      Data.forEach(e => setOp.add(e.genero))
+      setOp.forEach(s => {
         objetos.push({
-          nombre:s,
-          cuenta: Data.filter(e=>e.genero==s).length
+          nombre: s,
+          cuenta: Data.filter(e => e.genero == s).length
         })
-    
+
       })
-    break;
+      break;
     default:
-      document.getElementById('h1ModalTotales').innerText=`ESTA COLUMNA NO ES CONTABLE`
-      tBody.innerHTML=''
+      document.getElementById('h1ModalTotales').innerText = `ESTA COLUMNA NO ES CONTABLE`
+      tBody.innerHTML = ''
       return
       break;
   }
 
 
-  document.getElementById('h1ModalTotales').innerText=`Pacientes - ${col}`
-  tBody.innerHTML=''
-  objetos.forEach(e=>{
-    tBody.innerHTML+=`
+  document.getElementById('h1ModalTotales').innerText = `Pacientes - ${col}`
+  tBody.innerHTML = ''
+  objetos.forEach(e => {
+    tBody.innerHTML += `
     <tr>
               <td>${e.nombre}</td>
               <td>${e.cuenta}</td>
-              <td>${((e.cuenta/total)*100).toFixed(2)} %</td>
+              <td>${((e.cuenta / total) * 100).toFixed(2)} %</td>
             </tr>
     
     `
   })
-  tBody.innerHTML+=`
+  tBody.innerHTML += `
   <tr>
               <td>Total</td>
               <td>${total}</td>
@@ -1912,113 +1876,113 @@ function contarPacientes(col){
 }
 
 
-function contarExternos(col){
-  const tBody=document.getElementById('tBodyTotales')
+function contarExternos(col) {
+  const tBody = document.getElementById('tBodyTotales')
 
   total = Data.length
-  objetos=[]
-  let setOp=new Set()
+  objetos = []
+  let setOp = new Set()
 
 
-  switch(col){
-    case 'Seccion': Data.forEach(e=>setOp.add(e.seccion))
-    setOp.forEach(s=>{
-      objetos.push({
-        nombre:s,
-        cuenta: Data.filter(e=>e.seccion==s).length
+  switch (col) {
+    case 'Seccion': Data.forEach(e => setOp.add(e.seccion))
+      setOp.forEach(s => {
+        objetos.push({
+          nombre: s,
+          cuenta: Data.filter(e => e.seccion == s).length
+        })
+
       })
-  
-    })
-    break;
-    case 'Nombre': Data.forEach(e=>setOp.add(e.examen))
-    setOp.forEach(s=>{
-      objetos.push({
-        nombre:s,
-        cuenta: Data.filter(e=>e.examen==s).length
+      break;
+    case 'Nombre': Data.forEach(e => setOp.add(e.examen))
+      setOp.forEach(s => {
+        objetos.push({
+          nombre: s,
+          cuenta: Data.filter(e => e.examen == s).length
+        })
+
       })
-  
-    })
-    break;
-    case 'Paciente': Data.forEach(e=>setOp.add(e.paciente))
-    setOp.forEach(s=>{
-      objetos.push({
-        nombre:s,
-        cuenta: Data.filter(e=>e.paciente==s).length
+      break;
+    case 'Paciente': Data.forEach(e => setOp.add(e.paciente))
+      setOp.forEach(s => {
+        objetos.push({
+          nombre: s,
+          cuenta: Data.filter(e => e.paciente == s).length
+        })
+
       })
-  
-    })
-    break;
-    case 'Bioanalista': Data.forEach(e=>setOp.add(e.bioanalista))
-    setOp.forEach(s=>{
-      objetos.push({
-        nombre:s,
-        cuenta: Data.filter(e=>e.bioanalista==s).length
+      break;
+    case 'Bioanalista': Data.forEach(e => setOp.add(e.bioanalista))
+      setOp.forEach(s => {
+        objetos.push({
+          nombre: s,
+          cuenta: Data.filter(e => e.bioanalista == s).length
+        })
+
       })
-  
-    })
-    break;
-    case 'Categoria': 
-    Data.forEach(e=>setOp.add(e.categoria))
-            setOp.forEach(s=>{
-              objetos.push({
-                nombre:s,
-                cuenta: Data.filter(e=>e.categoria==s).length
-              })
-          
-            })
-    break;
+      break;
+    case 'Categoria':
+      Data.forEach(e => setOp.add(e.categoria))
+      setOp.forEach(s => {
+        objetos.push({
+          nombre: s,
+          cuenta: Data.filter(e => e.categoria == s).length
+        })
+
+      })
+      break;
     case 'Fecha':
-      Data.forEach(e=>setOp.add(e.fecha.split('T')[0]))
-              setOp.forEach(s=>{
-                objetos.push({
-                  nombre:s,
-                  cuenta: Data.filter(e=>e.fecha.split('T')[0]==s).length
-                })
-            
-              })
-              break;
+      Data.forEach(e => setOp.add(e.fecha.split('T')[0]))
+      setOp.forEach(s => {
+        objetos.push({
+          nombre: s,
+          cuenta: Data.filter(e => e.fecha.split('T')[0] == s).length
+        })
+
+      })
+      break;
     case 'Laboratorio':
-      Data.forEach(e=>setOp.add(e.laboratorio))
-              setOp.forEach(s=>{
-                objetos.push({
-                  nombre:s,
-                  cuenta: Data.filter(e=>e.laboratorio==s).length
-                })
-            
-              })
-              break;
-              case 'Usuario':
-                Data.forEach(e=>setOp.add(e.usuario))
-                        setOp.forEach(s=>{
-                          objetos.push({
-                            nombre:s,
-                            cuenta: Data.filter(e=>e.usuario==s).length
-                          })
-                      
-                        })
-                        break;
-    default: document.getElementById('h1ModalTotales').innerText=`ESTA COLUMNA NO ES CONTABLE`
-    tBody.innerHTML=''
-    return
-    break;
+      Data.forEach(e => setOp.add(e.laboratorio))
+      setOp.forEach(s => {
+        objetos.push({
+          nombre: s,
+          cuenta: Data.filter(e => e.laboratorio == s).length
+        })
+
+      })
+      break;
+    case 'Usuario':
+      Data.forEach(e => setOp.add(e.usuario))
+      setOp.forEach(s => {
+        objetos.push({
+          nombre: s,
+          cuenta: Data.filter(e => e.usuario == s).length
+        })
+
+      })
+      break;
+    default: document.getElementById('h1ModalTotales').innerText = `ESTA COLUMNA NO ES CONTABLE`
+      tBody.innerHTML = ''
+      return
+      break;
 
   }
-  
-    
 
-  document.getElementById('h1ModalTotales').innerText=`Examenes Externos - ${col}`
-  tBody.innerHTML=''
-  objetos.forEach(e=>{
-    tBody.innerHTML+=`
+
+
+  document.getElementById('h1ModalTotales').innerText = `Examenes Externos - ${col}`
+  tBody.innerHTML = ''
+  objetos.forEach(e => {
+    tBody.innerHTML += `
     <tr>
               <td>${e.nombre}</td>
               <td>${e.cuenta}</td>
-              <td>${((e.cuenta/total)*100).toFixed(2)} %</td>
+              <td>${((e.cuenta / total) * 100).toFixed(2)} %</td>
             </tr>
     
     `
   })
-  tBody.innerHTML+=`
+  tBody.innerHTML += `
   <tr>
               <td>Total</td>
               <td>${total}</td>
@@ -2030,103 +1994,103 @@ function contarExternos(col){
 
 
 
-function contarExamenes(col){
-  const tBody=document.getElementById('tBodyTotales')
+function contarExamenes(col) {
+  const tBody = document.getElementById('tBodyTotales')
 
   total = Data.length
-  objetos=[]
-  let setOp=new Set()
+  objetos = []
+  let setOp = new Set()
 
 
-  switch(col){
-    case 'Seccion': Data.forEach(e=>setOp.add(e.seccion))
-    setOp.forEach(s=>{
-      objetos.push({
-        nombre:s,
-        cuenta: Data.filter(e=>e.seccion==s).length
+  switch (col) {
+    case 'Seccion': Data.forEach(e => setOp.add(e.seccion))
+      setOp.forEach(s => {
+        objetos.push({
+          nombre: s,
+          cuenta: Data.filter(e => e.seccion == s).length
+        })
+
       })
-  
-    })
-    break;
-    case 'Nombre': Data.forEach(e=>setOp.add(e.nombre))
-    setOp.forEach(s=>{
-      objetos.push({
-        nombre:s,
-        cuenta: Data.filter(e=>e.nombre==s).length
+      break;
+    case 'Nombre': Data.forEach(e => setOp.add(e.nombre))
+      setOp.forEach(s => {
+        objetos.push({
+          nombre: s,
+          cuenta: Data.filter(e => e.nombre == s).length
+        })
+
       })
-  
-    })
-    break;
-    case 'Paciente': Data.forEach(e=>setOp.add(e.paciente))
-    setOp.forEach(s=>{
-      objetos.push({
-        nombre:s,
-        cuenta: Data.filter(e=>e.paciente==s).length
+      break;
+    case 'Paciente': Data.forEach(e => setOp.add(e.paciente))
+      setOp.forEach(s => {
+        objetos.push({
+          nombre: s,
+          cuenta: Data.filter(e => e.paciente == s).length
+        })
+
       })
-  
-    })
-    break;
-    case 'Bioanalista': Data.forEach(e=>setOp.add(e.bioanalista))
-    setOp.forEach(s=>{
-      objetos.push({
-        nombre:s,
-        cuenta: Data.filter(e=>e.bioanalista==s).length
+      break;
+    case 'Bioanalista': Data.forEach(e => setOp.add(e.bioanalista))
+      setOp.forEach(s => {
+        objetos.push({
+          nombre: s,
+          cuenta: Data.filter(e => e.bioanalista == s).length
+        })
+
       })
-  
-    })
-    break;
-    case 'Categoria': 
-    Data.forEach(e=>setOp.add(e.categoria))
-            setOp.forEach(s=>{
-              objetos.push({
-                nombre:s,
-                cuenta: Data.filter(e=>e.categoria==s).length
-              })
-          
-            })
-    break;
+      break;
+    case 'Categoria':
+      Data.forEach(e => setOp.add(e.categoria))
+      setOp.forEach(s => {
+        objetos.push({
+          nombre: s,
+          cuenta: Data.filter(e => e.categoria == s).length
+        })
+
+      })
+      break;
     case 'Fecha':
-      Data.forEach(e=>setOp.add(e.fecha.split('T')[0]))
-              setOp.forEach(s=>{
-                objetos.push({
-                  nombre:s,
-                  cuenta: Data.filter(e=>e.fecha.split('T')[0]==s).length
-                })
-            
-              })
-              break;
+      Data.forEach(e => setOp.add(e.fecha.split('T')[0]))
+      setOp.forEach(s => {
+        objetos.push({
+          nombre: s,
+          cuenta: Data.filter(e => e.fecha.split('T')[0] == s).length
+        })
+
+      })
+      break;
     case 'Sede':
-      Data.forEach(e=>setOp.add(e.sede))
-              setOp.forEach(s=>{
-                objetos.push({
-                  nombre:s,
-                  cuenta: Data.filter(e=>e.sede==s).length
-                })
-            
-              })
-              break;
-    default: document.getElementById('h1ModalTotales').innerText=`ESTA COLUMNA NO ES CONTABLE`
-    tBody.innerHTML=''
-    return
-    break;
+      Data.forEach(e => setOp.add(e.sede))
+      setOp.forEach(s => {
+        objetos.push({
+          nombre: s,
+          cuenta: Data.filter(e => e.sede == s).length
+        })
+
+      })
+      break;
+    default: document.getElementById('h1ModalTotales').innerText = `ESTA COLUMNA NO ES CONTABLE`
+      tBody.innerHTML = ''
+      return
+      break;
 
   }
-  
-    
 
-  document.getElementById('h1ModalTotales').innerText=`Examenes - ${col}`
-  tBody.innerHTML=''
-  objetos.forEach(e=>{
-    tBody.innerHTML+=`
+
+
+  document.getElementById('h1ModalTotales').innerText = `Examenes - ${col}`
+  tBody.innerHTML = ''
+  objetos.forEach(e => {
+    tBody.innerHTML += `
     <tr>
               <td>${e.nombre}</td>
               <td>${e.cuenta}</td>
-              <td>${((e.cuenta/total)*100).toFixed(2)} %</td>
+              <td>${((e.cuenta / total) * 100).toFixed(2)} %</td>
             </tr>
     
     `
   })
-  tBody.innerHTML+=`
+  tBody.innerHTML += `
   <tr>
               <td>Total</td>
               <td>${total}</td>
@@ -2136,120 +2100,120 @@ function contarExamenes(col){
 
 }
 
-function contarOrdenes(col){
-  const tBody=document.getElementById('tBodyTotales')
+function contarOrdenes(col) {
+  const tBody = document.getElementById('tBodyTotales')
 
   total = Data.length
-  objetos=[]
-  let setOp=new Set()
+  objetos = []
+  let setOp = new Set()
 
 
-  switch(col){
-    case 'Orden': Data.forEach(e=>setOp.add(e.orden))
-    setOp.forEach(s=>{
-      objetos.push({
-        nombre:s,
-        cuenta: Data.filter(e=>e.orden==s).length
+  switch (col) {
+    case 'Orden': Data.forEach(e => setOp.add(e.orden))
+      setOp.forEach(s => {
+        objetos.push({
+          nombre: s,
+          cuenta: Data.filter(e => e.orden == s).length
+        })
+
       })
-  
-    })
-    break;
-    case 'Empresa': Data.forEach(e=>setOp.add(e.clave))
-    setOp.forEach(s=>{
-      let imagen
-      if(s=='clave'){
-        imagen=`<img src="../imgs/la-milagrosa-logo.png"   width="30" alt="" srcset="">`
-          
-      }
-      if(s=='orden'){
-        imagen=`<img src="../imgs/salud-vital-logo.png"   width="30" alt="" srcset="">`
-      }
+      break;
+    case 'Empresa': Data.forEach(e => setOp.add(e.clave))
+      setOp.forEach(s => {
+        let imagen
+        if (s == 'clave') {
+          imagen = `<img src="../imgs/la-milagrosa-logo.png"   width="30" alt="" srcset="">`
 
-      if(s=='no'){
-        imagen=`<svg xmlns="http://www.w3.org/2000/svg" width="30" height="30"  fill="green" class="bi bi-person-lines-fill" viewBox="0 0 16 16">
+        }
+        if (s == 'orden') {
+          imagen = `<img src="../imgs/salud-vital-logo.png"   width="30" alt="" srcset="">`
+        }
+
+        if (s == 'no') {
+          imagen = `<svg xmlns="http://www.w3.org/2000/svg" width="30" height="30"  fill="green" class="bi bi-person-lines-fill" viewBox="0 0 16 16">
                             <path d="M6 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6m-5 6s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1zM11 3.5a.5.5 0 0 1 .5-.5h4a.5.5 0 0 1 0 1h-4a.5.5 0 0 1-.5-.5m.5 2.5a.5.5 0 0 0 0 1h4a.5.5 0 0 0 0-1zm2 3a.5.5 0 0 0 0 1h2a.5.5 0 0 0 0-1zm0 3a.5.5 0 0 0 0 1h2a.5.5 0 0 0 0-1z"/>
                           </svg>`
-      }
+        }
 
-      objetos.push({
-        
+        objetos.push({
 
-        nombre:imagen,
-        cuenta: Data.filter(e=>e.clave==s).length
+
+          nombre: imagen,
+          cuenta: Data.filter(e => e.clave == s).length
+        })
+
       })
-  
-    })
-    break;
-    case 'Paciente': Data.forEach(e=>setOp.add(e.paciente))
-    setOp.forEach(s=>{
-      objetos.push({
-        nombre:s,
-        cuenta: Data.filter(e=>e.paciente==s).length
+      break;
+    case 'Paciente': Data.forEach(e => setOp.add(e.paciente))
+      setOp.forEach(s => {
+        objetos.push({
+          nombre: s,
+          cuenta: Data.filter(e => e.paciente == s).length
+        })
+
       })
-  
-    })
-    break;
-    case 'Bioanalista': Data.forEach(e=>setOp.add(e.bioanalista))
-    setOp.forEach(s=>{
-      objetos.push({
-        nombre:s,
-        cuenta: Data.filter(e=>e.bioanalista==s).length
+      break;
+    case 'Bioanalista': Data.forEach(e => setOp.add(e.bioanalista))
+      setOp.forEach(s => {
+        objetos.push({
+          nombre: s,
+          cuenta: Data.filter(e => e.bioanalista == s).length
+        })
+
       })
-  
-    })
-    break;
-    case 'Expediente': 
-    Data.forEach(e=>setOp.add(e.expediente))
-            setOp.forEach(s=>{
-              objetos.push({
-                nombre:s,
-                cuenta: Data.filter(e=>e.expediente==s).length
-              })
-          
-            })
-    break;
+      break;
+    case 'Expediente':
+      Data.forEach(e => setOp.add(e.expediente))
+      setOp.forEach(s => {
+        objetos.push({
+          nombre: s,
+          cuenta: Data.filter(e => e.expediente == s).length
+        })
+
+      })
+      break;
     case 'Fecha':
-      Data.forEach(e=>setOp.add(e.fecha.split('T')[0]))
-              setOp.forEach(s=>{
-                objetos.push({
-                  nombre:s,
-                  cuenta: Data.filter(e=>e.fecha.split('T')[0]==s).length
-                })
-            
-              })
-              break;
+      Data.forEach(e => setOp.add(e.fecha.split('T')[0]))
+      setOp.forEach(s => {
+        objetos.push({
+          nombre: s,
+          cuenta: Data.filter(e => e.fecha.split('T')[0] == s).length
+        })
+
+      })
+      break;
     case 'Sede':
-      Data.forEach(e=>setOp.add(e.sede))
-              setOp.forEach(s=>{
-                objetos.push({
-                  nombre:s,
-                  cuenta: Data.filter(e=>e.sede==s).length
-                })
-            
-              })
-              break;
-    default: document.getElementById('h1ModalTotales').innerText=`ESTA COLUMNA NO ES CONTABLE`
-    tBody.innerHTML=''
-    return
-    break;
+      Data.forEach(e => setOp.add(e.sede))
+      setOp.forEach(s => {
+        objetos.push({
+          nombre: s,
+          cuenta: Data.filter(e => e.sede == s).length
+        })
+
+      })
+      break;
+    default: document.getElementById('h1ModalTotales').innerText = `ESTA COLUMNA NO ES CONTABLE`
+      tBody.innerHTML = ''
+      return
+      break;
 
   }
-  
-    
 
-  document.getElementById('h1ModalTotales').innerText=`Examenes - ${col}`
-  tBody.innerHTML=''
-  objetos.forEach(e=>{
-    tBody.innerHTML+=`
+
+
+  document.getElementById('h1ModalTotales').innerText = `Examenes - ${col}`
+  tBody.innerHTML = ''
+  objetos.forEach(e => {
+    tBody.innerHTML += `
     <tr>
               <td>${e.nombre}</td>
               <td>${e.cuenta}</td>
-              <td>${((e.cuenta/total)*100).toFixed(2)} %</td>
+              <td>${((e.cuenta / total) * 100).toFixed(2)} %</td>
             </tr>
     
     `
   })
-  tBody.innerHTML+=`
+  tBody.innerHTML += `
   <tr>
               <td>Total</td>
               <td>${total}</td>
@@ -2261,17 +2225,11 @@ function contarOrdenes(col){
 
 const abrirModalPacientes2 = (event) => {
   new bootstrap.Modal("#pacientes-list").toggle();
-  console.log(event)
-  
-  console.log(event.target)
-  console.log(event.target.tagName)
 
-  
-
-  const menu=document.getElementById('menuPacientesUl')
-    menu.innerHTML=''
-    pacientesArray.forEach(e=>{
-        menu.innerHTML+=`
+  const menu = document.getElementById('menuPacientesUl')
+  menu.innerHTML = ''
+  pacientesArray.forEach(e => {
+    menu.innerHTML += `
         <li class="list-group-item list-group-item-light list-group-item-action" >
           <div class="row">
             <div class="col-3">
@@ -2283,7 +2241,7 @@ const abrirModalPacientes2 = (event) => {
 
             </div>
             <div class="col-3 d-flex justify-content-end align-content-center">
-            <svg xmlns="http://www.w3.org/2000/svg" data-bs-dismiss="modal" style="cursor:pointer" width="24" height="24" fill="green" onclick="setInputPaciente(${e.id},'${event.target.tagName=='BUTTON' ? `${event.target.parentNode.children[0].id}` : event.target.tagName=='path' ?  `${event.target.parentNode.parentNode.parentNode.children[0].id}` :  `${event.target.parentNode.parentNode.children[0].id}`}')" class="bi bi-check-circle" viewBox="0 0 16 16">
+            <svg xmlns="http://www.w3.org/2000/svg" data-bs-dismiss="modal" style="cursor:pointer" width="24" height="24" fill="green" onclick="setInputPaciente(${e.id},'${event.target.tagName == 'BUTTON' ? `${event.target.parentNode.children[0].id}` : event.target.tagName == 'path' ? `${event.target.parentNode.parentNode.parentNode.children[0].id}` : `${event.target.parentNode.parentNode.children[0].id}`}')" class="bi bi-check-circle" viewBox="0 0 16 16">
               <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
               <path d="m10.97 4.97-.02.022-3.473 4.425-2.093-2.094a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-1.071-1.05"/>
             </svg>
@@ -2292,22 +2250,22 @@ const abrirModalPacientes2 = (event) => {
           </div>
         </li> 
         `
-    })
+  })
 
 }
 
 
-const abrirModalExamenes = (event,tipo) => {
- 
+const abrirModalExamenes = (event, tipo) => {
+
   new bootstrap.Modal("#examenes-list").toggle();
 
   seccionSelec = document.getElementById("seccionExamenSelect");
-  seccionSelec.setAttribute('onchange',`validarSelectSeccion(value,'${tipo}','${event.target.tagName=='BUTTON' ? `${event.target.parentNode.children[0].id}` : event.target.tagName=='svg' ?  `${event.target.parentNode.parentNode.children[0].id}` :  `${event.target.parentNode.parentNode.parentNode.children[0].id}`}')`)
+  seccionSelec.setAttribute('onchange', `validarSelectSeccion(value,'${tipo}','${event.target.tagName == 'BUTTON' ? `${event.target.parentNode.children[0].id}` : event.target.tagName == 'svg' ? `${event.target.parentNode.parentNode.children[0].id}` : `${event.target.parentNode.parentNode.parentNode.children[0].id}`}')`)
 
   input = document.getElementById("examenDiagnosticoInput");
-  input.setAttribute('oninput',`buscarExamen('${tipo}','${event.target.tagName=='BUTTON' ? `${event.target.parentNode.children[0].id}` : event.target.tagName=='svg' ?  `${event.target.parentNode.parentNode.children[0].id}` :  `${event.target.parentNode.parentNode.parentNode.children[0].id}`}')`)
+  input.setAttribute('oninput', `buscarExamen('${tipo}','${event.target.tagName == 'BUTTON' ? `${event.target.parentNode.children[0].id}` : event.target.tagName == 'svg' ? `${event.target.parentNode.parentNode.children[0].id}` : `${event.target.parentNode.parentNode.parentNode.children[0].id}`}')`)
   const menuDiagnosticoUl = document.getElementById("menuDiagnosticoUl");
-  menuDiagnosticoUl.innerHTML=''
+  menuDiagnosticoUl.innerHTML = ''
   examenesArray.forEach((ex) => {
     menuDiagnosticoUl.innerHTML += `
     <li class="list-group-item list-group-item-light list-group-item-action" >
@@ -2317,7 +2275,7 @@ const abrirModalExamenes = (event,tipo) => {
 
             </div>
             <div class="col-3 d-flex justify-content-end align-content-center">
-            <svg xmlns="http://www.w3.org/2000/svg" style="cursor:pointer" data-bs-dismiss="modal" onclick="setInputExamen(${ex.id},'${event.target.tagName=='BUTTON' ? `${event.target.parentNode.children[0].id}` : event.target.tagName=='path' ?  `${event.target.parentNode.parentNode.parentNode.children[0].id}` :  `${event.target.parentNode.parentNode.children[0].id}`}','${tipo}')" width="24" height="24" fill="green" class="bi bi-check-circle " viewBox="0 0 16 16">
+            <svg xmlns="http://www.w3.org/2000/svg" style="cursor:pointer" data-bs-dismiss="modal" onclick="setInputExamen(${ex.id},'${event.target.tagName == 'BUTTON' ? `${event.target.parentNode.children[0].id}` : event.target.tagName == 'path' ? `${event.target.parentNode.parentNode.parentNode.children[0].id}` : `${event.target.parentNode.parentNode.children[0].id}`}','${tipo}')" width="24" height="24" fill="green" class="bi bi-check-circle " viewBox="0 0 16 16">
               <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
               <path d="m10.97 4.97-.02.022-3.473 4.425-2.093-2.094a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-1.071-1.05"/>
             </svg>

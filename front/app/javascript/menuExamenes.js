@@ -6,7 +6,6 @@ const render = async () => {
       urlsv + "/api/examenes/get-examenes",
       { headers: { token } }
     );
-    console.log("🚀 ~ render ~ examenes:", examenes);
   } catch (error) {
     console.log(error);
     if (error.response.data.mensaje) {

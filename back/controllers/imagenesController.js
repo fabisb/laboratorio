@@ -1,7 +1,6 @@
 import { pool } from "../database/db.js";
 
 export const syncFiles = async (req, res) => {
-  console.log("🚀 ~ syncFiles ~ req.query:", req.query);
   const { idBioanalista } = req.query;
   try {
     const [bioanalistas] = await pool.execute(

@@ -755,7 +755,6 @@ ipcMain.on("email", async (event, email) => {
   const currentWindow = event.sender.getOwnerBrowserWindow();
 
   const examen = store.get("examen");
-  console.log("🚀 ~ ipcMain.on ~ examen:", examen)
   const ccsData = await fs.readFile("app/modules/bootstrap.min.css", "utf8");
   const imgData =
     `data:image/png;base64,` +
@@ -870,7 +869,6 @@ ipcMain.on("email", async (event, email) => {
 
       const texto = `${examen.paciente.pre_cedula}-${examen.paciente.cedula} ${examen.orden ? examen.orden : examen.orden.orden}`;
       const correo = (JSON.parse(email)).email;
-      console.log("🚀 ~ .then ~ texto:", texto)
       try {
         const { token } = await store.get("token");
 

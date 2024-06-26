@@ -14,7 +14,6 @@ const imprimir = async () => {
 
 const reimprimirExamen = async () => {
   const examen = await examenVar.get();
-  console.log("🚀 ~ pintarExamen ~ examen:", examen);
 
   document.getElementsByName("firmaBioanalista")[0].innerHTML = "";
 
@@ -28,9 +27,7 @@ const reimprimirExamen = async () => {
     const bio = [...bioSet][index];
     let bioanalistaInfo;
     const examenesBio = examen.examenes.filter((e) => e.bioanalista.id == bio);
-    console.log(examenesBio);
     examenesBio.forEach((ex) => {
-      console.log(ex);
       bioanalistaInfo = ex.bioanalista;
       ex.caracteristicas.sort(function (a, b) {
         if (a.posicion > b.posicion) {
@@ -43,7 +40,6 @@ const reimprimirExamen = async () => {
         return 0;
       });
       const seccionesSet = new Set(examenesBio.map((e) => e.nombreSeccion));
-      console.log("🚀 ~ pintarExamen ~ seccionesSet:", seccionesSet);
 
       document.getElementsByName("examenContainer")[0].innerHTML += [
         ...seccionesSet,
@@ -167,7 +163,6 @@ const reimprimirExamen = async () => {
 
 const pintarExamen = async () => {
   const examen = await examenVar.get();
-  console.log("🚀 ~ pintarExamen ~ examen:", examen);
   const { token } = await login.getToken();
   var imageUrl = "";
   var bioanalista;
@@ -182,7 +177,6 @@ const pintarExamen = async () => {
       params: { idBioanalista: examen.bioanalista },
     });
     bioanalista = data;
-    console.log("🚀 ~ pintarExamen ~ bioanalista:", bioanalista);
     //const imageUrl = await syncFiles(firmaImg.foto_firma)
     imageUrl = bioanalista.foto_firma;
   }
@@ -200,7 +194,6 @@ const pintarExamen = async () => {
   });
 
   const seccionesSet = new Set(examen.examenes.map((e) => e.nombreSeccion));
-  console.log("🚀 ~ pintarExamen ~ seccionesSet:", seccionesSet);
   document.getElementsByName("firmaBioanalista")[0].innerHTML = `
   
   ${reimpresion == true
@@ -319,7 +312,6 @@ const whatsapp = async () => {
     document.getElementById("numeroTlf").value.charAt(0) == "0"
       ? document.getElementById("numeroTlf").value.slice(1)
       : document.getElementById("numeroTlf").value;
-  console.log("🚀 ~ whatsapp ~ numeroInput:", numero);
 
   const code = document.getElementById("codeTlf").value;
   if (numero == "" || isNaN(numero) || numero <= 0) {

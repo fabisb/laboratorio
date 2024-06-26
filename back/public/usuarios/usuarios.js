@@ -73,7 +73,6 @@ async function modificarFormulario(id, nombre) {
     element.setAttribute("hidden", "true");
   }
   const usuarioInfo = usuariosArray.usuarios.find((e) => e.id == id);
-  console.log(usuarioInfo);
   const nombreInp = document.getElementById("nombre");
   const cedulaInp = document.getElementById("cedula");
   const direccionInp = document.getElementById("direccion");
@@ -88,7 +87,7 @@ async function modificarFormulario(id, nombre) {
     const colegioInp = document.getElementById("colegio");
     const ministerioInp = document.getElementById("ministerio");
     const firmaInp = document.getElementById("firma");
-    tipoInp.setAttribute('disabled','true');
+    tipoInp.setAttribute('disabled', 'true');
     //tipoInp.removeAttribute('disabled');
     for (let index = 0; index < biodiv.length; index++) {
       const element = biodiv[index];
@@ -117,8 +116,8 @@ async function modificarFormulario(id, nombre) {
 function crearUsuario() {
   const biodiv = document.getElementsByClassName("bioanalistaDiv");
 
-    document.getElementById("tipo").removeAttribute('disabled');
-    document.getElementById('bioOption').hidden = false;
+  document.getElementById("tipo").removeAttribute('disabled');
+  document.getElementById('bioOption').hidden = false;
 
   for (let index = 0; index < biodiv.length; index++) {
     const element = biodiv[index];
@@ -169,14 +168,13 @@ const buscarUsuarioTable = (value) => {
 
 const buscarUsuarios = async () => {
   const { data } = await axios.get("/api/espejo/get-usuarios");
-  console.log("🚀 ~ buscarUsuarios ~ data:", data);
   usuariosArray = data;
   const tBody = document.getElementById(`tBodyUsuarios`);
   tBody.innerHTML = "";
   data.usuarios.forEach((user) => {
     try {
       let bioanalista = data.bioanalistas.find((e) => e.id == user.bioanalista);
-    } catch (error) {}
+    } catch (error) { }
 
     tBody.innerHTML += `
     <tr>
@@ -186,45 +184,39 @@ const buscarUsuarios = async () => {
                       <td scope="col">${user.correo}</td>
                       <td scope="col">${user.telefono}</td>
                       <td scope="col">${user.nivel == 1
-                        ? "Administrador"
-                        : user.nivel == 2
-                        ? "Auxiliar"
-                        : "Bioanalista"}</td>
+        ? "Administrador"
+        : user.nivel == 2
+          ? "Auxiliar"
+          : "Bioanalista"}</td>
                       <td scope="col">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="orange" class="bi bi-pencil-square" onclick="modificarFormulario(${
-                          user.id
-                        },'${
-      user.nombre
-    }')"  style="cursor:pointer" viewBox="0 0 16 16">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="orange" class="bi bi-pencil-square" onclick="modificarFormulario(${user.id
+      },'${user.nombre
+      }')"  style="cursor:pointer" viewBox="0 0 16 16">
                           <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
                           <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z"/>
                         </svg>
                       </td>
-                      <td style="cursor:pointer">${
-                        user.status == "activo"
-                          ? `<svg xmlns="http://www.w3.org/2000/svg"  onclick="cambiarStatus('inactivo','${
-                              user.nivel == 1
-                                ? "administrador"
-                                : user.nivel == 2
-                                ? "auxiliar"
-                                : "bioanalista"
-                            }','${
-                              user.id
-                            }')" width="20" height="20" fill="green" class="bi bi-check-square mx-1" viewBox="0 0 16 16">
+                      <td style="cursor:pointer">${user.status == "activo"
+        ? `<svg xmlns="http://www.w3.org/2000/svg"  onclick="cambiarStatus('inactivo','${user.nivel == 1
+          ? "administrador"
+          : user.nivel == 2
+            ? "auxiliar"
+            : "bioanalista"
+        }','${user.id
+        }')" width="20" height="20" fill="green" class="bi bi-check-square mx-1" viewBox="0 0 16 16">
                         <path d="M14 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2z"/>
                         <path d="M10.97 4.97a.75.75 0 0 1 1.071 1.05l-3.992 4.99a.75.75 0 0 1-1.08.02L4.324 8.384a.75.75 0 1 1 1.06-1.06l2.094 2.093 3.473-4.425z"/>
                       </svg>`
-                          : `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="red" class="bi bi-x-octagon"  onclick="cambiarStatus('activo','${
-                              user.nivel == 1
-                                ? "administrador"
-                                : user.nivel == 2
-                                ? "auxiliar"
-                                : "bioanalista"
-                            }','${user.id}')" viewBox="0 0 16 16">
+        : `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="red" class="bi bi-x-octagon"  onclick="cambiarStatus('activo','${user.nivel == 1
+          ? "administrador"
+          : user.nivel == 2
+            ? "auxiliar"
+            : "bioanalista"
+        }','${user.id}')" viewBox="0 0 16 16">
                         <path d="M4.54.146A.5.5 0 0 1 4.893 0h6.214a.5.5 0 0 1 .353.146l4.394 4.394a.5.5 0 0 1 .146.353v6.214a.5.5 0 0 1-.146.353l-4.394 4.394a.5.5 0 0 1-.353.146H4.893a.5.5 0 0 1-.353-.146L.146 11.46A.5.5 0 0 1 0 11.107V4.893a.5.5 0 0 1 .146-.353zM5.1 1 1 5.1v5.8L5.1 15h5.8l4.1-4.1V5.1L10.9 1z"/>
                         <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708"/>
                       </svg>`
-                      }</td>                
+      }</td>                
                     </tr>
     `;
   });
@@ -304,7 +296,7 @@ const modificarBio = async (id, idBio) => {
       nivel,
     });
     await axios.put("/api/espejo/editar-bioanalista", {
-      id:idBio,
+      id: idBio,
       nombre: pre_nombre + " " + nombre,
       telefono,
       colegio,
@@ -337,7 +329,7 @@ const modificarUsuario = async (id) => {
     //ALERTAS PARA VALIDACION
     return usuariosAlerta("El ID del usuario no es valido", "danger");
   }
-  if (nombre == "" || telefono == "" || nivel == "" ) {
+  if (nombre == "" || telefono == "" || nivel == "") {
     return usuariosAlerta("Algun dato no es valido", "danger");
     //ALERTAS PARA VALIDACION
   }
@@ -484,7 +476,7 @@ const subirImagen = async () => {
 
       // Validar que el archivo sea una imagen
       if (!validImageTypes.includes(file.type)) {
-     await usuariosAlerta("Solo se permiten archivos de imagen (JPEG, PNG, GIF, BMP, WebP).", "warning");
+        await usuariosAlerta("Solo se permiten archivos de imagen (JPEG, PNG, GIF, BMP, WebP).", "warning");
 
         return "";
       }

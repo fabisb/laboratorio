@@ -1,6 +1,6 @@
 {
   "name": "medlab-front",
-  "version": "0.1.3",
+  "version": "0.1.5",
   "description": "MedLab-Suite, La Milagrosa",
   "main": "main.js",
   "scripts": {

@@ -16,8 +16,8 @@ const subirImagen = async () => {
 
       // Validar que el archivo sea una imagen
       if (!validImageTypes.includes(file.type)) {
-        
-     await usuariosAlerta("Solo se permiten archivos de imagen (JPEG, PNG, GIF, BMP, WebP).", "warning");
+
+        await usuariosAlerta("Solo se permiten archivos de imagen (JPEG, PNG, GIF, BMP, WebP).", "warning");
         return "";
       }
 
@@ -49,47 +49,42 @@ function buscarUserFiltro(value) {
   value == ""
     ? (usersFiltro = users)
     : isNaN(value)
-    ? (usersFiltro = users.filter((e) =>
+      ? (usersFiltro = users.filter((e) =>
         e.nombre.toLowerCase().includes(value.toLowerCase())
       ))
-    : (usersFiltro = users.filter((e) => e.cedula.includes(value)));
+      : (usersFiltro = users.filter((e) => e.cedula.includes(value)));
   usersFiltro.forEach((user) => {
     tBody.innerHTML += `
                     <tr>
                   <th scope="row">${user.cedula}</th>
                   <td>${user.nombre}</td>
-                  <td>${
-                    user.nivel == 1
-                      ? "Administrador"
-                      : user.nivel == 2
-                      ? "Auxiliar"
-                      : "Bioanalista"
-                  }</td>
-                  <td style="cursor:pointer">${
-                    user.status == "activo"
-                      ? `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="green"  onclick="cambiarStatus('inactivo','${
-                          user.nivel == 1
-                            ? "administrador"
-                            : user.nivel == 2
-                            ? "auxiliar"
-                            : "bioanalista"
-                        }','${
-                          user.id
-                        }')" class="bi bi-check-square mx-1" viewBox="0 0 16 16">
+                  <td>${user.nivel == 1
+        ? "Administrador"
+        : user.nivel == 2
+          ? "Auxiliar"
+          : "Bioanalista"
+      }</td>
+                  <td style="cursor:pointer">${user.status == "activo"
+        ? `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="green"  onclick="cambiarStatus('inactivo','${user.nivel == 1
+          ? "administrador"
+          : user.nivel == 2
+            ? "auxiliar"
+            : "bioanalista"
+        }','${user.id
+        }')" class="bi bi-check-square mx-1" viewBox="0 0 16 16">
                     <path d="M14 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2z"/>
                     <path d="M10.97 4.97a.75.75 0 0 1 1.071 1.05l-3.992 4.99a.75.75 0 0 1-1.08.02L4.324 8.384a.75.75 0 1 1 1.06-1.06l2.094 2.093 3.473-4.425z"/>
                   </svg>`
-                      : `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="red" class="bi bi-x-octagon" viewBox="0 0 16 16"  onclick="cambiarStatus('activo','${
-                          user.nivel == 1
-                            ? "administrador"
-                            : user.nivel == 2
-                            ? "auxiliar"
-                            : "bioanalista"
-                        }','${user.id}')">
+        : `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="red" class="bi bi-x-octagon" viewBox="0 0 16 16"  onclick="cambiarStatus('activo','${user.nivel == 1
+          ? "administrador"
+          : user.nivel == 2
+            ? "auxiliar"
+            : "bioanalista"
+        }','${user.id}')">
                     <path d="M4.54.146A.5.5 0 0 1 4.893 0h6.214a.5.5 0 0 1 .353.146l4.394 4.394a.5.5 0 0 1 .146.353v6.214a.5.5 0 0 1-.146.353l-4.394 4.394a.5.5 0 0 1-.353.146H4.893a.5.5 0 0 1-.353-.146L.146 11.46A.5.5 0 0 1 0 11.107V4.893a.5.5 0 0 1 .146-.353zM5.1 1 1 5.1v5.8L5.1 15h5.8l4.1-4.1V5.1L10.9 1z"/>
                     <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708"/>
                   </svg>`
-                  }</td>
+      }</td>
                   <td><svg
                     xmlns="http://www.w3.org/2000/svg"
                     width="25"
@@ -107,12 +102,10 @@ function buscarUserFiltro(value) {
                       d="M8 5.5a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5M4.5 8a3.5 3.5 0 1 1 7 0 3.5 3.5 0 0 1-7 0"
                     />
                   </svg>
-                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="orange" class="bi bi-pencil-square" onclick="detalleUsuario(${
-                    user.id
-                  }), ${
-        user.nivel == 3
-          ? `modificarFormBio('${user.id}','${bioanalista[0].id}')`
-          : `modificarFormUser('${user.id}')`
+                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="orange" class="bi bi-pencil-square" onclick="detalleUsuario(${user.id
+      }), ${user.nivel == 3
+        ? `modificarFormBio('${user.id}','${bioanalista[0].id}')`
+        : `modificarFormUser('${user.id}')`
       }" style="cursor:pointer" viewBox="0 0 16 16">
                     <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
                     <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z"/>
@@ -134,40 +127,34 @@ function buscarUserTipo(value) {
                     <tr>
                   <th scope="row">${user.cedula}</th>
                   <td>${user.nombre}</td>
-                  <td>${
-                    user.nivel == 1
-                      ? "Administrador"
-                      : user.nivel == 2
-                      ? "Auxiliar"
-                      : "Bioanalista"
-                  }</td>
-                  <td style="cursor:pointer">${
-                    user.status == "activo"
-                      ? `<svg xmlns="http://www.w3.org/2000/svg" onclick="cambiarStatus('inactivo','${
-                          user.nivel == 1
-                            ? "administrador"
-                            : user.nivel == 2
-                            ? "auxiliar"
-                            : "bioanalista"
-                        }','${
-                          user.id
-                        }')" width="20" height="20" fill="green" class="bi bi-check-square mx-1" viewBox="0 0 16 16">
+                  <td>${user.nivel == 1
+        ? "Administrador"
+        : user.nivel == 2
+          ? "Auxiliar"
+          : "Bioanalista"
+      }</td>
+                  <td style="cursor:pointer">${user.status == "activo"
+        ? `<svg xmlns="http://www.w3.org/2000/svg" onclick="cambiarStatus('inactivo','${user.nivel == 1
+          ? "administrador"
+          : user.nivel == 2
+            ? "auxiliar"
+            : "bioanalista"
+        }','${user.id
+        }')" width="20" height="20" fill="green" class="bi bi-check-square mx-1" viewBox="0 0 16 16">
                     <path d="M14 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2z"/>
                     <path d="M10.97 4.97a.75.75 0 0 1 1.071 1.05l-3.992 4.99a.75.75 0 0 1-1.08.02L4.324 8.384a.75.75 0 1 1 1.06-1.06l2.094 2.093 3.473-4.425z"/>
                   </svg>`
-                      : `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="red" onclick="cambiarStatus('activo','${
-                          user.nivel == 1
-                            ? "administrador"
-                            : user.nivel == 2
-                            ? "auxiliar"
-                            : "bioanalista"
-                        }','${
-                          user.id
-                        }')" class="bi bi-x-octagon" viewBox="0 0 16 16">
+        : `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="red" onclick="cambiarStatus('activo','${user.nivel == 1
+          ? "administrador"
+          : user.nivel == 2
+            ? "auxiliar"
+            : "bioanalista"
+        }','${user.id
+        }')" class="bi bi-x-octagon" viewBox="0 0 16 16">
                     <path d="M4.54.146A.5.5 0 0 1 4.893 0h6.214a.5.5 0 0 1 .353.146l4.394 4.394a.5.5 0 0 1 .146.353v6.214a.5.5 0 0 1-.146.353l-4.394 4.394a.5.5 0 0 1-.353.146H4.893a.5.5 0 0 1-.353-.146L.146 11.46A.5.5 0 0 1 0 11.107V4.893a.5.5 0 0 1 .146-.353zM5.1 1 1 5.1v5.8L5.1 15h5.8l4.1-4.1V5.1L10.9 1z"/>
                     <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708"/>
                   </svg>`
-                  }</td>
+      }</td>
                   <td><svg
                     xmlns="http://www.w3.org/2000/svg"
                     width="25"
@@ -185,12 +172,10 @@ function buscarUserTipo(value) {
                       d="M8 5.5a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5M4.5 8a3.5 3.5 0 1 1 7 0 3.5 3.5 0 0 1-7 0"
                     />
                   </svg>
-                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="orange" class="bi bi-pencil-square" onclick="detalleUsuario(${
-                    user.id
-                  }), ${
-        user.nivel == 3
-          ? `modificarFormBio('${user.id}','${bioanalista[0].id}')`
-          : `modificarFormUser('${user.id}')`
+                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="orange" class="bi bi-pencil-square" onclick="detalleUsuario(${user.id
+      }), ${user.nivel == 3
+        ? `modificarFormBio('${user.id}','${bioanalista[0].id}')`
+        : `modificarFormUser('${user.id}')`
       }" style="cursor:pointer" viewBox="0 0 16 16">
                     <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
                     <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z"/>
@@ -202,7 +187,6 @@ function buscarUserTipo(value) {
 
 function detalleUsuario(id) {
   const usuario = usuariosArray.usuarios.find((e) => e.id == id);
-  console.log("🚀 ~ detalleUsuario ~ usuario:", usuario);
   let bio;
   const pre_cedula = document.getElementById("precedula");
   const cedula = document.getElementById("cedula");
@@ -228,7 +212,6 @@ function detalleUsuario(id) {
     correo.value = usuario.correo;
     telefono.value = usuario.telefono;
     bio = usuariosArray.bioanalistas.find((e) => e.cedula == usuario.cedula);
-    console.log("🚀 ~ detalleUsuario ~ bio:", bio);
     ministerio.value = bio.ministerio;
     colegio.value = bio.colegio;
 
@@ -278,7 +261,6 @@ const guardarUsuario = async (tipo) => {
   }
 
   if (tipo != "1" && tipo != "2" && tipo != "3") {
-    console.log("Nivel de usuario no valido");
     return usuariosAlerta("Error al ingresar alguno de los datos", "danger");
   }
 
@@ -341,18 +323,17 @@ const guardarUsuario = async (tipo) => {
       await buscarUsuarios();
     }
   } catch (error) {
-    if (error.response.data.mensaje) {
+    console.log("🚀 ~ guardarUsuario ~ error:", error);
+    if (error.response?.data?.mensaje) {
       return await alerta.alert("Error:", error.response.data.mensaje);
     } else {
       return await alerta.error();
     }
     //CREAR MEJORES ALERTAS
-    console.log("🚀 ~ guardarUsuario ~ error:", error);
   }
 };
 
 function formularioCreacion(nivel) {
-  console.log(nivel);
   const buttonGuardar = document.getElementById("guardarButton");
   const nivelDiv = document.getElementById("nivelDiv");
   nivelDiv.hidden = true;
@@ -401,7 +382,6 @@ const buscarUsuarios = async () => {
     users = data.usuarios;
     const tBody = document.getElementById(`tBodyUsuarios`);
     tBody.innerHTML = "";
-    console.log(data)
     data.usuarios.forEach((user) => {
       let bioanalista = usuariosArray.bioanalistas.filter(
         (e) => e.cedula == user.cedula
@@ -410,38 +390,33 @@ const buscarUsuarios = async () => {
                     <tr>
                   <th scope="row">${user.cedula}</th>
                   <td>${user.nombre}</td>
-                  <td>${
-                    user.nivel == 1
-                      ? "Administrador"
-                      : user.nivel == 2
-                      ? "Auxiliar"
-                      : "Bioanalista"
-                  }</td>
-                  <td style="cursor:pointer">${
-                    user.status == "activo"
-                      ? `<svg xmlns="http://www.w3.org/2000/svg"  onclick="cambiarStatus('inactivo','${
-                          user.nivel == 1
-                            ? "administrador"
-                            : user.nivel == 2
-                            ? "auxiliar"
-                            : "bioanalista"
-                        }','${
-                          user.id
-                        }')" width="20" height="20" fill="green" class="bi bi-check-square mx-1" viewBox="0 0 16 16">
+                  <td>${user.nivel == 1
+          ? "Administrador"
+          : user.nivel == 2
+            ? "Auxiliar"
+            : "Bioanalista"
+        }</td>
+                  <td style="cursor:pointer">${user.status == "activo"
+          ? `<svg xmlns="http://www.w3.org/2000/svg"  onclick="cambiarStatus('inactivo','${user.nivel == 1
+            ? "administrador"
+            : user.nivel == 2
+              ? "auxiliar"
+              : "bioanalista"
+          }','${user.id
+          }')" width="20" height="20" fill="green" class="bi bi-check-square mx-1" viewBox="0 0 16 16">
                     <path d="M14 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2z"/>
                     <path d="M10.97 4.97a.75.75 0 0 1 1.071 1.05l-3.992 4.99a.75.75 0 0 1-1.08.02L4.324 8.384a.75.75 0 1 1 1.06-1.06l2.094 2.093 3.473-4.425z"/>
                   </svg>`
-                      : `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="red" class="bi bi-x-octagon"  onclick="cambiarStatus('activo','${
-                          user.nivel == 1
-                            ? "administrador"
-                            : user.nivel == 2
-                            ? "auxiliar"
-                            : "bioanalista"
-                        }','${user.id}')" viewBox="0 0 16 16">
+          : `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="red" class="bi bi-x-octagon"  onclick="cambiarStatus('activo','${user.nivel == 1
+            ? "administrador"
+            : user.nivel == 2
+              ? "auxiliar"
+              : "bioanalista"
+          }','${user.id}')" viewBox="0 0 16 16">
                     <path d="M4.54.146A.5.5 0 0 1 4.893 0h6.214a.5.5 0 0 1 .353.146l4.394 4.394a.5.5 0 0 1 .146.353v6.214a.5.5 0 0 1-.146.353l-4.394 4.394a.5.5 0 0 1-.353.146H4.893a.5.5 0 0 1-.353-.146L.146 11.46A.5.5 0 0 1 0 11.107V4.893a.5.5 0 0 1 .146-.353zM5.1 1 1 5.1v5.8L5.1 15h5.8l4.1-4.1V5.1L10.9 1z"/>
                     <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708"/>
                   </svg>`
-                  }</td>
+        }</td>
                   <td><svg
                     xmlns="http://www.w3.org/2000/svg"
                     width="25"
@@ -459,13 +434,11 @@ const buscarUsuarios = async () => {
                       d="M8 5.5a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5M4.5 8a3.5 3.5 0 1 1 7 0 3.5 3.5 0 0 1-7 0"
                     />
                   </svg>
-                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="orange" class="bi bi-pencil-square" onclick="detalleUsuario(${
-                    user.id
-                  }), ${
-        user.nivel == 3
+                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="orange" class="bi bi-pencil-square" onclick="detalleUsuario(${user.id
+        }), ${user.nivel == 3
           ? `modificarFormBio('${user.id}','${bioanalista[0].id}')`
           : `modificarFormUser('${user.id}')`
-      }" style="cursor:pointer" viewBox="0 0 16 16">
+        }" style="cursor:pointer" viewBox="0 0 16 16">
                     <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
                     <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z"/>
                   </svg></td>
@@ -505,9 +478,7 @@ const agregarBioanalista = async (event) => {
       } else {
         if (el.value == "") {
           if (el.name == "firma" || el.name == "direccion") {
-            console.log(`Campo ${el.name} vacio`);
           } else {
-            console.log(`Campo ${el.name} vacio`);
             return true;
           }
         }
@@ -528,27 +499,23 @@ const agregarBioanalista = async (event) => {
           }
 
           if (validarletra) {
-            console.log(`Campo ${el.name} invalido`);
             return true;
           }
         }
 
         if (el.name == "cedula") {
           if (el.value < 0) {
-            console.log("Ingrese una cedula valida");
             return true;
           }
         }
         if (el.name == "nombre") {
           if (!isNaN(el.value)) {
-            console.log("Ingrese un nombre valido");
             return true;
           }
         }
 
         if (el.name == "ingreso") {
           if (moment(el.value).isAfter(moment().format("YYYY-MM-DD"))) {
-            console.log("Ingrese una fecha valida");
             return true;
           }
         }
@@ -589,7 +556,6 @@ const agregarUsuario = async (event) => {
       if (el.value == "") {
         if (el.name == "correo" || el.name == "direccion") {
         } else {
-          console.log(`Campo ${el.name} vacio`);
           return true;
         }
       }
@@ -610,20 +576,17 @@ const agregarUsuario = async (event) => {
         }
 
         if (validarletra) {
-          console.log(`Campo ${el.name} invalido`);
           return true;
         }
       }
 
       if (el.name == "cedula") {
         if (el.value < 0) {
-          console.log("Ingrese una cedula valida");
           return true;
         }
       }
       if (el.name == "nombre") {
         if (!isNaN(el.value)) {
-          console.log("Ingrese un nombre valido");
           return true;
         }
       }
@@ -637,7 +600,6 @@ const agregarUsuario = async (event) => {
   if (validacion) {
     return usuariosAlerta("Error al ingresar alguno de los datos", "danger");
   }
-  console.log("🚀 ~ agregarPaciente ~ usuario:", usuario);
   const clave = document.getElementsByName("password")[0].value;
   const nivel = document.getElementsByName("nivel")[0].value;
   try {
@@ -660,7 +622,6 @@ const agregarUsuario = async (event) => {
 
 const render = () => {
   const fechaActual = moment().format("YYYY-MM-DD");
-  console.log(fechaActual);
   //  document.getElementsByName("ingreso")[0].setAttribute("max", fechaActual);
   window.scroll(0, 120);
 };
@@ -832,13 +793,12 @@ const cambiarCrearUsuario = (nivel) => {
               <hr>
               <div id="creacionUsuarioAlerta"></div>
 
-          <h3 id='h3Registro'>Registro de ${
-            nivel == 3
-              ? "Administrador"
-              : nivel == 1
-              ? "Usuario Bioanalista"
-              : "Auxiliar"
-          }</h3>
+          <h3 id='h3Registro'>Registro de ${nivel == 3
+      ? "Administrador"
+      : nivel == 1
+        ? "Usuario Bioanalista"
+        : "Auxiliar"
+    }</h3>
           <p>Ingrese los siguientes datos.</p>
           <form onsubmit="agregarUsuario(event), event.preventDefault()" class="requires-validation" novalidate>
             <div class="col-md-12">
@@ -1029,9 +989,7 @@ const buscarBio = async () => {
 
 const buscarUsuario = async () => {
   const pre_cedula = document.getElementsByName("pre_cedula")[0].value;
-  console.log("🚀 ~ buscarUsuario ~ pre_cedula:", pre_cedula);
   const cedula = document.getElementsByName("cedula")[0].value;
-  console.log("🚀 ~ buscarUsuario ~ cedula:", cedula);
   if (pre_cedula == "" || cedula == "") {
     //CREAR ALERTA PARA VALIDACION
     return usuariosAlerta("La cedula no es valida", "danger");
@@ -1049,7 +1007,6 @@ const buscarUsuario = async () => {
         headers: { token },
       }
     );
-    console.log("🚀 ~ buscarUsuario ~ user:", user);
     document
       .getElementsByName("pre_cedula")[0]
       .setAttribute("disabled", "true");
@@ -1082,7 +1039,6 @@ const buscarUsuario = async () => {
 };
 
 const cambiarStatus = async (status, tipo, id) => {
-  console.log(tipo);
   if (id < 0 || id == "" || !id)
     return usuariosAlerta("Envie un id valido", "danger");
 
@@ -1155,7 +1111,7 @@ const modificarBio = async (id, idBio) => {
   const correo = document.getElementById("correo").value;
   const password = document.getElementById("clave").value;
   const pre_nombre = document.getElementById("pre_nombre").value;
-  nombre = nombre.replaceAll('Lcdo ','').replaceAll('Lcda ','')
+  nombre = nombre.replaceAll('Lcdo ', '').replaceAll('Lcda ', '')
 
   if (nombre == "" || telefono == "" || colegio == "" || ministerio == "") {
     //ALERTAS PARA VALIDACION

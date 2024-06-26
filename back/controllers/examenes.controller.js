@@ -35,7 +35,6 @@ export const getExamenReimpresion = async (req, res) => {
         const [detalleInfo] = await pool.execute(
           `SELECT * FROM detalles_examen WHERE id = '${dt.id_dt}'`
         );
-        console.log(detalleInfo);
         const [subCar] = await pool.execute(
           `SELECT * FROM detalle_subcaracteristica_paciente where id_det_ex = '${dt.id}'`
         );
@@ -239,7 +238,6 @@ export const getPendienteExamen = async (req, res) => {
     }
     titulos.map((e) => detallesExamenPc.push(e));
 
-    console.log(pendiente);
 
     return await res.status(200).json({
       examenPac: {
@@ -273,14 +271,12 @@ export const getExamen = async (req, res) => {
 
     const rangos = await Promise.all(
       resultadosDetalle.map(async (e) => {
-        console.log("res: ", e);
         const [rangosBdd] = await pool.execute(
           `SELECT * FROM rangos_detalle where id_det_ex = '${e.id}'`
         );
         return { idDetEx: e.id, rangos: rangosBdd };
       })
     );
-    console.log("rangos otros:" + rangos);
     return await res
       .status(200)
       .json({ examen: resultados, detalle: resultadosDetalle, rangos: rangos });
@@ -354,7 +350,6 @@ export const getExamenResultados = async (req, res) => {
         .json({ mensaje: "El id ingresado no es correcto" });
     }
     let detalleResultados = [];
-    console.log(id);
     const [detalles] = await pool.execute(
       `
       SELECT * FROM detalles_examenes_paciente where id_ex_pac = ?
@@ -434,7 +429,6 @@ export const getExamenResultados = async (req, res) => {
       `select * from titulos where id_ex=?`,
       [detalles[0].id_ex]
     );
-    console.log(titulos);
     titulos.map((e) => {
       detalleResultados.push(e);
     });
@@ -449,7 +443,6 @@ export const getExamenResultados = async (req, res) => {
 
 export const modificarResultadoExamen = async (req, res) => {
   const { idRes, resultado, nota } = req.body;
-  console.log(idRes, resultado, nota);
   try {
     const [r] = await pool.execute(
       `UPDATE detalles_examenes_paciente set resultado = ?, nota = ? WHERE id = ?`,
@@ -552,7 +545,6 @@ export const modificarLaboratorio = async (req, res) => {
 
 export const modificarExamen = async (req, res) => {
   const { examen, detalle, idExamen } = req.body;
-  console.log("🚀 ~ modificarExamen ~ idExamen:", idExamen);
   if (!examen || examen == "") {
     return await res
       .status(400)
@@ -563,13 +555,10 @@ export const modificarExamen = async (req, res) => {
       .status(400)
       .json({ mensaje: "El examen no puede ser enviado sin caracteristicas" });
   }
-  console.log("🚀 ~ crearExamen ~ req.body:", req.body);
   try {
     for await (const dato of detalle) {
       const { nombre, unidad, resultados, idDetalleBdd } = dato;
-      console.log("🚀 ~ forawait ~ resultados:", resultados);
       if (resultados != null && resultados != "") {
-        console.log("aaa");
 
         if (resultados.split("~").length == 0) {
           return await res.status(400).json({
@@ -611,13 +600,10 @@ export const modificarExamen = async (req, res) => {
       return a;
     });
     const idsDetalleEx = detallesExistentes.map((e) => e.id);
-    console.log("ids", idsDetalle);
-    console.log("idsEx", idsDetalleEx);
 
     const detalleDelete = idsDetalleEx.filter((det) => {
       return !idsDetalle.includes(det);
     });
-    console.log("del: ", detalleDelete);
     if (detalleDelete.length > 0) {
       await pool.query(
         'UPDATE detalles_examen SET status = "inactivo" WHERE id IN (?)',
@@ -643,9 +629,7 @@ export const modificarExamen = async (req, res) => {
             dato.idDetalleBdd,
           ]
         );
-        console.log("del: ", "DELETE from rangos_detalle where id_det_ex = ?", [
-          dato.idDetalleBdd,
-        ]);
+
         await pool.execute("DELETE from rangos_detalle where id_det_ex = ?", [
           dato.idDetalleBdd,
         ]);
@@ -676,8 +660,6 @@ export const modificarExamen = async (req, res) => {
 };
 export const crearExamen = async (req, res) => {
   const { examen, detalle } = req.body;
-  console.log("🚀 ~ crearExamen ~ examen:", examen);
-  console.log("🚀 ~ crearExamen ~ detalle:", detalle);
   if (!examen || examen == "") {
     return await res
       .status(400)
@@ -742,7 +724,6 @@ export const crearExamen = async (req, res) => {
         `INSERT INTO detalles_examen(id_ex, nombre, posicion, unidad, impsiempre, resultados) VALUES('${examenInsert.insertId
         }','${nombre.toUpperCase()}','${posicion}','${unidad}','','${resultados.toUpperCase()}')`
       );
-      console.log("🚀 ~ forawait ~ consulta:", consulta);
       rangos.forEach(async (rg) => {
         cadenaRangos += `('${consulta.insertId}','${rg.superior}','${rg.inferior}','${rg.desde}','${rg.hasta}','${rg.genero}'),`;
       });
@@ -780,7 +761,6 @@ export const crearOrden = async (req, res) => {
     return await res.status(400).json({ mensaje: "Datos de token erroneo" });
   }
   var ordenId;
-  console.log("🚀 ~ crearOrden ~ Orden:", orden);
   try {
     const [validarOrden] = await pool.execute(
       `SELECT id FROM ordenes WHERE orden='${orden.orden}' AND clave = '${orden.clave}'`
@@ -822,7 +802,6 @@ export const crearOrden = async (req, res) => {
       ordenId = ordenBdd.insertId;
     }
     for await (const ex of orden.examenes) {
-      console.log(ex);
       const [examenBdd] = await pool.execute(`
       INSERT INTO examenes_paciente(id_orden, id_ex, id_pac, id_bio,id_sede,id_usuario) VALUES ('${ordenId}','${ex.id_ex}','${ex.idPac}','${orden.id_bio}','${sedeVar}','${user}')
       `);
@@ -893,7 +872,6 @@ export const getEmpresas = async (req, res) => {
 
 export const getCaracteristicasExamenPaciente = async (req, res) => {
   const { id } = req.query;
-  console.log(id);
   if (id == "" || !id) {
     return await res
       .status(400)
@@ -904,7 +882,6 @@ export const getCaracteristicasExamenPaciente = async (req, res) => {
       "SELECT * FROM detalles_examenes_paciente WHERE id_ex_pac = ?",
       [id]
     );
-    console.log(caracteristicas);
 
     if (caracteristicas.length > 0) {
       let caracteristicasData = [];
@@ -1073,7 +1050,6 @@ export const getPaciente = async (req, res) => {
 export const deletePendientesPaciente = async (req, res) => {
   const { id } = req.query;
 
-  console.log(id);
   try {
     const [pendiente] = await pool.execute(
       "SELECT * FROM examenes_pendientes WHERE id= ? ",
@@ -1151,9 +1127,7 @@ export const getPendientesPaciente = async (req, res) => {
   }
 };
 export const getPacienteHijo = async (req, res) => {
-  console.log("getPacienteHijo");
   const { cedula, nombre } = req.query;
-  console.log("🚀 ~ getPacienteHijo ~ req.query:", req.query);
   if (cedula == "" || !cedula || nombre == "" || !nombre) {
     return await res
       .status(400)
@@ -1198,9 +1172,7 @@ export const getExamenes = async (req, res) => {
 };
 
 export const getHijosController = async (req, res) => {
-  console.log("getHijosControllerExamnes");
   const { cedula } = req.query;
-  console.log("🚀 ~ getHijosController ~ cedula:", cedula);
   try {
     if (!cedula || isNaN(cedula) || cedula == "") {
       return await res.status(400).json({ mensaje: "La cedula no es valida" });
@@ -1228,7 +1200,6 @@ export const getHijosController = async (req, res) => {
 };
 
 export const statusExamenes = async (req, res) => {
-  console.log("statusExamenesController");
   const { status, col, id } = req.body;
   if (col != "status_imp" || "status_ws" || "status_correo") {
   }

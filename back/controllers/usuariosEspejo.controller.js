@@ -22,11 +22,10 @@ export const crearBioanalsita = async (req, res) => {
 
   const validacion = bioanalista.some((el) => {
     if (el.name == "direccion" || el.name == "correo") {
-      
-     
-    }else{
+
+
+    } else {
       if (el.value == "") {
-        console.log(`Campo ${el.name} vacio`);
         return true;
       }
     }
@@ -47,7 +46,6 @@ export const crearBioanalsita = async (req, res) => {
       }
 
       if (validarletra) {
-        console.log(`Campo ${el.name} invalido`);
         return true;
       }
     }
@@ -55,13 +53,11 @@ export const crearBioanalsita = async (req, res) => {
     if (el.name == "cedula") {
       cedulaValidacion = el.value;
       if (el.value < 0) {
-        console.log("Ingrese una cedula valida");
         return true;
       }
     }
     if (el.name == "nombre") {
       if (!isNaN(el.value)) {
-        console.log("Ingrese un nombre valido");
         return true;
       }
     }
@@ -88,7 +84,6 @@ export const crearBioanalsita = async (req, res) => {
     const valores = bioanalista.map((dato) => "?").join(", ");
     const consulta = `INSERT INTO bioanalistas (${columnas}) VALUES (${valores})`;
 
-    console.log("🚀 ~ agregarBioanalistaController ~ consulta:", consulta);
     // Ejecutar la consulta
     const resultados = await pool.execute(
       consulta,
@@ -145,7 +140,7 @@ export const crearUsuario = async (req, res) => {
     });
   }
 
- 
+
   if (nivel != "1" && nivel != "2" && nivel != "3") {
     return await res.status(401).json({
       mensaje: "Nivel de usuario no valido",
@@ -185,7 +180,6 @@ export const crearUsuario = async (req, res) => {
       const valores = usuario.map((dato) => "?").join(", ");
       const consulta = `INSERT INTO users (${columnas}) VALUES (${valores})`;
 
-      console.log("🚀 ~ crearUsuario ~ consulta:", consulta);
       // Ejecutar la consulta
       const [resultados] = await pool.execute(
         consulta,

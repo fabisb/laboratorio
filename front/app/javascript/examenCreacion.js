@@ -72,7 +72,6 @@ async function crearLaboratorio() {
   const razon = document.getElementById("razonLab");
   const telefono = document.getElementById("telefonoLab");
   const direccion = document.getElementById("direccionLab");
-  console.log(rif.value, razon.value, telefono.value, direccion.value);
   if (rif.value == "" || rif.value < 0) {
     return alerta.alert("Error:", "Rif Invalido");
   }
@@ -92,7 +91,6 @@ async function crearLaboratorio() {
       },
       { headers: { token } }
     );
-    console.log(res);
     rif.value = ''
     razon.value = ''
     direccion.value = ''
@@ -121,7 +119,6 @@ function validarSelectSeccionMenu(value) {
     examenes = examenesArray.filter((ex) => {
       return ex.id_seccion == value;
     });
-    console.log(examenes);
   }
   buscarExamen();
 }
@@ -235,17 +232,17 @@ const render = async () => {
       urlsv + "/api/examenes/get-examenes",
       { headers: { token } }
     );
-    examenesGet=examenesGet.sort(function(a,b){
-      
+    examenesGet = examenesGet.sort(function (a, b) {
 
-        if (a.nombre > b.nombre) {
-          return 1;
-        }
-        if (a.nombre < b.nombre) {
-          return -1;
-        }
-        // a must be equal to b
-        return 0;
+
+      if (a.nombre > b.nombre) {
+        return 1;
+      }
+      if (a.nombre < b.nombre) {
+        return -1;
+      }
+      // a must be equal to b
+      return 0;
     })
     examenesArray = examenesGet;
     examenes = examenesGet;
@@ -752,13 +749,6 @@ async function crearCaracteristicaBdd(nombre, idEx) {
     return rs.children[0].children[0].children[0].value.slice(0, 20);
   });
 
-  console.log({
-    caracteristica,
-    subCaracteristicas,
-    rangos,
-    resultados,
-    idEx,
-  });
   if (caracteristica[0].valor.includes('-EMPTY0023')) {
     caracteristica[0].valor = ''
   }
@@ -985,11 +975,7 @@ async function modificarExamenTabla(id) {
   const inputExamenNombre = document.getElementById("inputNombreExamen");
   const seccionSelect = document.getElementById("seccionExamenSelect");
   const categoriaSelect = document.getElementById("categoriaExamenSelect");
-  console.log(
-    inputExamenNombre.value,
-    seccionSelect.value,
-    categoriaSelect.value
-  );
+
   try {
     const { token } = await login.getToken();
     const { data } = await axios.put(
@@ -1034,7 +1020,6 @@ async function modificarExamen(id) {
 
 
     titulosArray = [];
-    console.log(examen);
     const botonRefrescarFooter = document.getElementById(
       "buttonRefrescarFooter"
     );
@@ -1069,7 +1054,6 @@ async function modificarExamen(id) {
     categoriaSelect.value = examen.examen.id_categoria;
     accordionDiv.innerHTML = "";
     examen.detalles = examen.detalles.sort((a, b) => {
-      console.log(a, b)
 
       if (a.posicion > b.posicion) {
         return 1;
@@ -1809,7 +1793,6 @@ async function deleteTituloBdd(id) {
 async function guardarTituloBdd(nombre, id) {
   const tituloInp = document.getElementById(`inputTitulo${nombre}`)
   const posicionInp = document.getElementById(`inputPosicion${nombre}`)
-  console.log(tituloInp.value, posicionInp.value)
   try {
     const { token } = await login.getToken();
     const { data } = await axios.put(
@@ -1853,7 +1836,6 @@ async function guardarCambioRsBdd(id, nombre) {
   const resultadoInput = document.getElementById(`resultadoRs${id}`);
 
   resultadoInput.value = resultadoInput.value.slice(0, 60);
-  console.log(resultadoInput.value);
   resultadoInput.setAttribute("readonly", "true");
   const btnModi = document.getElementsByClassName(`buttonModificarRs`);
   const arrBtn = [...btnModi];
@@ -2032,7 +2014,6 @@ async function añadirRangoExBdd(id, nombre, event) {
     if (r.childNodes[5].childNodes[1].childNodes[1].value == "") {
       if (r.childNodes[7].childNodes[1].childNodes[1].value != "") {
         error = true;
-        console.log("1");
         return alerta.alert("Error", "Verifique los campos");
       }
     }
@@ -2041,7 +2022,6 @@ async function añadirRangoExBdd(id, nombre, event) {
       r.childNodes[3].childNodes[1].childNodes[1].value == ""
     ) {
       error = true;
-      console.log("2");
 
       return alerta.alert("Error", "Verifique los campos");
     }
@@ -2053,7 +2033,6 @@ async function añadirRangoExBdd(id, nombre, event) {
       parseFloat(r.childNodes[7].childNodes[1].childNodes[1].value)
     ) {
       error = true;
-      console.log("3");
 
       return alerta.alert("Error", "Verifique los campos");
     }
@@ -2202,11 +2181,7 @@ function añadirResultadoEx(id, nombre) {
   tBodyResultados.appendChild(tr);
 }
 async function añadirResultadoExBdd(id, nombre) {
-  console.log("añadirResultadoExBdd");
-  console.log(
-    event.target.parentNode.parentNode.parentNode.children[0].children[0]
-      .children[0].value
-  );
+
   const resultado =
     event.target.parentNode.parentNode.parentNode.children[0].children[0]
       .children[0].value;
@@ -2382,8 +2357,6 @@ async function añadirSubCaBddEx(id, nombre) {
           variables.push(element);
         }
         if (operadores.includes(element)) {
-          console.log(split[il - 1], split[il + 1]);
-          console.log(operadores.includes(split[il + 1]));
           if (
             operadores.includes(split[il - 1]) ||
             operadores.includes(split[il + 1]) ||
@@ -2436,7 +2409,6 @@ async function añadirSubCaBddEx(id, nombre) {
         .childNodes[1].childNodes[1].value,
     idCar: id,
   };
-  console.log(sbNuevo);
   try {
     const { token } = await login.getToken();
 
@@ -2513,8 +2485,6 @@ async function guardarCambioSubCaBdd(id, nombre) {
           variables.push(element);
         }
         if (operadores.includes(element)) {
-          console.log(split[il - 1], split[il + 1]);
-          console.log(operadores.includes(split[i + 1]));
           if (
             operadores.includes(split[il - 1]) ||
             operadores.includes(split[il + 1]) ||
@@ -2533,7 +2503,6 @@ async function guardarCambioSubCaBdd(id, nombre) {
           }
         }
       }
-      console.log(variables);
 
       variables.forEach((v) => {
         let validar = false;
@@ -2582,7 +2551,6 @@ async function guardarCambioSubCaBdd(id, nombre) {
       }
     );
 
-    console.log("🚀 ~ guardarCambioRgBdd ~ data:", data);
 
     const inputsSb = document.getElementsByClassName(`inputSb${id}`);
     const arrSb = [...inputsSb];
@@ -2628,7 +2596,6 @@ async function guardarCambioSubCaBdd(id, nombre) {
 function modificarSubCaForm(id, nombre) {
   const inputsSb = document.getElementsByClassName(`inputSb${id}`);
   const tipo = document.getElementById(`selectSubTipo${id}`);
-  console.log(tipo);
   const arrSb = [...inputsSb];
   arrSb.forEach((e) => {
     if (e.tagName == "SELECT" || e.tagName == "button") {
@@ -2651,14 +2618,11 @@ function modificarSubCaForm(id, nombre) {
   arrBotonesMod.forEach((b) => {
     b.setAttribute("hidden", "true");
   });
-  console.log(arrBotonesMod);
   document.getElementById("botonGuardarSubCa" + id).removeAttribute("hidden");
-  console.log(inputsSb);
 }
 
 async function modificarRangoForm(id, nombre) {
   const inputRg = document.getElementsByClassName(`inpRg${id}`);
-  console.log(inputRg);
   const arrRg = [...inputRg];
   arrRg.forEach((e) => {
     if (e.tagName == "SELECT" || e.tagName == "button") {
@@ -2685,7 +2649,6 @@ async function guardarCambioRgBdd(id, nombre) {
     if (r.childNodes[5].childNodes[1].childNodes[1].value == "") {
       if (r.childNodes[7].childNodes[1].childNodes[1].value != "") {
         error = true;
-        console.log(1);
         return alerta.alert("Error", "Verifique los campos");
       }
     }
@@ -2694,7 +2657,6 @@ async function guardarCambioRgBdd(id, nombre) {
       r.childNodes[3].childNodes[1].childNodes[1].value == ""
     ) {
       error = true;
-      console.log(2);
 
       return alerta.alert("Error", "Verifique los campos");
     }
@@ -2706,18 +2668,6 @@ async function guardarCambioRgBdd(id, nombre) {
       parseFloat(r.childNodes[7].childNodes[1].childNodes[1].value)
     ) {
       error = true;
-      console.log(
-        r.childNodes[1].childNodes[1].childNodes[1].value +
-        ">" +
-        r.childNodes[3].childNodes[1].childNodes[1].value
-      );
-      console.log(
-        r.childNodes[5].childNodes[1].childNodes[1].value +
-        ">" +
-        r.childNodes[7].childNodes[1].childNodes[1].value
-      );
-
-      console.log(3);
 
       return alerta.alert("Error", "Verifique los campos");
     }
@@ -2738,9 +2688,7 @@ async function guardarCambioRgBdd(id, nombre) {
     superior,
     genero,
   };
-  console.log(rangoBdd);
   const inputRg = document.getElementsByClassName(`inpRg${id}`);
-  console.log(inputRg);
   const arrRg = [...inputRg];
   arrRg.forEach((e) => {
     if (e.tagName == "SELECT" || e.tagName == "button") {
@@ -2824,7 +2772,6 @@ async function guardarCambioCaracteristicaBdd(id, nombre) {
       }
     );
 
-    console.log("🚀 ~ guardarCambioRgBdd ~ data:", data);
 
     document
       .getElementById("botonModificarCaracteristicaForm" + nombre)
@@ -2833,7 +2780,6 @@ async function guardarCambioCaracteristicaBdd(id, nombre) {
       .getElementById("botonGuardarCaracteristica" + nombre)
       .setAttribute("hidden", "true");
 
-    console.log(caracteristica);
 
     examenesAlerta("Caracteristica modificada con exito!", "success");
 
@@ -2967,7 +2913,6 @@ async function detalleExamen(id) {
     urlsv + "/api/modulo-examenes/caracteristicas-id_ex",
     { headers: { token }, params: { id } }
   );
-  console.log(caracteristicas)
   const collapse = document.getElementById(`collapseMenu${id}`);
   collapse.innerHTML = `
   <table class="table table-sm text-center" style="border: 2px solid green; font-size:15px">
@@ -2998,24 +2943,24 @@ async function detalleExamen(id) {
   });
 
   caracteristicas2.forEach((c) => {
-    if(c.nombre){
-    if (c.status == "titulo") {
-      tBody.innerHTML += `
+    if (c.nombre) {
+      if (c.status == "titulo") {
+        tBody.innerHTML += `
       <tr>
         <th colspan="4" scope="col">${c.titulo}</th>
         
       </tr>
       `;
-    } else {
-      tBody.innerHTML += `
+      } else {
+        tBody.innerHTML += `
       <tr>
         <td scope="col">${c.nombre}</td>
-        <td scope="col">${c.unidad?c.unidad:''}</td>
+        <td scope="col">${c.unidad ? c.unidad : ''}</td>
         <td scope="col">${c.posicion}</td>
         <td scope="col">${c.impsiempre == 1 ? "SI" : "NO"}</td>
       </tr>
       `;
-    }
+      }
     }
   });
 }
@@ -3571,7 +3516,6 @@ function borrarTitulo(event, nombre, titulo) {
   const accordionCar = document.getElementById(
     `accordionItemCaracteristica${nombre}`
   );
-  console.log(accordionCar);
   caracteristicasCreadas.delete(nombre);
   accordion.removeChild(accordionCar);
 
@@ -3657,7 +3601,6 @@ function añadirAcordionItemTitulo(idEx) {
 
   let posicion = posicionInp.value;
   let nombre1 = nombreInp.value;
-  console.log(nombreInp, nombre1)
   nombre1 = nombre1.trim();
   if (nombre1 == "") {
     return alerta.alert("Error", "El nombre no puede estar vacio");
@@ -3900,7 +3843,6 @@ function validarSelectSub(nombre, event) {
 }
 
 function añadirChars(char, event) {
-  console.log(event);
   event.target.parentNode.children[0].value += char;
 }
 
@@ -4008,7 +3950,6 @@ async function borrarRango(event, nombre, id) {
     }
     const tBody = document.getElementById(`tBodyRangos${nombre}`);
 
-    console.log(event.target);
     if (event.target.localName == "button") {
       tBody.removeChild(event.target.parentNode.parentNode);
     }
@@ -4244,11 +4185,9 @@ async function crearExamen() {
       "warning"
     );
   }
-  console.log(nombre, seccion, categoria);
-  console.log(caracteristicas);
-  caracteristicas.forEach(e=>{
-    if(e.caracteristica[0].valor.includes('-EMPTY0023')){
-      e.caracteristica[0].valor=''
+  caracteristicas.forEach(e => {
+    if (e.caracteristica[0].valor.includes('-EMPTY0023')) {
+      e.caracteristica[0].valor = ''
     }
   })
   if (nombre == "" || !nombre) {
@@ -4405,8 +4344,6 @@ function crearCaracteristica(nombre) {
           variables.push(element);
         }
         if (operadores.includes(element)) {
-          console.log(split[i - 1], split[i + 1]);
-          console.log(operadores.includes(split[i + 1]));
           if (
             operadores.includes(split[i - 1]) ||
             operadores.includes(split[i + 1]) ||
@@ -4441,7 +4378,6 @@ function crearCaracteristica(nombre) {
   subCaracteristicas = subCaracteristicas.filter((s) => s != undefined);
 
   const rango = document.querySelectorAll(`.trRango${nombre}`);
-  console.log(rango);
 
   let rangos = [...rango].map((r) => {
     if (r.childNodes[5].childNodes[1].childNodes[1].value == "") {
@@ -4476,7 +4412,6 @@ function crearCaracteristica(nombre) {
 
   rangos = rangos.filter((r) => r != undefined);
   const resultado = document.querySelectorAll(`.trResultados${nombre}`);
-  console.log(rangos, resultado, subCaracteristica);
 
   const resultados = [...resultado].map((rs) => {
     return rs.children[0].children[0].children[0].value.slice(0, 60);
@@ -4766,7 +4701,6 @@ function borrarCaracteristica(event, nombre) {
   const accordionCar = document.getElementById(
     `accordionItemCaracteristica${nombre}`
   );
-  console.log(accordionCar);
   caracteristicasCreadas.delete(nombre);
   accordion.removeChild(accordionCar);
 
@@ -4777,7 +4711,7 @@ function borrarCaracteristica(event, nombre) {
   );
 }
 
-function modificarCrtCreacionFront(nombre,nombre1) {
+function modificarCrtCreacionFront(nombre, nombre1) {
   activarInputs(nombre);
   activarSelects(nombre);
   enableButtonByClass("button" + nombre);
@@ -4800,8 +4734,6 @@ function validarInputFormula(nombre, event) {
       variables.push(element);
     }
     if (operadores.includes(element)) {
-      console.log(split[i - 1], split[i + 1]);
-      console.log(operadores.includes(split[i + 1]));
       if (
         operadores.includes(split[i - 1]) ||
         operadores.includes(split[i + 1]) ||
@@ -4820,7 +4752,6 @@ function validarInputFormula(nombre, event) {
       }
     }
   }
-  console.log(variables);
 
   const tBodySub = document.getElementById(`tBodySubCaracteristica${nombre}`);
   variables.forEach((v) => {

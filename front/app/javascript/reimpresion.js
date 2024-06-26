@@ -38,7 +38,6 @@ const imprimir = async () => {
 const pintarExamen = async () => {
   try {
     const reimpresion = await reimpresionVar.get();
-    console.log("🚀 ~ pintarExamen ~ reimpresion:", reimpresion)
 
     const { token } = await login.getToken();
 
@@ -49,7 +48,6 @@ const pintarExamen = async () => {
     await examenVar.store(examen.examenes[0]);
 
     //examen.examenes[0].paciente.cedula
-    console.log("🚀 ~ pintarExamen ~ examen:", examen);
     document.getElementById("numeroTlf").value = examen.examenes[0].paciente.telefono || '';
     document.getElementById("emailInput").value = examen.examenes[0].paciente.correo || '';
     document.getElementsByName("firmaBioanalista")[0].innerHTML = "";
@@ -149,9 +147,7 @@ const pintarExamen = async () => {
       const bio = [...bioSet][index];
       let bioanalistaInfo;
       const examenesBio = examen.examenes.filter((e) => e.bioanalista.id == bio);
-      console.log(examenesBio);
       examenesBio.forEach((ex) => {
-        console.log(ex);
         bioanalistaInfo = ex.bioanalista;
         ex.caracteristicas.sort(function (a, b) {
           if (a.posicion > b.posicion) {
@@ -164,7 +160,6 @@ const pintarExamen = async () => {
           return 0;
         });
         const seccionesSet = new Set(examenesBio.map((e) => e.nombreSeccion));
-        console.log("🚀 ~ pintarExamen ~ seccionesSet:", seccionesSet);
 
         document.getElementsByName("examenContainer")[0].innerHTML += [
           ...seccionesSet,
@@ -295,7 +290,6 @@ const whatsapp = async () => {
     document.getElementById("numeroTlf").value.charAt(0) == "0"
       ? document.getElementById("numeroTlf").value.slice(1)
       : document.getElementById("numeroTlf").value;
-  console.log("🚀 ~ whatsapp ~ numeroInput:", numero);
 
   const code = document.getElementById("codeTlf").value;
   if (numero == "" || isNaN(numero) || numero <= 0) {
@@ -321,7 +315,6 @@ const whatsapp = async () => {
 
 const email = async () => {
   const email = document.getElementById("emailInput").value;
-  console.log("🚀 ~ email ~ email:", email)
   if (email == "") {
     return whatsappAlerta("Ingrese un correo electronico valido", "warning");
   }

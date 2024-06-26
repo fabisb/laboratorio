@@ -91,8 +91,7 @@ export const getLaboratorios = async (req, res) => {
 };
 
 export const getCaracteristicasById = async (req, res) => {
-  console.log("aaabb");
-  let caracteristicas=[];
+  let caracteristicas = [];
   const { id } = req.query;
   try {
     const [caracteristicasDet] = await pool.execute(
@@ -108,7 +107,7 @@ export const getCaracteristicasById = async (req, res) => {
         .status(404)
         .json({ mensaje: "No se encuentran caracteristicas" });
     } else {
-      caracteristicas=[...caracteristicasDet,...titulos]
+      caracteristicas = [...caracteristicasDet, ...titulos]
       return await res.status(200).json(caracteristicas);
     }
   } catch (error) {
@@ -195,10 +194,6 @@ export const getExamenById = async (req, res) => {
       "SELECT * FROM titulos WHERE id_ex = ?",
       [idExamen]
     );
-
-    
-    
-    console.log(titulos);
 
     if (examenes.length == 0) {
       return await res
@@ -293,8 +288,7 @@ export const getExamenByCategoria = async (req, res) => {
 };
 export const crearExamen = async (req, res) => {
   try {
-    const { seccion, nombre, caracteristicas, categoria,titulos } = req.body;
-    console.log("🚀 ~ crearExamen ~ req.body:", req.body);
+    const { seccion, nombre, caracteristicas, categoria, titulos } = req.body;
     if (!nombre || nombre == "") {
       return await res
         .status(400)
@@ -313,7 +307,7 @@ export const crearExamen = async (req, res) => {
 
     const [nombreExistente] = await pool.execute(
       "SELECT nombre FROM examenes WHERE nombre = ? AND status= ? ",
-      [nombre,'activo']
+      [nombre, 'activo']
     );
     if (nombreExistente.length > 0) {
       return await res.status(400).json({
@@ -322,15 +316,14 @@ export const crearExamen = async (req, res) => {
     } else {
       //VALIDACION
       for await (const ca of caracteristicas) {
-        console.log("🚀 ~ awaitcaracteristicas.map ~ ca:", ca);
         for await (const dato of ca.caracteristica) {
           if (dato.nombre == "" || !dato.nombre) {
             return await res.status(400).json({
               mensaje: "Ingrese un nombre de caracteristica valido",
             });
           }
-          if (dato.nombre == "posicion" && dato.valor <=0) {
-           dato.valor=500
+          if (dato.nombre == "posicion" && dato.valor <= 0) {
+            dato.valor = 500
           }
           if (
             dato.nombre == "impsiempre" &&
@@ -468,7 +461,6 @@ export const crearExamen = async (req, res) => {
           }
         })
       );
-      console.log(titulos)
       if (titulos.length > 0) {
         await Promise.all(
           await titulos.map(async (t) => {
@@ -483,7 +475,7 @@ export const crearExamen = async (req, res) => {
           })
         );
       }
-      
+
       return await res.status(200).json({
         mensaje: "Examen insertado correctamente",
         examenId: examenNew.insertId,
@@ -500,7 +492,6 @@ export const crearExamen = async (req, res) => {
 export const insertCaracteristica = async (req, res) => {
   try {
     const { caracteristicas, idEx } = req.body;
-    console.log("🚀 ~ insertCaracteristica ~ req.body:", req.body);
     if (!idEx || idEx < 0 || isNaN(idEx)) {
       return await res
         .status(400)
@@ -674,17 +665,16 @@ export const insertCaracteristica = async (req, res) => {
   }
 };
 export const crearTitulo = async (req, res) => {
-  const { titulo,posicion,id_ex } = req.body;
-  console.log(req.body)
+  const { titulo, posicion, id_ex } = req.body;
   try {
-    if (!titulo || titulo== "") {
+    if (!titulo || titulo == "") {
       return await res
         .status(400)
         .json({ mensaje: "Ingrese un nombre valido" });
     }
     const [nombreExistente] = await pool.execute(
       "SELECT titulo FROM titulos WHERE titulo = ? and id_ex =?",
-      [titulo,id_ex]
+      [titulo, id_ex]
     );
     if (nombreExistente.length > 0) {
       return await res.status(400).json({
@@ -693,7 +683,7 @@ export const crearTitulo = async (req, res) => {
     } else {
       const [seccion] = await pool.execute(
         "INSERT INTO titulos (titulo,posicion,id_ex) VALUES (?,?,?)",
-        [titulo,posicion,id_ex]
+        [titulo, posicion, id_ex]
       );
       return await res.status(200).json({
         mensaje: "Titulo insertado correctamente",
@@ -1228,7 +1218,7 @@ export const updateCategoria = async (req, res) => {
 };
 
 export const updateTitulo = async (req, res) => {
-  const { id_titulo, titulo,posicion } = req.body;
+  const { id_titulo, titulo, posicion } = req.body;
 
   if (!id_titulo || id_titulo < 0 || isNaN(id_titulo)) {
     return await res
@@ -1243,7 +1233,7 @@ export const updateTitulo = async (req, res) => {
   try {
     const [existenteName] = await pool.execute(
       "SELECT * FROM titulos where titulo = ? and id != ?",
-      [titulo,id_titulo]
+      [titulo, id_titulo]
     );
     if (existenteName.length > 0) {
       return await res.status(200).json({
@@ -1255,16 +1245,15 @@ export const updateTitulo = async (req, res) => {
       [id_titulo]
     );
     if (existente.length > 0) {
-      const[tit]=await pool.execute(
+      const [tit] = await pool.execute(
         "UPDATE titulos SET titulo = ?, posicion = ? WHERE id = ?",
-        [titulo,posicion, id_titulo]
+        [titulo, posicion, id_titulo]
       );
-      console.log(existente)
       return await res.status(200).json({
         mensaje: `EL titulo #${id_titulo} ha sido modificada correctamente`,
         examenId: existente[0].id_ex
       });
-      
+
     } else {
       return await res
         .status(400)
@@ -1279,7 +1268,6 @@ export const updateTitulo = async (req, res) => {
 };
 export const updateCaracteristica = async (req, res) => {
   const { id_caracteristica, caracteristica } = req.body;
-  console.log("🚀 ~ updateCaracteristica ~ req.body:", req.body);
   if (isNaN(id_caracteristica)) {
     return await res
       .status(400)
@@ -1294,7 +1282,7 @@ export const updateCaracteristica = async (req, res) => {
       const valores = caracteristica
         .map((dato) => {
           if (dato.nombre == "posicion" && dato.valor <= 0) {
-            dato.valor=500
+            dato.valor = 500
           }
           return `${dato.nombre} = ?`;
         })
@@ -1312,7 +1300,6 @@ export const updateCaracteristica = async (req, res) => {
           }
         })
       );
-      console.log("🚀 ~ updateCaracteristica ~ update:", update);
       return await res.status(200).json({
         mensaje:
           "La caracteristica #" + id_caracteristica + " ha sido actualizada",
@@ -1340,7 +1327,6 @@ export const updateCaracteristica = async (req, res) => {
 
 export const updateSubCaracteristica = async (req, res) => {
   const { id_subCaracteristica, subCaracteristica } = req.body;
-  console.log("🚀 ~ updateSubCaracteristica ~ req.body:", req.body);
   if (
     !id_subCaracteristica ||
     id_subCaracteristica < 0 ||
@@ -1556,7 +1542,6 @@ export const insertSubCaracteristica = async (req, res) => {
 
 export const insertRango = async (req, res) => {
   const { id_caracteristica, rango } = req.body;
-  console.log("🚀 ~ insertRango ~ req.body:", req.body);
   const { desde, hasta, inferior, superior, genero } = rango;
   if (
     isNaN(id_caracteristica) ||
@@ -1647,8 +1632,6 @@ export const insertResultado = async (req, res) => {
 
 export const deleteTitulo = async (req, res) => {
   const { id_titulo } = req.body;
-  console.log(req.body)
-  console.log(id_titulo)
   if (!id_titulo || id_titulo < 0 || isNaN(id_titulo)) {
     return await res
       .status(400)
@@ -1665,7 +1648,7 @@ export const deleteTitulo = async (req, res) => {
         [id_titulo]
       );
       return await res.status(200).json({
-        mensaje: "Titulo eliminado correctamente",examenId:existente[0].id_ex
+        mensaje: "Titulo eliminado correctamente", examenId: existente[0].id_ex
       });
     } else {
       return await res
@@ -1812,8 +1795,8 @@ export const deleteCaracteristica = async (req, res) => {
   }
 };
 
-export const deleteExamen= async (req, res) => {
-  const { id} = req.body
+export const deleteExamen = async (req, res) => {
+  const { id } = req.body
   if (!id || id < 0 || isNaN(id)) {
     return await res
       .status(400)
@@ -1845,8 +1828,8 @@ export const deleteExamen= async (req, res) => {
   }
 };
 
-export const deleteEmpresa= async (req, res) => {
-  const { id} = req.body
+export const deleteEmpresa = async (req, res) => {
+  const { id } = req.body
   if (!id || id < 0 || isNaN(id)) {
     return await res
       .status(400)
@@ -1858,12 +1841,12 @@ export const deleteEmpresa= async (req, res) => {
       [id]
     );
     if (existente.length > 0) {
-      if(existente[0].status == 'activo'){
+      if (existente[0].status == 'activo') {
         const [CaNulo] = await pool.execute(
           "UPDATE `empresas` SET `status` = ? WHERE id = ?",
           ["nulo", id]
         );
-      }else{
+      } else {
 
         const [CaNulo] = await pool.execute(
           "UPDATE `empresas` SET `status` = ? WHERE id = ?",
@@ -1886,8 +1869,8 @@ export const deleteEmpresa= async (req, res) => {
   }
 };
 
-export const deleteSede= async (req, res) => {
-  const { id} = req.body
+export const deleteSede = async (req, res) => {
+  const { id } = req.body
   if (!id || id < 0 || isNaN(id)) {
     return await res
       .status(400)
@@ -1899,13 +1882,13 @@ export const deleteSede= async (req, res) => {
       [id]
     );
     if (existente.length > 0) {
-      if(existente[0].status == 'activo'){
-      
+      if (existente[0].status == 'activo') {
+
         const [CaNulo] = await pool.execute(
           "UPDATE `sede` SET `status` = ? WHERE id = ?",
           ["nulo", id]
         );
-      }else{
+      } else {
         const [CaNulo] = await pool.execute(
           "UPDATE `sede` SET `status` = ? WHERE id = ?",
           ["activo", id]
@@ -1930,8 +1913,8 @@ export const deleteSede= async (req, res) => {
 
 
 
-export const deleteCategoria= async (req, res) => {
-  const { id} = req.body
+export const deleteCategoria = async (req, res) => {
+  const { id } = req.body
   if (!id || id < 0 || isNaN(id)) {
     return await res
       .status(400)
@@ -1963,8 +1946,8 @@ export const deleteCategoria= async (req, res) => {
   }
 };
 
-export const deleteSeccion= async (req, res) => {
-  const { id} = req.body
+export const deleteSeccion = async (req, res) => {
+  const { id } = req.body
   if (!id || id < 0 || isNaN(id)) {
     return await res
       .status(400)
@@ -1997,8 +1980,8 @@ export const deleteSeccion= async (req, res) => {
 };
 
 
-export const deleteLaboratorio= async (req, res) => {
-  const { id} = req.body
+export const deleteLaboratorio = async (req, res) => {
+  const { id } = req.body
   if (!id || id < 0 || isNaN(id)) {
     return await res
       .status(400)
@@ -2010,13 +1993,13 @@ export const deleteLaboratorio= async (req, res) => {
       [id]
     );
     if (existente.length > 0) {
-      if(existente[0].status == 'activo'){
+      if (existente[0].status == 'activo') {
 
         const [CaNulo] = await pool.execute(
           "UPDATE `laboratorios_externos` SET `status` = ? WHERE id = ?",
           ["nulo", id]
         );
-      }else{
+      } else {
         const [CaActivo] = await pool.execute(
           "UPDATE `laboratorios_externos` SET `status` = ? WHERE id = ?",
           ["activo", id]

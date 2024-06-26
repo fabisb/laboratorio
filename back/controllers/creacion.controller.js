@@ -14,7 +14,6 @@ export const buscarUsuarios = async (req, res) => {
 
 export const cambiarStatus = async (req, res) => {
   const { status, tipo, id } = req.body;
-  console.log("🚀 ~ cambiarStatus ~ req.body:", req.body)
   if (id < 0 || id == "" || !id)
     return await res
       .status(400)
@@ -23,16 +22,16 @@ export const cambiarStatus = async (req, res) => {
   if (status != "activo" && status != "inactivo")
     return await res.status(400).json({ mensaje: "Error en status" });
 
-  if (tipo != "auxiliar" && tipo != "bioanalista" && tipo!='administrador')
+  if (tipo != "auxiliar" && tipo != "bioanalista" && tipo != 'administrador')
     return await res.status(400).json({ mensaje: "Error en tipo" });
 
   try {
-    
-      const [userStatus] = await pool.execute(
-        "UPDATE users SET status = ? WHERE id = ?",
-        [status, id]
-      );
-    
+
+    const [userStatus] = await pool.execute(
+      "UPDATE users SET status = ? WHERE id = ?",
+      [status, id]
+    );
+
     return await res
       .status(200)
       .json({ mensaje: "Status modificado con exito" });
@@ -129,7 +128,7 @@ export const editarBioanalista = async (req, res) => {
     nombre == "" ||
     telefono == "" ||
     colegio == "" ||
-    ministerio == "" 
+    ministerio == ""
   ) {
     return await res.status(400).json({ mensaje: "Algun dato no es valido" });
   }
@@ -144,7 +143,7 @@ export const editarBioanalista = async (req, res) => {
         .json({ mensaje: "El usuario que intenta editar no existe" });
     } else {
       if (firma != '') {
-        
+
         const [bioUpdate] = await pool.execute(
           "UPDATE bioanalistas SET nombre = ?, telefono = ?, direccion = ?, colegio = ?, ministerio = ?, foto_firma = ? WHERE id = ?",
           [
@@ -157,7 +156,7 @@ export const editarBioanalista = async (req, res) => {
             id,
           ]
         );
-      }else{
+      } else {
         const [bioUpdate] = await pool.execute(
           "UPDATE bioanalistas SET nombre = ?, telefono = ?, direccion = ?, colegio = ?, ministerio = ? WHERE id = ?",
           [
@@ -182,7 +181,6 @@ export const editarBioanalista = async (req, res) => {
 
 export const editarUsuario = async (req, res) => {
   const { id, nombre, correo, telefono, direccion, nivel, password } = req.body;
-  console.log("🚀 ~ editarUsuario ~ req.body:", req.body);
   try {
     if (id < 0 || id == "" || !id) {
       return await res
@@ -199,10 +197,10 @@ export const editarUsuario = async (req, res) => {
         .status(404)
         .json({ mensaje: "El usuario que intenta editar no existe" });
     }
-    if(password!=''){
+    if (password != '') {
       let claveEncriptada = "";
       claveEncriptada = await bcrypt.hash(password, 2);
-  
+
       const [userUpdate] = await pool.execute(
         "UPDATE users SET password = ?, nombre = ?, correo = ?, telefono = ?, direccion = ?, nivel = ? WHERE id = ?",
         [claveEncriptada, nombre, correo, telefono, direccion, nivel, id]
@@ -210,19 +208,19 @@ export const editarUsuario = async (req, res) => {
       return await res
         .status(200)
         .json({ mensaje: "Usuario modificado correctamente" });
-    }else{
-      
+    } else {
 
-    const [userUpdate] = await pool.execute(
-      "UPDATE users SET nombre = ?, correo = ?, telefono = ?, direccion = ?, nivel = ? WHERE id = ?",
-      [nombre, correo, telefono, direccion, nivel, id]
-    );
-    return await res
-      .status(200)
-      .json({ mensaje: "Usuario modificado correctamente" });
+
+      const [userUpdate] = await pool.execute(
+        "UPDATE users SET nombre = ?, correo = ?, telefono = ?, direccion = ?, nivel = ? WHERE id = ?",
+        [nombre, correo, telefono, direccion, nivel, id]
+      );
+      return await res
+        .status(200)
+        .json({ mensaje: "Usuario modificado correctamente" });
     }
-    
-    
+
+
   } catch (error) {
     console.log(error);
     return await res.status(500).json({ mensaje: "ERROR DE SERVIDOR" });
@@ -238,7 +236,6 @@ export const agregarPacienteController = async (req, res) => {
   const validacion = paciente.some((el) => {
     if (el.value == "") {
       if (el.name != "genero") {
-        console.log(`Campo ${el.name} vacio`);
         return true;
       }
     }
@@ -259,7 +256,6 @@ export const agregarPacienteController = async (req, res) => {
       }
 
       if (validarletra) {
-        console.log(`Campo ${el.name} invalido`);
         return true;
       }
     }
@@ -267,36 +263,30 @@ export const agregarPacienteController = async (req, res) => {
     if (el.name == "cedula") {
       cedulaValidacion = el.value;
       if (el.value < 0) {
-        console.log("Ingrese una cedula valida");
         return true;
       }
     }
     if (el.name == "nombre") {
       nombreVal = el.value;
       if (!isNaN(el.value)) {
-        console.log("Ingrese un nombre valido");
         return true;
       }
     }
     if (el.name == "correo") {
       if (el.value.split("@")[0] == "" || el.value.split("@")[1] == "") {
-        console.log("Ingrese un correo valido");
         return true;
       }
       if (!el.value.split("@")[1].split(".")[1].includes("com")) {
-        console.log("Ingrese un correo valido");
         return true;
       }
     }
     if (el.name == "fecha_nacimiento") {
       if (moment(el.value).isAfter(moment().format("YYYY-MM-DD"))) {
-        console.log("Ingrese una fecha valida");
         return true;
       }
     }
     if (el.name == "pre_cedula") {
       if (el.value != "E" && el.value != "V" && el.value != "N") {
-        console.log("Ingrese pre Cedula Valida");
         return true;
       } else {
         preCedulaVal = el.value;
@@ -311,7 +301,6 @@ export const agregarPacienteController = async (req, res) => {
   }
 
   try {
-    console.log("CEDULA VALIDAICION:", cedulaValidacion);
     // Crear la consulta SQL
     if (req.body.new) {
       const [cedulaExistente] = await pool.execute(
@@ -338,7 +327,6 @@ export const agregarPacienteController = async (req, res) => {
         .status(200)
         .json({ mensaje: "Paciente registrado con exito" });
     } else {
-      console.log("EDITANDO");
       const [cedulaExistente] = await pool.execute(
         "SELECT cedula FROM pacientes WHERE cedula = ? AND pre_cedula = ? AND id = ?",
         [cedulaValidacion, preCedulaVal, idPaciente]
@@ -384,9 +372,7 @@ export const agregarBioanalistaController = async (req, res) => {
   const validacion = paciente.some((el) => {
     if (el.value == "") {
       if (el.name == "firma" || el.name == "direccion") {
-        console.log(`Campo ${el.name} vacio`);
       } else {
-        console.log(`Campo ${el.name} vacio`);
         return true;
       }
     }
@@ -407,7 +393,6 @@ export const agregarBioanalistaController = async (req, res) => {
       }
 
       if (validarletra) {
-        console.log(`Campo ${el.name} invalido`);
         return true;
       }
     }
@@ -415,20 +400,17 @@ export const agregarBioanalistaController = async (req, res) => {
     if (el.name == "cedula") {
       cedulaValidacion = el.value;
       if (el.value < 0) {
-        console.log("Ingrese una cedula valida");
         return true;
       }
     }
     if (el.name == "nombre") {
       if (!isNaN(el.value)) {
-        console.log("Ingrese un nombre valido");
         return true;
       }
     }
 
     if (el.name == "ingreso") {
       if (moment(el.value).isAfter(moment().format("YYYY-MM-DD"))) {
-        console.log("Ingrese una fecha valida");
         return true;
       }
     }
@@ -455,7 +437,6 @@ export const agregarBioanalistaController = async (req, res) => {
     const valores = paciente.map((dato) => "?").join(", ");
     const consulta = `INSERT INTO bioanalistas (${columnas}) VALUES (${valores})`;
 
-    console.log("🚀 ~ agregarBioanalistaController ~ consulta:", consulta);
     // Ejecutar la consulta
     const resultados = await pool.execute(
       consulta,
@@ -481,9 +462,7 @@ export const crearBioanalista = async (req, res) => {
   const validacion = bioanalista.some((el) => {
     if (el.value == "") {
       if (el.name == "firma" || el.name == "direccion") {
-        console.log(`Campo ${el.name} vacio`);
       } else {
-        console.log(`Campo ${el.name} vacio`);
         return true;
       }
     }
@@ -504,7 +483,6 @@ export const crearBioanalista = async (req, res) => {
       }
 
       if (validarletra) {
-        console.log(`Campo ${el.name} invalido`);
         return true;
       }
     }
@@ -512,13 +490,11 @@ export const crearBioanalista = async (req, res) => {
     if (el.name == "cedula") {
       cedulaValidacion = el.value;
       if (el.value < 0) {
-        console.log("Ingrese una cedula valida");
         return true;
       }
     }
     if (el.name == "nombre") {
       if (!isNaN(el.value)) {
-        console.log("Ingrese un nombre valido");
         return true;
       }
     }
@@ -545,7 +521,6 @@ export const crearBioanalista = async (req, res) => {
     const valores = bioanalista.map((dato) => "?").join(", ");
     const consulta = `INSERT INTO bioanalistas (${columnas}) VALUES (${valores})`;
 
-    console.log("🚀 ~ agregarBioanalistaController ~ consulta:", consulta);
     // Ejecutar la consulta
     const resultados = await pool.execute(
       consulta,
@@ -670,9 +645,7 @@ export const agregarUsuarioController = async (req, res) => {
   const validacion = usuario.some((el) => {
     if (el.value == "") {
       if (el.name == "firma" || el.name == "direccion") {
-        console.log(`Campo ${el.name} vacio`);
       } else {
-        console.log(`Campo ${el.name} vacio`);
         return true;
       }
     }
@@ -693,7 +666,6 @@ export const agregarUsuarioController = async (req, res) => {
       }
 
       if (validarletra) {
-        console.log(`Campo ${el.name} invalido`);
         return true;
       }
     }
@@ -701,20 +673,17 @@ export const agregarUsuarioController = async (req, res) => {
     if (el.name == "cedula") {
       cedulaValidacion = el.value;
       if (el.value < 0) {
-        console.log("Ingrese una cedula valida");
         return true;
       }
     }
     if (el.name == "nombre") {
       if (!isNaN(el.value)) {
-        console.log("Ingrese un nombre valido");
         return true;
       }
     }
 
     if (el.name == "ingreso") {
       if (moment(el.value).isAfter(moment().format("YYYY-MM-DD"))) {
-        console.log("Ingrese una fecha valida");
         return true;
       }
     }
@@ -819,7 +788,6 @@ export const agregarUsuarioController = async (req, res) => {
 } */
 
 export const getHijosController = async (req, res) => {
-  console.log("getHijosControllerExamnes");
   const { cedula } = req.query;
   try {
     if (!cedula || isNaN(cedula) || cedula == "") {
