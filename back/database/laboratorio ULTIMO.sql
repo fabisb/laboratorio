@@ -31,7 +31,7 @@ CREATE TABLE `bioanalistas` (
   `id` int(11) NOT NULL,
   `cedula` int(12) NOT NULL,
   `nombre` varchar(60) NOT NULL,
-  `ingreso` date NOT NULL DEFAULT current_timestamp(),
+  `ingreso` date NOT NULL DEFAULT (now()),
   `telefono` varchar(12) DEFAULT NULL,
   `direccion` text DEFAULT NULL,
   `colegio` varchar(15) NOT NULL,
@@ -40,7 +40,7 @@ CREATE TABLE `bioanalistas` (
   `foto_carnet` mediumblob DEFAULT NULL,
   `foto_firma` mediumblob DEFAULT NULL,
   `status` varchar(9) NOT NULL DEFAULT 'activo'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Volcado de datos para la tabla `bioanalistas`
@@ -76,7 +76,7 @@ CREATE TABLE `categoria_examen` (
   `id` int(11) NOT NULL,
   `nombre` varchar(80) NOT NULL,
   `status` varchar(8) NOT NULL DEFAULT 'activo'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Volcado de datos para la tabla `categoria_examen`
@@ -100,7 +100,7 @@ CREATE TABLE `detalles_examen` (
   `unidad` varchar(30) DEFAULT NULL,
   `impsiempre` tinyint(1) NOT NULL,
   `status` varchar(9) NOT NULL DEFAULT 'activo'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Volcado de datos para la tabla `detalles_examen`
@@ -229,7 +229,7 @@ CREATE TABLE `detalles_examenes_paciente` (
   `superior` decimal(8,2) NOT NULL,
   `resultado` mediumtext NOT NULL,
   `nota` varchar(80) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Volcado de datos para la tabla `detalles_examenes_paciente`
@@ -457,7 +457,7 @@ CREATE TABLE `detalles_ex_pendientes` (
   `superior` decimal(8,2) NOT NULL,
   `resultado` mediumtext NOT NULL,
   `nota` varchar(80) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Volcado de datos para la tabla `detalles_ex_pendientes`
@@ -487,7 +487,7 @@ CREATE TABLE `detalle_subcaracteristica_paciente` (
   `id_detalle_sub` int(11) NOT NULL,
   `resultado` varchar(80) NOT NULL,
   `nota` varchar(80) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Volcado de datos para la tabla `detalle_subcaracteristica_paciente`
@@ -531,7 +531,7 @@ CREATE TABLE `detalle_sub_ex_pd` (
   `id_detalle_sub` int(11) NOT NULL,
   `resultado` mediumtext NOT NULL,
   `nota` varchar(80) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Volcado de datos para la tabla `detalle_sub_ex_pd`
@@ -555,7 +555,7 @@ CREATE TABLE `empresas` (
   `id` int(11) NOT NULL,
   `nombre` varchar(100) NOT NULL,
   `status` varchar(8) NOT NULL DEFAULT 'activo'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Volcado de datos para la tabla `empresas`
@@ -577,7 +577,7 @@ CREATE TABLE `examenes` (
   `id_categoria` int(11) NOT NULL,
   `id_seccion` int(11) NOT NULL,
   `status` varchar(8) NOT NULL DEFAULT 'activo'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Volcado de datos para la tabla `examenes`
@@ -640,9 +640,9 @@ CREATE TABLE `examenes_externos` (
   `id_lab` int(11) NOT NULL,
   `id_pac` int(11) NOT NULL,
   `id_usuario` int(11) NOT NULL,
-  `fecha` timestamp NOT NULL DEFAULT current_timestamp(),
+  `fecha` timestamp NOT NULL DEFAULT (now()),
   `status` varchar(8) NOT NULL DEFAULT 'activo'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Volcado de datos para la tabla `examenes_externos`
@@ -668,11 +668,11 @@ CREATE TABLE `examenes_paciente` (
   `id_pac` int(11) NOT NULL,
   `id_bio` int(11) NOT NULL,
   `id_sede` int(11) NOT NULL,
-  `fecha` timestamp NOT NULL DEFAULT current_timestamp(),
+  `fecha` timestamp NOT NULL DEFAULT (now()),
   `fecha_actualizacion` timestamp NULL DEFAULT NULL,
   `id_usuario` int(11) NOT NULL,
   `status` varchar(8) NOT NULL DEFAULT 'activo'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Volcado de datos para la tabla `examenes_paciente`
@@ -732,8 +732,8 @@ CREATE TABLE `examenes_pendientes` (
   `id_ex` int(11) NOT NULL,
   `id_pac` int(11) NOT NULL,
   `status` varchar(10) NOT NULL DEFAULT 'pendiente',
-  `fecha` timestamp NOT NULL DEFAULT current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+  `fecha` timestamp NOT NULL DEFAULT (now())
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Volcado de datos para la tabla `examenes_pendientes`
@@ -755,7 +755,7 @@ CREATE TABLE `laboratorios_externos` (
   `telefono` int(11) NOT NULL,
   `direccion` varchar(60) NOT NULL,
   `status` varchar(8) NOT NULL DEFAULT 'activo'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Volcado de datos para la tabla `laboratorios_externos`
@@ -781,7 +781,7 @@ CREATE TABLE `niveles_usuario` (
   `id` int(11) NOT NULL,
   `nombre` varchar(30) NOT NULL,
   `descripcion` tinytext DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Volcado de datos para la tabla `niveles_usuario`
@@ -802,16 +802,16 @@ INSERT INTO `niveles_usuario` (`id`, `nombre`, `descripcion`) VALUES
 CREATE TABLE `ordenes` (
   `id` int(11) NOT NULL,
   `clave` varchar(5) NOT NULL,
-  `orden` int(11) NOT NULL,
+  `orden` int(40) NOT NULL,
   `id_paciente` int(11) NOT NULL,
   `id_bio` int(11) NOT NULL,
-  `expediente` int(11) NOT NULL,
+  `expediente` int(40) NOT NULL,
   `id_empresa` int(11) NOT NULL,
-  `fecha` timestamp NOT NULL DEFAULT current_timestamp(),
+  `fecha` timestamp NOT NULL DEFAULT (now()),
   `status_imp` tinyint(1) NOT NULL DEFAULT 0,
   `status_ws` tinyint(1) NOT NULL DEFAULT 0,
   `status_correo` tinyint(1) NOT NULL DEFAULT 0
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Volcado de datos para la tabla `ordenes`
@@ -874,7 +874,7 @@ CREATE TABLE `pacientes` (
   `pre_cedula` varchar(2) NOT NULL,
   `genero` varchar(10) DEFAULT NULL,
   `foto_carnet` mediumblob DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Volcado de datos para la tabla `pacientes`
@@ -909,7 +909,7 @@ CREATE TABLE `rangos_detalle` (
   `superior` decimal(12,2) NOT NULL,
   `genero` varchar(10) DEFAULT NULL,
   `status` varchar(8) NOT NULL DEFAULT 'activo'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Volcado de datos para la tabla `rangos_detalle`
@@ -983,7 +983,7 @@ CREATE TABLE `resultados_detalle` (
   `id` int(11) NOT NULL,
   `resultado` mediumtext NOT NULL,
   `id_det_ex` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Volcado de datos para la tabla `resultados_detalle`
@@ -1172,7 +1172,7 @@ CREATE TABLE `seccion_examen` (
   `id` int(11) NOT NULL,
   `nombre` tinytext NOT NULL,
   `status` varchar(8) NOT NULL DEFAULT 'activo'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Volcado de datos para la tabla `seccion_examen`
@@ -1198,7 +1198,7 @@ CREATE TABLE `sede` (
   `nombre` varchar(20) NOT NULL,
   `clave` int(10) NOT NULL,
   `status` varchar(8) NOT NULL DEFAULT 'activo'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Volcado de datos para la tabla `sede`
@@ -1223,7 +1223,7 @@ CREATE TABLE `subcaracteristicas_detalle` (
   `valor` text DEFAULT NULL,
   `id_det_ex` int(11) NOT NULL,
   `status` varchar(8) NOT NULL DEFAULT 'activo'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Volcado de datos para la tabla `subcaracteristicas_detalle`
@@ -1257,7 +1257,7 @@ CREATE TABLE `titulos` (
   `posicion` int(11) NOT NULL,
   `id_ex` int(11) NOT NULL,
   `status` varchar(6) NOT NULL DEFAULT 'titulo'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Volcado de datos para la tabla `titulos`
@@ -1295,7 +1295,7 @@ CREATE TABLE `users` (
   `foto_carnet` mediumblob NOT NULL,
   `nivel` int(11) NOT NULL,
   `status` varchar(8) NOT NULL DEFAULT 'activo'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Volcado de datos para la tabla `users`

@@ -788,7 +788,7 @@ export const crearOrden = async (req, res) => {
     }
     if (orden.clave == "no") {
       const [ordenBdd] = await pool.execute(
-        `INSERT INTO ordenes(clave, id_paciente, id_bio, expediente, id_empresa) VALUES ('${orden.clave}','${orden.idPac}','${orden.id_bio}','${orden.expediente}','${orden.empresa}')`
+        `INSERT INTO ordenes(clave, id_paciente, id_bio, expediente, id_empresa) VALUES ('${orden.clave}','${orden.idPac}','${orden.id_bio}','${orden.expediente}',${orden.empresa == '' ? 0 : orden.empresa})`
       );
       ordenId = ordenBdd.insertId;
 
@@ -797,23 +797,17 @@ export const crearOrden = async (req, res) => {
       );
     } else {
       const [ordenBdd] = await pool.execute(
-        `INSERT INTO ordenes(clave, id_paciente,orden, id_bio, expediente, id_empresa) VALUES ('${orden.clave}','${orden.idPac}','${orden.orden}','${orden.id_bio}','${orden.expediente}','${orden.empresa}')`
+        `INSERT INTO ordenes(clave, id_paciente,orden, id_bio, expediente, id_empresa) VALUES ('${orden.clave}','${orden.idPac}','${orden.orden}','${orden.id_bio}','${orden.expediente}', ${orden.empresa == '' ? 0 : orden.empresa})`
       );
       ordenId = ordenBdd.insertId;
     }
     for await (const ex of orden.examenes) {
-      const [examenBdd] = await pool.execute(`
-      INSERT INTO examenes_paciente(id_orden, id_ex, id_pac, id_bio,id_sede,id_usuario) VALUES ('${ordenId}','${ex.id_ex}','${ex.idPac}','${orden.id_bio}','${sedeVar}','${user}')
-      `);
+      const [examenBdd] = await pool.execute(`INSERT INTO examenes_paciente(id_orden, id_ex, id_pac, id_bio,id_sede,id_usuario) VALUES ('${ordenId}','${ex.id_ex}','${ex.idPac}','${orden.id_bio}','${sedeVar}','${user}')`);
       for await (const dt of ex.detallesExamen) {
         if (dt.status != "titulo") {
-          const [detalleBdd] = await pool.execute(`
-        INSERT INTO detalles_examenes_paciente(id_dt, id_ex, id_ex_pac, id_rango,superior,inferior, resultado, nota) VALUES ('${dt.id_dt}','${ex.id_ex}','${examenBdd.insertId}','${dt.id_rango}','${dt.superior}','${dt.inferior}','${dt.resultado}','${dt.nota}')
-        `);
+          const [detalleBdd] = await pool.execute(`INSERT INTO detalles_examenes_paciente(id_dt, id_ex, id_ex_pac, id_rango,superior,inferior, resultado, nota) VALUES ('${dt.id_dt}','${ex.id_ex}','${examenBdd.insertId}','${dt.id_rango == 'no' ? 0 : dt.id_rango}','${dt.superior == 'no' ? 0 : dt.superior}','${dt.inferior == 'no' ? 0 : dt.inferior}','${dt.resultado}','${dt.nota}')`);
           for await (const sb of dt.subCaracteristicasDt) {
-            const [subCaracteristicaBdd] = await pool.execute(`
-          INSERT INTO detalle_subcaracteristica_paciente(id_det_ex, id_detalle_sub, resultado, nota) VALUES ('${detalleBdd.insertId}','${sb.id_detalle_sub}','${sb.resultado}','${sb.nota}')
-          `);
+            const [subCaracteristicaBdd] = await pool.execute(`INSERT INTO detalle_subcaracteristica_paciente(id_det_ex, id_detalle_sub, resultado, nota) VALUES ('${detalleBdd.insertId}','${sb.id_detalle_sub}','${sb.resultado}','${sb.nota}')`);
           }
         }
       }

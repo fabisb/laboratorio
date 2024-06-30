@@ -71,7 +71,8 @@ autoUpdater.on("error", (info) => {
 //AUTO UPDATER
 
 //URL DE SEVIDOR
-const urlsv = "http://localhost:3000";
+//const urlsv = "http://localhost:3000";
+const urlsv = "https://laboratorio-sv.up.railway.app";
 //URL DE SEVIDOR
 const store = new Store();
 store.clear();
@@ -416,12 +417,12 @@ ipcMain.handle("examenPDFWindow", () => examenPDFWindow());
 ipcMain.on("print", async (event, arg) => {
   const currentWindow = event.sender.getOwnerBrowserWindow();
 
-
+  const desktopDir = path.join(os.homedir(), "Desktop");
   const examen = store.get("examen");
-  const ccsData = await fs.readFile("app/modules/bootstrap.min.css", "utf8");
+  const ccsData = await fs.readFile(path.join(__dirname, "app/modules/bootstrap.min.css"), "utf8");
   const imgData =
     `data:image/png;base64,` +
-    (await fs.readFile("app/imgs/la-milagrosa-logo.png", "base64"));
+    (await fs.readFile(path.join(__dirname, "app/imgs/la-milagrosa-logo.png"), "base64"));
 
   currentWindow.webContents
     .printToPDF({
@@ -528,8 +529,8 @@ ipcMain.on("print", async (event, arg) => {
     .then(async (data) => {
       // Save the PDF data to a file (you can modify the path)
       const fs = require("fs");
-      fs.writeFileSync("app/assets/my_generated_pdf.pdf", data);
-      shell.openPath(path.join(__dirname, "app/assets/my_generated_pdf.pdf"));
+      fs.writeFileSync(path.join(desktopDir, "EXAMENES-LABORATORIO/generated_pdf.pdf"), data);
+      shell.openPath(path.join(desktopDir, "EXAMENES-LABORATORIO/generated_pdf.pdf"));
       if (examen.orden != "Reimpresion") {
         const { token } = await store.get("token");
         try {
@@ -566,10 +567,10 @@ ipcMain.on("ws", async (event, numeroArg) => {
   const currentWindow = event.sender.getOwnerBrowserWindow();
 
   const examen = store.get("examen");
-  const ccsData = await fs.readFile("app/modules/bootstrap.min.css", "utf8");
+  const ccsData = await fs.readFile(path.join(__dirname, "app/modules/bootstrap.min.css"), "utf8");
   const imgData =
     `data:image/png;base64,` +
-    (await fs.readFile("app/imgs/la-milagrosa-logo.png", "base64"));
+    (await fs.readFile(path.join(__dirname, "app/imgs/la-milagrosa-logo.png"), "base64"));
 
   currentWindow.webContents
     .printToPDF({
@@ -755,10 +756,10 @@ ipcMain.on("email", async (event, email) => {
   const currentWindow = event.sender.getOwnerBrowserWindow();
 
   const examen = store.get("examen");
-  const ccsData = await fs.readFile("app/modules/bootstrap.min.css", "utf8");
+  const ccsData = await fs.readFile(path.join(__dirname, "app/modules/bootstrap.min.css"), "utf8");
   const imgData =
     `data:image/png;base64,` +
-    (await fs.readFile("app/imgs/la-milagrosa-logo.png", "base64"));
+    (await fs.readFile(path.join(__dirname, "app/imgs/la-milagrosa-logo.png"), "base64"));
 
   currentWindow.webContents
     .printToPDF({

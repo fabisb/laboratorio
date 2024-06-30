@@ -25,7 +25,8 @@ contextBridge.exposeInMainWorld("ventanas", {
   reimprimirWindow: async () => await ipcRenderer.invoke("reimpresionesWindow"),
 });
 
-contextBridge.exposeInMainWorld("urlsv", "http://localhost:3000");
+//contextBridge.exposeInMainWorld("urlsv", "http://localhost:3000");
+contextBridge.exposeInMainWorld("urlsv", "https://laboratorio-sv.up.railway.app");
 
 contextBridge.exposeInMainWorld("login", {
   login: async (user, pass) => {
