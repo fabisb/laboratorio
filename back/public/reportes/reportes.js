@@ -1383,7 +1383,7 @@ async function busquedaExamenDetallado() {
   }
   let filtrosValue = [
     {
-      columna: 'examen', valor: examen
+      columna: 'examenDet', valor: examen
     }
   ]
 
