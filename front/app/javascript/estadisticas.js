@@ -416,14 +416,12 @@ function validarInputExamenEx(value) {
       SedeInp.value = "";
       BioanalistaInp.value = "";
       TipoInp.value = "";
-      LaboratorioInp.value = "";
       break;
     case "sede":
       ordenInp.value = "";
       break;
     case "bioanalista":
       ordenInp.value = "";
-      LaboratorioInp.value = "";
       TipoInp.value = "";
       break;
     case "categoria":
@@ -447,7 +445,6 @@ function validarInputExamenEx(value) {
       BioanalistaInp.value = "";
       break;
     case "local":
-      LaboratorioInp.value = "";
       break;
     case "laboratorio":
       TipoInp.value = "externo";

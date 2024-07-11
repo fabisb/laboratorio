@@ -533,12 +533,9 @@ export const getPacientesReportes = async (req, res) => {
       query += `e.id_ex IN (SELECT id FROM examenes WHERE id_seccion = '${seccion.valor}' ${categoria ? `AND id_categoria = '${categoria.valor}'` : ``}) AND `
     } else {
       if (categoria) {
-        query += `e.id_ex IN (SELECT id FROM examenes WHERE id_categoria = '${categoria.valor}') AND`
+        query += `e.id_ex IN (SELECT id FROM examenes WHERE id_categoria = '${categoria.valor}') AND `
       }
     }
-
-
-
 
     let len = query.length
 
@@ -549,13 +546,6 @@ export const getPacientesReportes = async (req, res) => {
 
     }
     const [pacientes] = await pool.execute(query)
-
-
-
-
-
-
-
 
     res.status(200).json({ pacientes, columnas: ['Id', 'Cedula', 'Nombre', 'Genero', 'Edad', 'Telefono', 'Direccion', 'Examenes'] })
 

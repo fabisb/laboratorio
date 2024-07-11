@@ -374,7 +374,6 @@ function validarInputExamenEx(value) {
   const GeneroInp = document.getElementById("selectGeneroExamen");
   const UsuarioInp = document.getElementById("usuariosSelectExamen");
   const TipoInp = document.getElementById("selectTipoExamen");
-  const LaboratorioInp = document.getElementById("selectLaboratorioExamen");
   const desdeInp = document.getElementById("inputDesdeExamen");
   const hastaInp = document.getElementById("inputHastaExamen");
 
@@ -398,14 +397,13 @@ function validarInputExamenEx(value) {
       SedeInp.value = "";
       BioanalistaInp.value = "";
       TipoInp.value = "";
-      LaboratorioInp.value = "";
+
       break;
     case "sede":
       ordenInp.value = "";
       break;
     case "bioanalista":
       ordenInp.value = "";
-      LaboratorioInp.value = "";
       TipoInp.value = "";
       break;
     case "categoria":
@@ -429,7 +427,6 @@ function validarInputExamenEx(value) {
       BioanalistaInp.value = "";
       break;
     case "local":
-      LaboratorioInp.value = "";
       break;
     case "laboratorio":
       TipoInp.value = "externo";
