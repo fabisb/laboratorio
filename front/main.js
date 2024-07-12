@@ -71,8 +71,8 @@ autoUpdater.on("error", (info) => {
 //AUTO UPDATER
 
 //URL DE SEVIDOR
-//const urlsv = "http://localhost:3000";
-const urlsv = "https://laboratorio-sv.up.railway.app";
+const urlsv = "http://localhost:3000";
+//const urlsv = "https://laboratorio-sv.up.railway.app";
 //URL DE SEVIDOR
 const store = new Store();
 store.clear();
