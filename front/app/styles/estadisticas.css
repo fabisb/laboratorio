@@ -1,23 +1,26 @@
-.rowNav{
+.rowNav {
   border: solid 3px #1c8c9b;
-  transition: all 1s
+  transition: all 1s;
 }
 
-.rowNav:hover{
-    box-shadow: 2px 2px 2px 2px #c4c4c4;
-
+.rowNav:hover {
+  box-shadow: 2px 2px 2px 2px #c4c4c4;
 }
-.acordionEstadistica{
-  transition: all 1s
-
+.acordionEstadistica {
+  transition: all 1s;
 }
-.acordionEstadistica:hover{
-    box-shadow: 1px 1px 1px 1px #1c8c9b;
- 
-
+.acordionEstadistica:hover {
+  box-shadow: 1px 1px 1px 1px #1c8c9b;
 }
-th{
+th {
+  cursor: pointer;
   color: white !important;
-  background: rgb(255,255,255);
-  background: linear-gradient(87deg, rgba(255,255,255,1) 3%, rgba(28,140,155,1) 37%, rgba(28,140,155,1) 67%, rgba(255,255,255,1) 100%);
+  background: rgb(255, 255, 255);
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 1) 0%,
+    rgb(28, 140, 155) 15%,
+    rgb(28, 140, 155) 85%,
+    rgba(255, 255, 255, 1) 100%
+  );
 }

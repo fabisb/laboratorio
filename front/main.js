@@ -203,7 +203,7 @@ function estadisticasWindow() {
       width: 1368,
       icon: path.join(__dirname, "app/imgs/icons/app-logo.ico"),
       height: 960,
-      title: "Estadisticas",
+      title: "Estadísticas",
       webPreferences: {
         preload: path.join(__dirname, "app/preloads/preload.js"),
         devTools: devTools
@@ -257,7 +257,7 @@ function creacionExamenWindow() {
         width: 1368,
         icon: path.join(__dirname, "app/imgs/icons/app-logo.ico"),
         height: 960,
-        title: "Diagnosticos",
+        title: "Diagnósticos",
         webPreferences: {
           preload: path.join(__dirname, "app/preloads/preload.js"),
           devTools: devTools

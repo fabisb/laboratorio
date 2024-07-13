@@ -1139,7 +1139,7 @@ const modificarBio = async (id, idBio) => {
       {
         id,
         direccion,
-        nombre: pre_nombre + " " + nombre,
+        nombre,
         telefono,
         correo,
         password,

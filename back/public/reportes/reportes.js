@@ -582,7 +582,7 @@ async function busquedaorden() {
       `
     })
 
-    examenesArr = res.data.ordenes.sort(function (a, b) {
+    const examenesArr = res.data.ordenes.sort(function (a, b) {
       if (a.id > b.id) {
         return 1;
       }
@@ -592,6 +592,8 @@ async function busquedaorden() {
       // a must be equal to b
       return 0;
     });
+    if (examenesArr.length > 0) {
+
     examenesArr.forEach(e => {
 
       bodyReport.innerHTML += `
@@ -615,7 +617,15 @@ async function busquedaorden() {
                           </tr>
       `
     })
+  } else {
+    document.getElementById('alertFiltro').innerHTML = 'No se han encontrado datos'
+    document.getElementById('alertFiltro').removeAttribute('hidden')
 
+    setTimeout(() => {
+      document.getElementById('alertFiltro').setAttribute('hidden', 'true')
+
+    }, 3000);
+  }
   } catch (error) {
     console.log(error)
   }
@@ -687,7 +697,7 @@ async function busquedabioanalista() {
       `
     })
 
-    examenesArr = res.data.bioanalistas.sort(function (a, b) {
+    const examenesArr = res.data.bioanalistas.sort(function (a, b) {
       if (a.id > b.id) {
         return 1;
       }
@@ -697,6 +707,8 @@ async function busquedabioanalista() {
       // a must be equal to b
       return 0;
     });
+    if (examenesArr.length > 0) {
+
     examenesArr.forEach(e => {
 
       bodyReport.innerHTML += `
@@ -712,7 +724,15 @@ async function busquedabioanalista() {
                           </tr>
       `
     })
+  } else {
+    document.getElementById('alertFiltro').innerHTML = 'No se han encontrado datos'
+    document.getElementById('alertFiltro').removeAttribute('hidden')
 
+    setTimeout(() => {
+      document.getElementById('alertFiltro').setAttribute('hidden', 'true')
+
+    }, 3000);
+  }
   } catch (error) {
     console.log(error)
   }
@@ -812,7 +832,7 @@ async function busquedaexamen() {
       `
     })
 
-    examenesArr = res.data.examenes.sort(function (a, b) {
+    const examenesArr = res.data.examenes.sort(function (a, b) {
       if (a.id > b.id) {
         return 1;
       }
@@ -822,6 +842,8 @@ async function busquedaexamen() {
       // a must be equal to b
       return 0;
     });
+    if (examenesArr.length > 0) {
+
     examenesArr.forEach(e => {
 
       bodyReport.innerHTML += `
@@ -846,7 +868,15 @@ async function busquedaexamen() {
                           </tr>
       `
     })
+  } else {
+    document.getElementById('alertFiltro').innerHTML = 'No se han encontrado datos'
+    document.getElementById('alertFiltro').removeAttribute('hidden')
 
+    setTimeout(() => {
+      document.getElementById('alertFiltro').setAttribute('hidden', 'true')
+
+    }, 3000);
+  }
   } catch (error) {
     console.log(error)
   }
@@ -920,7 +950,7 @@ async function busquedaexterno() {
       `
     })
 
-    examenesArr = res.data.examenes.sort(function (a, b) {
+   const  examenesArr = res.data.examenes.sort(function (a, b) {
       if (a.id > b.id) {
         return 1;
       }
@@ -930,6 +960,8 @@ async function busquedaexterno() {
       // a must be equal to b
       return 0;
     });
+    if (examenesArr.length > 0) {
+
     examenesArr.forEach(e => {
 
       bodyReport.innerHTML += `
@@ -953,7 +985,15 @@ async function busquedaexterno() {
                           </tr>
       `
     })
+  } else {
+    document.getElementById('alertFiltro').innerHTML = 'No se han encontrado datos'
+    document.getElementById('alertFiltro').removeAttribute('hidden')
 
+    setTimeout(() => {
+      document.getElementById('alertFiltro').setAttribute('hidden', 'true')
+
+    }, 3000);
+  }
   } catch (error) {
     console.log(error)
   }
@@ -1275,7 +1315,7 @@ async function busquedaOrdenDetallado() {
       `
     })
 
-    examenesArr = res.data.ordenes.sort(function (a, b) {
+    const examenesArr = res.data.ordenes.sort(function (a, b) {
       if (a.id > b.id) {
         return 1;
       }
@@ -1285,6 +1325,8 @@ async function busquedaOrdenDetallado() {
       // a must be equal to b
       return 0;
     });
+    if (examenesArr.length > 0) {
+
     examenesArr.forEach(e => {
 
       bodyReport.innerHTML += `
@@ -1308,7 +1350,15 @@ async function busquedaOrdenDetallado() {
                           </tr>
       `
     })
+  } else {
+    document.getElementById('alertFiltro').innerHTML = 'No se han encontrado datos'
+    document.getElementById('alertFiltro').removeAttribute('hidden')
 
+    setTimeout(() => {
+      document.getElementById('alertFiltro').setAttribute('hidden', 'true')
+
+    }, 3000);
+  }
   } catch (error) {
     console.log(error)
   }
@@ -1344,7 +1394,7 @@ async function busquedaBioanalistaDetallado() {
       `
     })
 
-    examenesArr = res.data.bioanalistas.sort(function (a, b) {
+    const examenesArr = res.data.bioanalistas.sort(function (a, b) {
       if (a.id > b.id) {
         return 1;
       }
@@ -1354,6 +1404,8 @@ async function busquedaBioanalistaDetallado() {
       // a must be equal to b
       return 0;
     });
+    if (examenesArr.length > 0) {
+
     examenesArr.forEach(e => {
 
       bodyReport.innerHTML += `
@@ -1369,7 +1421,15 @@ async function busquedaBioanalistaDetallado() {
                           </tr>
       `
     })
+  } else {
+    document.getElementById('alertFiltro').innerHTML = 'No se han encontrado datos'
+    document.getElementById('alertFiltro').removeAttribute('hidden')
 
+    setTimeout(() => {
+      document.getElementById('alertFiltro').setAttribute('hidden', 'true')
+
+    }, 3000);
+  }
   } catch (error) {
     console.log(error)
   }
@@ -1403,7 +1463,7 @@ async function busquedaExamenDetallado() {
       `
     })
 
-    examenesArr = res.data.examenes.sort(function (a, b) {
+    const examenesArr = res.data.examenes.sort(function (a, b) {
       if (a.id > b.id) {
         return 1;
       }
@@ -1413,6 +1473,8 @@ async function busquedaExamenDetallado() {
       // a must be equal to b
       return 0;
     });
+    if (examenesArr.length > 0) {
+
     examenesArr.forEach(e => {
 
       bodyReport.innerHTML += `
@@ -1437,7 +1499,15 @@ async function busquedaExamenDetallado() {
                           </tr>
       `
     })
+ } else {
+      document.getElementById('alertFiltro').innerHTML = 'No se han encontrado datos'
+      document.getElementById('alertFiltro').removeAttribute('hidden')
 
+      setTimeout(() => {
+        document.getElementById('alertFiltro').setAttribute('hidden', 'true')
+
+      }, 3000);
+    }
   } catch (error) {
     console.log(error)
   }
@@ -1473,6 +1543,7 @@ async function busquedaPacienteDetallado() {
         <th scope="col">${c}</th>
       `
     })
+    if (res.data.pacientes.length > 0) {
 
     res.data.pacientes.forEach(e => {
       bodyReport.innerHTML += `
@@ -1493,7 +1564,15 @@ async function busquedaPacienteDetallado() {
     })
 
 
+} else {
+      document.getElementById('alertFiltro').innerHTML = 'No se han encontrado datos'
+      document.getElementById('alertFiltro').removeAttribute('hidden')
 
+      setTimeout(() => {
+        document.getElementById('alertFiltro').setAttribute('hidden', 'true')
+
+      }, 3000);
+    }
 
 
   } catch (error) {
@@ -1543,7 +1622,7 @@ async function examenesOrdenPaciente(tipo, id) {
       `
     })
 
-    examenesArr = res.data.examenes.sort(function (a, b) {
+    const examenesArr = res.data.examenes.sort(function (a, b) {
       if (a.id > b.id) {
         return 1;
       }
@@ -1553,6 +1632,8 @@ async function examenesOrdenPaciente(tipo, id) {
       // a must be equal to b
       return 0;
     });
+    if (examenesArr.length > 0) {
+
     examenesArr.forEach(e => {
 
       bodyReport.innerHTML += `
@@ -1577,7 +1658,15 @@ async function examenesOrdenPaciente(tipo, id) {
                           </tr>
       `
     })
+  } else {
+      document.getElementById('alertFiltro').innerHTML = 'No se han encontrado datos'
+      document.getElementById('alertFiltro').removeAttribute('hidden')
 
+      setTimeout(() => {
+        document.getElementById('alertFiltro').setAttribute('hidden', 'true')
+
+      }, 3000);
+    }
   } catch (error) {
     console.log(error)
   }
@@ -1668,6 +1757,7 @@ async function busquedapaciente() {
         <th scope="col" data-bs-toggle="modal" data-bs-target="#modalTotales" onclick="contarPacientes('${c}')">${c}</th>
       `
     })
+    if (res.data.pacientes.length > 0) {
 
     res.data.pacientes.forEach(e => {
       bodyReport.innerHTML += `
@@ -1688,7 +1778,15 @@ async function busquedapaciente() {
     })
 
 
+  } else {
+      document.getElementById('alertFiltro').innerHTML = 'No se han encontrado datos'
+      document.getElementById('alertFiltro').removeAttribute('hidden')
 
+      setTimeout(() => {
+        document.getElementById('alertFiltro').setAttribute('hidden', 'true')
+
+      }, 3000);
+    }
 
 
 

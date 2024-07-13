@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title >Diagnosticos</title>
+    <title >Diagnósticos</title>
     <link rel="stylesheet" href="../styles/creacionExamen.css" />
     <link rel="stylesheet" href="../styles/navBar.css" />
     <link
@@ -70,7 +70,7 @@
                     aria-current="page"
                     onclick="abrirExamenesWindow()"
                     style="cursor: pointer"
-                    >Diagnosticos</a
+                    >Diagnósticos</a
                   >
                 </li>
                 <li class="nav-item user1" hidden>
@@ -79,11 +79,11 @@
                     aria-current="page"
                     onclick="abrirExWindow()"
                     style="cursor: pointer"
-                    >Examenes</a
+                    >Exámenes</a
                   >
                 </li>
                 <li class="nav-item user1 user3" hidden>
-                  <a class="nav-link" onclick="abrirEstadisticasWindow()" style="cursor: pointer;">Estadisticas</a>
+                  <a class="nav-link" onclick="abrirEstadisticasWindow()" style="cursor: pointer;">Estadísticas</a>
                 </li>
                 <li class="nav-item user1" hidden>
                   <a
@@ -137,7 +137,7 @@
                   required
                   class="form-control"
                   id="ciInput"
-                  placeholder="Cedula"
+                  placeholder="Cédula"
                 />
               </div>
               <div id="childNameDiv" hidden class="col-1">
@@ -340,7 +340,7 @@
                 class="mb-3 d-flex align-items-center justify-content-center"
               >
                 <label for="exampleFormControlInput2" class="form-label"
-                  >Direccion:
+                  >Dirección:
                 </label>
                 <input
                   readonly
@@ -356,7 +356,7 @@
                 class="mb-3 d-flex align-items-center justify-content-center"
               >
                 <label for="exampleFormControlInput2" class="form-label"
-                  >Telefono:
+                  >Teléfono:
                 </label>
                 <input
                   readonly
@@ -419,7 +419,7 @@
           <hr style="border-top: solid 3px rgb(255, 196, 0)" />
 
           <div class="row">
-            <h1 class="display-6 fw-semibold text-center">Examenes Realizados</h1>
+            <h1 class="display-6 fw-semibold text-center">Exámenes Realizados</h1>
             <br>
             <div class="list-group" id="tBodyLgEx" style="max-height: 50vh; overflow-y: auto;">
               <a href="#" class="list-group-item list-group-item-action fw-semibold liTableExPac">
@@ -439,7 +439,7 @@
           <hr>
           <div class="d-flex justify-content-end">
             
-            <button class="btn btn-info w-25" onclick="abrirModalReimpresion()" id="reimpresionButton" hidden>Reimpresion</button>
+            <button class="btn btn-info w-25" onclick="abrirModalReimpresion()" id="reimpresionButton" hidden>Reimpresión</button>
             <button class="btn btn-success w-25" onclick="abrirModalTotalizar()" id="totalizarButton" hidden>Totalizar</button>
           </div>
         </div>
@@ -458,7 +458,7 @@
       <div class="modal-content" style="border: 5px solid #68c0c3;">
         <div class="modal-header">
           <h1 class="fs-3" id="ExamenesLabel">
-            Diagnosticos
+            Diagnósticos
           </h1>
           <img src="../imgs/la-milagrosa-logo.png" width="70" alt="" />
 
@@ -467,7 +467,7 @@
         <div class="modal-body container" >
           <div class="alert alert-danger" id="alertaExamen" hidden role="alert"></div>
 
-          <h1 class="display-6 text-center">Diagnosticos</h1>
+          <h1 class="display-6 text-center">Diagnósticos</h1>
           <hr>
           <div class="d-flex justify-content-center">
             <select class="form-select w-25 mx-2" id="seccionExamenSelect"  onchange="validarSelectSeccion(value)" aria-label="Default select example">
@@ -915,7 +915,7 @@
             
             <div class="row my-2">
               <div class="d-flex justify-content-around">
-                <h4 class="fw-semibold text-center">Examenes Realizados</h4>
+                <h4 class="fw-semibold text-center">Exámenes Realizados</h4>
               </div>
               <br>
               <div class="list-group" id="tBodyLgExOrd">
@@ -1071,7 +1071,7 @@
         <div class="modal-content" style="border: 5px solid #68c0c3;">
           <div class="modal-header">
             <h1 class="fs-5" id="reimpresionLabel">
-              Reimpresion
+              Reimpresión
             </h1>
             <img src="../imgs/la-milagrosa-logo.png" width="70" alt="" />
   
@@ -1094,7 +1094,7 @@
             
             <div class="row my-2">
               <div class="d-flex justify-content-around">
-                <h4 class="fw-semibold text-center">Examenes</h4>
+                <h4 class="fw-semibold text-center">Exámenes</h4>
               </div>
               <br>
               <div class="list-group" id="tBodyLgExRe">

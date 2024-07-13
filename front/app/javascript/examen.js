@@ -877,7 +877,7 @@ const cedulaPaciente = async () => {
             `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-exclamation-triangle-fill" viewBox="0 0 16 16">
         <path d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5m.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2"/>
       </svg>  <div>
-      No se ha encontrado el usuario, agreguelo para continuar
+      No se ha encontrado el usuario, agréguelo para continuar
         </div>`,
             "primary"
           );
@@ -1205,7 +1205,7 @@ const crearPaciente = async () => {
       desactivarInputs();
     } catch (error) {
       console.log(error);
-      if (error.response.data.mensaje) {
+      if (error.response?.data?.mensaje) {
         return await alerta.alert("Error:", error.response.data.mensaje);
       } else {
         return await alerta.error();
@@ -2650,23 +2650,35 @@ async function buscarExamenesPaciente() {
 }
 
 async function borrarExamenExterno(id) {
-
-  try {
-    const { token } = await login.getToken();
-    const { data } = await axios.put(
-      urlsv + "/api/examenes/delete-examen-externo",
-      {
-        id
-      },
-      {
-        headers: { token },
+  const res = await alerta.alert(
+    "ELIMINAR:",
+    "¿Esta seguro que desea eliminar el examen?"
+  );
+  if (res.response == 1) return;
+  else {
+    try {
+      const { token } = await login.getToken();
+      const { data } = await axios.put(
+        urlsv + "/api/examenes/delete-examen-externo",
+        {
+          id
+        },
+        {
+          headers: { token },
+        }
+      );
+  
+      cedulaPaciente()
+  
+    } catch (error) {
+      console.log(error)
+      if (error.response?.data?.mensaje) {
+        return await alerta.alert("Error:", error.response.data.mensaje);
+      } else {
+        return await alerta.error();
       }
-    );
-
-    cedulaPaciente()
-
-  } catch (error) {
-    console.log(error)
+    }
+    
   }
 
 
@@ -3231,7 +3243,7 @@ const validarNSlct = async (event) => {
           `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-exclamation-triangle-fill" viewBox="0 0 16 16">
     <path d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5m.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2"/>
   </svg>  <div>
-  No se ha encontrado el usuario, agreguelo para continuar
+  No se ha encontrado el usuario, agréguelo para continuar
     </div>`,
           "primary"
         );
@@ -3423,7 +3435,7 @@ const validarN2 = async () => {
             `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-exclamation-triangle-fill" viewBox="0 0 16 16">
           <path d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5m.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2"/>
         </svg>  <div>
-        No se ha encontrado el usuario, agreguelo para continuar
+        No se ha encontrado el usuario, agréguelo para continuar
           </div>`,
             "primary"
           );
@@ -3475,7 +3487,7 @@ const validarN2 = async () => {
               `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-exclamation-triangle-fill" viewBox="0 0 16 16">
             <path d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5m.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2"/>
           </svg>  <div>
-          No se ha encontrado el usuario, agreguelo para continuar
+          No se ha encontrado el usuario, agréguelo para continuar
             </div>`,
               "primary"
             );

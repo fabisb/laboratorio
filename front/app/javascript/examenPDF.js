@@ -55,10 +55,10 @@ const reimprimirExamen = async () => {
             }
           }
           return `
-      <div class="card">
-      <div class="card-header text-start fw-bolder fs-6">${s}</div>
-      ${ex.nombreSeccion == s
+          ${ex.nombreSeccion == s
               ? ` 
+            <div class="card">
+        <div class="card-header text-start fw-bolder fs-6">${s}</div>
           <div class="card">
           ${nombreExamen}
           <div class="card-body">
