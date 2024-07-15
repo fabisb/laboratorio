@@ -807,6 +807,7 @@ const cedulaPaciente = async () => {
     .setAttribute("disabled", "disabled");
 
   const preCedula = document.getElementsByName("pre_cedula")[0].value;
+  //const nombreHijo = (document.getElementsByName("childName")[0].value).split("-")[0] || '';
   if (preCedula != "E" && preCedula != "V" && preCedula != "N") {
     return cedulaAlerta(
       `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-exclamation-triangle-fill" viewBox="0 0 16 16">
@@ -863,6 +864,7 @@ const cedulaPaciente = async () => {
             params: {
               cedula,
               preCedula,
+              nombreHijo
             },
             headers: { token },
           }

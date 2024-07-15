@@ -249,7 +249,7 @@ const pintarExamen = async () => {
                     if (c?.status == "titulo") {
                       return `
                   <tr>
-                  <th colspan="5" scope="row">${c.nombre}</th>
+                  <th colspan="5" scope="row">${c.titulo}</th>
                 </tr>
                   `;
                     } else {

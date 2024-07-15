@@ -49,7 +49,7 @@ export const getExamenReimpresion = async (req, res) => {
             resultado: sb.resultado,
             idCar: dt.id_dt,
             nota: sb.nota,
-            tipo: subCaInfo[0].tipo,
+            tipo: subCaInfo[0].tipo
           });
         }
         caracteristicas.push({
@@ -60,6 +60,7 @@ export const getExamenReimpresion = async (req, res) => {
           inferior: dt.inferior,
           superior: dt.superior,
           imprimir: detalleInfo[0].impsiempre,
+          posicion:detalleInfo[0].posicion,
           subCaracteristicas,
         });
       }
@@ -1014,7 +1015,8 @@ export const getExamenesExternos = async (req, res) => {
   }
 };
 export const getPaciente = async (req, res) => {
-  const { cedula, preCedula } = req.query;
+  const { cedula, preCedula,nombreHijo } = req.query;
+  console.log("🚀 ~ getPaciente ~ nombreHijo:", nombreHijo)
 
   if (cedula == "" || !cedula) {
     return await res
